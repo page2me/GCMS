@@ -98,7 +98,7 @@ class View extends \Kotchasan\KBase
         'Expires' => gmdate('D, d M Y H:i:s', time() + $expire).' GMT',
         'Last-Modified' => gmdate('D, d M Y H:i:s', time() - $expire).' GMT'
       ))
-      ->setContent(preg_replace($patt, $replace, implode("\n", $js)))
+      ->withContent(preg_replace($patt, $replace, implode("\n", $js)))
       ->send();
   }
 }

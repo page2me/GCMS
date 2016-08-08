@@ -182,6 +182,6 @@ class Controller extends \Kotchasan\Controller
     }
     // ส่งออก เป็น HTML
     $response = new Response;
-    $response->setContent(Gcms::$view->renderHTML())->send();
+    $response->withContent(Gcms::$view->renderHTML())->send();
   }
 }

@@ -90,7 +90,7 @@ class View extends \Kotchasan\KBase
         'Expires' => gmdate('D, d M Y H:i:s', time() + $expire).' GMT',
         'Last-Modified' => gmdate('D, d M Y H:i:s', time() - $expire).' GMT'
       ))
-      ->setContent($data)
+      ->withContent($data)
       ->send();
   }
 }

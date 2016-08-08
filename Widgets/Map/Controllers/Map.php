@@ -30,6 +30,6 @@ class Map extends \Kotchasan\Controller
   {
     // ส่งออก เป็น HTML
     $response = new Response;
-    $response->setContent(createClass('Widgets\Map\Views\Map')->render($request))->send();
+    $response->withContent(createClass('Widgets\Map\Views\Map')->render($request))->send();
   }
 }

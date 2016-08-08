@@ -67,7 +67,7 @@ class Controller extends \Kotchasan\Controller
         $content .= '</channel>';
         $content .= '</rss>';
         // send Response
-        $response->setContent($content)
+        $response->withContent($content)
           ->withHeader('Content-Type', 'application/xml; charset=UTF-8')
           ->send();
         exit;

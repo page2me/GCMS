@@ -45,6 +45,7 @@ class Model extends \Kotchasan\Model
       curl_close($ch);
     }
     $response = new Response;
-    $response->withHeader('Content-type', 'text/html; charset=utf-8')->setContent($contents)->send();
+    $response->withHeader('Content-type', 'text/html; charset=utf-8')
+      ->withContent($contents)->send();
   }
 }

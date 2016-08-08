@@ -19,7 +19,7 @@ if (empty($cfg->msvalidate)) {
   $content .= "\n<users>";
   $content .= "\n\t<user>".$cfg->msvalidate."</user>";
   $content .= "\n</users>";
-  $response->setContent($content)
+  $response->withContent($content)
     ->withHeader('Content-Type', 'application/xml; charset=UTF-8')
     ->send();
 }

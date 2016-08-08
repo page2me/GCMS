@@ -123,13 +123,13 @@ class Model extends \Kotchasan\Model
         $response->withHeaders(array(
           'Content-Type' => 'application/force-download',
           'Content-Disposition' => 'attachment; filename='.$fname
-        ))->setContent(preg_replace(array('/[\\\\]+/', '/\\\"/'), array('\\', '"'), implode("\r\n", $sqls)))->send();
+        ))->withContent(preg_replace(array('/[\\\\]+/', '/\\\"/'), array('\\', '"'), implode("\r\n", $sqls)))->send();
         exit;
       }
     }
     // ไม่สามารถดาวน์โหลดได้
     $response = new Response(404);
-    $response->setContent('File Not Found!')->send();
+    $response->withContent('File Not Found!')->send();
   }
 
   /**

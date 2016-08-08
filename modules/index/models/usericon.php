@@ -50,7 +50,7 @@ class Model extends \Kotchasan\Model
             // image header
             'Content-type' => $info['mime']
           ))
-          ->setContent(file_get_contents($icon))
+          ->withContent(file_get_contents($icon))
           ->send();
       }
     }
