@@ -36,6 +36,7 @@ class Settings extends \Kotchasan\KBase
         // โหลด config
         $config = Config::load(ROOT_PATH.'settings/config.php');
         // ค่าที่ส่งมา
+        $config->map_api_key = self::$request->post('map_api_key')->topic();
         $config->map_height = max(100, self::$request->post('map_height')->toInt());
         $config->map_zoom = max(1, self::$request->post('map_zoom')->toInt());
         $config->map_latitude = self::$request->post('map_latitude')->topic();

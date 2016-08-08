@@ -29,15 +29,16 @@ class Settings extends \Kotchasan\View
    */
   public function render()
   {
-    // google map
-    Gcms::$view->addJavascript('//maps.google.com/maps/api/js?sensor=false&amp;language='.Language::name());
     // default
+    self::$cfg->map_api_key = isset(self::$cfg->map_api_key) ? self::$cfg->map_api_key : '';
     self::$cfg->map_height = isset(self::$cfg->map_height) ? self::$cfg->map_height : 400;
     self::$cfg->map_zoom = isset(self::$cfg->map_zoom) ? self::$cfg->map_zoom : 14;
     self::$cfg->map_latitude = isset(self::$cfg->map_latitude) ? self::$cfg->map_latitude : '14.132081110519639';
     self::$cfg->map_lantigude = isset(self::$cfg->map_lantigude) ? self::$cfg->map_lantigude : '99.69822406768799';
     self::$cfg->map_info_latigude = isset(self::$cfg->map_info_latigude) ? self::$cfg->map_info_latigude : '14.132081110519639';
     self::$cfg->map_info_lantigude = isset(self::$cfg->map_info_lantigude) ? self::$cfg->map_info_lantigude : '99.69822406768799';
+    // google map
+    Gcms::$view->addJavascript('//maps.google.com/maps/api/js?key='.self::$cfg->map_api_key.'&amp;language='.Language::name());
     // form
     $form = Html::create('form', array(
         'id' => 'setup_frm',
@@ -48,7 +49,18 @@ class Settings extends \Kotchasan\View
         'ajax' => true
     ));
     $fieldset = $form->add('fieldset', array(
-      'title' => Language::get('Determine the size and position of the map')
+      'title' => '{LNG_Config}'
+    ));
+    // map_api_key
+    $fieldset->add('text', array(
+      'id' => 'map_api_key',
+      'labelClass' => 'g-input icon-google',
+      'label' => '{LNG_Google API Key}',
+      'itemClass' => 'item',
+      'value' => self::$cfg->map_api_key
+    ));
+    $fieldset = $form->add('fieldset', array(
+      'title' => '{LNG_Determine the size and position of the map}'
     ));
     $groups = $fieldset->add('groups-table');
     // map_height

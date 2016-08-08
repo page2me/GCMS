@@ -32,7 +32,7 @@ class Map extends \Kotchasan\View
     $map[] = 'html,body,#map_canvas{height:100%}';
     $map[] = 'body{margin:0 auto;padding:0;font-family:Tahoma;font-size:12px;text-align:center;line-height:1.5em}';
     $map[] = '</style>';
-    $map[] = '<script src="//maps.google.com/maps/api/js?sensor=false&language='.Language::name().'"></script>';
+    $map[] = '<script src="//maps.google.com/maps/api/js?key='.(empty(self::$cfg->map_api_key) ? '' : self::$cfg->map_api_key).'&language='.Language::name().'"></script>';
     $map[] = '<meta charset=utf-8>';
     $map[] = '<script>';
     $map[] = 'function initialize() {';
