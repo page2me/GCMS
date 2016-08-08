@@ -37,16 +37,8 @@ class Model extends \Kotchasan\KBase
       if (is_file($counter_dat)) {
         foreach (file($counter_dat) AS $a => $item) {
           list($sid, $sip, $sref, $sagent, $time) = explode(chr(1), $item);
-          if (preg_match_all('%(?P<browser>Camino|Kindle(\ Fire)?|Firefox|Iceweasel|Safari|MSIE|Trident|AppleWebKit|TizenBrowser|Chrome|
-				Vivaldi|IEMobile|Opera|OPR|Silk|Midori|Edge|CriOS|
-				Baiduspider|Googlebot|YandexBot|bingbot|Lynx|Version|Wget|curl|MJ12bot|DotBot|
-				Valve\ Steam\ Tenfoot|
-				NintendoBrowser|PLAYSTATION\ (\d|Vita)+)
-				(?:\)?;?)
-				(?:(?:[:/ ])(?P<version>[0-9._A-Z]+)|/(?:[A-Z]*))%ix', $sagent, $result, PREG_PATTERN_ORDER)) {
+          if (preg_match_all('%(?P<browser>Firefox|Safari|MSIE|AppleWebKit|bingbot|MJ12bot|Baiduspider|Googlebot|DotBot|Twitterbot|LivelapBot|facebookexternalhit|StatusNet|PaperLiBot|SurdotlyBot|Trident|archive\.org_bot|Yahoo\!\sSlurp|Go[a-z\-]+)([\/\s](?P<version>[^;\s]+))?%ix', $sagent, $result, PREG_PATTERN_ORDER)) {
             $sagent = '<span title="'.$sagent.'">'.$result['browser'][0].(empty($result['version'][0]) ? '' : '/'.$result['version'][0]).'</span>';
-          } elseif (preg_match('%^(?!Mozilla)(?P<browser>[A-Z0-9\-]+)(/(?P<version>v?[0-9._A-Z]+))?%ix', $sagent, $result)) {
-            $sagent = '<span title="'.$sagent.'">'.$result['browser'].(empty($result['version']) ? '' : '/'.$result['version']).'</span>';
           } elseif ($sagent != '') {
             $sagent = '<span title="'.$sagent.'">unknown</span>';
           }
