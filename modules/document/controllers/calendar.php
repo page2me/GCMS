@@ -1,0 +1,102 @@
+<?php
+/*
+ * @filesource document/controllers/calendar.php
+ * @link http://www.kotchasan.com/
+ * @copyright 2016 Goragod.com
+ * @license http://www.kotchasan.com/license/
+ */
+
+namespace Document\Calendar;
+
+use \Kotchasan\Http\Request;
+use \Kotchasan\Date;
+use \Gcms\Gcms;
+use \Kotchasan\Language;
+
+/**
+ *  Model สำหรับอ่านข้อมูลโมดูล
+ *
+ * @author Goragod Wiriya <admin@goragod.com>
+ *
+ * @since 1.0
+ */
+class Controller extends \Kotchasan\Controller
+{
+
+  /**
+   * หน้าแสดงบทความจากวันที่
+   *
+   * @param Request $request
+   * @param Object $module ข้อมูลโมดูลจาก database
+   * @return Object
+   */
+  public function init(Request $request, $module)
+  {
+    // ลิสต์รายการ tag
+    $index = \Document\Stories\Model::calendar($request, $module);
+    if (empty($index)) {
+      // 404
+      $list = createClass('Index\PageNotFound\Controller')->init($request, 'document');
+    } else {
+      // ลิสต์รายการ tag
+      $index->module = 'document';
+      $index->list_per_page = 20;
+      $index->new_date = 0;
+      $index->topic = Language::get('Articles written at').' '.Date::format($index->d, 'd M Y');
+      $index->description = $index->topic;
+      $index->keywords = $index->topic;
+      $index->detail = '';
+      $list = createClass('Document\Stories\View')->index($request, $index);
+    }
+    return $list;
+  }
+
+  /**
+   * ฟังก์ชั่นอ่านข้อมูลสำหรับการแสดงบนปฏิทิน
+   *
+   * @param array $settings ค่ากำหนดของปฎิทิน
+   * @param int $first_date วันที่ 1 (mktime)
+   * @param int $first_next_month วันที่ 1 ของเดือนถัดไป (mktime)
+   * @return array
+   */
+  public function calendar($settings, $first_date, $first_next_month)
+  {
+    return createClass('Document\Calendar\Model')->calendar($settings, $first_date, $first_next_month);
+  }
+
+  /**
+   * ฟังก์ชั่นเรียมาจากปฏิทินเพื่อแสดงทูลทิป
+   *
+   * @param Request $request
+   * @param array $query_string ค่าที่ส่งมาจาก tooltip
+   * @param array $settings ค่ากำหนด
+   */
+  public function tooltip(Request $request, $settings)
+  {
+    if (preg_match('/^calendar\-([0-9]+){0,2}\-([0-9]+){0,2}\-([0-9]+){0,4}\-([0-9_]+)$/', $request->get('id')->toString(), $match)) {
+      $ids = array();
+      foreach (explode('_', $match[4]) as $id) {
+        $ids[] = (int)$id;
+      }
+      if (!empty($ids)) {
+        echo '<div id=calendar-tooltip>';
+        echo '<h5>'.Date::format("$match[3]-$match[2]-$match[1]", 'd M Y').'</h5>';
+        foreach (createClass('Document\Calendar\Model')->tooltip($ids, $settings) as $item) {
+          echo '<a href="'.WEB_URL.'index.php?module='.$item['module'].'&amp;id='.$item['id'].'" title="'.$item['description'].'">'.$item['topic'].'</a>';
+        }
+        echo '</div>';
+      }
+    }
+  }
+
+  /**
+   * สร้าง URL สำหรับการแสดงรายการภสยในวันที่เลือก
+   *
+   * @param string $d วันที่
+   * @return string
+   */
+  public function url($d)
+  {
+    return Gcms::createUrl('calendar', $d);
+  }
+}

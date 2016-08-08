@@ -1,0 +1,224 @@
+/*
+ Name: Go To School
+ Description: แม่แบบสองคอลัมน์ ยอดนิยม สำหรับเว็บไซต์โรงเรียน
+ Author: Goragod.com
+ Author URI: http://www.goragod.com
+ Responsive
+*/
+body {
+  background-color: #EEE;
+  color: #666;
+}
+#top_header {
+  background-color: #333;
+  color: #DDD;
+  white-space: nowrap;
+  line-height: 24px;
+}
+@media only screen and (max-width: 768px) {
+  #top_header {
+    white-space: normal;
+  }
+  #top_header div.td, #top_header div.table {
+    display: block;
+    text-align: center !important;
+  }
+}
+#logo {
+  background-image: url(img/logo.jpg);
+  height: 200px;
+  color: transparent;
+}
+#login_frm fieldset {
+  display: inline-block;
+}
+#login_editprofile:after {
+  border-width: 7px;
+  border-style: solid solid none solid;
+  border-color: #DDD transparent #DDD transparent;
+  content: "";
+  display: inline-block;
+  margin-left: 5px;
+}
+#login_editprofile:hover:after {
+  border-color: #FFF transparent #FFF transparent;
+}
+.sidebar section.widget-like {
+  text-align: right;
+}
+.sidebar section.social-box {
+  clear: both;
+  text-align: center;
+  padding-bottom: 10px;
+}
+.sidebar #widget-search-form {
+  padding: 3px;
+  border: 1px solid #EEE;
+}
+.sidebar .gallery-box .table_rss_gallery_class a {
+  border: 1px solid #DDD;
+}
+.sidebar_bg_color {
+  background-color: #FFF;
+  padding: 10px;
+}
+#text-links, .footer {
+  padding: 10px;
+  overflow: hidden;
+}
+.footer_bg_color {
+  background-color: #313131;
+  color: #FFF;
+}
+.footer a {
+  color: #FFC459;
+}
+#register_frm dl.info {
+  border: 1px dashed #DDD;
+  padding: 5px 10px;
+  line-height: 1.8em;
+  margin-top: 8px;
+}
+#register_frm dl.info dt {
+  padding-bottom: 5px;
+}
+.member_section, .tab > ul > li.select > a {
+  background-color: #FFF;
+}
+.reaction {
+  background-color: #F9F7EE;
+  overflow: hidden;
+  white-space: nowrap;
+  clear: both;
+}
+#document-view .reaction p {
+  margin: 0;
+}
+#board-view div.body {
+  margin-bottom: 0;
+}
+fieldset > legend > span, .bdr_content header > h3.icon-tags {
+  font-size: 1.4em;
+  padding-top: 10px;
+  overflow: hidden;
+  display: inline-block;
+}
+#comment-list {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#comment-list .r {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+#comment-list .r-body > .detail {
+  z-Index: 2;
+  margin-left: 60px;
+  position: relative;
+}
+#comment-list .r > .reaction {
+  text-align: right;
+}
+#comment-list .r-body > img.usericon {
+  float: left;
+  margin: 0 10px 10px 0;
+}
+nav.breadcrumbs {
+  background-color: #F5F5F5;
+  padding: 5px 1%;
+  position: absolute;
+  top: 0;
+  left: -1%;
+  width: 102%;
+}
+nav.breadcrumbs li a {
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4), -1px -1px 0 rgba(255,255,255,0.2);
+}
+nav.breadcrumbs li:before {
+  border-width: 5px;
+  border-style: solid none solid solid;
+  border-color: transparent #33CCFF;
+  content: "";
+  display: inline-block;
+}
+.widget_bg_color, .homepage .widget, .bdr_content {
+  background-color: #FFF;
+}
+.bdr_content {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #DDD;
+  box-shadow: 0 0 2px rgba(0,0,0,0.1);
+  padding: 0 1% 1%;
+}
+.homepage .bdr_content {
+  margin-bottom: 1%;
+}
+.homepage .bdr_content {
+  padding: 1%;
+}
+.bdr_content > header {
+  padding: 2.3em 0 0;
+}
+.widget > header > h2,
+.member_section > header > h2,
+.bdr_content header h2 {
+  line-height: 2.3em;
+}
+.bdr_content > header, header.header {
+  position: relative;
+  margin-bottom: 1%;
+}
+.widget header {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.homepage header {
+  margin-bottom: 0;
+}
+.homepage .bar1 {
+  background-color: #FF6600;
+  color: #FFF;
+}
+.homepage .bar2 {
+  background-color: #8C153B;
+  color: #FFF;
+}
+.homepage .bartop {
+  background-color: #691F74;
+  color: #FFF;
+}
+.homepage .icon-next {
+  margin: 5px;
+  display: inline-block;
+}
+.menu_wrapper .topmenu {
+  background-color: #333;
+}
+.menu_wrapper .topmenu > ul > li > a {
+  border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.2) rgba(0,0,0,0.2);
+  border-width: 1px;
+  border-style: solid;
+  text-shadow: -1px -1px 0 rgba(0,0,0,0.4), 1px 1px 0 rgba(0,0,0,0.2);
+  color: #A5A5A5;
+}
+.menu_wrapper .topmenu > ul > li:hover > a, .menu_wrapper .topmenu > ul > li.select > a {
+  background-color: #FFC459;
+  color: #2C2C2C;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4), -1px -1px 0 rgba(255,255,255,0.2);
+}
+.sidemenu {
+  border: 1px solid #DDD;
+  padding: 5px;
+}
+.sidemenu li {
+  border-bottom: 1px solid #DDD;
+}
+#GModal_modaldiv > .modaldiv form {
+  padding: 10px;
+  background-color: #FFF;
+}
+.mainform p {
+  padding-left: 0;
+  padding-right: 0;
+}

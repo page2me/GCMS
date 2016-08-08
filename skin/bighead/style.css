@@ -1,0 +1,270 @@
+/*
+ Name: BigHead
+ Description: Template เริ่มต้นสำหรับ GCMS แบบ 1 คอลัมน์ Header ขนาดใหญ่
+ Author: Goragod.com
+ Author URI: http://www.goragod.com
+ Responsive
+*/
+body {
+  font-size: 16px;
+  color: #777;
+  height: 100%;
+  line-height: 2;
+}
+a {
+  color: #CC3300;
+}
+a:hover {
+  color: #000;
+}
+.topic {
+  font-weight: normal;
+}
+.gcss-wrapper {
+  width: 1170px;
+}
+.top-fixed {
+  z-index: 2;
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  line-height: 2.5em;
+  padding: 1em 0;
+  -webkit-transition: all .2s ease-in-out;
+  -moz-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+}
+.toTop .top-fixed {
+  background-color: #67B0D1;
+  padding: 0;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  border-bottom: 1px solid #FFF;
+}
+.header_bg {
+  background-size: cover;
+  background-attachment: fixed;
+  background-image: url(img/head_bg.jpg);
+  background-position: top center;
+  height: 100%;
+  position: relative;
+}
+.header .td {
+  vertical-align: middle;
+}
+.header h1 {
+  padding: 0;
+  font-size: 2.5em;
+  color: #FFF;
+  font-family: Arial;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+.header .description {
+  display: block;
+  padding: 0;
+  color: #FFF;
+  font-size: 2em;
+  text-align: center;
+  line-height: 1.5;
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  margin-top: -2em;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+.topmenu > ul {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.toTop .topmenu > ul {
+  background-color: transparent;
+}
+.toTop .topmenu > ul > li > a {
+  color: #EEE;
+}
+.topmenu > ul > li.select > a {
+  background-color: #FFF;
+}
+.topmenu > ul > li:hover > a {
+  color: #000;
+}
+.toTop .topmenu > ul > li.select > a {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.toTop .topmenu > ul > li:hover > a {
+  color: #FFF;
+}
+.footer_bg_color {
+  background-color: #222;
+  color: #999;
+  text-align: center;
+  padding: 4% 2.5%;
+  font-size: 0.8em;
+}
+.footer-scroller {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 50em;
+  -moz-border-radius: 50em;
+  -webkit-border-radius: 50em;
+  width: 1.4em;
+  height: 1.4em;
+  line-height: 1.7;
+  text-align: center;
+  display: block;
+  margin: 0 auto 1%;
+  font-size: 2.2em;
+  font-family: Tahoma;
+  -webkit-transition: all .2s ease-in-out;
+  -moz-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+}
+.footer-scroller:hover {
+  color: #FFF;
+}
+.content header > h2 {
+  font-size: 3em;
+  margin: 30px 0;
+  text-align: center;
+  text-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
+}
+.breadcrumbs {
+  text-align: center;
+  margin-top: -20px;
+  margin-bottom: 50px;
+}
+.text-links, .footer_grid, .wrapper_top_bg {
+  padding: 20px 0;
+}
+.text-links {
+  background-color: #F7F7F7;
+  border-top: 1px solid #EEE;
+}
+#login-box a {
+  display: block;
+}
+.search-box {
+  background-color: #E89980;
+  padding: 10px;
+  margin-bottom: 30px;
+  color: #EEE;
+}
+.widget_share {
+  font-size: 1.3em;
+}
+.footer_grid {
+  background-color: #262626;
+  color: #999;
+}
+.footer_grid a {
+  color: inherit;
+}
+.footer_grid a:hover {
+  color: #FFF;
+}
+.footer_grid header {
+  margin-bottom: 20px;
+}
+.footer_grid header > h3 {
+  color: #FFF;
+  display: inline-block;
+  text-transform: uppercase;
+}
+.footer_grid ul {
+  padding: 0 0 30px 0;
+  list-style-type: none;
+}
+.footer_grid .news .topic {
+  font-weight: normal;
+}
+.footer_grid .news article {
+  padding: 0 !important;
+  border-style: none;
+  display: block;
+}
+.footer_grid .news img {
+  border-radius: 50em;
+  -moz-border-radius: 50em;
+  -webkit-border-radius: 50em;
+}
+.footer_grid #usericon {
+  margin-top: 0.7em;
+}
+#comment-list .post-detail {
+  border: 1px solid #d1e9ed;
+  background-color: #f6fbfc;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  min-height: 6em;
+  padding: 10px;
+  margin-left: 90px;
+}
+#comment-list .post-detail:after {
+  position: absolute;
+  content: '';
+  left: -10px;
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right:10px solid #f6fbfc;
+}
+#comment-list .post-detail:before {
+  position: absolute;
+  content: '';
+  left: -11px;
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right:10px solid #d1e9ed;
+}
+#comment-list .no {
+  color: #cee7ec;
+  font-size: 500%;
+  font-family: Courier;
+  line-height: 1;
+  font-stretch: condensed;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  -moz-opacity: .40;
+  filter: alpha(opacity=40);
+  opacity: .40;
+}
+#document-view .q .reaction {
+  background-color: #FFFFDD;
+}
+.bdr_content header > h3.icon-tags, .mainform fieldset > legend {
+  font-size: 1.4em;
+}
+dl.info {
+  padding: 10px;
+  border: 1px dashed #DDD;
+  background-color: #F9F9F9;
+}
+#GModal_modaldiv > div.modaldiv form {
+  padding: 10px;
+  background-color: #FFF;
+}
+@media only screen and (max-width: 960px) {
+  .responsive .header .table, .responsive .header .td {
+    display: block;
+    width: auto;
+    text-align: center;
+  }
+  .responsive .top-fixed {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+@media only screen and (max-width: 480px) {
+  .content header > h2 {
+    font-size: 2em;
+  }
+}

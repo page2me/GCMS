@@ -1,0 +1,33 @@
+<?php
+/*
+ * @filesource Widgets/Gallery/Controllers/Index.php
+ * @link http://www.kotchasan.com/
+ * @copyright 2016 Goragod.com
+ * @license http://www.kotchasan.com/license/
+ */
+
+namespace Widgets\Gallery\Controllers;
+
+/**
+ * Controller หลัก สำหรับแสดงผล Widget
+ *
+ * @author Goragod Wiriya <admin@goragod.com>
+ *
+ * @since 1.0
+ */
+class Index extends \Kotchasan\Controller
+{
+
+  /**
+   * แสดงผล Widget
+   *
+   * @param array $query_string ข้อมูลที่ส่งมาจากการเรียก Widget
+   * @return string
+   */
+  public function get($query_string)
+  {
+    if (!empty(self::$cfg->rss_gallery)) {
+      return "<div id=rss_gallery></div><script>new RSSGal(".json_encode(self::$cfg->rss_gallery).").show('rss_gallery');</script>";
+    }
+  }
+}

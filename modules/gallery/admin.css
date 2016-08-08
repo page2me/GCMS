@@ -1,0 +1,99 @@
+#tb_upload {
+  overflow: hidden;
+  clear: both;
+  padding: 0.7% 0 0 0.7%;
+}
+#tb_upload .icon-uncheck,
+#tb_upload .icon-check {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0;
+  width: 2em;
+  height: 2em;
+  border-radius: 0 0 0 3em;
+  -moz-border-radius: 0 0 0 3em;
+  -webkit-border-radius: 0 0 0 3em;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#tb_upload .icon-uncheck:before,
+#tb_upload .icon-check:before {
+  color: #FFF;
+  margin-right: -5px;
+}
+#tb_upload a {
+  display: inline-block;
+}
+#tb_upload .item {
+  margin: 0 0.7% 0.7% 0;
+  width: 19.3%;
+  float: left;
+  text-align: center;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  #gallery_upload #tb_upload .item {
+    width: 49.3%;
+  }
+}
+@media only screen and (max-width: 480px) {
+  #gallery_upload #tb_upload .item {
+    width: auto;
+    margin: 0 10px 10px 10px;
+    float: none;
+    padding-right: 0.7%;
+  }
+}
+#tb_upload figure {
+  position: relative;
+  border-width: 3px;
+  border-style: solid;
+  border-color: #DDD;
+  border-color: rgba(0,0,0,0.3);
+}
+#gallery_upload #tb_upload img {
+  width: 100%;
+}
+#gallery_upload #fsUploadProgress {
+  margin: 5px 0.7% 5px 0;
+}
+#gallery_upload #fsUploadProgress p {
+  border-bottom: 1px dotted #999999;
+  padding: 2px 0;
+  margin: 0 10px;
+}
+#gallery_upload #fsUploadProgress p * {
+  padding: 2px 0;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+#gallery_upload #fsUploadProgress img {
+  max-width: 100px;
+  max-height: 100px;
+}
+#gallery_upload .bar_graphs {
+  position: relative;
+  border: 1px solid #EEE;
+  display: block;
+  width: 300px;
+  max-width: 100%;
+  height: 5px;
+}
+#gallery_upload .value_graphs {
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: #E8B5E8;
+  position: absolute;
+}
+#gallery_upload .value_graphs.valid {
+  background-color: #A4C592;
+}
+#gallery_upload .value_graphs.invalid {
+  background-color: #F00;
+}
