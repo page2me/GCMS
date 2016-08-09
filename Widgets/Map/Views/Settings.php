@@ -108,7 +108,7 @@ class Settings extends \Kotchasan\View
       'id' => 'find_me',
       'itemClass' => 'width bottom',
       'title' => '{LNG_Find me}',
-      'class' => 'button go icon-gps'
+      'class' => 'button hidden go icon-gps'
     ));
     $groups->add('button', array(
       'id' => 'map_search',

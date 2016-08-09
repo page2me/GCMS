@@ -1,12 +1,20 @@
 var my_map, my_marker;
 function findMe() {
   if (navigator.geolocation) {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+    function error(err) {
+      alert(err.message);
+    }
     navigator.geolocation.getCurrentPosition(function (pos) {
       var myLatlng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
       my_map.setCenter(myLatlng);
       my_marker.setPosition(myLatlng);
       mapChanged();
-    });
+    }, error, options);
   }
 }
 function findLocation() {
