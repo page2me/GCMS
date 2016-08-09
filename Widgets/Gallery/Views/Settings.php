@@ -28,11 +28,7 @@ class Settings extends \Kotchasan\View
   public function render()
   {
     if (empty(self::$cfg->rss_gallery)) {
-      self::$cfg->rss_gallery = array(
-        'rows' => 3,
-        'cols' => 2,
-        'url' => 'http://gallery.gcms.in.th/gallery.rss'
-      );
+      self::$cfg->rss_gallery = \Widgets\Gallery\Models\Settings::defaultSettings();
     }
     // form
     $form = Html::create('form', array(

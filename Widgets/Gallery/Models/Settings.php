@@ -24,6 +24,20 @@ class Settings extends \Kotchasan\KBase
 {
 
   /**
+   * ค่าติดตั้งเรื่มต้น
+   *
+   * @return array
+   */
+  public static function defaultSettings()
+  {
+    return array(
+      'rows' => 2,
+      'cols' => 2,
+      'url' => 'http://gallery.gcms.in.th/gallery.rss'
+    );
+  }
+
+  /**
    * form submit
    */
   public function save(Request $request)

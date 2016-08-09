@@ -26,8 +26,9 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-    if (!empty(self::$cfg->rss_gallery)) {
-      return "<div id=rss_gallery></div><script>new RSSGal(".json_encode(self::$cfg->rss_gallery).").show('rss_gallery');</script>";
+    if (empty(self::$cfg->rss_gallery)) {
+      self::$cfg->rss_gallery = \Widgets\Gallery\Models\Settings::defaultSettings();
     }
+    return "<div id=rss_gallery></div><script>new RSSGal(".json_encode(self::$cfg->rss_gallery).").show('rss_gallery');</script>";
   }
 }
