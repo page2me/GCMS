@@ -41,20 +41,19 @@ class Map extends \Kotchasan\View
     $map[] = 'zoom:'.$request->get('zoom', 14)->toInt().',';
     $map[] = 'center:myLatlng,';
     $map[] = 'mapTypeId:google.maps.MapTypeId.ROADMAP';
-    $map[] = '}';
+    $map[] = '};';
     $map[] = 'var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);';
     $info = $request->get('info')->toString();
     if (!empty($info)) {
       $map[] = "var infowindow = new google.maps.InfoWindow({content:'".nl2br(str_replace(array('&lt;', '&gt;', '&#92;'), array('<', '>', '\\'), $info))."'});";
       $map[] = 'var info = new google.maps.LatLng("'.$request->get('info_lat')->topic().'","'.$request->get('info_lant')->topic().'");';
       $map[] = 'var marker = new google.maps.Marker({position:info,map:map});';
-
       $map[] = 'infowindow.open(map,marker);';
       $map[] = 'google.maps.event.addListener(marker,"click",function(){';
       $map[] = 'infowindow.open(map,marker);';
-      $map[] = '})';
-      $map[] = '}';
+      $map[] = '});';
     }
+    $map[] = '}';
     $map[] = '</script>';
     $map[] = '</head>';
     $map[] = '<body onload="initialize()">';
