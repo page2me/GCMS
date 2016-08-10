@@ -130,7 +130,7 @@ class Config extends \Kotchasan\Config
    *
    * @var int
    */
-  public $use_ajax = 0;
+  public $use_ajax = 1;
   /**
    * เวลาสำหรับการตรวจสอบคนออนไลน์ (วินาที)
    * 0 หมายถึงไม่มีการตรวจสอบคนออนไลน์
@@ -145,4 +145,29 @@ class Config extends \Kotchasan\Config
    * @var int
    */
   public $counter_gap = 60;
+  /**
+   * ชื่อเว็บไซต์
+   *
+   * @var string
+   */
+  public $web_title = 'GCMS Ajax CMS';
+  /**
+   * คำอธิบายเกี่ยวกับเว็บไซต์
+   *
+   * @var string
+   */
+  public $web_description = 'ระบบบริหารจัดการเว็บไซต์ (CMS) ด้วย Ajax โดยคนไทย';
+  /**
+   * template ที่กำลังใช้งานอยู่ (ชื่อโฟลเดอร์)
+   *
+   * @var string
+   */
+  public $skin = 'bighead';
+  /**
+   * กำหนดอายุของแคช (วินาที)
+   * 0 หมายถึงไม่มีการใช้งานแคช
+   *
+   * @var int
+   */
+  public $cache_expire = 5;
 }
