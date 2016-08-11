@@ -46,6 +46,7 @@ class Controller extends \Kotchasan\Controller
             if ($action == 'use') {
               // skin ที่กำหนด
               $config->skin = $theme;
+              unset($_SESSION['skin']);
               // บันทึก config.php
               if (Config::save($config, ROOT_PATH.'settings/config.php')) {
                 self::$request->setSession('my_skin', $config->skin);
