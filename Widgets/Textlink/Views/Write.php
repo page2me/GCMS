@@ -64,6 +64,7 @@ class Write extends \Kotchasan\View
       'id' => 'description',
       'labelClass' => 'g-input icon-file',
       'itemClass' => 'item',
+      'label' => '{LNG_Description}',
       'comment' => '{LNG_Notes or short description of the link}',
       'maxlength' => 49,
       'value' => $index->description

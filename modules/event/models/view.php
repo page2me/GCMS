@@ -31,7 +31,7 @@ class Model extends \Kotchasan\Model
   {
     $model = new static;
     $search = $model->db()->createQuery()
-      ->from('eventcalendar D')
+      ->from('event D')
       ->join('user U', 'LEFT', array('U.id', 'D.member_id'))
       ->where(array(array('D.id', $request->request('id')->toInt()), array('D.module_id', (int)$index->module_id)))
       ->cacheOn()

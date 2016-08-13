@@ -29,7 +29,7 @@ class Model extends \Kotchasan\Model
     $model = new static;
     return $model->db()->createQuery()
         ->select('D.id', 'D.topic', 'D.color', 'M.module', 'DAY(D.`begin_date`) AS `d`')
-        ->from('eventcalendar D')
+        ->from('event D')
         ->join('modules M', 'INNER', array(array('M.id', 'D.module_id'), array('M.owner', 'event')))
         ->where(array(
           array('MONTH(D.`begin_date`)', $month),

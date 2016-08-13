@@ -124,6 +124,8 @@ class Model extends \Kotchasan\Orm\Field
               $model->db()->createQuery()->delete('comment', array(array('index_id', $id), array('module_id', (int)$index->module_id)))->execute();
               // อัปเดทจำนวนเรื่อง และ ความคิดเห็น ในหมวด
               \Document\Admin\Write\Model::updateCategories((int)$index->module_id);
+              // คืนค่า
+              $ret['location'] = 'reload';
             }
           } elseif ($action === 'can_reply') {
             // การแสดงความคิดเห็น

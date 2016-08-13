@@ -30,7 +30,7 @@ return array(
     'video' => 'video',
     'edocument' => 'edocument',
     'edocument_download' => 'edocument_download',
-    'eventcalendar' => 'eventcalendar',
+    'event' => 'eventcalendar',
     'textlink' => 'textlink',
     'tags' => 'tags',
   ),

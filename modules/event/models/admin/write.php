@@ -106,7 +106,7 @@ class Model extends \Kotchasan\Model
           }
           // detail
           if ($save['detail'] == '') {
-            $ret['ret_detail'] = Language::get('Please fill in').' '.'{LNG_Detail}';
+            $ret['ret_detail'] = Language::get('Please fill in').' '.Language::get('Detail');
             $error = true;
           } else {
             $ret['ret_detail'] = '';

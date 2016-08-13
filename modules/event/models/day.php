@@ -36,7 +36,7 @@ class Model extends \Kotchasan\Model
       $model = new static;
       $index->items = $model->db()->createQuery()
         ->select('id', 'color', 'topic', 'description', 'begin_date', 'end_date')
-        ->from('eventcalendar')
+        ->from('event')
         ->where(array(
           array('YEAR(`begin_date`)', $index->year),
           array('MONTH(`begin_date`)', $index->month),
