@@ -35,6 +35,7 @@ GCMS เหมาะสมสำหรับการทำเว็บไซต
 ```
 ALTER TABLE `yourprefix_user` ADD `ban` INT( 11 ) UNSIGNED NOT NULL ;
 ALTER TABLE `yourprefix_eventcalendar` ADD `end_date` DATETIME NOT NULL AFTER `begin_date` ;
+ALTER TABLE `yourprefix_eventcalendar` CHANGE `create_date` `create_date` DATETIME NOT NULL ;
 ```
 * ทดสอบเรียกเว็บไซต์ โดยเข้าระบบแอดมิน
 * ตรวจสอบค่าติดตั้งต่างๆตามโมดูล และ ส่วนเสริมต่างๆให้เรียบร้อย โดย```กดบันทึก```ใหม่ทุกรายการ
