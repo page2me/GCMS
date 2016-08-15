@@ -52,6 +52,17 @@ class View extends \Kotchasan\View
       'maxlength' => 50,
       'value' => isset($index->name) ? $index->name : ''
     ));
+    // reciever
+    $fieldset->add('checkboxgroups', array(
+      'id' => 'reciever',
+      'name' => 'reciever[]',
+      'labelClass' => 'g-input icon-group',
+      'itemClass' => 'item',
+      'label' => '{LNG_Select the group of recipients}',
+      'comment' => '{LNG_The recipient is listed in the selected group can be downloaded (You can select multiple groups)}',
+      'options' => \Kotchasan\ArrayTool::merge(array(-1 => '{LNG_Guest}'), self::$cfg->member_status),
+      'value' => $index->reciever
+    ));
     // detail
     $fieldset->add('text', array(
       'id' => 'detail',

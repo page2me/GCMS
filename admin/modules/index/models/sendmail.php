@@ -108,7 +108,7 @@ class Model extends \Kotchasan\Model
           if (empty($err)) {
             // ส่งอีเมล์สำเร็จ
             $ret['alert'] = Language::get('Your message was sent successfully');
-            $ret['location'] = self::$request->getUri()->postBack('index.php', array('id' => 0));
+            $ret['location'] = 'reload';
           } else {
             // ข้อผิดพลาดการส่งอีเมล์
             $ret['alert'] = $err;

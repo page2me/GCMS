@@ -646,7 +646,7 @@ return array(
   'Download' => 'ดาวน์โหลด',
   'Download file' => 'ไฟล์ดาวน์โหลด',
   'File Name' => 'ชื่อไฟล์',
-  'The name of the file you want to download it the file name extension. To upload a new file name if not specified. The program uses the name of a file to upload. (Can be used in Thai language)' => 'ชื่อของไฟล์ที่ต้องการเมื่อดาวน์โหลดไม่ต้องระบุนามสกุลของไฟล์ อัปโหลดครั้งแรกถ้าไม่ระบุชื่อโปรแกรมจะใช้ชื่อของไฟล์ที่อัปโหลดให้ (สามารถใช้ภาษาไทยได้)',
+  'The name of the file you want to download it the file name extension. To upload a new file name if not specified. The program uses the name of a file to upload. (Can be used in Thai language)' => 'ชื่อของไฟล์ที่ต้องการเมื่อดาวน์โหลด ไม่ต้องระบุนามสกุลของไฟล์ อัปโหลดครั้งแรกถ้าไม่ระบุชื่อโปรแกรมจะใช้ชื่อของไฟล์ที่อัปโหลดให้ (สามารถใช้ภาษาไทยได้)',
   'Brief details about the file. (Page may be downloaded).' => 'รายละเอียดสั้นๆเกี่ยวกับไฟล์ (อาจใช้แสดงในหน้าดาวน์โหลดได้)',
   'Name include file path' => 'ชื่อและที่อยู่ไฟล์',
   'The name and address files such as upload/file.ext. If a file is already on the Server, or upload them below.' => 'ระบุชื่อและที่อยู่ที่เก็บไฟล์ เช่น upload/file.ext หากมีไฟล์อยู่บน Server อยู่แล้ว หรืออัปโหลดไฟล์ด้านล่าง',
@@ -694,7 +694,7 @@ return array(
   'forever' => 'ตลอดไป',
   'Enter the number of documents For reference' => 'ระบุเลขที่ของเอกสาร ใช้สำหรับอ้างอิงเอกสาร',
   'Select the group of recipients' => 'เลือกกลุ่มผู้รับ',
-  'The recipient is a group that can choose to download the document. (You can select multiple groups).' => 'ผู้รับที่มีสถานะอยู่ในกลุ่มที่เลือกสามารถดาวน์โหลดเอกสารได้ (สามารถเลือกได้หลายกลุ่ม)',
+  'The recipient is listed in the selected group can be downloaded (You can select multiple groups)' => 'ผู้รับที่มีสถานะอยู่ในกลุ่มที่เลือก สามารถดาวน์โหลดได้ (สามารถเลือกได้หลายกลุ่ม)',
   'Document title' => 'ชื่อเอกสาร',
   'Additional notes of explanation or documentation' => 'คำอธิบายหรือหมายเหตุเพิ่มเติมของเอกสาร',
   'Send an email to members' => 'ส่งอีเมล์แจ้งไปยังสมาชิกด้วย',
@@ -735,5 +735,6 @@ return array(
   'Speed' => 'ความเร็ว',
   'Style' => 'รูปแบบ',
   'Clicked' => 'คลิก',
-  'Views' => 'เปิดดู'
+  'Views' => 'เปิดดู',
+  'Please select :name at least one item' => 'กรุณาเลือก :name อย่างน้อย 1 รายการ'
 );

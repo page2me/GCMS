@@ -53,17 +53,15 @@ class View extends \Kotchasan\View
       'value' => isset($index->document_no) ? $index->document_no : ''
     ));
     // reciever
-    $fieldset->add('select', array(
+    $fieldset->add('checkboxgroups', array(
       'id' => 'reciever',
       'name' => 'reciever[]',
       'labelClass' => 'g-input icon-group',
       'itemClass' => 'item',
       'label' => '{LNG_Select the group of recipients}',
-      'comment' => '{LNG_The recipient is a group that can choose to download the document. (You can select multiple groups).}',
+      'comment' => '{LNG_The recipient is listed in the selected group can be downloaded (You can select multiple groups)}',
       'options' => \Kotchasan\ArrayTool::merge(array(-1 => '{LNG_Guest}'), self::$cfg->member_status),
-      'multiple' => true,
-      'size' => 3,
-      'value' => isset($index->reciever) ? $index->reciever : array()
+      'value' => $index->reciever
     ));
     // topic
     $fieldset->add('text', array(

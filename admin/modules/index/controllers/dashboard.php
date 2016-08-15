@@ -8,7 +8,7 @@
 
 namespace Index\Dashboard;
 
-use \Kotchasan\Login;
+use \Gcms\Login;
 use \Kotchasan\Html;
 
 /**
@@ -27,7 +27,7 @@ class Controller extends \Kotchasan\Controller
   public function render()
   {
     // แอดมิน
-    if (Login::isAdmin()) {
+    if (Login::adminAccess()) {
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs

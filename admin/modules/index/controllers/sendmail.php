@@ -8,7 +8,7 @@
 
 namespace Index\Sendmail;
 
-use \Kotchasan\Login;
+use \Gcms\Login;
 use \Kotchasan\Html;
 
 /**
@@ -27,7 +27,7 @@ class Controller extends \Kotchasan\Controller
   public function render()
   {
     // แอดมิน
-    if ($login = Login::isAdmin()) {
+    if ($login = Login::adminAccess()) {
       $section = Html::create('section');
       // breadcrumbs
       $breadcrumbs = $section->add('div', array(

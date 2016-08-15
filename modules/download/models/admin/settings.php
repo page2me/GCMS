@@ -35,6 +35,7 @@ class Model extends \Kotchasan\Model
       'list_per_page' => 20,
       'sort' => 1,
       'can_download' => array(-1, 0, 1),
+      'moderator' => array(1),
       'can_upload' => array(1),
       'can_config' => array(1)
     );
@@ -65,6 +66,7 @@ class Model extends \Kotchasan\Model
           'sort' => self::$request->post('sort')->toInt(),
           'can_download' => self::$request->post('can_download', array())->toInt(),
           'can_upload' => self::$request->post('can_upload', array())->toInt(),
+          'moderator' => self::$request->post('moderator', array())->toInt(),
           'can_config' => self::$request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
@@ -76,6 +78,7 @@ class Model extends \Kotchasan\Model
             $ret['ret_file_typies'] = 'this';
           } else {
             $save['can_upload'][] = 1;
+            $save['moderator'][] = 1;
             $save['can_config'][] = 1;
             $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
             // คืนค่า

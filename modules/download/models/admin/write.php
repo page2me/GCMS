@@ -8,16 +8,17 @@
 
 namespace Download\Admin\Write;
 
-use Kotchasan\Language;
-use Gcms\Gcms;
-use Kotchasan\Login;
+use \Kotchasan\Http\Request;
+use \Kotchasan\Language;
+use \Gcms\Gcms;
+use \Kotchasan\Login;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
 use \Kotchasan\Text;
 
 /**
- * อ่านข้อมูลโมดูล.
+ * อ่านข้อมูลโมดูล
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -36,7 +37,7 @@ class Model extends \Kotchasan\Model
   public static function get($module_id, $id)
   {
     // model
-    $model = new static();
+    $model = new static;
     $query = $model->db()->createQuery();
     if (empty($id)) {
       // ใหม่ ตรวจสอบโมดูล
@@ -57,6 +58,12 @@ class Model extends \Kotchasan\Model
     if (sizeof($result) == 1) {
       $result = ArrayTool::unserialize($result[0]['config'], $result[0], empty($id));
       unset($result['config']);
+      if (empty($id)) {
+        $result['reciever'] = $result['can_download'];
+      } else {
+        $reciever = @unserialize($result['reciever']);
+        $result['reciever'] = is_array($reciever) ? $reciever : array();
+      }
       return (object)$result;
     }
     return null;
@@ -65,33 +72,38 @@ class Model extends \Kotchasan\Model
   /**
    * บันทึก
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // ค่าที่ส่งมา
         $save = array(
-          'name' => self::$request->post('name')->topic(),
-          'detail' => self::$request->post('detail')->topic(),
-          'file' => self::$request->post('file')->topic()
+          'name' => $request->post('name')->topic(),
+          'reciever' => $request->post('reciever', array())->toInt(),
+          'file' => $request->post('file')->topic(),
+          'detail' => $request->post('detail')->topic()
         );
-        $id = self::$request->post('id')->toInt();
+        $id = $request->post('id')->toInt();
         // ตรวจสอบรายการที่เลือก
-        $index = self::get(self::$request->post('module_id')->toInt(), $id);
-        if ($index && Gcms::canConfig($login, $index, 'can_upload')) {
-          $error = false;
-          // detail
-          if ($save['detail'] == '') {
+        $index = self::get($request->post('module_id')->toInt(), $id);
+        if (!$index || !Gcms::canConfig($login, $index, 'can_upload')) {
+          // ไม่พบ หรือไม่สามารถอัปโหลดได้
+          $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
+        } elseif ($id > 0 && !($login['id'] == $index->member_id || Gcms::canConfig($login, $index, 'moderator'))) {
+          // แก้ไข ไม่ใช่เจ้าของหรือ moderator
+          $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
+        } else {
+          if (empty($save['reciever'])) {
+            // reciever
+            $ret['ret_reciever'] = Language::replace('Please select :name at least one item', array(':name' => Language::get('Recipient')));
+          } elseif ($save['detail'] == '') {
+            // detail
             $ret['ret_detail'] = 'this';
-            $error = true;
           } else {
-            $ret['ret_detail'] = '';
-          }
-          if (!$error) {
             // อัปโหลดไฟล์
             foreach (self::$request->getUploadedFiles() as $item => $file) {
               /* @var $file UploadedFile */
@@ -99,21 +111,17 @@ class Model extends \Kotchasan\Model
                 if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'download/')) {
                   // ไดเรคทอรี่ไม่สามารถสร้างได้
                   $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'download/');
-                  $error = true;
                 } elseif (!$file->validFileExt($index->file_typies)) {
                   // ชนิดของไฟล์ไม่ถูกต้อง
                   $ret['ret_'.$item] = Language::get('The type of file is invalid');
-                  $error = true;
                 } elseif ($file->getSize() > $index->upload_size) {
                   // ขนาดของไฟล์ใหญ่เกินไป
                   $ret['ret_'.$item] = Language::get('The file size larger than the limit');
-                  $error = true;
                 } else {
                   $save['ext'] = $file->getClientFileExt();
                   $file_name = str_replace('.'.$save['ext'], '', $file->getClientFilename());
                   if ($file_name == '' && $save['name'] == '') {
                     $ret['ret_name'] = 'this';
-                    $error = true;
                   } else {
                     // อัปโหลด
                     $save['file'] = DATA_FOLDER.'download/'.Text::rndname(10).'.'.$save['ext'];
@@ -132,19 +140,18 @@ class Model extends \Kotchasan\Model
                     } catch (\Exception $exc) {
                       // ไม่สามารถอัปโหลดได้
                       $ret['ret_'.$item] = Language::get($exc->getMessage());
-                      $error = true;
                     }
                   }
                 }
               } elseif ($id == 0) {
                 // ใหม่ ต้องมีไฟล์
                 $ret['ret_'.$item] = Language::get('Please select file');
-                $error = true;
               }
             }
           }
-          if (!$error) {
+          if (empty($ret)) {
             $save['last_update'] = time();
+            $save['reciever'] = serialize($save['reciever']);
             if ($id == 0) {
               // ใหม่
               $save['module_id'] = $index->module_id;
@@ -159,8 +166,6 @@ class Model extends \Kotchasan\Model
             $ret['alert'] = Language::get('Saved successfully');
             $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'download-setup', 'mid' => $index->module_id));
           }
-        } else {
-          $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
         }
       }
     } else {

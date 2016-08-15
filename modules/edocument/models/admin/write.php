@@ -68,6 +68,12 @@ class Model extends \Kotchasan\Model
         $result['document_no'] = sprintf($result['format_no'], $result['id']);
         $result['id'] = 0;
       }
+      if (empty($id)) {
+        $result['reciever'] = array();
+      } else {
+        $reciever = @unserialize($result['reciever']);
+        $result['reciever'] = is_array($reciever) ? $reciever : array();
+      }
       return (object)$result;
     }
     return null;
@@ -101,118 +107,101 @@ class Model extends \Kotchasan\Model
           // แก้ไข ไม่ใช่เจ้าของหรือ moderator
           $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
         } else {
-          $error = false;
-          // document_no
           if ($save['document_no'] == '') {
+            // ไม่ได้กรอกเลขที่เอกสาร
             $ret['ret_document_no'] = 'this';
-            $error = true;
           } else {
             // ค้นหาเลขที่เอกสารซ้ำ
             $search = $this->db()->first($this->getFullTableName('edocument'), array('document_no', $save['document_no']));
             if ($search && ($id == 0 || $id != $search->id)) {
               $ret['ret_document_no'] = str_replace(':name', Language::get('Document number'), Language::get('This :name already exist'));
-              $error = true;
-            } else {
-              $ret['ret_document_no'] = '';
             }
           }
-          // reciever
-          if (empty($save['reciever'])) {
-            $ret['ret_reciever'] = 'this';
-            $error = true;
-          } else {
-            $ret['ret_reciever'] = '';
-          }
-          // detail
-          if ($save['detail'] == '') {
-            $ret['ret_detail'] = 'this';
-            $error = true;
-          } else {
-            $ret['ret_detail'] = '';
-          }
-          if (!$error) {
-            // อัปโหลดไฟล์
-            foreach (self::$request->getUploadedFiles() as $item => $file) {
-              /* @var $file UploadedFile */
-              if ($file->hasUploadFile()) {
-                $dir = ROOT_PATH.DATA_FOLDER.'edocument/';
-                if (!File::makeDirectory($dir)) {
-                  // ไดเรคทอรี่ไม่สามารถสร้างได้
-                  $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'edocument/');
-                  $error = true;
-                } elseif (!$file->validFileExt($index->file_typies)) {
-                  // ชนิดของไฟล์ไม่ถูกต้อง
-                  $ret['ret_'.$item] = Language::get('The type of file is invalid');
-                  $error = true;
-                } elseif ($file->getSize() > $index->upload_size) {
-                  // ขนาดของไฟล์ใหญ่เกินไป
-                  $ret['ret_'.$item] = Language::get('The file size larger than the limit');
-                  $error = true;
-                } else {
-                  $save['ext'] = $file->getClientFileExt();
-                  $file_name = str_replace('.'.$save['ext'], '', $file->getClientFilename());
-                  if ($file_name == '' && $save['topic'] == '') {
-                    $ret['ret_topic'] = 'this';
-                    $error = true;
+          if (empty($ret)) {
+            if (empty($save['reciever'])) {
+              // reciever
+              $ret['ret_reciever'] = Language::replace('Please select :name at least one item', array(':name' => Language::get('Recipient')));
+            } elseif ($save['detail'] == '') {
+              // detail
+              $ret['ret_detail'] = 'this';
+            } else {
+              // อัปโหลดไฟล์
+              foreach (self::$request->getUploadedFiles() as $item => $file) {
+                /* @var $file UploadedFile */
+                if ($file->hasUploadFile()) {
+                  $dir = ROOT_PATH.DATA_FOLDER.'edocument/';
+                  if (!File::makeDirectory($dir)) {
+                    // ไดเรคทอรี่ไม่สามารถสร้างได้
+                    $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'edocument/');
+                  } elseif (!$file->validFileExt($index->file_typies)) {
+                    // ชนิดของไฟล์ไม่ถูกต้อง
+                    $ret['ret_'.$item] = Language::get('The type of file is invalid');
+                  } elseif ($file->getSize() > $index->upload_size) {
+                    // ขนาดของไฟล์ใหญ่เกินไป
+                    $ret['ret_'.$item] = Language::get('The file size larger than the limit');
                   } else {
-                    // อัปโหลด
-                    $save['file'] = Text::rndname(10).'.'.$save['ext'];
-                    while (file_exists($dir.$save['file'])) {
+                    $save['ext'] = $file->getClientFileExt();
+                    $file_name = str_replace('.'.$save['ext'], '', $file->getClientFilename());
+                    if ($file_name == '' && $save['topic'] == '') {
+                      $ret['ret_topic'] = 'this';
+                    } else {
+                      // อัปโหลด
                       $save['file'] = Text::rndname(10).'.'.$save['ext'];
-                    }
-                    try {
-                      $file->moveTo($dir.$save['file']);
-                      $save['size'] = $file->getSize();
-                      if ($save['topic'] == '') {
-                        $save['topic'] = $file_name;
+                      while (file_exists($dir.$save['file'])) {
+                        $save['file'] = Text::rndname(10).'.'.$save['ext'];
                       }
-                      if (!empty($index->file) && $save['file'] != $index->file) {
-                        @unlink($dir.$index->file);
+                      try {
+                        $file->moveTo($dir.$save['file']);
+                        $save['size'] = $file->getSize();
+                        if ($save['topic'] == '') {
+                          $save['topic'] = $file_name;
+                        }
+                        if (!empty($index->file) && $save['file'] != $index->file) {
+                          @unlink($dir.$index->file);
+                        }
+                      } catch (\Exception $exc) {
+                        // ไม่สามารถอัปโหลดได้
+                        $ret['ret_'.$item] = Language::get($exc->getMessage());
                       }
-                    } catch (\Exception $exc) {
-                      // ไม่สามารถอัปโหลดได้
-                      $ret['ret_'.$item] = Language::get($exc->getMessage());
-                      $error = true;
                     }
                   }
+                } elseif ($id == 0) {
+                  // ใหม่ ต้องมีไฟล์
+                  $ret['ret_'.$item] = Language::get('Please select file');
                 }
-              } elseif ($id == 0) {
-                // ใหม่ ต้องมีไฟล์
-                $ret['ret_'.$item] = Language::get('Please select file');
-                $error = true;
               }
             }
-          }
-          if (!$error) {
-            $save['last_update'] = time();
-            $reciever = $save['reciever'];
-            $save['reciever'] = serialize($reciever);
-            if ($id == 0) {
-              // ใหม่
-              $save['module_id'] = $index->module_id;
-              $save['downloads'] = 0;
-              $save['sender_id'] = $login['id'];
-              $this->db()->insert($this->getFullTableName('edocument'), $save);
-            } else {
-              // แก้ไข
-              $this->db()->update($this->getFullTableName('edocument'), $id, $save);
-            }
-            if ($request->post('send_mail')->toInt() == 1) {
-              $query = $this->db()->createQuery()->select('fname', 'lname', 'email')->from('user')->where(array('status', $reciever));
-              foreach ($query->toArray()->execute() as $item) {
-                // ส่งอีเมล์
-                $replace = array(
-                  '/%FNAME%/' => $item['fname'],
-                  '/%LNAME%/' => $item['lname'],
-                  '/%URL%/' => WEB_URL.'index.php?module='.$index->module
-                );
-                Email::send(1, 'edocument', $replace, $item['email']);
+            if (empty($ret)) {
+              $save['last_update'] = time();
+              $reciever = $save['reciever'];
+              $save['reciever'] = serialize($reciever);
+              if ($id == 0) {
+                // ใหม่
+                $save['module_id'] = $index->module_id;
+                $save['downloads'] = 0;
+                $save['sender_id'] = $login['id'];
+                $this->db()->insert($this->getFullTableName('edocument'), $save);
+              } else {
+                // แก้ไข
+                $this->db()->update($this->getFullTableName('edocument'), $id, $save);
               }
-              $ret['alert'] = Language::get('Save and email completed');
-            } else {
-              $ret['alert'] = Language::get('Saved successfully');
+              if ($request->post('send_mail')->toInt() == 1) {
+                $query = $this->db()->createQuery()->select('fname', 'lname', 'email')->from('user')->where(array('status', $reciever));
+                foreach ($query->toArray()->execute() as $item) {
+                  // ส่งอีเมล์
+                  $replace = array(
+                    '/%FNAME%/' => $item['fname'],
+                    '/%LNAME%/' => $item['lname'],
+                    '/%URL%/' => WEB_URL.'index.php?module='.$index->module
+                  );
+                  Email::send(1, 'edocument', $replace, $item['email']);
+                }
+                $ret['alert'] = Language::get('Save and email completed');
+              } else {
+                $ret['alert'] = Language::get('Saved successfully');
+              }
+              $ret['location'] = $request->getUri()->postBack('index.php', array('mid' => $index->module_id, 'module' => 'edocument-setup'));
             }
-            $ret['location'] = $request->getUri()->postBack('index.php', array('mid' => $index->module_id, 'module' => 'edocument-setup'));
           }
         }
       }

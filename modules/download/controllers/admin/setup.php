@@ -49,7 +49,7 @@ class Controller extends \Kotchasan\Controller
         'innerHTML' => '<h1 class="icon-list">'.$this->title().'</h1>'
       ));
       // แสดงตาราง
-      $section->appendChild(createClass('Download\Admin\Setup\View')->render($index));
+      $section->appendChild(createClass('Download\Admin\Setup\View')->render($index, $login));
       return $section->render();
     } else {
       // 404.html

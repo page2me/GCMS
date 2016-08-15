@@ -49,8 +49,9 @@ class View extends \Gcms\View
     // กลุ่มผู้รับ
     $reciever = array();
     foreach (ArrayTool::merge(array(-1 => '{LNG_Guest}'), self::$cfg->member_status) as $key => $value) {
-      $sel = in_array($key, $index->reciever) ? ' selected' : '';
-      $reciever[] = '<option value='.$key.$sel.'>'.$value.'</option>';
+      $sel = in_array($key, $index->reciever) ? ' checked' : '';
+      $sel .= $key == -1 ? ' id=reciever' : '';
+      $reciever[] = '<label><input type=checkbox value='.$key.$sel.' name=reciever[]>&nbsp;'.$value.'</label>';
     }
     // antispam
     $antispam = new Antispam();
@@ -67,7 +68,7 @@ class View extends \Gcms\View
       '/{ID}/' => $index->id,
       '/{MODULE_ID}/' => $index->module_id,
       '/{MODULE}/' => $index->module,
-      '/{SENDMAIL}/' => $index->id == 0 ? 'checked' : ''
+      '/{SENDMAIL}/' => $index->id == 0 && $index->send_mail ? 'checked' : ''
     ));
     Gcms::$view->setContents(array(
       '/:type/' => implode(', ', $index->file_typies),

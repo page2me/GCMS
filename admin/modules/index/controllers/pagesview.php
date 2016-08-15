@@ -9,7 +9,7 @@
 namespace Index\Pagesview;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Login;
+use \Gcms\Login;
 use \Kotchasan\Html;
 use \Kotchasan\Date;
 
@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // แอดมิน
-    if (Login::isAdmin()) {
+    if (Login::adminAccess()) {
       $this->date = $request->get('date', date('Y-m'))->date();
       // แสดงผล
       $section = Html::create('section');

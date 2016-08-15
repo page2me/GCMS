@@ -11,6 +11,7 @@ namespace Edocument\Admin\Setup;
 use \Kotchasan\DataTable;
 use \Kotchasan\Date;
 use \Kotchasan\Text;
+use \Gcms\Gcms;
 
 /**
  * module=edocument-setup
@@ -26,12 +27,17 @@ class View extends \Kotchasan\View
    * ตารางรายการ
    *
    * @param object $index
+   * @param array $login
    * @return string
    */
-  public function render($index)
+  public function render($index, $login)
   {
     // Uri
     $uri = self::$request->getUri();
+    $where = array(array('A.module_id', (int)$index->module_id));
+    if (!Gcms::canConfig($login, $index, 'moderator')) {
+      $where[] = array('A.sender_id', (int)$login['id']);
+    }
     // model
     $model = new \Kotchasan\Model;
     // ตาราง
@@ -54,9 +60,7 @@ class View extends \Kotchasan\View
         'file'
       ),
       /* query where */
-      'defaultFilters' => array(
-        array('A.module_id', (int)$index->module_id)
-      ),
+      'defaultFilters' => $where,
       /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
