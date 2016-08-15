@@ -128,13 +128,13 @@ class Controller extends \Kotchasan\Controller
         $info = getImageSize(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo);
         if ($info[0] > 0 || $info[1] > 0) {
           $ext = explode('.', self::$cfg->logo);
-          if (strtolower(end($ext)) == 'swf') {
-            $script[] = '$G(window).Ready(function(){';
-            $script[] = 'if ($E("logo")) {';
-            $script[] = "new GMedia('logo_swf', '".$image_src."', $info[0], $info[1]).write('logo');";
-            $script[] = '}';
-            $script[] = '});';
-          } else {
+          $ext = strtolower(end($ext));
+          $script[] = '$G(window).Ready(function(){';
+          $script[] = 'if ($E("logo")) {';
+          $script[] = "new GMedia('logo_$ext', '".$image_src."', $info[0], $info[1]).write('logo');";
+          $script[] = '}';
+          $script[] = '});';
+          if ($ext != 'swf') {
             $image_logo = '<img src="'.$image_src.'" alt="{WEBTITLE}">';
           }
         }
