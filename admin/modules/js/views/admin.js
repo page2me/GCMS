@@ -1,4 +1,4 @@
-function initEditInplace(id, module) {
+function initEditInplace(id, className) {
   var editor, hs,
     patt = /config_status_(delete|name|color)_([0-9]+)/;
   function _doAction(c) {
@@ -13,7 +13,7 @@ function initEditInplace(id, module) {
       }
     }
     if (q != '') {
-      send('index.php/index/model/' + module + '/action', q, function (xhr) {
+      send('index.php/' + className, q, function (xhr) {
         var ds = xhr.responseText.toJSON();
         if (ds) {
           if (ds.data) {
@@ -45,7 +45,7 @@ function initEditInplace(id, module) {
         asynchronous: false
       });
       req.initLoading(this, false);
-      req.send('index.php/index/model/' + module + '/action', 'action=' + this.id + '&value=' + encodeURIComponent(v));
+      req.send('index.php/' + className, 'action=' + this.id + '&value=' + encodeURIComponent(v));
       req.hideLoading();
       var ds = req.responseText.toJSON();
       if (ds) {

@@ -28,7 +28,7 @@ class Model extends \Kotchasan\KBase
   public function action()
   {
     $ret = array();
-    // referer, session, member
+    // referer, session, admin
     if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
@@ -63,11 +63,11 @@ class Model extends \Kotchasan\KBase
           // id ของสถานะใหม่
           $i = sizeof($config->member_status) - 1;
           // ข้อมูลใหม่
-          $row = '<dd id="config_status_'.$i.'">';
-          $row .= '<span class="icon-delete" id="config_status_delete_'.$i.'" title="{LNG_Delete}"></span>';
+          $row = '<li id="config_status_'.$i.'">';
+          $row .= '<span class="icon-delete" id="config_status_delete_'.$i.'" title="'.Language::get('Delete').'"></span>';
           $row .= '<span id="config_status_color_'.$i.'" title="'.$config->color_status[$i].'"></span>';
           $row .= '<span id="config_status_name_'.$i.'" title="'.$config->member_status[$i].'">'.htmlspecialchars($config->member_status[$i]).'</span>';
-          $row .= '</dd>';
+          $row .= '</li>';
           // คืนค่าข้อมูลเข้ารหัส
           $ret['data'] = $row;
           $ret['newId'] = "config_status_$i";

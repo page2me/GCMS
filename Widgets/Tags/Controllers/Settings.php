@@ -8,9 +8,9 @@
 
 namespace Widgets\Tags\Controllers;
 
-use \Kotchasan\Language;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
+use \Kotchasan\Language;
 
 /**
  * Controller สำหรับจัดการการตั้งค่าเริ่มต้น
@@ -54,6 +54,6 @@ class Settings extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Configuring} {LNG_Tags}';
+    return Language::replace('list of all :name', array(':name' => Language::get('Tags')));
   }
 }

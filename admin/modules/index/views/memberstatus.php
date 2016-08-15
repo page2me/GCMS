@@ -9,7 +9,6 @@
 namespace Index\Memberstatus;
 
 use \Kotchasan\Html;
-use \Kotchasan\Language;
 
 /**
  * ฟอร์ม Memberstatus
@@ -28,9 +27,10 @@ class View extends \Kotchasan\View
    */
   public function render()
   {
-    $section = Html::create('div', array(
-        'class' => 'subtitle',
-        'innerHTML' => '{LNG_Status of membership, the first item (0) means end users and 1 represents the administrator. (The first two items are the items necessary), you can modify the ability of each member of the modules again.}'
+    $section = Html::create('div');
+    $section->add('div', array(
+      'class' => 'subtitle',
+      'innerHTML' => '{LNG_Status of membership, the first item (0) means end users and 1 represents the administrator. (The first two items are the items necessary), you can modify the ability of each member of the modules again.}'
     ));
     $list = $section->add('ol', array(
       'class' => 'editinplace_list',
@@ -68,9 +68,9 @@ class View extends \Kotchasan\View
     ));
     $a->add('span', array(
       'class' => 'icon-plus',
-      'innerHTML' => '{LNG_Add New}'.' '.'{LNG_Member status}'
+      'innerHTML' => '{LNG_Add New} {LNG_Member status}'
     ));
-    $section->script('initEditInplace("config_status", "memberstatus");');
+    $section->script('initEditInplace("config_status", "index/model/memberstatus/action");');
     $section->script('$E("config_status_color_0").focus();');
     return $section->render();
   }
