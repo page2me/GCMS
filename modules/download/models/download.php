@@ -46,7 +46,7 @@ class Model extends \Kotchasan\Model
         $ret = array();
         if (!$download || !is_file(ROOT_PATH.$download->file)) {
           $ret['alert'] = Language::get('Sorry, Item not found It&#39;s may be deleted');
-        } elseif (!in_array($status, $download->can_download)) {
+        } elseif (!in_array($status, $download->reciever)) {
           $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
         } elseif ($action === 'download') {
           $ret['confirm'] = Language::get('Do you want to download the file ?');
@@ -92,6 +92,8 @@ class Model extends \Kotchasan\Model
       foreach ($config as $key => $value) {
         $search[$key] = $value;
       }
+      $reciever = @unserialize($search['reciever']);
+      $search['reciever'] = is_array($reciever) ? $reciever : $search['can_download'];
       return (object)$search;
     }
     return null;
