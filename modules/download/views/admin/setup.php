@@ -22,6 +22,12 @@ use \Gcms\Gcms;
  */
 class View extends \Kotchasan\View
 {
+  /**
+   * ข้อมูลโมดูล
+   *
+   * @var object
+   */
+  private $categories;
 
   /**
    * ตารางรายการ
@@ -32,6 +38,11 @@ class View extends \Kotchasan\View
    */
   public function render($index, $login)
   {
+    // หมวดหมู่
+    $this->categories = array(0 => '{LNG_all items}');
+    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
+      $this->categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
+    }
     // Uri
     $uri = self::$request->getUri();
     $where = array(array('A.module_id', (int)$index->module_id));
@@ -49,6 +60,7 @@ class View extends \Kotchasan\View
         'name',
         'id',
         'ext',
+        'category_id',
         'detail',
         'size',
         'last_update',
@@ -77,6 +89,16 @@ class View extends \Kotchasan\View
       ),
       /* คอลัมน์ที่สามารถค้นหาได้ */
       'searchColumns' => array('name', 'ext', 'detail', 'file'),
+      /* ตัวเลือกการแสดงผลที่ส่วนหัว */
+      'filters' => array(
+        'category_id' => array(
+          'name' => 'cat',
+          'text' => '{LNG_Category}',
+          'options' => $this->categories,
+          'default' => 0,
+          'value' => self::$request->get('cat')->toInt()
+        )
+      ),
       /* ส่วนหัวของตาราง และการเรียงลำดับ (thead) */
       'headers' => array(
         'name' => array(
@@ -84,6 +106,10 @@ class View extends \Kotchasan\View
         ),
         'id' => array(
           'text' => '{LNG_Widget}'
+        ),
+        'category_id' => array(
+          'text' => '{LNG_Category}',
+          'class' => 'center'
         ),
         'detail' => array(
           'text' => '{LNG_Description}',
@@ -103,6 +129,9 @@ class View extends \Kotchasan\View
       ),
       /* รูปแบบการแสดงผลของคอลัมน์ (tbody) */
       'cols' => array(
+        'category_id' => array(
+          'class' => 'center'
+        ),
         'size' => array(
           'class' => 'center'
         ),
@@ -144,6 +173,7 @@ class View extends \Kotchasan\View
     $item['id'] = '<em>{WIDGET_DOWNLOAD_'.$item['id'].'}</em>';
     $item['name'] = "<a href='".WEB_URL."$item[file]' target=_blank>$item[name].$item[ext]</a>";
     $item['size'] = Text::formatFileSize($item['size']);
+    $item['category_id'] = empty($item['category_id']) || empty($this->categories[$item['category_id']]) ? '{LNG_Uncategorized}' : $this->categories[$item['category_id']];
     $item['last_update'] = Date::format($item['last_update'], 'd M Y H:i');
     return $item;
   }

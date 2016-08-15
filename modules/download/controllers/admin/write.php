@@ -11,7 +11,6 @@ namespace Download\Admin\Write;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Html;
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
@@ -52,10 +51,9 @@ class Controller extends \Kotchasan\Controller
       // แสดงฟอร์ม
       $section->appendChild(createClass('Download\Admin\Write\View')->render($index));
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**
@@ -63,6 +61,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Create or Edit').' '.Language::get('Download file');
+    return '{LNG_Create or Edit} {LNG_Download file}';
   }
 }

@@ -83,6 +83,7 @@ class Model extends \Kotchasan\Model
         // ค่าที่ส่งมา
         $save = array(
           'name' => $request->post('name')->topic(),
+          'category_id' => $request->post('category_id')->toInt(),
           'reciever' => $request->post('reciever', array())->toInt(),
           'file' => $request->post('file')->topic(),
           'detail' => $request->post('detail')->topic()

@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource personnel/controllers/admin/category.php
+ * @filesource download/controllers/admin/category.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Personnel\Admin\Category;
+namespace Download\Admin\Category;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Personnel\Admin\Index\Model::module(self::$request->get('mid')->toInt());
+    $index = \Download\Admin\Index\Model::module(self::$request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
@@ -42,14 +42,14 @@ class Controller extends \Kotchasan\Controller
         'class' => 'breadcrumbs'
       ));
       $ul = $breadcrumbs->add('ul');
-      $ul->appendChild('<li><span class="icon-customer">{LNG_Module}</span></li>');
-      $ul->appendChild('<li><a href="{BACKURL?module=personnel-settings&mid='.$index->module_id.'}">'.ucfirst($index->module).'</a></li>');
-      $ul->appendChild('<li><span>{LNG_Personnel groups}</span></li>');
+      $ul->appendChild('<li><span class="icon-download">{LNG_Module}</span></li>');
+      $ul->appendChild('<li><a href="{BACKURL?module=download-settings&mid='.$index->module_id.'}">'.ucfirst($index->module).'</a></li>');
+      $ul->appendChild('<li><span>{LNG_Category}</span></li>');
       $section->add('header', array(
         'innerHTML' => '<h1 class="icon-category">'.$this->title().'</h1>'
       ));
       // แสดงตาราง
-      $section->appendChild(createClass('Personnel\Admin\Category\View')->render($index));
+      $section->appendChild(createClass('Download\Admin\Category\View')->render($index));
       return $section->render();
     }
     // 404.html
@@ -61,6 +61,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return str_replace(':name', Language::get('Personnel groups'), Language::get('list of all :name'));
+    return str_replace(':name', Language::get('Category'), Language::get('list of all :name'));
   }
 }

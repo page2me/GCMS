@@ -29,7 +29,7 @@ class View extends \Kotchasan\View
   private $uri;
 
   /**
-   * ตารางรายการบทความ
+   * ตารางรายการ
    *
    * @param object $index
    * @return string
@@ -166,7 +166,7 @@ class View extends \Kotchasan\View
     $item['email'] = "<a href='".$this->uri->createBackUri(array('module' => 'sendmail', 'to' => $item['email']))."'>$item[email]</a>";
     $thumb = is_file(ROOT_PATH.DATA_FOLDER.'personnel/'.$item['picture']) ? WEB_URL.DATA_FOLDER.'personnel/'.$item['picture'] : '../modules/video/img/nopicture.jpg';
     $item['picture'] = '<img src="'.$thumb.'" style="max-height:50px" alt=thumbnail>';
-    $item['category_id'] = isset($this->categories[$item['category_id']]) ? $this->categories[$item['category_id']] : '{LNG_Uncategorized}';
+    $item['category_id'] = empty($item['category_id']) || empty($this->categories[$item['category_id']]) ? '{LNG_Uncategorized}' : $this->categories[$item['category_id']];
     $item['order'] = '<label><input type=text size=5 id=order_'.$item['module_id'].'_'.$item['id'].' value="'.$item['order'].'"></label>';
     return $item;
   }

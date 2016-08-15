@@ -188,7 +188,7 @@ class View extends \Kotchasan\View
     }
     $item['show_news'] = '<span class="icon-widgets reply'.(preg_match('/news=1/', $item['show_news']) ? 1 : 0).'"></span>';
     $item['create_date'] = Date::format($item['create_date'], 'd M Y H:i');
-    $item['category_id'] = isset($this->categories[$item['category_id']]) ? $this->categories[$item['category_id']] : '{LNG_Uncategorized}';
+    $item['category_id'] = empty($item['category_id']) || empty($this->categories[$item['category_id']]) ? '{LNG_Uncategorized}' : $this->categories[$item['category_id']];
     $item['last_update'] = Date::format($item['last_update'], 'd M Y H:i');
     $item['writer'] = '<span class="status'.$item['status'].'">'.$item['writer'].'</span>';
     $item['can_reply'] = '<a id=can_reply_'.$item['id'].' class="icon-reply reply'.$item['can_reply'].'" title="'.$this->replies[$item['can_reply']].'"></a>';

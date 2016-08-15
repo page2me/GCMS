@@ -52,6 +52,20 @@ class View extends \Kotchasan\View
       'maxlength' => 50,
       'value' => isset($index->name) ? $index->name : ''
     ));
+    // category_id
+    $categories = array(0 => '{LNG_Uncategorized}');
+    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
+      $categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
+    }
+    $fieldset->add('select', array(
+      'id' => 'category_id',
+      'labelClass' => 'g-input icon-category',
+      'label' => '{LNG_Category}',
+      'comment' => '{LNG_Select the category you want}',
+      'itemClass' => 'item',
+      'options' => $categories,
+      'value' => isset($index->category_id) ? $index->category_id : 0
+    ));
     // reciever
     $fieldset->add('checkboxgroups', array(
       'id' => 'reciever',

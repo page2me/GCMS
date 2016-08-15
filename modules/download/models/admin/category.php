@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource personnel/models/admin/category.php
+ * @filesource download/models/admin/category.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Personnel\Admin\Category;
+namespace Download\Admin\Category;
 
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
@@ -69,7 +69,7 @@ class Model extends \Kotchasan\Model
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // อ่านข้อมูลโมดูล
-        $index = \Personnel\Admin\Index\Model::module($request->post('module_id')->toInt());
+        $index = \Download\Admin\Index\Model::module($request->post('module_id')->toInt());
         if (Gcms::canConfig($login, $index, 'can_config')) {
           // ค่าที่ส่งมา
           $save = array();
