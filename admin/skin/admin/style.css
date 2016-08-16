@@ -254,24 +254,25 @@ section > header {
 /* edit inplace */
 .editinplace_list {
   display: block;
-  padding: 0;
-  border-top: 1px solid #DDD;
+  padding: 0 10px;
+  white-space: nowrap;
   list-style-type: none;
+  border-top: 1px solid #DDD;
 }
-.editinplace_list > * {
-  padding: 0.3em 10px;
-  position: relative;
+.editinplace_list > li {
+  display: block;
   border-top: 1px solid #FFF;
   border-bottom: 1px solid #DDD;
-  white-space: nowrap;
+  padding: 5px 0;
 }
-.editinplace_list span,
-.editinplace_list a {
+.editinplace_list > li > span,
+.editinplace_list > li > a {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   display: inline-block;
-  min-width: 4em;
-  min-height: 1.6em;
+  min-width: 5em;
+  height: 2.3em;
+  line-height: 2.3em;
   vertical-align: middle;
   text-align: center;
 }
@@ -280,13 +281,13 @@ section > header {
   vertical-align: middle;
   height: 2.1em;
 }
-.editinplace {
+.editinplace_list > li > .editinplace {
   border-width: 1px;
-  border-style: none none dashed none;
+  border-style: dashed;
+  border-color: transparent transparent rgba(0, 0, 0, 0.3) transparent;
   cursor: pointer;
-  line-height: 1.7em;
-  padding: 2px;
-  position: relative;
+  padding: 0 2px;
+  min-width: 10em;
 }
 .editinplace:hover:after {
   padding: 0 5px;
@@ -304,6 +305,10 @@ section > header {
 }
 .editinplace_list .icon-color {
   color: attr(title);
+}
+.editinplace_list .icon-delete:before {
+  font-size: 1.3em;
+  line-height: inherit;
 }
 /* dashboard */
 .infobox ul {
