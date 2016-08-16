@@ -33,6 +33,9 @@ class Controller extends \Kotchasan\Controller
       // ตัวแปรป้องกันการเรียกหน้าเพจโดยตรง
       define('MAIN_INIT', __FILE__);
       // กำหนด skin ให้กับ template
+      if (!empty($_SESSION['skin']) && is_file(ROOT_PATH.'skin/'.$_SESSION['skin'].'/style.css')) {
+        self::$cfg->skin = $_SESSION['skin'];
+      }
       Template::init(self::$cfg->skin);
       // ค่าจาก POST
       $query_string = $request->getParsedBody();

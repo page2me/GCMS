@@ -37,6 +37,9 @@ class Controller extends \Kotchasan\Controller
       // ตรวจสอบการ login
       Login::create();
       // กำหนด skin ให้กับ template
+      if (!empty($_SESSION['skin']) && is_file(ROOT_PATH.'skin/'.$_SESSION['skin'].'/style.css')) {
+        self::$cfg->skin = $_SESSION['skin'];
+      }
       Template::init(self::$cfg->skin);
       // counter และ useronline
       \Index\Counter\Model::init();
