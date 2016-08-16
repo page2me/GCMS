@@ -165,7 +165,7 @@ class Model extends \Kotchasan\Model
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'download-setup', 'mid' => $index->module_id));
+            $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'download-setup', 'mid' => $index->module_id));
           }
         }
       }
