@@ -8,8 +8,6 @@
 
 namespace Widgets\Tags\Views;
 
-use \Kotchasan\Language;
-use \Kotchasan\DataTable;
 use \Kotchasan\Html;
 
 /**
@@ -21,7 +19,6 @@ use \Kotchasan\Html;
  */
 class Settings extends \Kotchasan\View
 {
-  private $publisheds;
 
   /**
    * module=Tags-settings

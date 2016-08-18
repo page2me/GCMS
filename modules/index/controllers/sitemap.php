@@ -58,8 +58,8 @@ class Controller extends \Kotchasan\Controller
     $f = @opendir($dir);
     if ($f) {
       while (false !== ($owner = readdir($f))) {
-        if (!in_array($owner, array('.', '..', 'index', 'css', 'js')) && !empty($owners[$owner]) && is_file(ROOT_PATH.'modules/'.$owner.'/controllers/sitemap.php')) {
-          include(ROOT_PATH.'modules/'.$owner.'/controllers/sitemap.php');
+        if (!in_array($owner, array('.', '..', 'index', 'css', 'js')) && !empty($owners[$owner]) && is_file($dir.$owner.'/controllers/sitemap.php')) {
+          include $dir.$owner.'/controllers/sitemap.php';
           foreach (createClass(ucfirst($owner).'\Sitemap\Controller')->init($owners[$owner], $modules, $cdate) as $item) {
             $content .= $view->render($item->url, $item->date);
           }
