@@ -14,6 +14,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Date;
 use \Kotchasan\Grid;
 use \Kotchasan\Text;
+use \Kotchasan\ArrayTool;
 
 /**
  * แสดงรายการบทความ
@@ -34,8 +35,12 @@ class View extends \Gcms\View
    */
   public function index(Request $request, $index)
   {
+    // หมวดหมู่ที่เลือก
+    $index->category_id = $request->request('cat')->toInt();
     // query ข้อมูล
     $index = \Download\Index\Model::getItems($request, $index);
+    // หมวดหมู่
+    $categories = \Index\Category\Model::categories($index->module_id);
     // รายการ
     $listitem = Grid::create($index->owner, $index->module, 'listitem');
     foreach ($index->items as $item) {
@@ -48,7 +53,8 @@ class View extends \Gcms\View
         '/{DATE}/' => Date::format($item->last_update),
         '/{DATEISO}/' => date(DATE_ISO8601, $item->last_update),
         '/{DOWNLOADS}/' => number_format($item->downloads),
-        '/{SIZE}/' => Text::formatFileSize($item->size)
+        '/{SIZE}/' => Text::formatFileSize($item->size),
+        '/{CATEGORY}/' => empty($categories[$item->category_id]) ? '{LNG_Uncategorized}' : $categories[$item->category_id]
       ));
     }
     // breadcrumb ของโมดูล
@@ -63,11 +69,28 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
       }
     }
+    // breadcrumb ของหมวดหมู่
+    if (!empty($index->category_id) && !empty($categories[$index->category_id])) {
+      $index->canonical = Gcms::createUrl($index->module, '', $index->category_id);
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $categories[$index->category_id]);
+    }
     // current URL
     $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
+    // หมวดหมู่
+    $categoryitem = Grid::create($index->owner, $index->module, 'categoryitem');
+    if (!$categoryitem->isEmpty()) {
+      foreach (ArrayTool::merge(array(0 => '{LNG_all items}'), $categories) as $category_id => $topic) {
+        $categoryitem->add(array(
+          '/{SELECT}/' => $category_id == $index->category_id ? 'selected' : '',
+          '/{TOPIC}/' => $topic,
+          '/{URL}/' => Gcms::createUrl($index->module, '', $category_id),
+        ));
+      }
+    }
     // template
     $template = Template::create($index->owner, $index->module, $listitem->hasItem() ? 'list' : 'empty');
     $template->add(array(
+      '/{CATEGORIES}/' => $categoryitem->render(),
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
       '/{LIST}/' => $listitem->render(),

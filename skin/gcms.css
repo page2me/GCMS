@@ -183,6 +183,9 @@ header.list .newtopic {
   text-align: right;
   color: inherit;
 }
+header.list h2 select {
+  font-size: 0.8em;
+}
 #comment-list .r,
 #document-view .q,
 #board-view .q {

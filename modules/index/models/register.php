@@ -153,7 +153,7 @@ class Model extends \Kotchasan\Model
             $save['create_date'] = time();
             $save['subscrib'] = 1;
             $save['status'] = 0;
-            list($displayname, $domain) = explode('@', $save['email']);
+            list($displayname, $domain) = explode('@', ucwords($save['email']));
             $save['displayname'] = $displayname;
             $a = 1;
             while (true) {

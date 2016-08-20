@@ -28,14 +28,22 @@ function initDownloadList(id) {
     }
     return false;
   };
-  var e = $E(id);
-  if (e.tagName.toLowerCase() == 'a' && patt.test(e.id)) {
-    callClick(e, doDownloadClick);
-  } else {
-    forEach($G(id).elems('a'), function () {
-      if (patt.test(this.id)) {
-        callClick(this, doDownloadClick);
-      }
-    });
+  if (id) {
+    var e = $E(id);
+    if (e.tagName.toLowerCase() == 'a' && patt.test(e.id)) {
+      callClick(e, doDownloadClick);
+    } else {
+      forEach($G(id).elems('a'), function () {
+        if (patt.test(this.id)) {
+          callClick(this, doDownloadClick);
+        }
+      });
+    }
+  }
+  var categoryChanged = function () {
+    loaddoc(this.value);
+  };
+  if ($E('download-cat')) {
+    $G('download-cat').addEvent('change', categoryChanged);
   }
 }

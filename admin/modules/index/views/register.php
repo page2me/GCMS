@@ -76,6 +76,12 @@ class View extends \Kotchasan\View
       'labelClass' => 'g-input icon-star0',
       'options' => self::$cfg->member_status
     ));
+    $fieldset->add('checkbox', array(
+      'id' => 'register_admin_access',
+      'itemClass' => 'item',
+      'label' => '{LNG_Access to the system administrator.}',
+      'value' => 1
+    ));
     $fieldset = $form->add('fieldset', array(
       'class' => 'submit'
     ));

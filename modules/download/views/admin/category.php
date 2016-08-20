@@ -59,6 +59,8 @@ class View extends \Kotchasan\View
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
       'hideColumns' => array('id'),
+      /* ฟังก์ชั่นจัดการข้อมูลในแต่ละแถว เมื่อมีการเปลี่ยนแปลง */
+      'onInitRow' => 'downloadInitRow',
       'border' => true,
       'responsive' => true,
       'pmButton' => true,

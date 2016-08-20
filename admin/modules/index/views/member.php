@@ -45,7 +45,7 @@ class View extends \Kotchasan\View
       'sort' => self::$request->cookie('member_sort', 'id desc')->toString(),
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
-      'hideColumns' => array('visited', 'status', 'admin_access', 'activatecode', 'website', 'fb'),
+      'hideColumns' => array('visited', 'status', 'activatecode', 'website', 'fb'),
       /* คอลัมน์ที่สามารถค้นหาได้ */
       'searchColumns' => array('fname', 'lname', 'displayname', 'email'),
       /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
@@ -85,6 +85,7 @@ class View extends \Kotchasan\View
       'fields' => array(
         'id',
         'ban',
+        'admin_access',
         'email',
         'displayname',
         'CONCAT_WS(" ", `pname`,`fname`,`lname`) name',
@@ -95,7 +96,6 @@ class View extends \Kotchasan\View
         'lastvisited',
         'visited',
         'status',
-        'admin_access',
         'activatecode',
         'fb'
       ),
@@ -106,6 +106,9 @@ class View extends \Kotchasan\View
           'sort' => 'id',
         ),
         'ban' => array(
+          'text' => ''
+        ),
+        'admin_access' => array(
           'text' => ''
         ),
         'email' => array(
@@ -147,6 +150,9 @@ class View extends \Kotchasan\View
         'ban' => array(
           'class' => 'center'
         ),
+        'admin_access' => array(
+          'class' => 'center'
+        ),
         'create_date' => array(
           'class' => 'center'
         ),
@@ -182,6 +188,7 @@ class View extends \Kotchasan\View
     $item['lastvisited'] = Date::format($item['lastvisited'], 'd M Y H:i').' ('.number_format($item['visited']).')';
     $item['sex'] = '<span class=icon-sex'.(isset($this->sexes[$item['sex']]) ? '-'.$item['sex'] : '').'></span>';
     $item['ban'] = $item['ban'] == 1 ? '<span class="icon-ban ban" title="{LNG_Members were suspended}"></span>' : '<span class="icon-ban"></span>';
+    $item['admin_access'] = $item['admin_access'] == 1 ? '<span class="icon-valid access" title="{LNG_Access to the system administrator.}"></span>' : '<span class="icon-valid disabled"></span>';
     $item['phone1'] = empty($item['phone1']) ? '' : '<a href="tel:'.$item['phone1'].'">'.$item['phone1'].'</a>';
     $class = $item['fb'] == 1 ? ' class=facebook' : '';
     $item['displayname'] = empty($item['website']) ? '<span'.$class.'>'.$item['displayname'].'</span>' : '<a href="http://'.$item['website'].'" target="_blank"'.$class.'>'.$item['displayname'].'</a>';

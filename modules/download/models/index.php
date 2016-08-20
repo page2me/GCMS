@@ -29,11 +29,17 @@ class Model extends \Kotchasan\Model
    */
   public static function getItems(Request $request, $index)
   {
+    $where = array(
+      array('module_id', (int)$index->module_id)
+    );
+    if (!empty($index->category_id)) {
+      $where[] = array('category_id', $index->category_id);
+    }
     // Model
     $model = new static;
     $query = $model->db()->createQuery()
       ->from('download')
-      ->where(array('module_id', (int)$index->module_id));
+      ->where($where);
     // จำนวน
     $index->total = $query->cacheOn()->count();
     // ข้อมูลแบ่งหน้า
@@ -45,7 +51,7 @@ class Model extends \Kotchasan\Model
     $index->page = max(1, ($index->page > $index->totalpage ? $index->totalpage : $index->page));
     $index->start = $index->list_per_page * ($index->page - 1);
     // query
-    $query->select('id', 'name', 'ext', 'detail', 'last_update', 'downloads', 'size')
+    $query->select('id', 'category_id', 'name', 'ext', 'detail', 'last_update', 'downloads', 'size')
       ->order('last_update DESC')
       ->limit($index->list_per_page, $index->start);
     $index->items = $query->cacheOn()->execute();

@@ -111,6 +111,20 @@ class Model extends \Kotchasan\Model
             } else {
               $ret['ret_register_displayname'] = '';
             }
+          } elseif ($id == 0) {
+            // ใหม่ ใช้ชื่อจาก email
+            list($displayname, $domain) = explode('@', ucwords($save['email']));
+            $save['fname'] = $displayname;
+            $save['displayname'] = $displayname;
+            $a = 1;
+            while (true) {
+              if (false === $db->first($user_table, array('displayname', $save['displayname']))) {
+                break;
+              } else {
+                $a++;
+                $save['displayname'] = $displayname.$a;
+              }
+            }
           }
           // โทรศัพท์
           if (!empty($save['phone1'])) {
