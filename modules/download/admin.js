@@ -5,4 +5,3 @@ function downloadInitRow(tr, row) {
     }
   });
 }
-
