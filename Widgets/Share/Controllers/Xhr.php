@@ -28,7 +28,7 @@ class Xhr extends \Kotchasan\Controller
   public function get(Request $request)
   {
     if (defined('MAIN_INIT')) {
-      $url = 'https://api.facebook.com/method/links.getStats?format=json&urls='.rawurlencode($request->get('url')->url());
+      $url = 'https://graph.facebook.com/'.rawurlencode($request->get('url')->url());
       if (function_exists('curl_init') && $curl = @curl_init()) {
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -39,12 +39,8 @@ class Xhr extends \Kotchasan\Controller
       } else {
         $result = @file_get_contents($url);
       }
-      $result = json_decode($result);
-      if (empty($result) || isset($result->error_code)) {
-        echo 0;
-      } else {
-        echo number_format($result[0]->total_count);
-      }
+      $result = (array)json_decode($result);
+      echo isset($result['share']) && isset($result['share']->share_count) ? number_format($result['share']->share_count) : 0;
     }
   }
 }

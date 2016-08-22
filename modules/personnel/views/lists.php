@@ -35,7 +35,7 @@ class View extends \Gcms\View
     // หมวดที่เลือก
     $category_id = $request->request('cat')->toInt();
     // หมวดหมู่บุคลากร
-    $categories = \Index\Category\Model::all((int)$index->module_id);
+    $categories = \Index\Category\Model::categories((int)$index->module_id);
     // รายการ
     $listitem = Template::create($index->owner, $index->module, 'item');
     $n = 0;
@@ -47,7 +47,7 @@ class View extends \Gcms\View
         if ($i > 0) {
           $listitem->insertHTML('</ul></article><article>');
         }
-        $listitem->insertHTML('<h3>'.(empty($categories[$old_cat]->topic) ? '{LNG_Unknown}' : $categories[$old_cat]->topic).'</h3><ul>');
+        $listitem->insertHTML('<h3>'.(isset($categories[$old_cat]) ? $categories[$old_cat] : '{LNG_Unknown}' ).'</h3><ul>');
       }
       if ($n > 0 && ($old_order != $item->order || ($item->order > 0 && $n % $item->order == 0))) {
         $listitem->insertHTML('</ul><ul>');
@@ -86,7 +86,7 @@ class View extends \Gcms\View
     }
     if ($category_id > 0 && isset($categories[$category_id])) {
       // breadcrumb ของหมวดหมู่
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $category_id), $categories[$category_id]->topic);
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $category_id), $categories[$category_id]);
     }
     // template
     $template = Template::create($index->owner, $index->module, 'list');
@@ -95,7 +95,7 @@ class View extends \Gcms\View
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => Gcms::showDetail($index->detail, true, false),
       '/{MODULE}/' => $index->module,
-      '/{CATEGORY}/' => isset($categories[$category_id]) ? $categories[$category_id]->topic : '',
+      '/{CATEGORY}/' => isset($categories[$category_id]) ? $categories[$category_id] : '{LNG_Unknown}',
     ));
     // คืนค่า
     $index->detail = $template->render();

@@ -11,9 +11,6 @@ namespace Widgets\Relate\Controllers;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
 use \Gcms\Gcms;
-use \Document\Index\Controller;
-use \Kotchasan\Grid;
-use \Kotchasan\Date;
 
 /**
  * Controller หลัก สำหรับแสดงผล Widget
