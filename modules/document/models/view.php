@@ -91,7 +91,7 @@ class Model extends \Kotchasan\Model
         $result[0]['visited'] ++;
         $result[0]['visited_today'] ++;
         $model->db()->update($model->getFullTableName('index'), $result[0]['id'], array('visited' => $result[0]['visited'], 'visited_today' => $result[0]['visited_today']));
-        $model->db()->cache()->save($result);
+        $model->db()->cacheSave($result);
         return (object)$result[0];
       }
     }

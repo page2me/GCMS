@@ -69,7 +69,13 @@ class View extends \Gcms\View
       }
     }
     // คืนค่า
-    $index->detail = $template->render();
-    return $index;
+    return (object)array(
+        'canonical' => $index->canonical,
+        'module' => $index->module,
+        'topic' => $index->topic,
+        'description' => $index->description,
+        'keywords' => $index->keywords,
+        'detail' => $template->render()
+    );
   }
 }

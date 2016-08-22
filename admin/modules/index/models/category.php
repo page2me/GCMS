@@ -96,8 +96,6 @@ class Model extends \Kotchasan\Model
               'can_reply' => empty($config['can_reply']) ? 0 : 1,
               'published' => empty($category->published) ? 0 : 1
             );
-            // คืนค่าเป็น JSON
-            echo json_encode($ret);
           }
         } elseif ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if ($action === 'delete' && preg_match('/^[0-9,]+$/', $id)) {
@@ -124,6 +122,8 @@ class Model extends \Kotchasan\Model
                 array('module_id', $index->id)
               ))->execute();
             }
+            // คืนค่า
+            $ret['location'] = 'reload';
           } else {
             $category = $this->db()->first($this->getFullTableName('category'), array(
               array('id', (int)$id),
@@ -177,10 +177,12 @@ class Model extends \Kotchasan\Model
                 }
                 $this->db()->update($this->getFullTableName('category'), $category->id, $save);
               }
-              // คืนค่าเป็น JSON
-              echo json_encode($ret);
             }
           }
+        }
+        // คืนค่าเป็น JSON
+        if (!empty($ret)) {
+          echo json_encode($ret);
         }
       }
     } else {

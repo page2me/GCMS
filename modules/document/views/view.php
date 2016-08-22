@@ -62,6 +62,8 @@ class View extends \Gcms\View
       // รูปภาพ
       if (!empty($story->picture) && is_file($imagedir.$story->picture)) {
         $story->image_src = $imageurl.$story->picture;
+      } else {
+        $story->image_src = null;
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
@@ -101,7 +103,7 @@ class View extends \Gcms\View
           '/<MEMBER>(.*)<\/MEMBER>/s' => $isMember ? '' : '$1',
           '/{TOPIC}/' => $story->topic,
           '/<IMAGE>(.*)<\/IMAGE>/s' => empty($story->image_src) ? '' : '$1',
-          '/{IMG}/' => empty($story->image_src) ? '' : $story->image_src,
+          '/{IMG}/' => $story->image_src,
           '/{DETAIL}/' => Gcms::HighlightSearch($detail, $search),
           '/{DATE}/' => Date::format($story->create_date),
           '/{DATEISO}/' => date(DATE_ISO8601, $story->create_date),
@@ -144,8 +146,15 @@ class View extends \Gcms\View
       $story->canonical = Controller::url($index->module, $story->alias, $story->id);
       Gcms::$view->addBreadcrumb($story->canonical, $story->topic);
       // คืนค่า
-      $story->module = $index->module;
-      return $story;
+      return (object)array(
+          'image_src' => $story->image_src,
+          'canonical' => $story->canonical,
+          'module' => $index->module,
+          'topic' => $story->topic,
+          'description' => $story->description,
+          'keywords' => $story->keywords,
+          'detail' => $story->detail
+      );
     }
   }
 }

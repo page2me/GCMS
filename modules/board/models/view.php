@@ -58,7 +58,7 @@ class Model extends \Kotchasan\Model
       if (sizeof($result) == 1) {
         $result[0]['visited'] ++;
         $model->db()->update($model->getFullTableName('board_q'), $result[0]['id'], array('visited' => $result[0]['visited']));
-        $model->db()->cache()->save($result);
+        $model->db()->cacheSave($result);
         $result = $result[0];
         // config
         $result = ArrayTool::unserialize($result['config'], $result);

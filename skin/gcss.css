@@ -3039,7 +3039,7 @@ a.skip_content {
   z-index: 10;
   display: inline-block;
   position: fixed;
-  bottom: 2%;
+  bottom: -2%;
   right: 2%;
   font-size: 2em;
   font-family: Tahoma, Loma, Arial;

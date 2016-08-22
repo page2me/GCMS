@@ -164,7 +164,7 @@ class View extends \Kotchasan\View
   {
     $item['phone'] = "<a href='tel:$item[phone]'>$item[phone]</a>";
     $item['email'] = "<a href='".$this->uri->createBackUri(array('module' => 'sendmail', 'to' => $item['email']))."'>$item[email]</a>";
-    $thumb = is_file(ROOT_PATH.DATA_FOLDER.'personnel/'.$item['picture']) ? WEB_URL.DATA_FOLDER.'personnel/'.$item['picture'] : '../modules/video/img/nopicture.jpg';
+    $thumb = is_file(ROOT_PATH.DATA_FOLDER.'personnel/'.$item['picture']) ? WEB_URL.DATA_FOLDER.'personnel/'.$item['picture'] : '../modules/personnel/img/noimage.jpg';
     $item['picture'] = '<img src="'.$thumb.'" style="max-height:50px" alt=thumbnail>';
     $item['category_id'] = empty($item['category_id']) || empty($this->categories[$item['category_id']]) ? '{LNG_Uncategorized}' : $this->categories[$item['category_id']];
     $item['order'] = '<label><input type=text size=5 id=order_'.$item['module_id'].'_'.$item['id'].' value="'.$item['order'].'"></label>';

@@ -112,8 +112,14 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->topic);
       }
       // คืนค่า
-      $index->detail = $template->render();
-      return $index;
+      return (object)array(
+          'canonical' => $index->canonical,
+          'module' => $index->module,
+          'topic' => $index->topic,
+          'description' => $index->description,
+          'keywords' => $index->keywords,
+          'detail' => $template->render()
+      );
     }
   }
 }

@@ -54,7 +54,7 @@ class Model extends \Kotchasan\Orm\Field
         ->first($select);
       if ($result) {
         $result['visited'] ++;
-        $model->db()->cache()->save(array($result));
+        $model->db()->cacheSave(array($result));
         $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited']));
         return (object)$result;
       }
@@ -90,7 +90,7 @@ class Model extends \Kotchasan\Orm\Field
       if ($result) {
         $result['visited'] ++;
         $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited']));
-        $model->db()->cache()->save(array($result));
+        $model->db()->cacheSave(array($result));
         return (object)$result;
       }
     }
