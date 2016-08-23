@@ -93,7 +93,7 @@ class Index extends \Kotchasan\Controller
           \Widgets\Textlink\Models\Index::previewUpdate($banner['id']);
           return '<div class="widget_textlink '.$query_string['module'].'">'.implode('', $textlinks).'</div>';
         }
-      } else {
+      } elseif (!empty($textlinks)) {
         return '<div class="widget_textlink '.$query_string['module'].'">'.implode('', $textlinks).'</div>';
       }
     }

@@ -125,15 +125,13 @@ class Model extends \Kotchasan\Model
     $model = new static;
     $query = $model->db()->createQuery()
       ->from('board_q Q')
-      ->join('index_detail D', 'INNER', array('D.module_id', 'Q.module_id'))
       ->join('category C', 'LEFT', array(array('C.category_id', 'Q.category_id'), array('C.module_id', 'Q.module_id')))
       ->where(array(
         array('Q.id', $id),
-        array('Q.module_id', (int)$index->module_id),
-        array('D.id', (int)$index->index_id)
+        array('Q.module_id', (int)$index->module_id)
       ))
       ->toArray()
-      ->first('Q.*', 'C.config', 'D.description', 'D.keywords');
+      ->first('Q.*', 'C.config');
     if ($query) {
       $query = ArrayTool::unserialize($query['config'], $query);
       unset($query['config']);
@@ -158,15 +156,13 @@ class Model extends \Kotchasan\Model
     $query = $model->db()->createQuery()
       ->from('board_r R')
       ->join('board_q Q', 'INNER', array(array('Q.id', 'R.index_id'), array('Q.module_id', 'R.module_id')))
-      ->join('index_detail D', 'INNER', array('D.module_id', 'Q.module_id'))
       ->join('category C', 'LEFT', array(array('C.category_id', 'Q.category_id'), array('C.module_id', 'Q.module_id')))
       ->where(array(
         array('R.id', $id),
-        array('Q.module_id', (int)$index->module_id),
-        array('D.id', (int)$index->index_id)
+        array('Q.module_id', (int)$index->module_id)
       ))
       ->toArray()
-      ->first('R.*', 'C.config', 'D.description', 'D.keywords', 'Q.topic', 'Q.category_id', 'C.topic category');
+      ->first('R.*', 'C.config', 'Q.topic', 'Q.category_id', 'C.topic category');
     if ($query) {
       $query = ArrayTool::unserialize($query['config'], $query);
       unset($query['config']);

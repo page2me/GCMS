@@ -70,11 +70,20 @@ class View extends \Gcms\View
     // breadcrumb ของกระทู้
     Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'wbid='.$index->id), $index->topic);
     // breadcrumb ของหน้า
-    $index->canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;rid='.$index->id;
-    Gcms::$view->addBreadcrumb($index->canonical, '{LNG_Edit}');
+    $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;rid='.$index->id;
+    Gcms::$view->addBreadcrumb($canonical, '{LNG_Edit}');
+    // breadcrumb ของหน้า
+    $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;rid='.$index->id;
+    $topic = '{LNG_Edit} {LNG_comments}';
+    Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
-    $index->topic = '{LNG_Edit} {LNG_comments}'.' - '.$index->topic;
-    $index->detail = $template->render();
-    return $index;
+    return (object)array(
+        'module' => $index->module,
+        'canonical' => $canonical,
+        'topic' => $topic.' - '.$index->topic,
+        'detail' => $template->render(),
+        'keywords' => $index->topic,
+        'description' => $index->topic
+    );
   }
 }

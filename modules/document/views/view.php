@@ -61,9 +61,9 @@ class View extends \Gcms\View
       $imageurl = WEB_URL.DATA_FOLDER.'document/';
       // รูปภาพ
       if (!empty($story->picture) && is_file($imagedir.$story->picture)) {
-        $story->image_src = $imageurl.$story->picture;
+        $image_src = $imageurl.$story->picture;
       } else {
-        $story->image_src = null;
+        $image_src = '';
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
@@ -102,8 +102,8 @@ class View extends \Gcms\View
           '/{REPLYFORM}/' => $canReply ? Template::load($index->owner, $index->module, 'reply') : '',
           '/<MEMBER>(.*)<\/MEMBER>/s' => $isMember ? '' : '$1',
           '/{TOPIC}/' => $story->topic,
-          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($story->image_src) ? '' : '$1',
-          '/{IMG}/' => $story->image_src,
+          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($image_src) ? '' : '$1',
+          '/{IMG}/' => $image_src,
           '/{DETAIL}/' => Gcms::HighlightSearch($detail, $search),
           '/{DATE}/' => Date::format($story->create_date),
           '/{DATEISO}/' => date(DATE_ISO8601, $story->create_date),
@@ -122,14 +122,14 @@ class View extends \Gcms\View
           '/{DELETE}/' => $moderator ? '{LNG_Delete}' : '{LNG_Removal request}',
           '/{TAGS}/' => implode(', ', $tags)
         );
-        $story->detail = Template::create($index->owner, $index->module, 'view')->add($replace)->render();
+        $detail = Template::create($index->owner, $index->module, 'view')->add($replace)->render();
       } else {
         // not login
         $replace = array(
           '/{TOPIC}/' => $story->topic,
           '/{DETAIL}/' => '<div class=error>{LNG_Members Only}</div>'
         );
-        $story->detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
+        $detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
       }
       // breadcrumb ของโมดูล
       if (!Gcms::isHome($index->module)) {
@@ -143,17 +143,17 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
       }
       // breadcrumb ของหน้า
-      $story->canonical = Controller::url($index->module, $story->alias, $story->id);
-      Gcms::$view->addBreadcrumb($story->canonical, $story->topic);
+      $canonical = Controller::url($index->module, $story->alias, $story->id);
+      Gcms::$view->addBreadcrumb($canonical, $story->topic);
       // คืนค่า
       return (object)array(
-          'image_src' => $story->image_src,
-          'canonical' => $story->canonical,
+          'image_src' => $image_src,
+          'canonical' => $canonical,
           'module' => $index->module,
           'topic' => $story->topic,
           'description' => $story->description,
           'keywords' => $story->keywords,
-          'detail' => $story->detail
+          'detail' => $detail
       );
     }
   }

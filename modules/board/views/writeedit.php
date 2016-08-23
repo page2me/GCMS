@@ -8,7 +8,6 @@
 
 namespace Board\Writeedit;
 
-use \Kotchasan\Language;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
@@ -103,12 +102,17 @@ class View extends \Gcms\View
     // breadcrumb ของกระทู้
     Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'wbid='.$index->id), $index->topic);
     // breadcrumb ของหน้า
-    $index->canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;qid='.$index->id;
+    $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;qid='.$index->id;
     $topic = '{LNG_Edit} {LNG_Posted}';
-    Gcms::$view->addBreadcrumb($index->canonical, $topic);
+    Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
-    $index->topic = $topic.' - '.$index->topic;
-    $index->detail = $template->render();
-    return $index;
+    return (object)array(
+        'module' => $index->module,
+        'canonical' => $canonical,
+        'topic' => $topic.' - '.$index->topic,
+        'detail' => $template->render(),
+        'keywords' => $index->topic,
+        'description' => $index->topic
+    );
   }
 }

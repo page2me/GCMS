@@ -26,7 +26,7 @@ class Model extends \Kotchasan\Model
    * @param int $module_id
    * @param int $id
    * @param string $alias
-   * @return object
+   * @return object ข้อมูล object ไม่พบคืนค่า null
    */
   public static function get($module_id, $id, $alias)
   {

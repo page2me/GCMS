@@ -8,7 +8,6 @@
 
 namespace Board\View;
 
-use \Kotchasan\Language;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
@@ -60,7 +59,9 @@ class View extends \Gcms\View
       $imageurl = WEB_URL.DATA_FOLDER.'board/';
       // รูปภาพ
       if (!empty($story->picture) && is_file($imagedir.$story->picture)) {
-        $story->image_src = $imageurl.$story->picture;
+        $image_src = $imageurl.$story->picture;
+      } else {
+        $image_src = '';
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
@@ -95,7 +96,7 @@ class View extends \Gcms\View
         // แก้ไขกระทู้ (mod หรือ ตัวเอง)
         $canEdit = $moderator || ($isMember && $login['id'] == $story->member_id);
         // รูปภาพในกระทู้
-        $picture = empty($story->image_src) ? '' : '<div><figure><img src="'.$story->image_src.'" alt="'.$story->topic.'"></figure></div>';
+        $picture = empty($image_src) ? '' : '<div><figure><img src="'.$image_src.'" alt="'.$story->topic.'"></figure></div>';
         // เนื้อหา
         $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($story->detail)), $canView, true, true);
         $replace = array(
@@ -130,14 +131,14 @@ class View extends \Gcms\View
           '/{PIN_TITLE}/' => '{LNG_click to} '.($story->pin == 1 ? '{LNG_Unpin}' : '{LNG_Pin}'),
           '/{LOCK_TITLE}/' => '{LNG_click to} '.($story->locked == 1 ? '{LNG_Unlock}' : '{LNG_Lock}')
         );
-        $story->detail = Template::create($index->owner, $index->module, 'view')->add($replace)->render();
+        $detail = Template::create($index->owner, $index->module, 'view')->add($replace)->render();
       } else {
         // not login
         $replace = array(
           '/{TOPIC}/' => $story->topic,
-          '/{DETAIL}/' => '<div class=error>'.Language::get('Members Only').'</div>'
+          '/{DETAIL}/' => '<div class=error>{LNG_Members Only}</div>'
         );
-        $story->detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
+        $detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
       }
       // breadcrumb ของโมดูล
       if (!Gcms::isHome($index->module)) {
@@ -151,13 +152,18 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
       }
       // breadcrumb ของหน้า
-      $story->canonical = Controller::url($index->module, $story->category_id, $story->id);
-      Gcms::$view->addBreadcrumb($story->canonical, $story->topic);
+      $canonical = Controller::url($index->module, $story->category_id, $story->id);
+      Gcms::$view->addBreadcrumb($canonical, $story->topic);
       // คืนค่า
-      $story->description = Gcms::html2txt($detail);
-      $story->keywords = $story->topic;
-      $story->module = $index->module;
-      return $story;
+      return (object)array(
+          'image_src' => $image_src,
+          'canonical' => $canonical,
+          'module' => $index->module,
+          'topic' => $story->topic,
+          'description' => Gcms::html2txt($detail),
+          'keywords' => $story->topic,
+          'detail' => $detail
+      );
     }
   }
 }
