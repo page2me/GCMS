@@ -35,12 +35,12 @@ class Index extends \Kotchasan\Controller
       // อ่านข้อมูล
       $textlinks = array();
       $type = '';
-      $banner = array('last_preview' => time());
       foreach (\Widgets\Textlink\Models\Index::get(Date::month(), Date::day(), Date::year()) AS $item) {
         if ($item['name'] == $query_string['module']) {
           $type = $type == '' ? $item['type'] : $type;
           if ($item['type'] == 'banner') {
             // แสดงแบนเนอร์เพียงอันเดียว
+            $banner = array('last_preview' => time());
             if ($item['last_preview'] < $banner['last_preview']) {
               $banner = $item;
             }
@@ -81,16 +81,18 @@ class Index extends \Kotchasan\Controller
         return implode("\n", $widget);
       } elseif ($type == 'banner') {
         // แสดงแบนเนอร์เพียงอันเดียว
-        $replace = array();
-        $replace[] = $banner['text'];
-        $replace[] = $banner['description'];
-        $replace[] = WEB_URL.DATA_FOLDER.'image/'.$banner['logo'];
-        $replace[] = empty($banner['url']) ? '' : ' href="'.$banner['url'].'"';
-        $replace[] = $banner['target'] == '_blank' ? ' target=_blank' : '';
-        $textlinks[] = preg_replace($patt, $replace, $styles['banner']);
-        // อัปเดทรายการว่าแสดงผลแล้ว
-        \Widgets\Textlink\Models\Index::previewUpdate($banner['id']);
-        return '<div class="widget_textlink '.$query_string['module'].'">'.implode('', $textlinks).'</div>';
+        if (isset($banner)) {
+          $replace = array();
+          $replace[] = $banner['text'];
+          $replace[] = $banner['description'];
+          $replace[] = WEB_URL.DATA_FOLDER.'image/'.$banner['logo'];
+          $replace[] = empty($banner['url']) ? '' : ' href="'.$banner['url'].'"';
+          $replace[] = $banner['target'] == '_blank' ? ' target=_blank' : '';
+          $textlinks[] = preg_replace($patt, $replace, $styles['banner']);
+          // อัปเดทรายการว่าแสดงผลแล้ว
+          \Widgets\Textlink\Models\Index::previewUpdate($banner['id']);
+          return '<div class="widget_textlink '.$query_string['module'].'">'.implode('', $textlinks).'</div>';
+        }
       } else {
         return '<div class="widget_textlink '.$query_string['module'].'">'.implode('', $textlinks).'</div>';
       }

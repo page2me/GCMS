@@ -39,6 +39,8 @@ class Index extends \Kotchasan\Controller
         }
       }
       $_SESSION['emails'] = $emails;
+    } else {
+      unset($_SESSION['emails']);
     }
     // form
     return \Widgets\Contact\Views\Index::render($emails);

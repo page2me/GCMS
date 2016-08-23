@@ -37,7 +37,6 @@ class Model extends \Kotchasan\Model
       if (!$antispam->valid($request->post('register_antispam')->toString())) {
         // Antispam ไม่ถูกต้อง
         $ret['ret_register_antispam'] = 'this';
-        $ret['input'] = 'register_antispam';
       } else {
         // รับค่าจากการ POST
         $save = array();
@@ -67,89 +66,66 @@ class Model extends \Kotchasan\Model
           $user_table = $this->getFullTableName('user');
           // database connection
           $db = $this->db();
-          // ตรวจสอบค่าที่ส่งมา
-          $input = false;
           // อีเมล์
           if (empty($save['email'])) {
             $ret['ret_register_email'] = 'this';
-            $input = !$input ? 'register_email' : $input;
           } elseif (!Validator::email($save['email'])) {
-            $ret['ret_register_email'] = str_replace(':name', Language::get('Email'), Language::get('Invalid :name'));
-            $input = !$input ? 'register_email' : $input;
+            $ret['ret_register_email'] = Language::replace('Invalid :name', array(':name' => Language::get('Email')));
           } else {
             // ตรวจสอบอีเมล์ซ้ำ
             $search = $db->first($user_table, array('email', $save['email']));
             if ($search !== false) {
-              $ret['ret_register_email'] = str_replace(':name', Language::get('Email'), Language::get('This :name is already registered'));
-              $input = !$input ? 'register_email' : $input;
-            } else {
-              $ret['ret_register_email'] = '';
+              $ret['ret_register_email'] = Language::replace('This :name is already registered', array(':name' => Language::get('Email')));
             }
           }
           // password
           if (mb_strlen($password) < 4) {
             // รหัสผ่านต้องไม่น้อยกว่า 4 ตัวอักษร
             $ret['ret_register_password'] = 'this';
-            $input = !$input ? 'register_password' : $input;
           } elseif ($repassword != $password) {
             // ถ้าต้องการเปลี่ยนรหัสผ่าน กรุณากรอกรหัสผ่านสองช่องให้ตรงกัน
             $ret['ret_register_repassword'] = 'this';
-            $input = !$input ? 'register_repassword' : $input;
           } else {
             $save['password'] = md5($password.$save['email']);
-            $ret['ret_register_password'] = '';
-            $ret['ret_register_repassword'] = '';
           }
           // phone1
           if (!empty($save['phone1'])) {
             if (!preg_match('/[0-9]{9,10}/', $save['phone1'])) {
-              $ret['ret_register_phone1'] = str_replace(':name', Language::get('phone number'), Language::get('Invalid :name'));
-              $input = !$input ? 'register_phone1' : $input;
+              $ret['ret_register_phone1'] = Language::replace('Invalid :name', array(':name' => Language::get('phone number')));
             } else {
               // ตรวจสอบโทรศัพท์
               $search = $db->first($user_table, array('phone1', $save['phone1']));
               if ($search !== false) {
-                $ret['ret_register_phone1'] = str_replace(':name', Language::get('phone number'), Language::get('This :name is already registered'));
-                $input = !$input ? 'register_phone1' : $input;
-              } else {
-                $ret['ret_register_phone1'] = '';
+                $ret['ret_register_phone1'] = Language::replace('This :name is already registered', array(':name' => Language::get('phone number')));
               }
             }
           } elseif (self::$cfg->member_phone == 2) {
             $ret['ret_register_phone1'] = 'this';
-            $input = !$input ? 'register_phone1' : $input;
           }
           // idcard
           if (!empty($save['idcard'])) {
             if (!Validator::idCard($save['idcard'])) {
-              $ret['ret_register_idcard'] = str_replace(':name', Language::get('Identification number'), Language::get('Invalid :name'));
-              $input = !$input ? 'register_idcard' : $input;
+              $ret['ret_register_idcard'] = Language::replace('Invalid :name', array(':name' => Language::get('Identification number')));
             } else {
               // ตรวจสอบ idcard ซ้ำ
               $search = $db->first($user_table, array('idcard', $save['idcard']));
               if ($search !== false) {
-                $ret['ret_register_idcard'] = str_replace(':name', Language::get('Identification number'), Language::get('This :name is already registered'));
-                $input = !$input ? 'register_idcard' : $input;
-              } else {
-                $ret['ret_register_idcard'] = '';
+                $ret['ret_register_idcard'] = Language::replace('This :name is already registered', array(':name' => Language::get('Identification number')));
               }
             }
           } elseif (self::$cfg->member_idcard == 2) {
-            $ret['ret_idcard'] = 'this';
-            $input = !$input ? 'idcard' : $input;
+            $ret['ret_register_idcard'] = 'this';
           }
           // invite
           if (isset($save['invite'])) {
-            $ret['ret_invite'] = '';
             if (!empty($save['invite'])) {
               $search = $db->first($user_table, $save['invite']);
               if ($search === false) {
-                $ret['ret_register_invite'] = str_replace(':name', Language::get('Invitation code'), Language::get('Invalid :name'));
-                $input = !$input ? 'register_invite' : $input;
+                $ret['ret_register_invite'] = Language::replace('Invalid :name', array(':name' => Language::get('Invitation code')));
               }
             }
           }
-          if (!$input) {
+          if (empty($ret)) {
             $save['create_date'] = time();
             $save['subscrib'] = 1;
             $save['status'] = 0;
@@ -180,19 +156,17 @@ class Model extends \Kotchasan\Model
               $save['password'] = $password;
               $_SESSION['login'] = $save;
               // แสดงข้อความตอบรับการสมัครสมาชิก
-              $ret['alert'] = str_replace(':email', $save['email'], Language::get('Registration information sent to :email complete. We will take you to edit your profile'));
+              $ret['alert'] = Language::replace('Registration information sent to :email complete. We will take you to edit your profile', array(':email' => $save['email']));
               // ถ้าไม่มีการกำหนดหน้าถัดไปมา ไปแก้ไขข้อมูลส่วนตัว
               $ret['location'] = isset($next) ? $next : WEB_URL.'index.php?module=editprofile';
             } else {
               // แสดงข้อความตอบรับการสมัครสมาชิก
-              $ret['alert'] = str_replace(':email', $save['email'], Language::get('Register successfully, We have sent complete registration information to :email'));
+              $ret['alert'] = Language::replace('Register successfully, We have sent complete registration information to :email', array(':email' => $save['email']));
               // ถ้าไม่มีการกำหนดหน้าถัดไปมา กลับไปหน้าหลักเว็บไซต์
               $ret['location'] = isset($next) ? $next : WEB_URL.'index.php';
             }
             // clear antispam
             $antispam->delete();
-          } else {
-            $ret['input'] = $input;
           }
         }
       }

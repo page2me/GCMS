@@ -47,7 +47,6 @@ class Index extends \Kotchasan\Model
       } else {
         // ตรวจสอบผู้รับ
         $tmp = $reciever;
-        $reciever = '';
         if (!empty($_SESSION['emails']) && !empty($tmp)) {
           foreach ($_SESSION['emails'] as $name => $email) {
             if ($tmp == $name) {
