@@ -11,9 +11,9 @@ namespace Widgets\Document\Controllers;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
 use \Gcms\Gcms;
-use \Document\Index\Controller;
+use \Kotchasan\Text;
 use \Kotchasan\Grid;
-use \Kotchasan\Date;
+use \Widgets\Document\Views\Index as View;
 
 /**
  * Controller หลัก สำหรับแสดงผล Widget
@@ -37,24 +37,27 @@ class Index extends \Kotchasan\Controller
       // module
       $index = Gcms::$install_modules[$query_string['module']];
       // ค่าที่ส่งมา
-      $cat = isset($query_string['cat']) ? $query_string['cat'] : 0;
-      $interval = isset($query_string['interval']) ? (int)$query_string['interval'] : 0;
       $cols = isset($query_string['cols']) ? (int)$query_string['cols'] : 1;
-      $rows = isset($query_string['rows']) ? (int)$query_string['rows'] : 0;
-      $show = isset($query_string['show']) && preg_match('/^[a-z0-9]+$/', $query_string['show']) ? $query_string['show'] : '';
-      if ($rows > 0) {
-        $count = $rows * $cols;
-      } else {
-        $count = isset($query_string['count']) ? (int)$query_string['count'] : $index->news_count;
+      if (isset($query_string['count'])) {
+        $rows = ceil($query_string['count'] / $cols);
+      } elseif (isset($query_string['rows'])) {
+        $rows = (int)$query_string['rows'];
       }
-      if ($count > 0) {
+      if (empty($rows)) {
+        $rows = ceil((int)$index->news_count / $cols);
+      }
+      if ($rows > 0 && $cols > 0) {
+        $cat = isset($query_string['cat']) ? $query_string['cat'] : 0;
+        $interval = isset($query_string['interval']) ? (int)$query_string['interval'] : 0;
         $sort = isset($query_string['sort']) ? (int)$query_string['sort'] : $index->news_sort;
+        $show = isset($query_string['show']) && preg_match('/^[a-z0-9]+$/', $query_string['show']) ? $query_string['show'] : '';
         $style = isset($query_string['style']) && in_array($query_string['style'], array('list', 'icon', 'thumb')) ? $query_string['style'] : 'list';
         // template
         $template = Template::create('document', $index->module, 'widget');
         $template->add(array(
           '/{DETAIL}/' => '<script>getWidgetNews("{ID}", "Document", '.$interval.')</script>',
-          '/{ID}/' => $index->module_id.'_'.$cat.'_'.$count.'_'.$index->new_date.'_'.$sort.'_'.$cols.'_'.$style.'_'.$show,
+          // module_id_cat_rows_cols_sort_show
+          '/{ID}/' => Text::rndname(10).'_'.$index->module_id.'_'.$cat.'_'.$rows.'_'.$cols.'_'.$sort.'_'.$show,
           '/{MODULE}/' => $index->module,
           '/{STYLE}/' => $style.'view'
         ));
@@ -71,50 +74,24 @@ class Index extends \Kotchasan\Controller
    */
   public function getWidgetNews(Request $request)
   {
-    if ($request->isReferer() && preg_match('/^([0-9]+)_([0-9,]+)_([0-9]+)_([0-9]+)_([0-9]+)_([0-9]+)_(list|icon|thumb)_([a-z0-9]+)?$/', $request->post('id')->toString(), $match)) {
+    // module_id_cat_rows_cols_sort_show
+    if ($request->isReferer() && preg_match('/^([a-z]{10,10})_([0-9]+)_([0-9,]{0,})_([0-9]+)_([0-9]+)_([0-9]+)_([a-z]{0,})$/', $request->post('id')->toString(), $match)) {
+      $rows = (int)$match[4];
+      $cols = (int)$match[5];
       // ตรวจสอบโมดูล
-      $index = \Index\Module\Model::get('document', null, $match[1]);
-      // รายการ
-      $listitem = Grid::create('document', $index->module, 'widgetitem');
-      $listitem->setCols($match[7]);
-      // เครื่องหมาย new
-      $valid_date = time() - (int)$match[4];
-      // query ข้อมูล
-      $bg = 'bg2';
-      foreach (\Widgets\Document\Models\Index::get($index->module_id, $match[2], (isset($match[8]) ? $match[8] : ''), $match[5], $match[3]) as $item) {
-        $bg = $bg == 'bg1' ? 'bg2' : 'bg1';
-        if (!empty($item->picture) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$item->picture)) {
-          $thumb = WEB_URL.DATA_FOLDER.'document/'.$item->picture;
-        } elseif (!empty($index->icon) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$index->icon)) {
-          $thumb = WEB_URL.DATA_FOLDER.'document/'.$index->icon;
-        } else {
-          $thumb = WEB_URL.(isset($index->default_icon) ? $index->default_icon : 'modules/document/img/document-icon.png');
+      $index = \Index\Module\Model::get('document', null, $match[2]);
+      if ($index) {
+        // รายการ
+        $listitem = Grid::create('document', $index->module, 'widgetitem');
+        $listitem->setCols($cols);
+        // เครื่องหมาย new
+        $valid_date = time() - (int)$index->new_date;
+        // query ข้อมูล
+        foreach (\Widgets\Document\Models\Index::get($index->module_id, $match[3], $match[7], $match[6], $rows * $cols) as $item) {
+          $listitem->add(View::renderItem($index, $item, $valid_date, $cols));
         }
-        if ($item->create_date > $valid_date && $item->comment_date == 0) {
-          $icon = 'new';
-        } elseif ($item->last_update > $valid_date || $item->comment_date > $valid_date) {
-          $icon = 'update';
-        } else {
-          $icon = '';
-        }
-        $listitem->add(array(
-          '/{BG}/' => $bg,
-          '/{URL}/' => Controller::url($index->module, $item->alias, $item->id),
-          '/{TOPIC}/' => $item->topic,
-          '/{DETAIL}/' => $item->description,
-          '/{CATEGORY}/' => $item->category,
-          '/{DATE}/' => Date::format($item->create_date, 'd M Y'),
-          '/{UID}/' => $item->member_id,
-          '/{SENDER}/' => $item->sender,
-          '/{STATUS}/' => $item->status,
-          '/{COMMENTS}/' => number_format($item->comments),
-          '/{VISITED}/' => number_format($item->visited),
-          '/{PICTURE}/' => $thumb,
-          '/{ICON}/' => $icon,
-          '/{COLS}/' => $match[6]
-        ));
+        echo createClass('Kotchasan\View')->renderHTML($listitem->render());
       }
-      echo createClass('Kotchasan\View')->renderHTML($listitem->render());
     }
   }
 }

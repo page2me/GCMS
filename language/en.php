@@ -138,5 +138,6 @@ return array(
     'slideshow' => 'Banner Slideshow'
   ),
   'FROM_TIME' => 'from H:i',
-  'TO_TIME' => 'to H:i'
+  'TO_TIME' => 'to H:i',
+  'WIDGET_DATE_FORMAT' => 'L, d F Y'
 );

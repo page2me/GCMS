@@ -115,6 +115,7 @@ class View extends \Gcms\View
           '/{LOGIN_PASSWORD}/' => $login['password'],
           '/{LOGIN_EMAIL}/' => $login['email'],
           '/{QID}/' => $story->id,
+          '/{CATID}/' => $story->category_id,
           '/{MODULE}/' => $index->module,
           '/{MODULEID}/' => $story->module_id,
           '/{ANTISPAM}/' => isset($antispam) ? $antispam->getId() : '',

@@ -404,7 +404,24 @@ $G(window).Ready(function () {
     }
   });
   var _scrolltop = 0;
-  var toTop = $E('toTop') ? $G('toTop').getTop() : 100;
+  var toTop = 100;
+  if ($E('toTop')) {
+    if ($G('toTop').hasClass('fixed_top')) {
+      document.addEvent('toTopChange', function () {
+        if (document.body.hasClass('toTop')) {
+          var _toTop = $G('toTop').copy();
+          _toTop.zIndex = -1;
+          _toTop.id = 'toTop_temp';
+          _toTop.setStyle('opacity', 0);
+          _toTop.removeClass('fixed_top');
+          $G('toTop').after(_toTop);
+        } else if ($E('toTop_temp')) {
+          $G('toTop_temp').remove();
+        }
+      });
+    }
+    toTop = $E('toTop').getTop();
+  }
   document.addEvent('scroll', function () {
     var c = this.viewport.getscrollTop() > toTop;
     if (_scrolltop != c) {

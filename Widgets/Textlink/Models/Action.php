@@ -43,6 +43,8 @@ class Action extends \Kotchasan\Model
           }
         }
         $this->db()->createQuery()->delete('textlink', array('id', $ids))->execute();
+        // คืนค่า JSON
+        echo json_encode(array('location' => 'reload'));
       } elseif ($action == 'move') {
         // sort link
         $max = 1;

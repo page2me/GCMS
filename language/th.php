@@ -736,5 +736,6 @@ return array(
   'Style' => 'รูปแบบ',
   'Clicked' => 'คลิก',
   'Views' => 'เปิดดู',
-  'Please select :name at least one item' => 'กรุณาเลือก :name อย่างน้อย 1 รายการ'
+  'Please select :name at least one item' => 'กรุณาเลือก :name อย่างน้อย 1 รายการ',
+  'WIDGET_DATE_FORMAT' => 'วันLที่ d F พ.ศ. Y'
 );

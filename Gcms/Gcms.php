@@ -220,7 +220,7 @@ class Gcms extends \Kotchasan\KBase
    *
    * @param string $module URL ชื่อโมดูล
    * @param string $document (option)
-   * @param int $catid (option) id ของหมวดหมู่ (default 0)
+   * @param int $catid id ของหมวดหมู่ (default 0)
    * @param int $id (option) id ของข้อมูล (default 0)
    * @param string $query (option) query string อื่นๆ (default ค่าว่าง)
    * @param boolean $encode (option) true=เข้ารหัสด้วย rawurlencode ด้วย (default true)

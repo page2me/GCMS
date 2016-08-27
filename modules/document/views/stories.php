@@ -70,7 +70,15 @@ class View extends \Gcms\View
     if (Gcms::isHome($index->module)) {
       $index->canonical = WEB_URL.'index.php';
     } else {
-      $index->canonical = Gcms::createUrl($index->module);
+      if (empty($index->category_id)) {
+        $index->canonical = Gcms::createUrl($index->module);
+      } else {
+        if (is_array($index->category_id)) {
+          $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'cat='.implode(',', $index->category_id));
+        } else {
+          $index->canonical = Gcms::createUrl($index->module, '', $index->category_id);
+        }
+      }
       $menu = Gcms::$menu->moduleMenu($index->module);
       if ($menu) {
         Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
@@ -84,7 +92,7 @@ class View extends \Gcms\View
       // breadcrumb ของ calendar
       $index->canonical = Gcms::createUrl('calendar', $index->alias);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
-    } elseif (!empty($index->category_id)) {
+    } elseif (!empty($index->category_id) && is_int($index->category_id)) {
       // breadcrumb ของหมวดหมู่
       Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->topic);
     }

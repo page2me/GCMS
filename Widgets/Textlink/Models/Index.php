@@ -83,18 +83,22 @@ class Index extends \Kotchasan\Model
   {
     $model = new static;
     $q2 = $model->groupOr(array('publish_end', 0), array('publish_end', '>', mktime(0, 0, 0, $m, $d, $y)));
-    return $model->db()->createQuery()
-        ->select('id', 'name', 'text', 'type', 'url', 'target', 'logo', 'description', 'template', 'last_preview')
-        ->from('textlink')
-        ->where(array(
-          array('published', 1),
-          array('publish_start', '<', mktime(23, 59, 59, $m, $d, $y)),
-          $q2
-        ))
-        ->order('link_order')
-        ->cacheOn()
-        ->toArray()
-        ->execute();
+    $query = $model->db()->createQuery()
+      ->select('id', 'name', 'text', 'type', 'url', 'target', 'logo', 'description', 'template', 'last_preview')
+      ->from('textlink')
+      ->where(array(
+        array('published', 1),
+        array('publish_start', '<', mktime(23, 59, 59, $m, $d, $y)),
+        $q2
+      ))
+      ->order('link_order')
+      ->cacheOn()
+      ->toArray();
+    $result = array();
+    foreach ($query->execute() as $item) {
+      $result[$item['name']][] = $item;
+    }
+    return $result;
   }
 
   /**

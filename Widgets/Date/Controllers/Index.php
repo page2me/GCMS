@@ -28,6 +28,6 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-    return Date::format(time(), \Kotchasan\Language::get('WIDGET_DATE_FOREMAT'));
+    return Date::format(time(), \Kotchasan\Language::get('WIDGET_DATE_FORMAT'));
   }
 }

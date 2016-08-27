@@ -33,13 +33,13 @@ class Model extends \Kotchasan\Model
   public static function get(Request $request, $index)
   {
     // หมวดหมู่
-    $categories = array();
+    $index->category_id = array();
     $value = $request->request('cat')->filter('\d,');
     if (!empty($value)) {
       foreach (explode(',', $value) as $v) {
         $v = (int)$v;
         if ($v > 0) {
-          $categories[$v] = $v;
+          $index->category_id[$v] = $v;
         }
       }
     }
@@ -60,7 +60,7 @@ class Model extends \Kotchasan\Model
       ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))))
       ->cacheOn()
       ->toArray();
-    if (sizeof($categories) == 1) {
+    if (sizeof($index->category_id) == 1) {
       // มีการเลือกหมวด เพียงหมวดเดียว
       $select[] = 'C.category_id';
       $select[] = 'C.topic c_topic';
@@ -68,7 +68,7 @@ class Model extends \Kotchasan\Model
       $select[] = 'C.icon';
       $select[] = 'C.config';
       $query->join('category C', 'LEFT', array(
-        array('C.category_id', (int)reset($categories)),
+        array('C.category_id', (int)reset($index->category_id)),
         array('C.module_id', 'D.module_id')
       ));
     }
@@ -98,9 +98,6 @@ class Model extends \Kotchasan\Model
             break;
         }
       }
-    }
-    if (!empty($categories) && empty($index->category_id)) {
-      $index->category_id = $categories;
     }
     return $index;
   }

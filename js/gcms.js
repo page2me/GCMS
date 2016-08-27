@@ -406,6 +406,42 @@ function getWidgetNews(id, module, interval, callback) {
     req.autoupdate(WEB_URL + 'xhr.php', floatval(interval), _getRequest, _callback);
   }
 }
+function initWidgetTab(tab, id, module, category) {
+  var patt = /tab_([0-9,]+)/;
+  function getNews(wait, category) {
+    var q = 'class=Widgets\\' + module + '\\Controllers\\Index&method=getWidgetNews&id=' + id + '&cat=' + category;
+    send(WEB_URL + 'xhr.php', q, function (xhr) {
+      $E(id).innerHTML = xhr.responseText;
+    }, wait);
+  }
+  var _tabClick = function () {
+    var temp = this;
+    getNews(this, this.id.replace('tab_', ''));
+    forEach($G(tab).elems('a'), function () {
+      if (temp == this) {
+        this.addClass('select');
+      } else {
+        $G(this).removeClass('select');
+      }
+    });
+  };
+  if (tab != '' && $E(tab)) {
+    var firstitem = null;
+    forEach($G(tab).elems('a'), function (item, index) {
+      if (patt.test(item.id)) {
+        callClick(item, _tabClick);
+        if (index == 0) {
+          firstitem = item;
+        }
+      }
+    });
+    if (firstitem) {
+      _tabClick.call(firstitem);
+    }
+  } else {
+    getNews('wait', category);
+  }
+}
 var G_editor = null;
 function initEditor(frm, editor, action) {
   $G(window).Ready(function () {

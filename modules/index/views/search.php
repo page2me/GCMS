@@ -61,7 +61,7 @@ class View extends \Kotchasan\View
     // template search/search.html
     $template = Template::create('search', 'search', 'search');
     // canonical
-    $index->canonical = Gcms::createUrl($index->module);
+    $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'q='.rawurlencode($index->q));
     // current URL
     $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
     if ($index->total > 0) {
