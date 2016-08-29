@@ -94,6 +94,20 @@ class View extends \Gcms\View
         foreach (explode(',', $story->relate) as $tag) {
           $tags[] = '<a href="'.Gcms::createUrl('tag', $tag).'">'.$tag.'</a>';
         }
+        // breadcrumb ของโมดูล
+        if (!Gcms::isHome($index->module)) {
+          $menu = Gcms::$menu->moduleMenu($index->module);
+          if ($menu) {
+            Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+          }
+        }
+        // breadcrumb ของหมวดหมู่
+        if (!empty($story->category)) {
+          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
+        }
+        // breadcrumb ของหน้า
+        $canonical = Controller::url($index->module, $story->alias, $story->id);
+        Gcms::$view->addBreadcrumb($canonical, $story->topic);
         // เนื้อหา
         $detail = Gcms::showDetail(str_replace(array('&#x007B;', '&#x007D;'), array('{', '}'), $story->detail), $canView, true, true);
         $replace = array(
@@ -121,7 +135,9 @@ class View extends \Gcms\View
           '/{ANTISPAM}/' => isset($antispam) ? $antispam->getId() : '',
           '/{ANTISPAMVAL}/' => isset($antispam) && Login::isAdmin() ? $antispam->getValue() : '',
           '/{DELETE}/' => $moderator ? '{LNG_Delete}' : '{LNG_Removal request}',
-          '/{TAGS}/' => implode(', ', $tags)
+          '/{TAGS}/' => implode(', ', $tags),
+          '/{URL}/' => $canonical,
+          '/{XURL}/' => rawurlencode($canonical)
         );
         $detail = Template::create($index->owner, $index->module, 'view')->add($replace)->render();
       } else {
@@ -132,20 +148,6 @@ class View extends \Gcms\View
         );
         $detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
       }
-      // breadcrumb ของโมดูล
-      if (!Gcms::isHome($index->module)) {
-        $menu = Gcms::$menu->moduleMenu($index->module);
-        if ($menu) {
-          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
-        }
-      }
-      // breadcrumb ของหมวดหมู่
-      if (!empty($story->category)) {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
-      }
-      // breadcrumb ของหน้า
-      $canonical = Controller::url($index->module, $story->alias, $story->id);
-      Gcms::$view->addBreadcrumb($canonical, $story->topic);
       // คืนค่า
       return (object)array(
           'image_src' => $image_src,

@@ -54,7 +54,6 @@ class Model extends \Kotchasan\Model
         if (!$antispam->valid($request->post('reply_antispam')->toString())) {
           // Antispam ไม่ถูกต้อง
           $ret['ret_reply_antispam'] = 'this';
-          $ret['input'] = 'reply_antispam';
         } else {
           // อ่านข้อมูล
           $index = $this->get($id, $request->post('module_id')->toInt(), $index_id);
@@ -77,31 +76,25 @@ class Model extends \Kotchasan\Model
           } elseif ($post['detail'] == '') {
             // ไม่ได้กรอกรายละเอียด
             $ret['ret_reply_detail'] = Language::get('Please fill in').' '.Language::get('Detail');
-            $ret['input'] = 'reply_detail';
           } elseif ($id == 0) {
             // ใหม่
             if ($email == '') {
               // ไม่ได้กรอกอีเมล์
               $ret['ret_reply_email'] = Language::get('Please fill in').' '.Language::get('Email');
-              $ret['input'] = 'reply_email';
             } elseif ($password == '' && !$guest) {
               // สมาชิกเท่านั้น และ ไม่ได้กรอกรหัสผ่าน
               $ret['ret_reply_password'] = Language::get('Please fill in').' '.Language::get('Password');
-              $ret['input'] = 'reply_password';
             } elseif ($email != '' && $password != '') {
               $user = Login::checkMember($email, $password);
               if (is_string($user)) {
                 if (Login::$login_input == 'password') {
                   $ret['ret_reply_password'] = $user;
-                  $ret['input'] = 'reply_password';
                 } else {
                   $ret['ret_reply_email'] = $user;
-                  $ret['input'] = 'reply_email';
                 }
-              } elseif (!in_array($user['status'], $index['can_reply'])) {
+              } elseif (!Gcms::canConfig($login, $index, 'can_reply')) {
                 // ไม่สามารถแสดงความคิดเห็นได้
                 $ret['ret_reply_email'] = Language::get('Sorry, you do not have permission to comment');
-                $ret['input'] = 'reply_email';
               } else {
                 // สมาชิก สามารถแสดงความคิดเห็นได้
                 $post['member_id'] = $user['id'];
@@ -117,11 +110,9 @@ class Model extends \Kotchasan\Model
               if ($search) {
                 // พบอีเมล์ ต้องการ password
                 $ret['ret_reply_password'] = Language::get('Please fill in').' '.Language::get('Password');
-                $ret['input'] = 'reply_password';
               } elseif (!Validator::email($email)) {
                 // อีเมล์ไม่ถูกต้อง
                 $ret['ret_reply_email'] = str_replace(':name', Language::get('Email'), Language::get('Invalid :name'));
-                $ret['input'] = 'reply_email';
               } else {
                 // guest
                 $post['member_id'] = 0;
@@ -237,8 +228,8 @@ class Model extends \Kotchasan\Model
         $index = ArrayTool::unserialize($index['config'], $index);
         $index['can_reply'] = $can_reply;
       }
-      unset($index['config']);
       unset($index['mconfig']);
+      unset($index['config']);
     }
     return $index;
   }

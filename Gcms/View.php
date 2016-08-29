@@ -47,7 +47,7 @@ class View extends \Kotchasan\View
   /**
    * เพิ่ม breadcrumb.
    *
-   * @param string $url ลิงค์
+   * @param string|null $url ลิงค์ ถ้าเป็นค่า null จะแสดงข้อความเฉยๆ
    * @param string $menu ข้อความแสดงใน breadcrumb
    * @param string $tooltip (option) ทูลทิป
    * @param string $class (option) คลาสสำหรับลิงค์นี้
@@ -86,7 +86,10 @@ class View extends \Kotchasan\View
       // เวลาประมวลผล
       '/{ELAPSED}/' => round(microtime(true) - REQUEST_TIME, 4),
       // จำนวน Query
-      '/{QURIES}/' => \Kotchasan\Database\Driver::queryCount()
+      '/{QURIES}/' => \Kotchasan\Database\Driver::queryCount(),
+      /* ภาษา */
+      '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
+      '/{LANGUAGE}/' => \Kotchasan\Language::name()
     ));
     return parent::renderHTML($template);
   }

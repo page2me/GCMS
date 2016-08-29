@@ -8,12 +8,12 @@
 
 namespace Board\Write;
 
-use \Kotchasan\Language;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Kotchasan\Login;
 use \Kotchasan\Antispam;
+use \Kotchasan\Language;
 
 /**
  * ตั้งกระทู้
@@ -34,19 +34,15 @@ class View extends \Gcms\View
    */
   public function index(Request $request, $index)
   {
-    // หมวดที่เลือก
-    $cat = $request->get('cat')->toInt();
     // login
     $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
     // สมาชิก true
     $isMember = $login['status'] > -1;
     // หมวดหมู่
     $category_options = array();
-    $category = '';
     foreach (\Index\Category\Model::all($index->module_id) as $item) {
-      if ($cat == $item->category_id) {
-        $category = $item->topic;
-        $category_options[] = '<option value='.$item->category_id.'>'.$category.'</option>';
+      if (empty($index->category_id) || $index->category_id == $item->category_id) {
+        $category_options[] = '<option value='.$item->category_id.'>'.$item->topic.'</option>';
       }
     }
     if (empty($category_options)) {
@@ -76,18 +72,25 @@ class View extends \Gcms\View
       $menu = Gcms::$menu->moduleMenu($index->module);
       if ($menu) {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+      } else {
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic);
       }
     }
     // breadcrumb ของหมวดหมู่
-    if ($category != '') {
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $category, $category);
+    if (!empty($index->category)) {
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->category);
     }
-    // breadcrumb ของหน้า
-    $index->canonical = Gcms::createUrl($index->module, 'write', $index->category_id);
-    $index->topic = Language::get('Create topic');
-    Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
+    $canonical = WEB_URL.'index.php?module='.$index->module.'-write';
+    $topic = Language::get('Create topic');
+    Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
-    $index->detail = $template->render();
-    return $index;
+    return (object)array(
+        'module' => $index->module,
+        'canonical' => $canonical,
+        'topic' => $topic.' - '.$index->topic,
+        'detail' => $template->render(),
+        'keywords' => $index->topic,
+        'description' => $index->topic
+    );
   }
 }

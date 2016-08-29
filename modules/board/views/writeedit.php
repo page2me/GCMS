@@ -13,6 +13,7 @@ use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Kotchasan\Login;
 use \Kotchasan\Antispam;
+use \Kotchasan\Language;
 
 /**
  * แก้ไขกระทู้
@@ -38,7 +39,6 @@ class View extends \Gcms\View
     // สมาชิก true
     $isMember = $login['status'] > -1;
     // หมวดหมู่
-    $categories = array();
     $category_options = array();
     foreach (\Index\Category\Model::all($index->module_id) as $item) {
       $categories[$item->category_id] = $item->topic;
@@ -93,17 +93,19 @@ class View extends \Gcms\View
       $menu = Gcms::$menu->moduleMenu($index->module);
       if ($menu) {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+      } else {
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->title);
       }
     }
     // breadcrumb ของหมวดหมู่
-    if (!empty($index->category_id)) {
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $categories[$index->category_id], $categories[$index->category_id]);
+    if (!empty($index->category)) {
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->category);
     }
     // breadcrumb ของกระทู้
     Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'wbid='.$index->id), $index->topic);
     // breadcrumb ของหน้า
     $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;qid='.$index->id;
-    $topic = '{LNG_Edit} {LNG_Posted}';
+    $topic = Language::get('Edit');
     Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
     return (object)array(

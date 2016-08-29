@@ -41,7 +41,7 @@ class Controller extends \Kotchasan\Controller
     // กำหนด skin ให้กับ template
     Template::init($request->get('skin', self::$cfg->skin)->toString());
     // backend
-    Gcms::$view = new \Kotchasan\View;
+    Gcms::$view = new \Gcms\View;
     if ($login = Login::adminAccess()) {
       // โหลดโมดูลที่ติดตั้งแล้ว
       \Index\Index\Model::installedmodules();

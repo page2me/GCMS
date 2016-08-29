@@ -145,6 +145,8 @@ class View extends \Gcms\View
         $menu = Gcms::$menu->moduleMenu($index->module);
         if ($menu) {
           Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+        } else {
+          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic);
         }
       }
       // breadcrumb ของหมวดหมู่

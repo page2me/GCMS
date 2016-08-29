@@ -65,10 +65,11 @@ class View extends \Gcms\View
         } else {
           $icon = '';
         }
+        $category_id = empty($index->category_id) ? 0 : $index->category_id;
         $listitem->add(array(
           '/{ID}/' => $item->id,
           '/{PICTURE}/' => $thumb,
-          '/{URL}/' => Controller::url($index->module, $index->category_id, $item->id),
+          '/{URL}/' => Controller::url($index->module, $category_id, $item->id),
           '/{TOPIC}/' => $item->topic,
           '/{UID}/' => $item->member_id,
           '/{SENDER}/' => $item->sender,
@@ -104,12 +105,12 @@ class View extends \Gcms\View
         '/{LIST}/' => $listitem->render(),
         '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
         '/{NEWTOPIC}/' => empty($index->can_post) ? 'hidden' : '',
-        '/{CATEGORY}/' => $index->category_id,
+        '/{CATEGORY}/' => $category_id,
         '/{MODULE}/' => $index->module
       ));
       // breadcrumb ของหมวดหมู่
-      if (!empty($index->category_id)) {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->topic);
+      if (!empty($category_id)) {
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $category_id), $index->topic);
       }
       // คืนค่า
       return (object)array(

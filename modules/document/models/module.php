@@ -33,13 +33,13 @@ class Model extends \Kotchasan\Model
   public static function get(Request $request, $index)
   {
     // หมวดหมู่
-    $index->category_id = array();
+    $categories = array();
     $value = $request->request('cat')->filter('\d,');
     if (!empty($value)) {
       foreach (explode(',', $value) as $v) {
         $v = (int)$v;
         if ($v > 0) {
-          $index->category_id[$v] = $v;
+          $categories[$v] = $v;
         }
       }
     }
@@ -60,15 +60,15 @@ class Model extends \Kotchasan\Model
       ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))))
       ->cacheOn()
       ->toArray();
-    if (sizeof($index->category_id) == 1) {
+    if (sizeof($categories) == 1) {
       // มีการเลือกหมวด เพียงหมวดเดียว
       $select[] = 'C.category_id';
-      $select[] = 'C.topic c_topic';
-      $select[] = 'C.detail c_description';
+      $select[] = 'C.topic category';
+      $select[] = 'C.detail category_description';
       $select[] = 'C.icon';
       $select[] = 'C.config';
       $query->join('category C', 'LEFT', array(
-        array('C.category_id', (int)reset($index->category_id)),
+        array('C.category_id', (int)reset($categories)),
         array('C.module_id', 'D.module_id')
       ));
     }
@@ -76,14 +76,10 @@ class Model extends \Kotchasan\Model
     if ($result) {
       foreach ($result as $key => $value) {
         switch ($key) {
-          case 'c_topic':
-            $index->topic = Gcms::ser2Str($value);
-            break;
-          case 'c_description':
-            $index->description = Gcms::ser2Str($value);
-            break;
+          case 'category':
+          case 'category_description':
           case 'icon':
-            $index->icon = Gcms::ser2Str($value);
+            $index->$key = Gcms::ser2Str($value);
             break;
           case 'config':
             $value = @unserialize($value);
@@ -121,9 +117,7 @@ class Model extends \Kotchasan\Model
       ->toArray()
       ->first('R.id', 'R.index_id', 'R.detail', 'R.module_id', 'R.member_id', 'C.config', 'C.category_id', 'C.topic category', 'D.topic');
     if ($query) {
-      if ($query['category_id'] > 0) {
-        $query = ArrayTool::unserialize($query['config'], $query);
-      }
+      $query = ArrayTool::unserialize($query['config'], $query);
       unset($query['config']);
       foreach ($query as $k => $v) {
         $index->$k = $v;

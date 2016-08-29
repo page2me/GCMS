@@ -21,25 +21,26 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * Controller หลักของโมดูล ใช้เพื่อตรวจสอบว่าจะเรียกหน้าไหนมาแสดงผล
+   * เขียนความคิดเห็น
    *
-   * @param Object $module ข้อมูลโมดูลจาก database
-   * @return Object
+   * @param Request $request
+   * @param object $module ข้อมูลโมดูลจาก database
+   * @return object
    */
   public function init(Request $request, $module)
   {
     // รายการที่แก้ไข
-    $id = $request->get('id')->toInt();
+    $qid = $request->get('id')->toInt();
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
-    if ($id > 0) {
-      $index = \Board\Module\Model::getQuestionById($id, $module);
+    if ($qid > 0) {
+      $index = \Board\Module\Model::getQuestionById($qid, $module);
     } else {
       $index = \Board\Module\Model::get($request, $module);
     }
     if (empty($index)) {
       // 404
       $page = createClass('Index\PageNotFound\Controller')->init($request, 'board');
-    } elseif ($id > 0) {
+    } elseif ($qid > 0) {
       // ฟอร์มแก้ไขกระทู้
       $page = createClass('Board\Writeedit\View')->index($request, $index);
     } else {

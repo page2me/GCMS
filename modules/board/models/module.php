@@ -56,23 +56,14 @@ class Model extends \Kotchasan\Model
     );
     $query = $model->db()->createQuery()
       ->from('index_detail D')
-      ->join('index I', 'INNER', array(
-        array('I.index', 1),
-        array('I.id', 'D.id'),
-        array('I.module_id', 'D.module_id'),
-        array('I.language', 'D.language')
-      ))
-      ->where(array(
-        array('I.module_id', (int)$index->module_id),
-        array('D.language', array(Language::name(), ''))
-      ))
+      ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
+      ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))))
       ->cacheOn()
       ->toArray();
     if (sizeof($categories) == 1) {
       // มีการเลือกหมวด เพียงหมวดเดียว
       $select[] = 'C.category_id';
-      $select[] = 'C.topic c_topic';
-      $select[] = 'C.detail c_description';
+      $select[] = 'C.topic category';
       $select[] = 'C.icon';
       $select[] = 'C.config';
       $query->join('category C', 'LEFT', array(
@@ -84,14 +75,9 @@ class Model extends \Kotchasan\Model
     if ($result) {
       foreach ($result as $key => $value) {
         switch ($key) {
-          case 'c_topic':
-            $index->topic = Gcms::ser2Str($value);
-            break;
-          case 'c_description':
-            $index->description = Gcms::ser2Str($value);
-            break;
+          case 'category':
           case 'icon':
-            $index->icon = Gcms::ser2Str($value);
+            $index->$key = Gcms::ser2Str($value);
             break;
           case 'config':
             $value = @unserialize($value);
@@ -106,9 +92,6 @@ class Model extends \Kotchasan\Model
             break;
         }
       }
-    }
-    if (empty($index->category_id)) {
-      $index->category_id = empty($categories) ? 0 : (int)reset($categories);
     }
     return $index;
   }
@@ -125,13 +108,15 @@ class Model extends \Kotchasan\Model
     $model = new static;
     $query = $model->db()->createQuery()
       ->from('board_q Q')
+      ->join('index I', 'INNER', array(array('I.index', 1), array('I.module_id', 'Q.module_id'), array('I.language', array('', Language::name()))))
+      ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
       ->join('category C', 'LEFT', array(array('C.category_id', 'Q.category_id'), array('C.module_id', 'Q.module_id')))
       ->where(array(
         array('Q.id', $id),
         array('Q.module_id', (int)$index->module_id)
       ))
       ->toArray()
-      ->first('Q.*', 'C.config');
+      ->first('Q.*', 'C.config', 'D.topic title');
     if ($query) {
       $query = ArrayTool::unserialize($query['config'], $query);
       unset($query['config']);
@@ -156,13 +141,12 @@ class Model extends \Kotchasan\Model
     $query = $model->db()->createQuery()
       ->from('board_r R')
       ->join('board_q Q', 'INNER', array(array('Q.id', 'R.index_id'), array('Q.module_id', 'R.module_id')))
+      ->join('index I', 'INNER', array(array('I.index', 1), array('I.module_id', 'Q.module_id'), array('I.language', array('', Language::name()))))
+      ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
       ->join('category C', 'LEFT', array(array('C.category_id', 'Q.category_id'), array('C.module_id', 'Q.module_id')))
-      ->where(array(
-        array('R.id', $id),
-        array('Q.module_id', (int)$index->module_id)
-      ))
+      ->where(array(array('R.id', $id), array('Q.module_id', (int)$index->module_id)))
       ->toArray()
-      ->first('R.*', 'C.config', 'Q.topic', 'Q.category_id', 'C.topic category');
+      ->first('R.*', 'C.config', 'Q.topic', 'Q.category_id', 'C.topic category', 'D.topic title');
     if ($query) {
       $query = ArrayTool::unserialize($query['config'], $query);
       unset($query['config']);
