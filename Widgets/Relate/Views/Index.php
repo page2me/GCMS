@@ -19,7 +19,7 @@ use \Kotchasan\Date;
  *
  * @since 1.0
  */
-class Index extends \Kotchasan\View
+class Index extends \Gcms\View
 {
 
   /**
@@ -52,6 +52,6 @@ class Index extends \Kotchasan\View
         '/{COLS}/' => $index->cols
       ));
     }
-    return createClass('Kotchasan\View')->renderHTML($listitem->render());
+    return createClass('Gcms\View')->renderHTML($listitem->render());
   }
 }

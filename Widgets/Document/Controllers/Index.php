@@ -90,7 +90,7 @@ class Index extends \Kotchasan\Controller
         foreach (\Widgets\Document\Models\Index::get($index->module_id, $match[3], $match[7], $match[6], $rows * $cols) as $item) {
           $listitem->add(View::renderItem($index, $item, $valid_date, $cols));
         }
-        echo createClass('Kotchasan\View')->renderHTML($listitem->render());
+        echo createClass('Gcms\View')->renderHTML($listitem->render());
       }
     }
   }

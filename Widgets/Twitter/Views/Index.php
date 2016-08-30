@@ -15,7 +15,7 @@ namespace Widgets\Twitter\Views;
  *
  * @since 1.0
  */
-class Index extends \Kotchasan\View
+class Index extends \Gcms\View
 {
 
   /**

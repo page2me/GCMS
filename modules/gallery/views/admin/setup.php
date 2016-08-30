@@ -19,7 +19,7 @@ use \Kotchasan\Date;
  *
  * @since 1.0
  */
-class View extends \Kotchasan\View
+class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล

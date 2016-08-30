@@ -40,7 +40,7 @@ class Controller extends \Kotchasan\Controller
         $detail = createClass($className)->init($request, $index);
       }
       if ($detail != '') {
-        $view = new \Kotchasan\View;
+        $view = new \Gcms\View;
         $view->setContents(array(
           '/{CONTENT}/' => $detail
         ));

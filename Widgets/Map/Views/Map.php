@@ -18,7 +18,7 @@ use \Kotchasan\Language;
  *
  * @since 1.0
  */
-class Map extends \Kotchasan\View
+class Map extends \Gcms\View
 {
 
   public function render(Request $request)

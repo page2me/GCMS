@@ -19,7 +19,7 @@ use \Kotchasan\Date;
  *
  * @since 1.0
  */
-class Lists extends \Kotchasan\View
+class Lists extends \Gcms\View
 {
 
   /**
@@ -51,7 +51,7 @@ class Lists extends \Kotchasan\View
       ));
     }
     $content = '<div id="'.$id.'" class="document-list download"><div class="row listview">';
-    $content .= createClass('Kotchasan\View')->renderHTML($listitem->render());
+    $content .= createClass('Gcms\View')->renderHTML($listitem->render());
     $content .= '</div></div>';
     $content .= '<script>initDownloadList("'.$id.'");</script>';
     return $content;

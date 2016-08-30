@@ -19,7 +19,7 @@ use \Kotchasan\Language;
  *
  * @since 1.0
  */
-class Download extends \Kotchasan\View
+class Download extends \Gcms\View
 {
 
   /**

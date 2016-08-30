@@ -17,7 +17,7 @@ use \Kotchasan\Html;
  *
  * @since 1.0
  */
-class Write extends \Kotchasan\View
+class Write extends \Gcms\Adminview
 {
 
   /**

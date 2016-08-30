@@ -18,7 +18,7 @@ use \Kotchasan\Language;
  *
  * @since 1.0
  */
-class Settings extends \Kotchasan\View
+class Settings extends \Gcms\Adminview
 {
 
   /**

@@ -20,7 +20,7 @@ use \Kotchasan\Country;
  *
  * @since 1.0
  */
-class View extends \Kotchasan\View
+class View extends \Gcms\View
 {
 
   /**

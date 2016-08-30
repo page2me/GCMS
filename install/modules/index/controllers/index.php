@@ -45,7 +45,7 @@ class Controller extends \Kotchasan\Controller
       $page = createClass('Index\Success\View')->render($request);
     }
     // แสดงผล
-    $view = new \Kotchasan\View;
+    $view = new \Gcms\View;
     $view->setContents(array(
       '/{CONTENT}/' => $page->content,
       '/{TITLE}/' => $page->title

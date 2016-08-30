@@ -20,7 +20,7 @@ use \Gcms\Gcms;
  *
  * @since 1.0
  */
-class View extends \Kotchasan\View
+class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล

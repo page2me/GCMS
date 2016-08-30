@@ -41,7 +41,7 @@ class Controller extends \Kotchasan\Controller
     // กำหนด skin ให้กับ template
     Template::init($request->get('skin', self::$cfg->skin)->toString());
     // backend
-    Gcms::$view = new \Gcms\View;
+    Gcms::$view = new \Gcms\Adminview;
     if ($login = Login::adminAccess()) {
       // โหลดโมดูลที่ติดตั้งแล้ว
       \Index\Index\Model::installedmodules();
@@ -71,7 +71,7 @@ class Controller extends \Kotchasan\Controller
       // title
       '/{TITLE}/' => $main->title().' (Admin)',
       // url สำหรับกลับไปหน้าก่อนหน้า
-      '/{BACKURL(\?([a-zA-Z0-9=&\-_@\.]+))?}/e' => '\Kotchasan\View::back'
+      '/{BACKURL(\?([a-zA-Z0-9=&\-_@\.]+))?}/e' => '\Gcms\Adminview::back'
     ));
     if ($login) {
       $name = trim($login['fname'].' '.$login['lname']);
