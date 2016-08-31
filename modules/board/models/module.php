@@ -93,6 +93,9 @@ class Model extends \Kotchasan\Model
         }
       }
     }
+    if (!empty($categories) && empty($index->category_id)) {
+      $index->category_id = $categories;
+    }
     return $index;
   }
 
