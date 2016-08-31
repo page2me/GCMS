@@ -9,7 +9,6 @@
 namespace Index\Index;
 
 use \Gcms\Gcms;
-use \Kotchasan\Language;
 use \Kotchasan\Login;
 
 /**
