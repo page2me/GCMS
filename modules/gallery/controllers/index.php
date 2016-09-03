@@ -32,19 +32,21 @@ class Controller extends \Kotchasan\Controller
   {
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     $index = \Index\Module\Model::getDetails($index);
-    if ($request->request('id')->exists()) {
-      // ดูอัลบัม
-      $page = createClass('Gallery\View\View')->index($request, $index);
-    } else {
-      // หน้าแสดงรายการอัลบัม
-      $page = createClass('Gallery\Album\View')->index($request, $index);
+    if ($index) {
+      if ($request->request('id')->exists()) {
+        // ดูอัลบัม
+        $page = createClass('Gallery\View\View')->index($request, $index);
+      } else {
+        // หน้าแสดงรายการอัลบัม
+        $page = createClass('Gallery\Album\View')->index($request, $index);
+      }
+
+      if ($page) {
+        return $page;
+      }
     }
-    if ($page) {
-      return $page;
-    } else {
-      // 404
-      return createClass('Index\PageNotFound\Controller')->init($request, 'gallery');
-    }
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init($request, 'gallery');
   }
 
   /**

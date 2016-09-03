@@ -46,12 +46,21 @@ class Model extends \Kotchasan\Model
       $save = array(
         'time' => $time,
         'session' => $session_id,
-        'ip' => $request->getClientIp()
+        'ip' => $request->getClientIp(),
+        'member_id' => 0,
+        'displayname' => '',
+        'icon' => ''
       );
       $login = Login::isMember();
       if ($login) {
-        $save['member_id'] = (int)$login['id'];
-        $save['displayname'] = $login['displayname'] == '' ? $login['email'] : $login['displayname'];
+        if (!empty($login['id'])) {
+          $save['member_id'] = (int)$login['id'];
+        }
+        if (!empty($login['displayname'])) {
+          $save['displayname'] = $login['displayname'];
+        } elseif (!empty($login['email'])) {
+          $save['displayname'] = $login['email'];
+        }
       }
       $this->db()->insert($useronline, $save);
       // คืนค่า user online
@@ -65,12 +74,9 @@ class Model extends \Kotchasan\Model
         while (false !== ($text = readdir($f))) {
           if ($text != "." && $text != "..") {
             if (is_dir($dir.$text)) {
-              if (is_file($dir.$text.'/controllers/useronline.php')) {
-                include $dir.$text.'/controllers/useronline.php';
-                $class = ucfirst($text).'\Useronline\Controller';
-                if (method_exists($class, 'index')) {
-                  $ret = createClass($class)->index($ret);
-                }
+              $class = ucfirst($text).'\Useronline\Controller';
+              if (method_exists($class, 'index')) {
+                $ret = createClass($class)->index($ret);
               }
             }
           }
