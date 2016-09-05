@@ -37,7 +37,7 @@ class View extends \Gcms\View
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
       '/{WEBTITLE}/' => self::$cfg->web_title,
       '/{SUBTITLE}/' => empty(Login::$login_message) ? self::$cfg->web_description : '<span class=error>'.Login::$login_message.'</span>',
-      '/{DISPLAYNAME}/' => empty($login['displayname']) ? $login['email'] : $login['displayname'],
+      '/{DISPLAYNAME}/' => empty($login['displayname']) ? (empty($login['email']) ? 'Unname' : $login['email']) : $login['displayname'],
       '/{ID}/' => (int)$login['id'],
       '/{STATUS}/' => $login['status'],
       '/{ADMIN}/' => $login && Login::isAdmin() ? '' : 'hidden',
