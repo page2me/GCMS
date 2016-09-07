@@ -82,7 +82,7 @@ class View extends \Kotchasan\View
       // ขนาดตัวอักษร
       '/{FONTSIZE}/' => '<a class="font_size small" title="{LNG_change font small}">A<sup>-</sup></a><a class="font_size normal" title="{LNG_change font normal}">A</a><a class="font_size large" title="{LNG_change font large}">A<sup>+</sup></a>',
       // เวอร์ชั่นของ GCMS
-      '/{VERSION}/' => self::$cfg->version,
+      '/{VERSION}/' => isset(self::$cfg->version) ? self::$cfg->version : '',
       // เวลาประมวลผล
       '/{ELAPSED}/' => round(microtime(true) - REQUEST_TIME, 4),
       // จำนวน Query

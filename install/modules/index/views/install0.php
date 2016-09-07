@@ -6,7 +6,7 @@
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Index\Install;
+namespace Index\Install0;
 
 use \Kotchasan\Http\Request;
 
@@ -40,7 +40,6 @@ class View extends \Gcms\View
         'PDO mysql Support' => defined('PDO::ATTR_DRIVER_NAME') && in_array('mysql', \PDO::getAvailableDrivers()) ? 'correct' : 'incorrect',
         'MB String Support' => extension_loaded('mbstring') ? 'correct' : 'incorrect',
         'Register Globals <b>Off</b>' => ini_get('register_globals') == false ? 'correct' : 'incorrect',
-        'Magic Quotes GPC <b>Off</b>' => ini_get('magic_quotes_gpc') == false ? 'correct' : 'incorrect',
         'Zlib Compression Support' => extension_loaded('zlib') ? 'correct' : 'incorrect',
         'JSON Support' => function_exists('json_encode') && function_exists('json_decode') ? 'correct' : 'incorrect',
         'XML Support' => extension_loaded('xml') ? 'correct' : 'incorrect'
@@ -55,6 +54,7 @@ class View extends \Gcms\View
       $content[] = '<ul>';
       $content[] = '<li class='.((bool)ini_get('safe_mode') === false ? 'correct' : 'incorrect').'>Safe Mode <b>OFF</b></li>';
       $content[] = '<li class='.((bool)ini_get('file_uploads') === true ? 'correct' : 'incorrect').'>File Uploads <b>ON</b></li>';
+      $content[] = '<li class='.((bool)ini_get('magic_quotes_gpc') === false ? 'correct' : 'incorrect').'>Magic Quotes GPC <b>OFF</b></li>';
       $content[] = '<li class='.((bool)ini_get('magic_quotes_runtime') === false ? 'correct' : 'incorrect').'>Magic Quotes Runtime <b>OFF</b></li>';
       $content[] = '<li class='.((bool)ini_get('session.auto_start') === false ? 'correct' : 'incorrect').'>Session Auto Start <b>OFF</b></li>';
       $content[] = '<li class='.(function_exists('zip_open') && function_exists('zip_read') ? 'correct' : 'incorrect').'>Native ZIP support <b>ON</b></li>';
