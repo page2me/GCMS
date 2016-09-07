@@ -45,14 +45,12 @@ class Controller extends \Kotchasan\Controller
       // owner
       $modules = array();
       foreach (Gcms::$install_owners as $owner => $item) {
-        if (file_exists(ROOT_PATH.'modules/'.$owner.'/controllers/admin/init.php')) {
-          $class = ucfirst($owner).'\Admin\Init\Controller';
-          if (method_exists($class, 'description')) {
-            // get module description
-            $description = $class::description();
-            if (!empty($description)) {
-              $modules[$owner] = $description.' ['.$owner.']';
-            }
+        $class = ucfirst($owner).'\Admin\Init\Controller';
+        if (class_exists($class) && method_exists($class, 'description')) {
+          // get module description
+          $description = $class::description();
+          if (!empty($description)) {
+            $modules[$owner] = $description.' ['.$owner.']';
           }
         }
       }

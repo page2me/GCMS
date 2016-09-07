@@ -36,7 +36,7 @@ class Controller extends \Kotchasan\Controller
     $index = \Index\Export\Model::module($request->get('module')->toString());
     if ($index) {
       $className = ucfirst($index->owner).'\Export\Controller';
-      if (method_exists($className, 'init')) {
+      if (class_exists($className) && method_exists($className, 'init')) {
         $detail = createClass($className)->init($request, $index);
       }
       if ($detail != '') {

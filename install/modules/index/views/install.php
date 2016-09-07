@@ -6,7 +6,7 @@
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Index\Install0;
+namespace Index\Install;
 
 use \Kotchasan\Http\Request;
 

@@ -205,7 +205,7 @@ class Model extends \Kotchasan\Model
               if (empty($module_id)) {
                 // โมดูลใหม่
                 $class = ucfirst($module_save['owner']).'\Admin\Settings\Model';
-                if (method_exists($class, 'defaultSettings')) {
+                if (class_exists($class) && method_exists($class, 'defaultSettings')) {
                   $module_save['config'] = serialize($class::defaultSettings());
                 }
                 $module_id = $model->db()->insert($table_modules, $module_save);

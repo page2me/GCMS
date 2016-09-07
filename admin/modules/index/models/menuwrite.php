@@ -96,7 +96,7 @@ class Model extends \Kotchasan\Model
       // inint module
       foreach ($result as $owner => $values) {
         $class = ucfirst($owner).'\Admin\Init\Model';
-        if (method_exists($class, 'initMenuwrite')) {
+        if (class_exists($class) && method_exists($class, 'initMenuwrite')) {
           $result[$owner] = $class::initMenuwrite($values);
         }
       }
@@ -203,7 +203,7 @@ class Model extends \Kotchasan\Model
         if ($action == 1 && preg_match('/^([a-z]+)_(([a-z]+)(_([a-z0-9]+))?|([0-9]+))$/', self::$request->post('index_id')->toString(), $match)) {
           // module Initial
           $class = ucfirst($match[1]).'\Admin\Init\Model';
-          if (method_exists($class, 'parseMenuwrite')) {
+          if (class_exists($class) && method_exists($class, 'parseMenuwrite')) {
             $class::parseMenuwrite($match);
           }
           if (empty($match[6])) {

@@ -34,7 +34,7 @@ class Controller extends \Kotchasan\Controller
     if (empty(self::$cfg->version)) {
       // ติดตั้งครั้งแรก
       $class = 'Index\Install'.$request->request('step')->toInt().'\View';
-      if (method_exists($class, 'render')) {
+      if (class_exists($class) && method_exists($class, 'render')) {
         $page = createClass($class)->render($request);
       } else {
         $page = createClass('Index\Install\View')->render($request);

@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
       $result = null;
       // โมดูลหรือ Widget ที่จะติดตั้ง
       $class = $request->post('module')->filter('\\a-zA-Z');
-      if (method_exists($class, 'install')) {
+      if (class_exists($class) && method_exists($class, 'install')) {
         $result = createClass($class)->install($request);
       }
       if (empty($result) || empty($result['value'])) {

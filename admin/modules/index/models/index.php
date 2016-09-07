@@ -75,13 +75,10 @@ class Model extends \Kotchasan\Orm\Field
       self::$menus = self::loadMenus();
       // called Initial
       foreach (Gcms::$install_owners as $owner => $items) {
-        if (is_file(ROOT_PATH.'modules/'.$owner.'/controllers/admin/init.php')) {
-          include ROOT_PATH.'modules/'.$owner.'/controllers/admin/init.php';
-          $class = ucfirst($owner).'\Admin\Init\Controller';
-          if (method_exists($class, 'init')) {
-            // module Initial
-            $class::init($items);
-          }
+        $class = ucfirst($owner).'\Admin\Init\Controller';
+        if (class_exists($class) && method_exists($class, 'init')) {
+          // module Initial
+          $class::init($items);
         }
       }
     } else {

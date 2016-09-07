@@ -75,7 +75,7 @@ class Model extends \Kotchasan\Model
           if ($text != "." && $text != "..") {
             if (is_dir($dir.$text)) {
               $class = ucfirst($text).'\Useronline\Controller';
-              if (method_exists($class, 'index')) {
+              if (class_exists($class) && method_exists($class, 'index')) {
                 $ret = createClass($class)->index($ret);
               }
             }

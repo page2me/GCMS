@@ -91,7 +91,9 @@ class Controller extends \Kotchasan\Controller
       }
       // เรียก method init
       $method = 'init';
-    } elseif (!empty($modules['module']) && method_exists('Index\Member\Controller', $modules['module'])) {
+    } elseif (!empty($modules['module']) &&
+      class_exists('Index\Member\Controller') &&
+      method_exists('Index\Member\Controller', $modules['module'])) {
       // หน้าสมาชิก
       $className = 'Index\Member\Controller';
       // method ที่เลือก
