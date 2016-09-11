@@ -99,7 +99,7 @@ class View extends \Gcms\Adminview
         'autocomplete' => 'off',
         'action' => 'index.php/index/model/database/import',
         'onsubmit' => 'doFormSubmit',
-        'confirmsubmit' => 'doCustomConfirm("{LNG_Do you want to import the database?}")',
+        'onbeforesubmit' => 'doCustomConfirm("{LNG_Do you want to import the database?}")',
         'ajax' => true
     ));
     $fieldset = $form->add('fieldset', array(

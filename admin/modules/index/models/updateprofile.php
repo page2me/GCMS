@@ -49,7 +49,7 @@ class Model extends \Kotchasan\Model
           'subscrib' => $request->post('register_subscrib')->toBoolean(),
           'address1' => $request->post('register_address1')->topic(),
           'address2' => $request->post('register_address2')->topic(),
-          'provinceID' => $request->post('register_provinceID')->number(),
+          'provinceID' => $request->post('register_provinceID')->toInt(),
           'province' => $request->post('register_province')->topic(),
           'zipcode' => $request->post('register_zipcode')->number(),
           'country' => $request->post('register_country')->topic(),

@@ -162,6 +162,7 @@ class Model extends \Kotchasan\Model
               $save['id'] = $index->id;
               $save['module_id'] = $index->module_id;
               $save['count'] = 1;
+              $save['visited'] = 0;
               $this->db()->insert($this->getFullTableName('gallery_album'), $save);
             } else {
               // แก้ไข
@@ -173,6 +174,7 @@ class Model extends \Kotchasan\Model
                 'album_id' => $index->id,
                 'module_id' => $index->module_id,
                 'image' => $image['name'],
+                'last_update' => $mktime,
                 'count' => 0
               );
               $this->db()->insert($this->getFullTableName('gallery'), $save2);

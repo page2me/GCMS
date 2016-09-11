@@ -113,7 +113,7 @@ class View extends \Gcms\View
         }
       }
       // install Admin
-      $sql = "INSERT INTO `$_SESSION[prefix]_user` (`id`, `password`, `email`, `displayname`,`country`, `status`, `fb`, `admin_access`) VALUES (1,'".md5($_SESSION['password'].$_SESSION['email'])."','$_SESSION[email]','Admin','TH',1,'0','1');";
+      $sql = "INSERT INTO `$_SESSION[prefix]_user` (`id`, `password`, `email`, `displayname`,`country`, `status`, `fb`, `admin_access`, `create_date`) VALUES (1,'".md5($_SESSION['password'].$_SESSION['email'])."','$_SESSION[email]','Admin','TH',1,'0','1',".time().");";
       $db->query($sql);
       if (!empty($_SESSION['typ']) && is_dir(ROOT_PATH.'install/'.$_SESSION['typ'].'/datas/')) {
         File::copyDirectory(ROOT_PATH.'install/'.$_SESSION['typ'].'/datas/', ROOT_PATH.DATA_FOLDER);

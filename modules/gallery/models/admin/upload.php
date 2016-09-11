@@ -83,6 +83,7 @@ class Model extends \Kotchasan\Model
                     'album_id' => $index->id,
                     'module_id' => $index->module_id,
                     'image' => $image['name'],
+                    'last_update' => time(),
                     'count' => $index->count
                   );
                   $this->db()->insert($this->getFullTableName('gallery'), $save);
