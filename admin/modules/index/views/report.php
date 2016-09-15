@@ -20,10 +20,17 @@ use \Kotchasan\DataTable;
 class View extends \Gcms\Adminview
 {
 
-  public function render($date)
+  /**
+   * แสดงข้อมูลประวัติการเยียมชม
+   *
+   * @param string $ip
+   * @param string $date
+   * @return string
+   */
+  public function render($ip, $date)
   {
     $table = new DataTable(array(
-      'datas' => \Index\Report\Model::get($date),
+      'datas' => \Index\Report\Model::get($ip, $date),
       /* ส่วนหัวของตาราง และการเรียงลำดับ (thead) */
       'headers' => array(
         'time' => array(

@@ -23,6 +23,7 @@ use \Kotchasan\Date;
 class Controller extends \Kotchasan\Controller
 {
   private $date;
+  private $ip;
 
   /**
    * แสดงผล
@@ -31,6 +32,7 @@ class Controller extends \Kotchasan\Controller
   {
     // แอดมิน
     if (Login::adminAccess()) {
+      $this->ip = $request->get('ip')->filter('0-9\.');
       $this->date = $request->get('date', date('Y-m-d'))->date();
       // แสดงผล
       $section = Html::create('section');
@@ -45,7 +47,7 @@ class Controller extends \Kotchasan\Controller
         'innerHTML' => '<h1 class="icon-stats">'.$this->title().'</h1>'
       ));
       // แสดงฟอร์ม
-      $section->appendChild(createClass('Index\Report\View')->render($this->date));
+      $section->appendChild(createClass('Index\Report\View')->render($this->ip, $this->date));
       return $section->render();
     } else {
       // 404.html
@@ -58,6 +60,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Visitors report} '.Date::format($this->date, 'd M Y');
+    return '{LNG_Visitors report} '.Date::format($this->date, 'd M Y').(empty($this->ip) ? '' : ' IP '.$this->ip);
   }
 }
