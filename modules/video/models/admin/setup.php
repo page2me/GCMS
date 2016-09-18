@@ -42,7 +42,7 @@ class Model extends \Kotchasan\Orm\Field
         // รับค่าจากการ POST
         $id = self::$request->post('id')->toString();
         $action = self::$request->post('action')->toString();
-        $index = \Video\Admin\Index\Model::module(self::$request->post('mid')->toInt());
+        $index = \Index\Module\Model::get('video', self::$request->post('mid')->toInt());
         if ($index && Gcms::canConfig($login, $index, 'can_write') && preg_match('/^[0-9,]+$/', $id)) {
           $module_id = (int)$index->module_id;
           // Model

@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource board/models/admin/index.php
+ * @filesource index/models/module.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Board\Admin\Index;
+namespace Index\Module;
 
 use \Kotchasan\ArrayTool;
 
@@ -21,12 +21,13 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * อ่านข้อมูลโมดูล
+   * อ่านข้อมูลโมดูล และ config
    *
+   * @param string $owner ชื่อโมดูล (ไดเร็คทอรี่)
    * @param int $module_id
-   * @return object|null ข้อมูลโมดูล (Object) หรือ null หากไม่พบบ
+   * @return object|null ข้อมูลโมดูล (Object) หรือ null หากไม่พบ
    */
-  public static function module($module_id)
+  public static function get($owner, $module_id)
   {
     $model = new static;
     // ตรวจสอบโมดูลที่เรียก
@@ -35,7 +36,7 @@ class Model extends \Kotchasan\Model
       ->from('modules')
       ->where(array(
         array('id', $module_id),
-        array('owner', 'board')
+        array('owner', $owner)
       ))
       ->limit(1)
       ->toArray()
@@ -44,9 +45,12 @@ class Model extends \Kotchasan\Model
       return null;
     } else {
       // ค่าติดตั้งเริ่มต้น
-      $config = ArrayTool::unserialize($index[0]['config'], \Board\Admin\Settings\Model::defaultSettings());
-      unset($index[0]['config']);
-      $index = ArrayTool::merge($config, $index[0]);
+      $className = ucfirst($owner).'\Admin\Settings\Model';
+      if (class_exists($className) && method_exists($className, 'defaultSettings')) {
+        $config = ArrayTool::unserialize($index[0]['config'], $className::defaultSettings());
+        unset($index[0]['config']);
+        $index = ArrayTool::merge($config, $index[0]);
+      }
       return (object)$index;
     }
   }

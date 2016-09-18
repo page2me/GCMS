@@ -64,7 +64,7 @@ class Model extends \Kotchasan\Model
       ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'M.id')))
       ->where($where2, 'OR');
     // union all queries
-    $q3 = $db->createQuery()->union(array($q1, $q2));
+    $q3 = $db->createQuery()->union($q1, $q2);
     // groub by id
     $index->sqls[] = $db->createQuery()->select()->from(array($q3, 'Q'))->groupBy('Q.id');
     // ค้นหาจากโมดูลอื่นๆที่ติดตั้ง

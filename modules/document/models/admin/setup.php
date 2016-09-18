@@ -89,7 +89,7 @@ class Model extends \Kotchasan\Orm\Field
         // รับค่าจากการ POST
         $id = self::$request->post('id')->toString();
         $action = self::$request->post('action')->toString();
-        $index = \Document\Admin\Index\Model::module(self::$request->post('mid')->toInt());
+        $index = \Index\Module\Model::get('document', self::$request->post('mid')->toInt());
         if ($index && Gcms::canConfig($login, $index, 'can_write')) {
           // Model
           $model = new \Kotchasan\Model;

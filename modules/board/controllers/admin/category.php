@@ -8,6 +8,7 @@
 
 namespace Board\Admin\Category;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 use \Kotchasan\Language;
@@ -26,10 +27,10 @@ class Controller extends \Kotchasan\Controller
   /**
    * แสดงผล
    */
-  public function render()
+  public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Board\Admin\Index\Model::module(self::$request->get('mid')->toInt());
+    $index = \Index\Module\Model::get('board', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้

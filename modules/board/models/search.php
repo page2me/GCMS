@@ -50,7 +50,7 @@ class Model extends \Kotchasan\Model
       ->join('modules M', 'INNER', array(array('M.id', 'Q.module_id'), array('M.owner', 'board')))
       ->where($where2);
     // union all queries
-    $q3 = $db->createQuery()->union(array($q1, $q2));
+    $q3 = $db->createQuery()->union($q1, $q2);
     // groub by id
     $index->sqls[] = $db->createQuery()->select()->from(array($q3, 'Y'))->groupBy('Y.id');
   }

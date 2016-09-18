@@ -52,7 +52,7 @@ class Model extends \Kotchasan\Model
           'can_config' => self::$request->post('can_config', array())->toInt()
         );
         // โมดูลที่เรียก
-        $index = \Event\Admin\Index\Model::module(self::$request->post('id')->toInt());
+        $index = \Index\Module\Model::get('event', self::$request->post('id')->toInt());
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           $save['can_write'][] = 1;
           $save['can_config'][] = 1;

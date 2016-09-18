@@ -40,22 +40,7 @@ class View extends \Gcms\Adminview
     $fieldset = $form->add('fieldset', array(
       'title' => '{LNG_General}'
     ));
-    // member_reservir
-    if (empty($config->member_reserv)) {
-      $config->member_reserv = array(
-        'website',
-        'webmaster',
-        'cms',
-        'gcms',
-        'module',
-        'website',
-        'member',
-        'members',
-        'register',
-        'edit',
-        'forgot'
-      );
-    }
+    // member_reserv
     $fieldset->add('textarea', array(
       'id' => 'member_reserv',
       'labelClass' => 'g-input icon-file',
@@ -63,62 +48,9 @@ class View extends \Gcms\Adminview
       'label' => '{LNG_Member reserve}',
       'comment' => '{LNG_Do not use these names as a member (one per line)}',
       'rows' => 6,
-      'value' => implode("\n", $config->member_reserv)
+      'value' => empty($config->member_reserv) ? '' : implode("\n", $config->member_reserv)
     ));
     // wordrude
-    if (empty($config->wordrude)) {
-      $config->wordrude = array(
-        'ashole',
-        'a s h o l e',
-        'a.s.h.o.l.e',
-        'bitch',
-        'b i t c h',
-        'b.i.t.c.h',
-        'shit',
-        's h i t',
-        's.h.i.t',
-        'fuck',
-        'dick',
-        'f u c k',
-        'd i c k',
-        'f.u.c.k',
-        'd.i.c.k',
-        'มึง',
-        'มึ ง',
-        'ม ึ ง',
-        'ม ึง',
-        'มงึ',
-        'มึ.ง',
-        'มึ_ง',
-        'มึ-ง',
-        'มึ+ง',
-        'กู',
-        'ควย',
-        'ค ว ย',
-        'ค.ว.ย',
-        'คอ วอ ยอ',
-        'คอ-วอ-ยอ',
-        'ปี้',
-        'เหี้ย',
-        'ไอ้เหี้ย',
-        'เฮี้ย',
-        'ชาติหมา',
-        'ชาดหมา',
-        'ช า ด ห ม า',
-        'ช.า.ด.ห.ม.า',
-        'ช า ติ ห ม า',
-        'ช.า.ติ.ห.ม.า',
-        'สัดหมา',
-        'สัด',
-        'เย็ด',
-        'หี',
-        'สันดาน',
-        'แม่ง',
-        'ระยำ',
-        'ส้นตีน',
-        'แตด',
-      );
-    }
     $fieldset->add('textarea', array(
       'id' => 'wordrude',
       'labelClass' => 'g-input icon-file',
@@ -126,7 +58,7 @@ class View extends \Gcms\Adminview
       'label' => '{LNG_Bad words}',
       'comment' => '{LNG_List of bad words (one per line)}',
       'rows' => 6,
-      'value' => implode("\n", $config->wordrude)
+      'value' => empty($config->wordrude) ? '' : implode("\n", $config->wordrude)
     ));
     // wordrude_replace
     $fieldset->add('text', array(

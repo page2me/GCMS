@@ -69,7 +69,7 @@ class Model extends \Kotchasan\Model
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // อ่านข้อมูลโมดูล
-        $index = \Personnel\Admin\Index\Model::module($request->post('module_id')->toInt());
+        $index = \Index\Module\Model::get('personnel', $request->post('module_id')->toInt());
         if (Gcms::canConfig($login, $index, 'can_config')) {
           // ค่าที่ส่งมา
           $save = array();

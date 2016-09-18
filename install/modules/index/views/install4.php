@@ -183,7 +183,7 @@ class View extends \Gcms\View
       }
       $content[] = '<li class='.($f ? 'correct' : 'incorrect').'>Update file <b>.htaccess</b> ...</li>';
       $content[] = '</ul>';
-      $content[] = '<p class=warning>กรุณาลบโฟลเดอร์ <em>install/</em> ออกจาก Server ของคุณ';
+      $content[] = '<p class=warning>กรุณาลบโฟลเดอร์ <em>install/</em> ออกจาก Server ของคุณ</p>';
       $content[] = '<p>คุณควรปรับ chmod ให้โฟลเดอร์ <em>'.DATA_FOLDER.'</em> เป็น 755 ก่อนดำเนินการต่อ (ถ้าคุณได้ทำการปรับ chmod ด้วยตัวเอง)</p>';
       $content[] = '<p>เมื่อเรียบร้อยแล้ว กรุณา<b>เข้าระบบผู้ดูแล</b>เพื่อตั้งค่าที่จำเป็นอื่นๆโดยใช้ขื่ออีเมล์ <em>'.$_SESSION['email'].'</em> และ รหัสผ่าน <em>'.$_SESSION['password'].'</em></p>';
       $content[] = '<p><a href="'.WEB_URL.'admin/index.php?module=system" class="button large admin">เข้าระบบผู้ดูแล</a></p>';

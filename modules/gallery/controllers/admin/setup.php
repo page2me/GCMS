@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Gallery\Admin\Index\Model::module($request->get('mid')->toInt());
+    $index = \Index\Module\Model::get('gallery', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
@@ -51,10 +51,9 @@ class Controller extends \Kotchasan\Controller
       // แสดงตาราง
       $section->appendChild(createClass('Gallery\Admin\Setup\View')->render($index));
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**
