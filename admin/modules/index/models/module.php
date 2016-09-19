@@ -50,6 +50,9 @@ class Model extends \Kotchasan\Model
         $config = ArrayTool::unserialize($index[0]['config'], $className::defaultSettings());
         unset($index[0]['config']);
         $index = ArrayTool::merge($config, $index[0]);
+      } else {
+        unset($index[0]['config']);
+        $index = $index[0];
       }
       return (object)$index;
     }
