@@ -69,7 +69,7 @@ class View extends \Gcms\View
         $listitem->add(array(
           '/{ID}/' => $item->id,
           '/{PICTURE}/' => $thumb,
-          '/{URL}/' => Controller::url($index->module, $category_id, $item->id),
+          '/{URL}/' => Controller::url($index->module, $item->id),
           '/{TOPIC}/' => $item->topic,
           '/{UID}/' => $item->member_id,
           '/{SENDER}/' => $item->sender,

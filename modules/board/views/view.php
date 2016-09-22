@@ -99,6 +99,8 @@ class View extends \Gcms\View
         $picture = empty($image_src) ? '' : '<div><figure><img src="'.$image_src.'" alt="'.$story->topic.'"></figure></div>';
         // เนื้อหา
         $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($story->detail)), $canView, true, true);
+        // URL
+        $canonical = Controller::url($index->module, $story->id);
         $replace = array(
           '/(edit-{QID}-0-0-{MODULE})/' => $canEdit ? '\\1' : 'hidden',
           '/(delete-{QID}-0-0-{MODULE})/' => $moderator ? '\\1' : 'hidden',
@@ -121,6 +123,7 @@ class View extends \Gcms\View
           '/{LOGIN_PASSWORD}/' => $login['password'],
           '/{LOGIN_EMAIL}/' => $login['email'],
           '/{QID}/' => $story->id,
+          '/{URL}/' => $canonical,
           '/{MODULE}/' => $index->module,
           '/{MODULEID}/' => $story->module_id,
           '/{ANTISPAM}/' => isset($antispam) ? $antispam->getId() : '',
@@ -154,7 +157,6 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
       }
       // breadcrumb ของหน้า
-      $canonical = Controller::url($index->module, $story->category_id, $story->id);
       Gcms::$view->addBreadcrumb($canonical, $story->topic);
       // คืนค่า
       return (object)array(

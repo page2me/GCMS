@@ -57,12 +57,11 @@ class Controller extends \Kotchasan\Controller
    * ฟังก์ชั่นสร้าง URL ของบทความ
    *
    * @param string $module
-   * @param int $cat
    * @param int $id
    * @return string
    */
-  public static function url($module, $cat, $id)
+  public static function url($module, $id)
   {
-    return Gcms::createUrl($module, '', $cat, 0, 'wbid='.$id);
+    return Gcms::createUrl($module, '', 0, 0, 'wbid='.$id);
   }
 }

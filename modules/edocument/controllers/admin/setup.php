@@ -51,10 +51,9 @@ class Controller extends \Kotchasan\Controller
       // แสดงตาราง
       $section->appendChild(createClass('Edocument\Admin\Setup\View')->render($index, $login));
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**

@@ -27,34 +27,33 @@ class Model extends \Kotchasan\Model
    * @param int $module_id
    * @return object|null ข้อมูลโมดูล (Object) หรือ null หากไม่พบ
    */
-  public static function get($owner, $module_id)
+  public static function get($owner, $module_id = -1)
   {
+
+    if ($module_id < 0) {
+      $where = array('owner', $owner);
+    } else {
+      $where = array(
+        array('owner', $owner),
+        array('id', $module_id)
+      );
+    }
     $model = new static;
     // ตรวจสอบโมดูลที่เรียก
     $index = $model->db()->createQuery()
-      ->select('id module_id', 'module', 'owner', 'config')
       ->from('modules')
-      ->where(array(
-        array('id', $module_id),
-        array('owner', $owner)
-      ))
-      ->limit(1)
+      ->where($where)
       ->toArray()
-      ->execute();
-    if (empty($index)) {
-      return null;
-    } else {
+      ->first('id module_id', 'module', 'owner', 'config');
+    if ($index) {
       // ค่าติดตั้งเริ่มต้น
-      $className = ucfirst($owner).'\Admin\Settings\Model';
+      $className = ucfirst($index['owner']).'\Admin\Settings\Model';
       if (class_exists($className) && method_exists($className, 'defaultSettings')) {
-        $config = ArrayTool::unserialize($index[0]['config'], $className::defaultSettings());
-        unset($index[0]['config']);
-        $index = ArrayTool::merge($config, $index[0]);
-      } else {
-        unset($index[0]['config']);
-        $index = $index[0];
+        $index = ArrayTool::merge(ArrayTool::unserialize($index['config'], $className::defaultSettings()), $index);
       }
+      unset($index['config']);
       return (object)$index;
     }
+    return $index;
   }
 }

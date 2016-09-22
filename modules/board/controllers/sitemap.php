@@ -33,7 +33,7 @@ class Controller extends \Kotchasan\Controller
     $result = array();
     foreach (\Board\Sitemap\Model::getStories($ids) as $item) {
       $result[] = (object)array(
-          'url' => Module::url($modules[$item->module_id], 0, $item->id),
+          'url' => Module::url($modules[$item->module_id], $item->id),
           'date' => date("Y-m-d", ($item->comment_date == 0 ? $item->last_update : $item->comment_date))
       );
     }

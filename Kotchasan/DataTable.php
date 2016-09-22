@@ -684,7 +684,11 @@ class DataTable extends \Kotchasan\KBase
                 $replace[] = $src_items[$k];
               }
             }
-            $row[] = str_replace($patt, $replace, $this->td($id, $i, array('class' => 'buttons'), implode('', $buttons), ''));
+            $prop = array('class' => 'buttons');
+            if (isset($this->cols['buttons']) && isset($this->cols['buttons']['class'])) {
+              $prop = array('class' => $this->cols['buttons']['class'].' buttons');
+            }
+            $row[] = str_replace($patt, $replace, $this->td($id, $i, $prop, implode('', $buttons), ''));
           }
         }
         if ($this->pmButton) {

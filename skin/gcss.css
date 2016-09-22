@@ -408,6 +408,9 @@ header p, footer p {
 .content header {
   margin-bottom: 10px;
 }
+.content h2 a {
+  color: inherit;
+}
 .sidebar {
   width: 230px;
 }
@@ -883,6 +886,10 @@ textarea.cke_editable {
 .button [class^="icon-"]:before {
   color: inherit;
 }
+.button.notext [class^="icon-"]:before {
+  line-height: inherit;
+  margin-right: 0;
+}
 .button.wait {
   color: transparent;
   background-color: #B71C1C;
@@ -925,12 +932,13 @@ textarea.cke_editable {
   display: block;
   width: 100%;
   text-align: center;
-  padding-left: 0;
-  padding-right: 0;
 }
 .button.small,
 .button.large {
   height: auto;
+}
+.button.small {
+  line-height: 1.8em;
 }
 .button.large {
   font-size: 1.4em;
@@ -1296,13 +1304,13 @@ form .comment {
   padding: 0.25em 1em 0.25em 0.25em;
   cursor: pointer;
   float: left;
-  padding-right: 1em;
 }
 .radiogroups.multiline > label, .checkboxgroups.multiline > label {
   float: none;
   display: block;
 }
 .radiogroups > label > input, .checkboxgroups > label > input {
+  height: 1.65em;
 }
 .radiogroups, .checkboxgroups {
   border-width: 1px;
@@ -2988,8 +2996,27 @@ table p,
 .icons :before {
   margin-right: 0;
 }
-td.icons {
+td.icons, td.buttons {
   white-space: nowrap;
+}
+td.buttons {
+  text-align: right;
+}
+td.buttons .button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -moz-border-top-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+}
+td.buttons .button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  -moz-border-top-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
 }
 a.skip_content {
   position: absolute;

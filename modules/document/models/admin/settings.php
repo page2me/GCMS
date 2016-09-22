@@ -24,7 +24,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * ค่าติดตั้งเรื่มต้น
+   * ค่าติดตั้งเริ่มต้น
    *
    * @return array
    */

@@ -76,7 +76,7 @@ class View extends \Gcms\View
           '/{TOPIC}/' => $story->topic,
           '/{DETAIL}/' => $picture.$detail,
           '/{DATE}/' => Date::format($story->create_date),
-          '/{URL}/' => \Board\Index\Controller::url($index->module, $story->category_id, $story->id),
+          '/{URL}/' => \Board\Index\Controller::url($index->module, $story->id),
           '/{DISPLAYNAME}/' => $story->name
         );
         return Template::create($index->owner, $index->module, 'print')->add($replace)->render();

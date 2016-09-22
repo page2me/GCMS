@@ -11,7 +11,6 @@ namespace Event\Admin\Settings;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
-use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
@@ -51,10 +50,9 @@ class Controller extends \Kotchasan\Controller
       // แสดงฟอร์ม
       $section->appendChild(createClass('Event\Admin\Settings\View')->render($index));
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**
@@ -62,6 +60,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Module settings');
+    return '{LNG_Module settings}';
   }
 }

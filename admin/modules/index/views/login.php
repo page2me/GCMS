@@ -31,7 +31,7 @@ class View extends \Gcms\Adminview
         'autocomplete' => 'off',
         'ajax' => false,
         'token' => true,
-        'action' => '?action=login'
+        'action' => (string)self::$request->getUri()->withParams(array('action' => 'login'))
     ));
     // h1
     $form->add('h1', array(
