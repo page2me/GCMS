@@ -12,6 +12,7 @@ use \Kotchasan\DataTable;
 use \Kotchasan\Date;
 use \Kotchasan\Text;
 use \Gcms\Gcms;
+use \Kotchasan\ArrayTool;
 
 /**
  * module=download-setup
@@ -39,10 +40,7 @@ class View extends \Gcms\Adminview
   public function render($index, $login)
   {
     // หมวดหมู่
-    $this->categories = array(0 => '{LNG_all items}');
-    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
-      $this->categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
-    }
+    $this->categories = \Index\Category\Model::categories((int)$index->module_id);
     // Uri
     $uri = self::$request->getUri();
     $where = array(array('A.module_id', (int)$index->module_id));
@@ -94,7 +92,7 @@ class View extends \Gcms\Adminview
         'category_id' => array(
           'name' => 'cat',
           'text' => '{LNG_Category}',
-          'options' => $this->categories,
+          'options' => ArrayTool::merge(array(0 => '{LNG_all items}'), $this->categories),
           'default' => 0,
           'value' => self::$request->get('cat')->toInt()
         )
@@ -172,7 +170,7 @@ class View extends \Gcms\Adminview
   {
     $item['id'] = '<em>{WIDGET_DOWNLOAD_'.$item['id'].'}</em>';
     $item['name'] = "<a href='".WEB_URL."$item[file]' target=_blank>$item[name].$item[ext]</a>";
-    $item['size'] = Text::formatFileSize($item['size']);
+    $item['size'] = is_file(ROOT_PATH.$item['file']) ? Text::formatFileSize($item['size']) : '<em>0</em>';
     $item['category_id'] = empty($item['category_id']) || empty($this->categories[$item['category_id']]) ? '{LNG_Uncategorized}' : $this->categories[$item['category_id']];
     $item['last_update'] = Date::format($item['last_update'], 'd M Y H:i');
     return $item;

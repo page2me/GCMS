@@ -9,14 +9,20 @@
 namespace Index\Member;
 
 /**
- * อ่านข้อมูลสมาชิก
+ * ตารางสมาชิก
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Model extends \Kotchasan\Model
+class Model extends \Kotchasan\Orm\Field
 {
+  /**
+   * ชื่อตาราง
+   *
+   * @var string
+   */
+  protected $table = 'user U';
 
   /**
    * อ่านข้อมูลสมาชิกจาก ID
@@ -26,7 +32,7 @@ class Model extends \Kotchasan\Model
    */
   public static function getUserById($id)
   {
-    $model = new static;
+    $model = new \Kotchasan\Model;
     return $model->db()->createQuery()->from('user')->where($id)->first();
   }
 
@@ -38,7 +44,7 @@ class Model extends \Kotchasan\Model
    */
   public static function getUserByActivateCode($id)
   {
-    $model = new static;
+    $model = new \Kotchasan\Model;
     return $model->db()->createQuery()->from('user')->where(array('activatecode', $id))->first();
   }
 
@@ -49,7 +55,7 @@ class Model extends \Kotchasan\Model
    */
   public static function activateUser($user)
   {
-    $model = new static;
+    $model = new \Kotchasan\Model;
     $model->db()->update($model->getFullTableName('user'), $user->id, array('activatecode' => ''));
   }
 }

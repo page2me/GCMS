@@ -43,13 +43,13 @@ class View extends \Gcms\Adminview
     // ตาราง
     $table = new DataTable(array(
       /* ข้อมูลใส่ลงในตาราง */
-      'datas' => \Index\Category\Model::categories((int)$index->module_id),
+      'datas' => \Index\Admincategory\Model::all((int)$index->module_id),
       /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
       'hideColumns' => array('module_id', 'id', 'group_id', 'c2', 'icon'),
       /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
-      'action' => 'index.php/index/model/category/action?mid='.$index->module_id,
+      'action' => 'index.php/index/model/admincategory/action?mid='.$index->module_id,
       'actionCallback' => 'indexActionCallback',
       'actionConfirm' => 'confirmAction',
       'actions' => array(

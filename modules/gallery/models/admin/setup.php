@@ -69,7 +69,7 @@ class Model extends \Kotchasan\Orm\Field
         // รับค่าจากการ POST
         $id = self::$request->post('id')->toString();
         $action = self::$request->post('action')->toString();
-        $index = \Index\Module\Model::get('gallery', self::$request->post('mid')->toInt());
+        $index = \Index\Adminmodule\Model::get('gallery', self::$request->post('mid')->toInt());
         if ($index && Gcms::canConfig($login, $index, 'can_write') && preg_match('/^[0-9,]+$/', $id)) {
           $id = explode(',', $id);
           $module_id = (int)$index->module_id;

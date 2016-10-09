@@ -40,7 +40,11 @@ class Controller extends \Kotchasan\Controller
       $page = createClass('Index\PageNotFound\Controller')->init($request, 'document');
     } elseif (!empty($document) || !empty($id)) {
       // หน้าแสดงบทความ
-      $page = createClass('Document\View\View')->index($request, $index);
+      if (MAIN_INIT === 'amphtml') {
+        $page = createClass('Document\Amp\View')->index($request, $index);
+      } else {
+        $page = createClass('Document\View\View')->index($request, $index);
+      }
     } elseif (!empty($index->category_id) || empty($index->categories) || empty($index->category_display)) {
       // เลือกหมวดมา หรือไม่มีหมวด หรือปิดการแสดงผลหมวดหมู่ แสดงรายการบทความ
       $stories = \Document\Stories\Model::stories($request, $index);

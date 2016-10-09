@@ -29,7 +29,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Index\Module\Model::get('document', $request->get('mid')->toInt());
+    $index = \Index\Adminmodule\Model::get('document', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้

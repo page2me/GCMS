@@ -65,6 +65,20 @@ class View extends \Gcms\View
       } else {
         $image_src = '';
       }
+      // breadcrumb ของโมดูล
+      if (!Gcms::isHome($index->module)) {
+        $menu = Gcms::$menu->moduleMenu($index->module);
+        if ($menu) {
+          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+        }
+      }
+      // breadcrumb ของหมวดหมู่
+      if (!empty($story->category)) {
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
+      }
+      // breadcrumb ของหน้า
+      $canonical = Controller::url($index->module, $story->alias, $story->id);
+      Gcms::$view->addBreadcrumb($canonical, $story->topic);
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
           // antispam
@@ -94,20 +108,6 @@ class View extends \Gcms\View
         foreach (explode(',', $story->relate) as $tag) {
           $tags[] = '<a href="'.Gcms::createUrl('tag', $tag).'">'.$tag.'</a>';
         }
-        // breadcrumb ของโมดูล
-        if (!Gcms::isHome($index->module)) {
-          $menu = Gcms::$menu->moduleMenu($index->module);
-          if ($menu) {
-            Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
-          }
-        }
-        // breadcrumb ของหมวดหมู่
-        if (!empty($story->category)) {
-          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $story->category_id), Gcms::ser2Str($story->category), Gcms::ser2Str($story->cat_tooltip));
-        }
-        // breadcrumb ของหน้า
-        $canonical = Controller::url($index->module, $story->alias, $story->id);
-        Gcms::$view->addBreadcrumb($canonical, $story->topic);
         // เนื้อหา
         $detail = Gcms::showDetail(str_replace(array('&#x007B;', '&#x007D;'), array('{', '}'), $story->detail), $canView, true, true);
         $replace = array(

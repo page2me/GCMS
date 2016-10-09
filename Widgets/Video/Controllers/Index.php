@@ -8,9 +8,6 @@
 
 namespace Widgets\Video\Controllers;
 
-use \Kotchasan\Text;
-use \Kotchasan\Grid;
-
 /**
  * Controller หลัก สำหรับแสดงผล Widget
  *
@@ -53,27 +50,5 @@ class Index extends \Kotchasan\Controller
       $videos = \Widgets\Video\Models\Index::get(0, $count);
     }
     return \Widgets\Video\Views\Index::render($cols, $count, $videos);
-    if ($cols == 1 && $count == 1) {
-      return '<div class="youtube"><iframe src="//www.youtube.com/embed/'.$videos[0]['youtube'].'?wmode=transparent"></iframe></div>';
-    } else {
-      $a = Text::rndname(10);
-      $widget = array('<div id="'.$a.'" class="document-list video">');
-      // รายการ
-      $listitem = Grid::create('video', 'video', 'listitem');
-      $listitem->setCols($cols);
-      foreach ($videos as $item) {
-        $listitem->add(array(
-          '/{ID}/' => $item['id'],
-          '/{TOPIC}/' => '',
-          '/{PICTURE}/' => is_file(ROOT_PATH.DATA_FOLDER.'video/'.$item['youtube'].'.jpg') ? WEB_URL.DATA_FOLDER.'video/'.$item['youtube'].'.jpg' : WEB_URL.'modules/video/img/nopicture.jpg',
-          '/{YOUTUBE}/' => $item['youtube'],
-          '/{COLS}/' => $cols
-        ));
-      }
-      $widget[] = $listitem->render();
-      $widget[] = '</div>';
-      $widget[] = '<script>initVideoList("'.$a.'");</script>';
-      return implode('', $widget);
-    }
   }
 }

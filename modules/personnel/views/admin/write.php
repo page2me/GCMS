@@ -10,9 +10,10 @@ namespace Personnel\Admin\Write;
 
 use \Kotchasan\Html;
 use \Gcms\Gcms;
+use \Kotchasan\ArrayTool;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข ไฟล์ดาวน์โหลด
+ * ฟอร์มเพิ่ม/แก้ไข บุคลากร
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -52,16 +53,12 @@ class View extends \Gcms\Adminview
       'value' => isset($index->name) ? $index->name : ''
     ));
     // category_id
-    $categories = array(0 => '{LNG_Uncategorized}');
-    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
-      $categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
-    }
     $fieldset->add('select', array(
       'id' => 'category_id',
       'labelClass' => 'g-input icon-group',
       'label' => '{LNG_Personnel groups}',
       'itemClass' => 'item',
-      'options' => $categories,
+      'options' => ArrayTool::merge(array(0 => '{LNG_Uncategorized}'), \Index\Category\Model::categories((int)$index->module_id)),
       'value' => isset($index->category_id) ? $index->category_id : 0
     ));
     // order

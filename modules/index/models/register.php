@@ -75,7 +75,7 @@ class Model extends \Kotchasan\Model
             // ตรวจสอบอีเมล์ซ้ำ
             $search = $db->first($user_table, array('email', $save['email']));
             if ($search !== false) {
-              $ret['ret_register_email'] = Language::replace('This :name is already registered', array(':name' => Language::get('Email')));
+              $ret['ret_register_email'] = Language::replace('This :name already exist', array(':name' => Language::get('Email')));
             }
           }
           // password
@@ -96,7 +96,7 @@ class Model extends \Kotchasan\Model
               // ตรวจสอบโทรศัพท์
               $search = $db->first($user_table, array('phone1', $save['phone1']));
               if ($search !== false) {
-                $ret['ret_register_phone1'] = Language::replace('This :name is already registered', array(':name' => Language::get('phone number')));
+                $ret['ret_register_phone1'] = Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
               }
             }
           } elseif (self::$cfg->member_phone == 2) {
@@ -110,7 +110,7 @@ class Model extends \Kotchasan\Model
               // ตรวจสอบ idcard ซ้ำ
               $search = $db->first($user_table, array('idcard', $save['idcard']));
               if ($search !== false) {
-                $ret['ret_register_idcard'] = Language::replace('This :name is already registered', array(':name' => Language::get('Identification number')));
+                $ret['ret_register_idcard'] = Language::replace('This :name already exist', array(':name' => Language::get('Identification number')));
               }
             }
           } elseif (self::$cfg->member_idcard == 2) {

@@ -86,7 +86,7 @@ class Model extends \Kotchasan\Model
       } else {
         // ไม่สามารถ login ได้ เนื่องจากมี email อยู่ก่อนแล้ว
         $facebook_data = false;
-        $ret['alert'] = str_replace(':name', Language::get('User'), Language::get('This :name is already registered'));
+        $ret['alert'] = str_replace(':name', Language::get('User'), Language::get('This :name already exist'));
         $ret['isMember'] = 0;
       }
       if (is_array($facebook_data)) {

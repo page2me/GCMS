@@ -194,6 +194,8 @@ class View extends \Gcms\Adminview
       array('text' => '{LNG_Moderator}'),
       array('text' => '{LNG_Settings}')
     ));
+    // สามารถเขียนได้ที่หน้าบ้าน
+    $can_write = file_exists(ROOT_PATH.'modules/document/views/member.php');
     foreach (\Kotchasan\ArrayTool::merge(array(-1 => '{LNG_Guest}'), self::$cfg->member_status) as $i => $item) {
       $row = array();
       $row[] = array(
@@ -213,7 +215,7 @@ class View extends \Gcms\Adminview
       $check = isset($index->can_write) && is_array($index->can_write) && in_array($i, $index->can_write) ? ' checked' : '';
       $row[] = array(
         'class' => 'center',
-        'text' => $i > 1 ? '<label data-text="{LNG_Writing}"><input type=checkbox name=can_write[] title="{LNG_Members of this group can create the content}" value='.$i.$check.'></label>' : ''
+        'text' => $i > ($can_write ? -1 : 1) && $i != 1 ? '<label data-text="{LNG_Writing}"><input type=checkbox name=can_write[] title="{LNG_Members of this group can create the content}" value='.$i.$check.'></label>' : ''
       );
       $check = isset($index->moderator) && is_array($index->moderator) && in_array($i, $index->moderator) ? ' checked' : '';
       $row[] = array(

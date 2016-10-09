@@ -57,6 +57,12 @@ class Model extends \Kotchasan\KBase
           $save = true;
         } elseif ($post['action'] === 'droplang' && preg_match('/^([a-z]{2,2})$/', $post['data'], $match)) {
           // ลบภาษา
+          $model = new \Kotchasan\Model;
+          $language_table = $model->getTableName('language');
+          if ($model->db()->fieldExists($language_table, $match[1])) {
+            $model->db()->query("ALTER TABLE `$language_table` DROP `$match[1]`");
+          }
+          // ลบไฟล์
           @unlink(ROOT_PATH.'language/'.$match[1].'.php');
           @unlink(ROOT_PATH.'language/'.$match[1].'.js');
           @unlink(ROOT_PATH.'language/'.$match[1].'.gif');

@@ -534,6 +534,9 @@ table.config_table > tbody > tr > td, .no {
 table.can_list {
   background-color: rgba(255,255,255,0.3);
 }
+#language_tbl label {
+  margin-right: 10px;
+}
 td a[class*="icon"] {
   display: block;
 }
@@ -709,38 +712,30 @@ a.icon-delete:before,
 .icon-move {
   cursor: move;
 }
-div.install {
-  padding: 1em 10px;
+div#install fieldset {
+  padding: 10px;
 }
-div.install > ol {
-  padding: 0;
+div#install fieldset > legend {
+  border-bottom: 3px solid #DDD;
 }
-div.install > h3 {
-  font-size: 130%;
-  color: #666;
-  font-weight: 700;
-  padding-bottom: 5px;
-  display: block;
-  border-bottom: 1px solid;
-  margin-bottom: 10px
+div#install fieldset > legend > span {
+  padding: 10px 0 0 0;
 }
-ol.install > li {
+div#install ol {
+  padding: 1em 0;
+  list-style-type: none;
+}
+div#install li {
   line-height: 1.8em;
   border-bottom: 1px dashed #DDD;
-  list-style-type: none
 }
-ol.install > li.valid {
+div#install li.valid {
   background-position: 100% 50%;
   color: #259B24;
 }
-ol.install > li.invalid {
+div#install li.invalid {
   background-position: 100% 50%;
   color: #B71C1C;
-}
-div.install p {
-  margin-top: 10px;
-  padding-left: 0;
-  padding-right: 0;
 }
 #GModal_modaldiv > .modaldiv form {
   padding: 10px;

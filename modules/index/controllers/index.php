@@ -32,7 +32,7 @@ class Controller extends \Kotchasan\Controller
   public function index(Request $request)
   {
     // ตัวแปรป้องกันการเรียกหน้าเพจโดยตรง
-    define('MAIN_INIT', __FILE__);
+    define('MAIN_INIT', 'indexhtml');
     // session cookie
     $request->initSession();
     // ตรวจสอบการ login

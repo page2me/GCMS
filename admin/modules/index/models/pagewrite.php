@@ -164,14 +164,11 @@ class Model extends \Kotchasan\Model
                 ->join('index I', 'INNER', array(array('I.module_id', 'M.id'), array('I.index', 1)))
                 ->where($where);
               foreach ($query->toArray()->execute() as $item) {
-                if (empty($detail_save['language'])) {
-                  $ret['ret_module'] = str_replace(':name', Language::get('Module'), Language::get('This :name is already installed'));
-                  $input = !$input ? 'module' : $input;
-                } elseif (empty($item['language'])) {
-                  $ret['ret_module'] = str_replace(':name', Language::get('Module'), Language::get('This :name is already installed'));
-                  $input = !$input ? 'module' : $input;
-                } elseif ($item['language'] == $detail_save['language']) {
-                  $ret['ret_module'] = str_replace(':name', Language::get('Module'), Language::get('This :name is already installed'));
+                if (empty($detail_save['language']) ||
+                  empty($item['language']) ||
+                  $item['language'] == $detail_save['language']
+                ) {
+                  $ret['ret_module'] = Language::replace('This :name already exist', array(':name', Language::get('Module')));
                   $input = !$input ? 'module' : $input;
                 }
                 $module_id = (int)$item['module_id'];

@@ -38,9 +38,14 @@ class Model extends \Kotchasan\Model
       // ตรวจสอบโมดูลที่ติดตั้งแล้ว
       $search = $db->createQuery()->from('modules')->where(array('module', $module))->first('id');
       if (!$search) {
+        $className = ucfirst($owner).'\Admin\Settings\Model';
+        if (class_exists($className) && method_exists($className, 'defaultSettings')) {
+          $config = $className::defaultSettings();
+        }
         $id = $db->insert($model->getTableName('modules'), array(
           'owner' => $owner,
-          'module' => $module
+          'module' => $module,
+          'config' => empty($config) ? '' : serialize($config)
         ));
         $index = $db->insert($model->getTableName('index'), array(
           'module_id' => $id,
@@ -67,5 +72,23 @@ class Model extends \Kotchasan\Model
       }
     }
     return 0;
+  }
+
+  /**
+   * บันทึกไฟล์ settings/database.php
+   *
+   * @param array $tables รายการตารางที่ต้องการอัปเดท (แทนที่ข้อมูลเดิม)
+   * @return boolean คืนค่า true ถ้าสำเร็จ
+   */
+  public static function updateTables($tables)
+  {
+    // โหลด database
+    $database = \Kotchasan\Config::load(ROOT_PATH.'settings/database.php');
+    // อัปเดท tables
+    foreach ($tables as $key => $value) {
+      $database->tables[$key] = $value;
+    }
+    // save database
+    return \Kotchasan\Config::save($database, ROOT_PATH.'settings/database.php');
   }
 }

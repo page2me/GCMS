@@ -11,7 +11,7 @@ namespace Document\Admin\Setup;
 use \Kotchasan\DataTable;
 use \Kotchasan\Language;
 use \Kotchasan\Date;
-use \Gcms\Gcms;
+use \Kotchasan\ArrayTool;
 
 /**
  * module=document-setup
@@ -47,10 +47,7 @@ class View extends \Gcms\Adminview
     $this->replies = Language::get('REPLIES');
     $this->thumbnails = Language::get('THUMBNAILS');
     $this->default_icon = WEB_URL.$index->default_icon;
-    $this->categories = array(0 => '{LNG_all items}');
-    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
-      $this->categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
-    }
+    $this->categories = \Index\Category\Model::categories((int)$index->module_id);
     $category_id = self::$request->get('cat', 0)->toInt();
     // Uri
     $uri = self::$request->getUri();
@@ -91,7 +88,7 @@ class View extends \Gcms\Adminview
         'category_id' => array(
           'name' => 'cat',
           'text' => '{LNG_Category}',
-          'options' => $this->categories,
+          'options' => ArrayTool::merge(array(0 => '{LNG_all items}'), $this->categories),
           'default' => 0,
           'value' => $category_id
         )

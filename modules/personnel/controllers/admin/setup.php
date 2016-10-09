@@ -15,7 +15,7 @@ use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- * แสดงรายการอัลบัม
+ * แสดงรายการบุคลากร
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Index\Module\Model::get('personnel', $request->get('mid')->toInt());
+    $index = \Index\Adminmodule\Model::get('personnel', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้

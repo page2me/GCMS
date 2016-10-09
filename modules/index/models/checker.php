@@ -38,7 +38,7 @@ class Model extends \Kotchasan\Model
         // ตรวจสอบอีเมล์ซ้ำ
         $search = $this->db()->first($this->getFullTableName('user'), array('email', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('Email'), Language::get('This :name is already registered'));
+          echo str_replace(':name', Language::get('Email'), Language::get('This :name already exist'));
         }
       }
     }
@@ -60,7 +60,7 @@ class Model extends \Kotchasan\Model
         $model = new static;
         $search = $model->db()->first($model->getFullTableName('user'), array('phone1', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('phone number'), Language::get('This :name is already registered'));
+          echo str_replace(':name', Language::get('phone number'), Language::get('This :name already exist'));
         }
       }
     }
@@ -82,7 +82,7 @@ class Model extends \Kotchasan\Model
         $model = new static;
         $search = $model->db()->first($model->getFullTableName('user'), array('idcard', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('idcard'), Language::get('This :name is already registered'));
+          echo str_replace(':name', Language::get('idcard'), Language::get('This :name already exist'));
         }
       }
     }
@@ -102,7 +102,7 @@ class Model extends \Kotchasan\Model
         $model = new static;
         $search = $model->db()->first($model->getFullTableName('user'), array('displayname', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('Name'), Language::get('This :name is already registered'));
+          echo str_replace(':name', Language::get('Name'), Language::get('This :name already exist'));
         }
       }
     }
@@ -162,7 +162,7 @@ class Model extends \Kotchasan\Model
           }
         }
         if ($error) {
-          echo str_replace(':name', Language::get('Module'), Language::get('This :name is already installed'));
+          echo Language::replace('This :name already exist', array(':name', Language::get('Module')));
         }
       }
     }

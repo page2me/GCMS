@@ -9,7 +9,6 @@
 namespace Index\Language;
 
 use \Kotchasan\Login;
-use \Kotchasan\ArrayTool;
 use \Kotchasan\Language;
 
 /**
@@ -19,8 +18,14 @@ use \Kotchasan\Language;
  *
  * @since 1.0
  */
-class Model extends \Kotchasan\KBase
+class Model extends \Kotchasan\Orm\Field
 {
+  /**
+   * ชื่อตาราง
+   *
+   * @var string
+   */
+  protected $table = 'language';
 
   /**
    * รับค่าจาก action
@@ -32,17 +37,13 @@ class Model extends \Kotchasan\KBase
     if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
       if (empty($login['fb'])) {
         // ค่าที่ส่งมา
-        $type = self::$request->post('type')->toString();
-        $type = $type == 'js' ? 'js' : 'php';
-        $id = self::$request->post('id')->toString();
+        $id = self::$request->post('id')->toInt();
         $action = self::$request->post('action')->toString();
         if ($action == 'delete') {
-          // โหลดภาษา
-          $datas = Language::installed($type);
-          // ลบรายการที่ส่งมา
-          $datas = ArrayTool::delete($datas, $id);
-          // save
-          $error = Language::save($datas, $type);
+          $model = new \Kotchasan\Model;
+          $model->db()->delete($model->getTableName('language'), $id);
+          // อัปเดทไฟล์ ภาษา
+          $error = self::updateLanguageFile();
           if (empty($error)) {
             $ret['location'] = 'reload';
           } else {
@@ -54,5 +55,40 @@ class Model extends \Kotchasan\KBase
       $ret['alert'] = Language::get('Unable to complete the transaction');
     }
     echo json_encode($ret);
+  }
+
+  /**
+   * อัปเดทไฟล์ ภาษา
+   */
+  public static function updateLanguageFile()
+  {
+    // ภาษาที่ติดตั้ง
+    $languages = \Gcms\Gcms::installedLanguage();
+    // query ข้อมูลภาษา
+    $model = new \Kotchasan\Model;
+    $query = $model->db()->createQuery()->select()->from('language');
+    // เตรียมข้อมูล
+    $datas = array();
+    foreach ($query->toArray()->execute() as $item) {
+      $save = array('key' => $item['key']);
+      foreach ($languages as $lng) {
+        if (isset($item[$lng]) && $item[$lng] != '') {
+          if ($item['type'] == 'array') {
+            $save[$lng] = unserialize($item[$lng]);
+          } elseif ($item['type'] == 'int') {
+            $save[$lng] = (int)$item[$lng];
+          } else {
+            $save[$lng] = $item[$lng];
+          }
+        }
+      }
+      $datas[$item['js'] == 1 ? 'js' : 'php'][] = $save;
+    }
+    // บันทึกไฟล์ภาษา
+    $error = '';
+    foreach ($datas as $type => $items) {
+      $error .= \Kotchasan\Language::save($items, $type);
+    }
+    return $error;
   }
 }

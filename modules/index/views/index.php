@@ -31,7 +31,11 @@ class View extends \Gcms\View
     // template main.html, home/main.html
     $template = Template::create('', $index->module, 'main');
     // canonical
-    $index->canonical = Gcms::createUrl($index->module);
+    if (Gcms::isHome($index->module)) {
+      $index->canonical = WEB_URL.'index.php';
+    } else {
+      $index->canonical = Gcms::createUrl($index->module);
+    }
     // add template
     $template->add(array(
       // content

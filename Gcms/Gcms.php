@@ -489,4 +489,21 @@ class Gcms extends \Kotchasan\KBase
     }
     return $text;
   }
+
+  /**
+   * อ่านภาษาที่ติดตั้งตามลำดับการตั้งค่า
+   *
+   * @return array
+   */
+  public static function installedLanguage()
+  {
+    $languages = array();
+    foreach (self::$cfg->languages as $item) {
+      $languages[$item] = $item;
+    }
+    foreach (Language::installedLanguage() as $item) {
+      $languages[$item] = $item;
+    }
+    return array_keys($languages);
+  }
 }

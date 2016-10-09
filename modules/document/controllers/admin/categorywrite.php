@@ -8,6 +8,7 @@
 
 namespace Document\Admin\Categorywrite;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 use \Gcms\Gcms;
@@ -25,10 +26,10 @@ class Controller extends \Kotchasan\Controller
   /**
    * แสดงผล
    */
-  public function render()
+  public function render(Request $request)
   {
     // อ่านรายการที่เลือก
-    $index = \Document\Admin\Categorywrite\Model::get(self::$request->get('mid')->toInt(), self::$request->get('id')->toInt());
+    $index = \Document\Admin\Categorywrite\Model::get($request->get('mid')->toInt(), self::$request->get('id')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้

@@ -160,6 +160,8 @@ class Model extends \Kotchasan\Model
     $model = new static;
     if (empty($module_id)) {
       $where = array(array('module', $module), array('owner', $owner));
+    } elseif (empty($owner) && empty($module)) {
+      $where = array('id', (int)$module_id);
     } else {
       $where = array(array('id', (int)$module_id), array('owner', $owner));
     }

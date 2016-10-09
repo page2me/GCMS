@@ -11,6 +11,7 @@ namespace Document\Admin\Write;
 use \Kotchasan\Html;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
+use \Kotchasan\ArrayTool;
 
 /**
  * ฟอร์มสร้าง/แก้ไข เนื้อหา
@@ -39,9 +40,8 @@ class View extends \Gcms\Adminview
         'onsubmit' => 'doFormSubmit',
         'ajax' => true
     ));
-    // ภาษาที่ติดตั้ง
-    $languages = Language::installedLanguage();
-    foreach ($languages as $item) {
+    foreach ($index->languages as $item) {
+      // รายละเอียด
       $details = isset($index->details[$item]) ? $index->details[$item] : (object)array('topic' => '', 'keywords' => '', 'description' => '', 'detail' => '', 'relate' => '');
       // รายละเอียดแต่ละภาษา
       $fieldset = $form->add('fieldset', array(
@@ -167,11 +167,6 @@ class View extends \Gcms\Adminview
       'dataPreview' => 'imgPicture',
       'previewSrc' => $img
     ));
-    // หมวดหมู่
-    $categories = array(0 => '{LNG_Uncategorized}');
-    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
-      $categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
-    }
     // category_id
     $fieldset->add('select', array(
       'id' => 'category_'.$index->module_id,
@@ -180,7 +175,7 @@ class View extends \Gcms\Adminview
       'label' => '{LNG_Category}',
       'comment' => '{LNG_Select the category you want}',
       'itemClass' => 'item',
-      'options' => $categories,
+      'options' => ArrayTool::merge(array(0 => '{LNG_Uncategorized}'), \Index\Category\Model::categories((int)$index->module_id)),
       'value' => $index->category_id
     ));
     // can_reply
@@ -253,11 +248,11 @@ class View extends \Gcms\Adminview
     ));
     // tab ที่เลือก
     $tab = self::$request->get('tab')->toString();
-    $tab = empty($tab) ? 'detail_'.reset($languages) : $tab;
+    $tab = empty($tab) ? 'detail_'.reset($index->languages) : $tab;
     $form->script('initWriteTab("accordient_menu", "'.$tab.'");');
     $form->script('checkSaved("preview", "'.WEB_URL.'index.php?module='.$index->module.'", "id");');
     $form->script('new GValidator("alias", "keyup,change", checkAlias, "index.php/index/model/checker/alias", null, "setup_frm");');
-    $form->script('selectChanged("category_'.$index->module_id.'","index.php/index/model/category/action",doFormSubmit);');
+    $form->script('selectChanged("category_'.$index->module_id.'","index.php/index/model/admincategory/action",doFormSubmit);');
     // tab
     $fieldset->add('hidden', array(
       'id' => 'tab',

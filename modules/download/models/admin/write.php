@@ -144,17 +144,22 @@ class Model extends \Kotchasan\Model
                     }
                   }
                 }
-              } elseif ($id == 0) {
+              } elseif ($id == 0 && (empty($save['file']) || !is_file(ROOT_PATH.$save['file']))) {
                 // ใหม่ ต้องมีไฟล์
                 $ret['ret_'.$item] = Language::get('Please select file');
               }
             }
+          }
+          if (is_file(ROOT_PATH.$save['file'])) {
+            // อัปเดทขนาดของไฟล์
+            $save['size'] = filesize(ROOT_PATH.$save['file']);
           }
           if (empty($ret)) {
             $save['last_update'] = time();
             $save['reciever'] = serialize($save['reciever']);
             if ($id == 0) {
               // ใหม่
+              $save['create_date'] = $save['last_update'];
               $save['module_id'] = $index->module_id;
               $save['downloads'] = 0;
               $save['member_id'] = $login['id'];

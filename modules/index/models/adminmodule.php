@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource index/models/module.php
+ * @filesource index/models/adminmodule.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Index\Module;
+namespace Index\Adminmodule;
 
 use \Kotchasan\ArrayTool;
 
@@ -29,9 +29,10 @@ class Model extends \Kotchasan\Model
    */
   public static function get($owner, $module_id = -1)
   {
-
     if ($module_id < 0) {
       $where = array('owner', $owner);
+    } elseif (empty($owner)) {
+      $where = array('id', $module_id);
     } else {
       $where = array(
         array('owner', $owner),

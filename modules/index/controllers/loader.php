@@ -33,7 +33,7 @@ class Controller extends \Kotchasan\Controller
     // ตรวจสอบ Referer
     if ($request->initSession() && $request->isReferer()) {
       // ตัวแปรป้องกันการเรียกหน้าเพจโดยตรง
-      define('MAIN_INIT', __FILE__);
+      define('MAIN_INIT', 'indexhtml');
       // ตรวจสอบการ login
       Login::create();
       // กำหนด skin ให้กับ template

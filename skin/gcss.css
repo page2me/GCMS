@@ -1410,6 +1410,7 @@ html[dir="rtl"] .gdpanel-arrow {
 .sidemenu li,
 .group-button li {
   position: relative;
+  line-height: inherit;
 }
 .topmenu.right > ul {
   float: right;
@@ -1442,6 +1443,7 @@ html .sidemenu ul,
 .group-button {
   list-style-type: none;
   padding: 0 !important;
+  line-height: inherit;
 }
 .topmenu li > a > span,
 .topmenu li > a,

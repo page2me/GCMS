@@ -325,28 +325,20 @@ function fbLogin() {
               if (ds.alert) {
                 alert(ds.alert);
               } else if (ds.isMember == 1) {
+                var login_action;
                 if ($E('login_action')) {
-                  var login_action = $E('login_action').value;
-                  if (login_action == 1) {
-                    ds.location = replaceURL('action', 'login');
-                  } else if (login_action == 2) {
-                    ds.location = 'back'
-                  } else if (/^http.*/.test(login_action)) {
-                    ds.location = login_action;
-                  }
+                  login_action = $E('login_action').value;
+                } else {
+                  login_action = replaceURL('action', 'login');
                 }
-                if (ds.location) {
-                  if (ds.location == 'back') {
-                    if (loader) {
-                      loader.back();
-                    } else {
-                      window.history.go(-1);
-                    }
+                if (login_action == 2) {
+                  if (loader) {
+                    loader.back();
                   } else {
-                    window.location = ds.location;
+                    window.history.back();
                   }
                 } else {
-                  window.location = replaceURL('action', 'login');
+                  window.location = login_action;
                 }
               }
             } else if (xhr.responseText != '') {

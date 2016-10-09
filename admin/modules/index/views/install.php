@@ -36,22 +36,30 @@ class View extends \Gcms\Adminview
         'id' => 'install'
     ));
     if (($type === 'module' && empty(Gcms::$install_modules[$module])) || $type === 'widget') {
-      $div->add('aside', array(
-        'class' => 'tip',
-        'innerHTML' => Language::get('Module or an extension has not been installed correctly the first time. Please click on the button "Install" below to complete installation before.')
-      ));
-      $div2 = $div->add('div', array(
-        'class' => 'padding-right-bottom-left'
-      ));
-      $div2->add('a', array(
-        'class' => 'button ok large',
-        'id' => 'install_btn',
-        'innerHTML' => '<span class=icon-valid>'.Language::get('Install').'</span>'
-      ));
       if ($type === 'module') {
-        $div->script("callInstall('".rawurlencode(ucfirst($module).'\Admin\Install\Model')."')");
+        $className = ucfirst($module).'\Admin\Install\Model';
       } elseif ($type === 'widget') {
-        $div->script("callInstall('".rawurlencode('Widgets\\'.ucfirst($module).'\Models\Install')."')");
+        $className = 'Widgets\\'.ucfirst($module).'\Models\Install';
+      }
+      if (isset($className) && class_exists($className)) {
+        $div->script("callInstall('".rawurlencode($className)."')");
+        $div->add('aside', array(
+          'class' => 'tip',
+          'innerHTML' => Language::get('Module or an extension has not been installed correctly the first time. Please click on the button "Install" below to complete installation before.')
+        ));
+        $div2 = $div->add('div', array(
+          'class' => 'padding-right-bottom-left'
+        ));
+        $div2->add('a', array(
+          'class' => 'button ok large',
+          'id' => 'install_btn',
+          'innerHTML' => '<span class=icon-valid>'.Language::get('Install').'</span>'
+        ));
+      } else {
+        $div->add('aside', array(
+          'class' => 'error',
+          'innerHTML' => Language::get('Sorry, cannot find a page called Please check the URL or try the call again.')
+        ));
       }
     } else {
       $div->add('aside', array(

@@ -9,7 +9,7 @@
 namespace Personnel\Admin\Setup;
 
 use \Kotchasan\DataTable;
-use \Gcms\Gcms;
+use \Kotchasan\ArrayTool;
 
 /**
  * module=personnel-setup
@@ -36,10 +36,8 @@ class View extends \Gcms\Adminview
    */
   public function render($index)
   {
-    $this->categories = array(0 => '{LNG_all items}');
-    foreach (\Index\Category\Model::categories((int)$index->module_id) as $item) {
-      $this->categories[$item['category_id']] = Gcms::ser2Str($item, 'topic');
-    }
+    // หมวดหมู่
+    $this->categories = \Index\Category\Model::categories((int)$index->module_id);
     // Uri
     $this->uri = self::$request->getUri();
     // ตาราง
@@ -89,7 +87,7 @@ class View extends \Gcms\Adminview
         'category_id' => array(
           'name' => 'cat',
           'text' => '{LNG_Personnel groups}',
-          'options' => $this->categories,
+          'options' => ArrayTool::merge(array(0 => '{LNG_all items}'), $this->categories),
           'default' => 0,
           'value' => self::$request->get('cat')->toInt()
         )

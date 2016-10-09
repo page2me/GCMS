@@ -8,6 +8,7 @@
 
 namespace Index\Languageedit;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Html;
 use \Kotchasan\Language;
 use \Kotchasan\DataTable;
@@ -28,7 +29,7 @@ class View extends \Gcms\Adminview
    *
    * @return string
    */
-  public function render(\Index\Languageedit\Controller $controller)
+  public function render(Request $request, $language)
   {
     // form แก้ไข
     $form = Html::create('form', array(
@@ -40,28 +41,47 @@ class View extends \Gcms\Adminview
     ));
     // fieldset
     $fieldset = $form->add('fieldset', array(
-      'title' => '{LNG_'.($controller->id > -1 ? 'Edit' : 'Create').'} '.htmlspecialchars($controller->language['key'])
+      'title' => '{LNG_'.($language->id > 0 ? 'Edit' : 'Create').'} '.htmlspecialchars($language->key)
     ));
+    // js
+    $fieldset->add('select', array(
+      'id' => 'write_js',
+      'labelClass' => 'g-input icon-file',
+      'label' => '{LNG_File}',
+      'itemClass' => 'item',
+      'options' => array(0 => 'php', 1 => 'js'),
+      'value' => $language->js
+    ));
+    // type
     $fieldset->add('select', array(
       'id' => 'write_type',
       'labelClass' => 'g-input icon-config',
       'label' => '{LNG_Type}',
       'itemClass' => 'item',
-      'options' => array('php' => 'php', 'js' => 'js'),
-      'value' => $controller->type
+      'options' => array('text' => 'Text', 'int' => 'Integer', 'array' => 'Array'),
+      'value' => $language->type
     ));
-    // topic
+    // owner
+    $fieldset->add('select', array(
+      'id' => 'write_owner',
+      'labelClass' => 'g-input icon-modules',
+      'label' => '{LNG_Module}',
+      'itemClass' => 'item',
+      'options' => \Index\Languageedit\Model::getOwners(),
+      'value' => $language->owner
+    ));
+    // key
     $fieldset->add('text', array(
-      'id' => 'write_topic',
+      'id' => 'write_key',
       'labelClass' => 'g-input icon-edit',
       'label' => '{LNG_Key}',
       'itemClass' => 'item',
       'autofocus',
-      'value' => $controller->language['key']
+      'value' => $language->key
     ));
     // table
     $table = new DataTable(array(
-      'datas' => $controller->languages,
+      'datas' => $language->datas,
       'onRow' => array($this, 'onRow'),
       'border' => true,
       'responsive' => true,
@@ -93,7 +113,7 @@ class View extends \Gcms\Adminview
     // id
     $fieldset->add('hidden', array(
       'id' => 'write_id',
-      'value' => $controller->id
+      'value' => $language->id
     ));
     return $form->render();
   }
@@ -107,13 +127,13 @@ class View extends \Gcms\Adminview
   public function onRow($item)
   {
     $item['key'] = Form::text(array(
-        'name' => 'save_array[]',
+        'name' => 'datas[key][]',
         'labelClass' => 'g-input',
         'value' => $item['key']
       ))->render();
     foreach (Language::installedLanguage() as $key) {
       $item[$key] = Form::textarea(array(
-          'name' => 'language_'.$key.'[]',
+          'name' => 'datas['.$key.'][]',
           'labelClass' => 'g-input',
           'value' => isset($item[$key]) ? $item[$key] : '',
         ))->render();

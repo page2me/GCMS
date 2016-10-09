@@ -361,6 +361,16 @@ function setSelect(id, value) {
     }
   });
 }
+function selectChanged(src, action, callback) {
+  $G(src).addEvent('change', function () {
+    var temp = this;
+    send(action, 'id=' + this.id + '&value=' + this.value, function (xhr) {
+      if (xhr.responseText !== '') {
+        callback.call(temp, xhr);
+      }
+    });
+  });
+}
 var doCustomConfirm = function (value) {
   return confirm(value);
 };

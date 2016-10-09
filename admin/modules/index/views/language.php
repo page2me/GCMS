@@ -8,8 +8,8 @@
 
 namespace Index\Language;
 
-use \Kotchasan\Language;
 use \Kotchasan\DataTable;
+use \Kotchasan\Text;
 
 /**
  * module=language
@@ -20,6 +20,7 @@ use \Kotchasan\DataTable;
  */
 class View extends \Gcms\Adminview
 {
+  private $languages;
 
   /**
    * ตารางภาษา
@@ -29,20 +30,20 @@ class View extends \Gcms\Adminview
   public function render()
   {
     // ชนิดของภาษาที่เลือก php,js
-    $type = self::$request->get('type')->toString();
-    $type = $type == 'js' ? 'js' : 'php';
-    // โหลดภาษา
-    $datas = Language::installed($type);
-    $installed_language = Language::installedLanguage();
+    $js = self::$request->get('js')->toBoolean();
+    $this->languages = \Gcms\Gcms::installedLanguage();
     // Uri
     $uri = self::$request->getUri();
     // ตารางภาษา
     $table = new DataTable(array(
-      'datas' => $datas,
+      'id' => 'language_table',
+      'model' => 'Index\Language\Model',
       'onRow' => array($this, 'onRow'),
+      /* คอลัมน์ที่ไม่ต้องแสดงผล */
+      'hideColumns' => array('type', 'js'),
       'perPage' => max(10, self::$request->cookie('language_perPage', 30)->toInt()),
-      'sort' => self::$request->cookie('language_sort', 'key')->toString(),
-      'searchColumns' => array_merge(array('key'), $installed_language),
+      'sort' => self::$request->cookie('language_sort', 'id DESC')->toString(),
+      'searchColumns' => array_merge(array('key'), $this->languages),
       'headers' => array(
         'id' => array(
           'text' => '{LNG_ID}',
@@ -51,9 +52,20 @@ class View extends \Gcms\Adminview
         'key' => array(
           'text' => '{LNG_Key}',
           'sort' => 'key'
+        ),
+        'owner' => array(
+          'text' => '{LNG_Module}',
+          'class' => 'center',
+          'sort' => 'owner'
         )
       ),
-      'action' => 'index.php/index/model/language/action?type='.$type,
+      /* รูปแบบการแสดงผลของคอลัมน์ (tbody) */
+      'cols' => array(
+        'owner' => array(
+          'class' => 'center'
+        ),
+      ),
+      'action' => 'index.php/index/model/language/action?js='.$js,
       'actionCallback' => 'doFormSubmit',
       'actionConfirm' => 'confirmAction',
       'actions' => array(
@@ -67,32 +79,33 @@ class View extends \Gcms\Adminview
         ),
         array(
           'class' => 'button add icon-plus',
-          'href' => $uri->createBackUri(array('module' => 'languageedit', 'id' => null, 'type' => $type)),
+          'href' => $uri->createBackUri(array('module' => 'languageedit', 'id' => null, 'js' => $js)),
           'text' => '{LNG_Add New}'
         )
       ),
       'buttons' => array(
         array(
           'class' => 'icon-edit button green',
-          'href' => $uri->createBackUri(array('module' => 'languageedit', 'id' => ':id', 'type' => $type)),
+          'href' => $uri->createBackUri(array('module' => 'languageedit', 'id' => ':id', 'js' => $js)),
           'text' => '{LNG_Edit}'
         )
       ),
       'filters' => array(
-        'type' => array(
-          'name' => 'type',
+        'js' => array(
+          'name' => 'js',
           'text' => '{LNG_Type}',
-          'options' => array('php' => 'php', 'js' => 'js'),
-          'value' => $type
+          'options' => array(0 => 'php', 1 => 'js'),
+          'value' => $js
         )
       )
     ));
-    foreach ($installed_language as $lng) {
+    foreach ($this->languages as $lng) {
       $table->headers[$lng] ['sort'] = $lng;
     }
     // save cookie
     setcookie('language_perPage', $table->perPage, time() + 3600 * 24 * 365, '/');
     setcookie('language_sort', $table->sort, time() + 3600 * 24 * 365, '/');
+    $table->script('initLanguageTable("language_table");');
     return $table->render();
   }
 
@@ -104,12 +117,21 @@ class View extends \Gcms\Adminview
    */
   public function onRow($item)
   {
-    foreach ($item as $key => $value) {
-      if ($key != 'id') {
-        $text = \Kotchasan\Text::toEditor(is_array($value) ? implode(', ', $value) : $value);
-        $item[$key] = '<span title="'.$text.'">'.\Kotchasan\Text::cut($text, 50).'</span>';
+    foreach ($this->languages as $lng) {
+      if ($item['type'] == 'array') {
+        if ($item[$lng] != '') {
+          $item[$lng] = implode(', ', unserialize($item[$lng]));
+        }
       }
+      $item[$lng] = $item[$lng] == '' ? '' : '<span title="'.$item[$lng].'">'.self::toText($item[$lng]).'</span>';
     }
+    $item['key'] = str_replace('&', '&amp;', $item['key']);
+    $item['key'] = '<a class=icon-copy title="'.$item['key'].'">'.self::toText($item['key']).'</a>';
     return $item;
+  }
+
+  private static function toText($text)
+  {
+    return Text::cut(str_replace(array("\r", "\n"), array('', ' '), strip_tags($text)), 50);
   }
 }

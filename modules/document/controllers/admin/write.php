@@ -11,7 +11,6 @@ namespace Document\Admin\Write;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Html;
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
@@ -39,10 +38,8 @@ class Controller extends \Kotchasan\Controller
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
     if ($index && Gcms::canConfig($login, $index, 'can_write')) {
-      // ภาษาที่ติดตั้ง
-      $languages = Language::installedLanguage();
       if (!empty($index->id)) {
-        $index->details = \Document\Admin\Write\Model::details((int)$index->module_id, (int)$index->id, reset($languages));
+        $index->details = \Document\Admin\Write\Model::details((int)$index->module_id, (int)$index->id, reset(self::$cfg->languages));
       }
       // แสดงผล
       $section = Html::create('section');
@@ -67,7 +64,9 @@ class Controller extends \Kotchasan\Controller
       $ul = $writetab->add('ul', array(
         'id' => 'accordient_menu'
       ));
-      foreach ($languages as $item) {
+      // ภาษาที่ติดตั้ง
+      $index->languages = Gcms::installedLanguage();
+      foreach ($index->languages as $item) {
         $ul->add('li', array(
           'innerHTML' => '<a id=tab_detail_'.$item.' href="{BACKURL?module=document-write&qid='.$index->id.'&tab=detail_'.$item.'}">{LNG_Detail}&nbsp;<img src='.WEB_URL.'language/'.$item.'.gif alt='.$item.'></a>'
         ));
@@ -81,10 +80,9 @@ class Controller extends \Kotchasan\Controller
         $section->appendChild(createClass('Document\Admin\Write\View')->render($index));
       }
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**
@@ -92,6 +90,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Create or Edit').' '.Language::get('Document');
+    return '{LNG_Create or Edit} {LNG_Document}';
   }
 }

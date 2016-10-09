@@ -77,8 +77,7 @@ class View extends \Kotchasan\KBase
       $data2 .= 'body{'.$bg.'}';
     }
     // compress css
-    $data = preg_replace(array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/[\s]{0,}([:;,>\{\}])[\s]{0,}/'), array('', '\\1'), $data.$data2);
-    $data = preg_replace(array('/[\r\n\t]/s', '/[\s]{2,}/s', '/;}/'), array('', ' ', '}'), $data);
+    $data = self::compress($data.$data2);
     // Response
     $response = new \Kotchasan\Http\Response;
     // cache 1 month
@@ -92,5 +91,10 @@ class View extends \Kotchasan\KBase
       ))
       ->withContent($data)
       ->send();
+  }
+
+  public static function compress($css)
+  {
+    return preg_replace(array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/[\s]{0,}([:;,>\{\}])[\s]{0,}/', '/[\r\n\t]/s', '/[\s]{2,}/s', '/;}/'), array('', '\\1', '', ' ', '}'), $css);
   }
 }

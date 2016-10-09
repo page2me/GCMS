@@ -32,8 +32,9 @@ class Controller extends \Kotchasan\Controller
   {
     $result = array();
     foreach (\Document\Sitemap\Model::getStories($ids, $date) as $item) {
+      $module = $modules[$item->module_id];
       $result[] = (object)array(
-          'url' => Module::url($modules[$item->module_id], $item->alias, $item->id),
+          'url' => Module::url($module, $item->alias, $item->id),
           'date' => date('Y-m-d', $item->create_date)
       );
     }

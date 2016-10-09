@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource index/models/category.php
+ * @filesource index/models/admincategory.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Index\Category;
+namespace Index\Admincategory;
 
 use \Gcms\Gcms;
 use \Kotchasan\Login;
@@ -30,7 +30,7 @@ class Model extends \Kotchasan\Model
    * @param boolean $all true (default) คืนค่าทุกรายการ, false คืนค่าเฉพาะรายการที่เผยแพร่
    * @return array คืนค่าแอเรย์ของ Object ไม่มีคืนค่าแอเรย์ว่าง
    */
-  public static function categories($module_id, $all = true)
+  public static function all($module_id, $all = true)
   {
     $result = array();
     if (is_int($module_id) && $module_id > 0) {
@@ -62,7 +62,7 @@ class Model extends \Kotchasan\Model
   public function action()
   {
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         echo Language::get('Unable to complete the transaction');
       } else {
@@ -79,13 +79,13 @@ class Model extends \Kotchasan\Model
         // ตรวจสอบโมดูล
         $index = false;
         if (!empty($module_id)) {
-          $index = \Index\Module\Model::getModule($module_id);
+          $index = \Index\Adminmodule\Model::get(null, $module_id);
         }
         if ($action === 'category') {
           // อ่านข้อมูลหมวดหมู่ตอนเขียนบทความ
           $category = $this->db()->first($this->getFullTableName('category'), array(
             array('category_id', (int)$value),
-            array('module_id', (int)$index->id)
+            array('module_id', (int)$index->module_id)
           ));
           if ($category) {
             $config = @unserialize($category->config);
@@ -105,7 +105,7 @@ class Model extends \Kotchasan\Model
               ->from('category')
               ->where(array(
                 array('id', explode(',', $id)),
-                array('module_id', $index->id)
+                array('module_id', $index->module_id)
               ))
               ->toArray();
             $ids = array();
@@ -119,7 +119,7 @@ class Model extends \Kotchasan\Model
               // ลบหมวดหมู่
               $this->db()->createQuery()->delete('category', array(
                 array('id', $ids),
-                array('module_id', $index->id)
+                array('module_id', $index->module_id)
               ))->execute();
             }
             // คืนค่า
@@ -127,7 +127,7 @@ class Model extends \Kotchasan\Model
           } else {
             $category = $this->db()->first($this->getFullTableName('category'), array(
               array('id', (int)$id),
-              array('module_id', (int)$index->id)
+              array('module_id', (int)$index->module_id)
             ));
             if ($category) {
               if ($action === 'categoryid') {
@@ -136,13 +136,13 @@ class Model extends \Kotchasan\Model
                 $search = $this->db()->createQuery()
                   ->from('category')
                   ->where(array(
-                    array('module_id', (int)$index->id),
+                    array('module_id', (int)$index->module_id),
                     array('category_id', $value)
                   ))
                   ->first('id');
                 if ($search) {
                   // มี category_id อยู่ก่อนแล้วคืนค่ารายการเดิม
-                  $ret['categoryid_'.$index->id.'_'.$category->id] = $category->category_id;
+                  $ret['categoryid_'.$index->module_id.'_'.$category->id] = $category->category_id;
                 } else {
                   // save
                   $this->db()->createQuery()
@@ -151,7 +151,7 @@ class Model extends \Kotchasan\Model
                     ->where((int)$category->id)
                     ->execute();
                   // คืนค่ารายการใหม่
-                  $ret['categoryid_'.$index->id.'_'.$category->id] = $value;
+                  $ret['categoryid_'.$index->module_id.'_'.$category->id] = $value;
                 }
               } elseif ($action === 'published' || $action === 'can_reply') {
                 // เผยแพร่, การแสดงความคิดเห็น

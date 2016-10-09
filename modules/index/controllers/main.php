@@ -36,7 +36,7 @@ class Controller extends \Kotchasan\Controller
     } elseif (!empty($module->id)) {
       $index = \Index\Index\Model::getIndexById((int)$module->id);
     }
-    if ($index) {
+    if ($index && MAIN_INIT == 'indexhtml') {
       // view (index)
       return createClass('Index\Index\View')->render($index);
     }

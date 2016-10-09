@@ -84,7 +84,26 @@ class Model extends \Kotchasan\Model
         // ข้อมูลในตาราง
         foreach ($tables AS $table) {
           if (preg_match('/^'.$prefix.'(.*?)$/', $table['Name'], $match)) {
-            if ($match[1] == '_emailtemplate') {
+            if ($match[1] == '_language') {
+              if (isset($_POST['language_lang']) && isset($_POST['language_owner'])) {
+                $l = array_merge(array('key', 'type', 'owner', 'js'), $_POST['language_lang']);
+                foreach ($_POST['language_owner'] AS $lang) {
+                  $languages[] = "'$lang'";
+                  if ($lang == 'index') {
+                    $languages[] = "''";
+                  }
+                }
+                $table_name = $prefix == '' ? $table['Name'] : preg_replace('/^'.$prefix.'/', '{prefix}', $table['Name']);
+                $data = "INSERT INTO `$table_name` (`".implode('`, `', $l)."`) VALUES ('%s');";
+                $sql = "SELECT `".implode('`,`', $l)."` FROM `".$table['Name']."` WHERE `owner` IN (".implode(',', $languages).") ORDER BY `owner`,`key`,`js`";
+                foreach ($model->db()->customQuery($sql, true) AS $record) {
+                  foreach ($record as $field => $value) {
+                    $record[$field] = ($field == 'owner' && $value == '') ? 'index' : addslashes($value);
+                  }
+                  $sqls[] = preg_replace(array('/[\r]/u', '/[\n]/u'), array('\r', '\n'), sprintf($data, implode("','", $record)));
+                }
+              }
+            } elseif ($match[1] == '_emailtemplate') {
               if (isset($datas[$table['Name']]['datas'])) {
                 if (($key = array_search('id', $database[$table['Name']]['Field'])) !== false) {
                   unset($database[$table['Name']]['Field'][$key]);

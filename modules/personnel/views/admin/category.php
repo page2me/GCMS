@@ -8,10 +8,10 @@
 
 namespace Personnel\Admin\Category;
 
-use \Kotchasan\Language;
 use \Kotchasan\DataTable;
 use \Kotchasan\Html;
 use \Kotchasan\Form;
+use \Gcms\Gcms;
 
 /**
  * แสดงรายการหมวดหมู่
@@ -38,7 +38,7 @@ class View extends \Gcms\Adminview
   public function render($index)
   {
     // ภาษาที่ติดตั้ง
-    $this->languages = Language::installedLanguage();
+    $this->languages = Gcms::installedLanguage();
     // form
     $form = Html::create('form', array(
         'id' => 'setup_frm',
@@ -59,6 +59,8 @@ class View extends \Gcms\Adminview
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
       'hideColumns' => array('id'),
+      /* กำหนดให้ input ตัวแรก (id) รับค่าเป็นตัวเลขเท่านั้น */
+      'onInitRow' => 'initFirstRowNumberOnly',
       'border' => true,
       'responsive' => true,
       'pmButton' => true,

@@ -37,9 +37,7 @@ class Controller extends \Kotchasan\Controller
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
-      $breadcrumbs = $section->add('div', array(
-        'class' => 'breadcrumbs'
-      ));
+      $breadcrumbs = $section->add('div', array('class' => 'breadcrumbs'));
       $ul = $breadcrumbs->add('ul');
       if ($module !== '') {
         $ul->appendChild('<li><span class="icon-modules">{LNG_Module}</span></li>');
@@ -47,17 +45,14 @@ class Controller extends \Kotchasan\Controller
       } elseif ($widget !== '') {
         $ul->appendChild('<li><span class="icon-widgets">{LNG_Widgets}</span></li>');
         $type = 'widget';
-      } else {
-        // 404.html
-        return \Index\Error\Controller::page404();
       }
-      $ul->appendChild('<li><span>{LNG_Install}</span></li>');
-      $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-inbox">'.$this->title().'</h1>'
-      ));
-      // แสดงฟอร์ม
-      $section->appendChild(createClass('Index\Install\View')->render($type, $this->module));
-      return $section->render();
+      if (!empty($type)) {
+        $ul->appendChild('<li><span>{LNG_Install}</span></li>');
+        $section->add('header', array('innerHTML' => '<h1 class="icon-inbox">'.$this->title().'</h1>'));
+        // แสดงฟอร์ม
+        $section->appendChild(createClass('Index\Install\View')->render($type, $this->module));
+        return $section->render();
+      }
     }
     // 404.html
     return \Index\Error\Controller::page404();

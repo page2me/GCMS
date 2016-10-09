@@ -98,7 +98,7 @@ function initListCategory(module) {
       $G(this).addEvent('keypress', numberOnly);
       this.addEvent('change', function () {
         var hs = patt.exec(this.id);
-        send('index.php/' + module + '/model/category/action', 'action=categoryid&mid=' + hs[1] + '&id=' + hs[2] + '&value=' + this.value, doFormSubmit, this);
+        send('index.php/' + module + '/model/admincategory/action', 'action=categoryid&mid=' + hs[1] + '&id=' + hs[2] + '&value=' + this.value, doFormSubmit, this);
       });
     }
   });
@@ -322,6 +322,23 @@ function initIndexWrite() {
   callClick('btn_copy', doIndexCopy);
   callClick('btn_preview', indexPreview);
 }
+function initFirstRowNumberOnly(tr, row) {
+  forEach($G(tr).elems('input'), function (item, index) {
+    if (index == 0) {
+      $G(item).addEvent('keypress', numberOnly);
+    }
+  });
+}
+function initLanguageTable(id) {
+  forEach($G(id).elems('a'), function () {
+    if ($G(this).hasClass('icon-copy')) {
+      callClick(this, function () {
+        copyToClipboard(this.title);
+        return false;
+      });
+    }
+  });
+}
 function showDebug() {
   var t = 0;
   var _get = function () {
@@ -361,16 +378,6 @@ var confirmAction = function (msg, action, id, mid) {
   }
   return '';
 };
-function selectChanged(src, action, callback) {
-  $G(src).addEvent('change', function () {
-    var temp = this;
-    send(action, 'id=' + this.id + '&value=' + this.value, function (xhr) {
-      if (xhr.responseText !== '') {
-        callback.call(temp, xhr);
-      }
-    });
-  });
-}
 function checkSaved(button, url, write_id, target) {
   callClick(button, function () {
     var id = floatval($E(write_id).value);
@@ -413,5 +420,34 @@ function callInstall(c) {
         $E('install').innerHTML = xhr.responseText;
       }
     });
+  });
+}
+function findUser(name, id) {
+  var SearchGet = function () {
+    var value = $E(name).value;
+    if (value != '') {
+      return  'name=' + encodeURIComponent(value);
+    }
+    return null;
+  };
+  function SearchCallback() {
+    $E(name).value = this.name.unentityify();
+    $E(id).value = this.id;
+    $G(name).replaceClass('invalid', 'valid');
+  }
+  function SearchPopulate() {
+    return '<p><span class="icon-user">' + this.name.unentityify() + '</span></p>';
+  }
+  function SearchRequest(datas) {
+    $G(name).replaceClass('valid', 'invalid');
+    $E(id).value = 0;
+  }
+  new GAutoComplete(name, {
+    className: "gautocomplete",
+    get: SearchGet,
+    url: 'index.php/index/model/autocomplete/findUser',
+    callBack: SearchCallback,
+    populate: SearchPopulate,
+    onRequest: SearchRequest
   });
 }

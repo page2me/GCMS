@@ -8,6 +8,7 @@
 
 namespace Index\Password;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
 use \Kotchasan\Template;
 use \Kotchasan\Orm\Recordset;
@@ -24,11 +25,13 @@ class View extends \Gcms\View
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มแก้ไขรหัสผ่านสมาชิก
    *
-   * @return string
+   * @param Request $request
+   * @param object $index
+   * @return object
    */
-  public function render()
+  public function render(Request $request, $index)
   {
     // อ่านข้อมูลสมาชิก
     $rs = Recordset::create('Index\User\Model');
@@ -62,6 +65,8 @@ class View extends \Gcms\View
       }
     }
     $template->add($contents);
-    return $template->render();
+    $index->detail = $template->render();
+    // คืนค่า
+    return $index;
   }
 }

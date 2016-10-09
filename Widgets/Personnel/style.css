@@ -1,12 +1,10 @@
 .widget_personnel {
   overflow: hidden;
   clear: both;
-  padding-top: 10px;
-  margin-bottom: 10px;
   position: relative;
 }
-.widget_personnel p {
-  margin: 0;
+.widget_personnel .detail {
+  margin: 10px 0 0 0;
 }
 .widget_personnel > div {
   position: relative;
@@ -31,10 +29,9 @@
 .widget_personnel .thumbnail, .widget_personnel .name, .widget_personnel .position {
   font-weight: bold;
   display: block;
-  margin: 5px;
 }
 .widget_personnel .thumbnail img {
-  max-width: 150px;
+  max-width: 80%;
   background-color: #FFF;
   padding: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.2);

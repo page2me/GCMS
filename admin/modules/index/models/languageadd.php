@@ -48,6 +48,10 @@ class Model extends \Kotchasan\KBase
         } else {
           $input = !$input ? 'language_name' : $input;
         }
+        // Model
+        $model = new \Kotchasan\Model;
+        // ชื่อตาราง
+        $language_table = $model->getTableName('language');
         if (!$input) {
           if (empty($post['language'])) {
             // สร้างภาษาใหม่
@@ -59,6 +63,9 @@ class Model extends \Kotchasan\KBase
               @copy(ROOT_PATH.'language/'.$post['copy'].'.gif', ROOT_PATH.'language/'.$post['language_name'].'.gif');
               $config->languages[] = $post['language_name'];
             }
+            // อัปเดทฐานข้อมูล
+            $model->db()->query("ALTER TABLE `$language_table` ADD `$post[language_name]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL");
+            $model->db()->query("UPDATE `$language_table` SET `$post[language_name]`=`$post[copy]`");
           } elseif ($post['language_name'] != $post['language']) {
             // เปลี่ยนชื่อภาษา
             rename(ROOT_PATH.'language/'.$post['language'].'.php', ROOT_PATH.'language/'.$post['language_name'].'.php');
@@ -69,6 +76,8 @@ class Model extends \Kotchasan\KBase
                 $config->languages[$i] = $post['language_name'];
               }
             }
+            // อัปเดทฐานข้อมูล
+            $model->db()->query("ALTER TABLE `$language_table` CHANGE `$post[language]` `$post[language_name]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL");
           }
           // ไอคอนอัปโหลด
           foreach (self::$request->getUploadedFiles() as $item => $file) {

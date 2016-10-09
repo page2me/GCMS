@@ -11,6 +11,7 @@ namespace Kotchasan;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\Language;
 use \Kotchasan\Orm\Recordset;
+use \Kotchasan\Http\Uri;
 
 /**
  * คลาสสำหรับจัดการแสดงผลข้อมูลจาก Model ในรูปแบบตาราง
@@ -249,6 +250,12 @@ class DataTable extends \Kotchasan\KBase
    * @var array
    */
   private $javascript = array();
+  /**
+   * Uri ปัจจุบันของหน้าเว็บ
+   *
+   * @var Uri
+   */
+  private $uri;
 
   /**
    * Initial Class
@@ -261,10 +268,16 @@ class DataTable extends \Kotchasan\KBase
     foreach ($param as $key => $value) {
       $this->$key = $value;
     }
+    if (empty($this->uri)) {
+      $this->uri = self::$request->getUri();
+    } elseif (is_string($this->uri)) {
+      $this->uri = Uri::createFromUri($this->uri);
+    }
     // รายการต่อหน้า มาจากการเลือกภายในตารง
     $count = self::$request->request('count')->toInt();
     if ($count > 0) {
       $this->perPage = $count;
+      $this->uri = $this->uri->withParams(array('count' => $count));
     }
     // header ของตาราง มาจาก model หรือมาจากข้อมูล หรือ มาจากการกำหนดเอง
     if (isset($this->model)) {
@@ -315,6 +328,9 @@ class DataTable extends \Kotchasan\KBase
       $this->headers = $headers;
     }
     $this->sort = self::$request->request('sort', $this->sort)->toString();
+    if (!empty($this->sort)) {
+      $this->uri = $this->uri->withParams(array('sort' => $this->sort));
+    }
   }
 
   /**
@@ -340,7 +356,8 @@ class DataTable extends \Kotchasan\KBase
     }
     $url_query = array();
     $hidden_fields = array();
-    foreach (self::$request->getQueryParams() as $key => $value) {
+    parse_str($this->uri->getQuery(), $query_string);
+    foreach ($query_string as $key => $value) {
       $value = rawurlencode($value);
       $url_query[$key] = $key.'='.$value;
       // แอเรย์เก็บรายการ input ที่ไม่ต้องสร้าง
@@ -401,6 +418,7 @@ class DataTable extends \Kotchasan\KBase
           // filter ข้อมูลจาก array
           $this->datas = ArrayTool::filter($this->datas, $search);
         }
+        $this->uri = $this->uri->withParams(array('search' => $search));
       }
       $form[] = '&nbsp;<fieldset class=search>';
       $form[] = '<label accesskey=f class="icon-search"><input type=text name=search value="'.$search.'" placeholder="'.Language::get('Search').'"></label>';
@@ -408,7 +426,7 @@ class DataTable extends \Kotchasan\KBase
       $form[] = '</fieldset>';
     }
     if (!empty($form)) {
-      $content[] = '<form class="table_nav" method="get">'.implode('', $form).'</form>';
+      $content[] = '<form class="table_nav" method="get" action="'.$this->uri.'">'.implode('', $form).'</form>';
     }
     if (isset($this->model)) {
       // Model
@@ -593,7 +611,7 @@ class DataTable extends \Kotchasan\KBase
       }
       // แบ่งหน้า
       if (!empty($this->perPage)) {
-        $content[] = '<div class="splitpage">'.self::$request->getUri()->pagination($totalpage, $page).'</div>';
+        $content[] = '<div class="splitpage">'.$this->uri->pagination($totalpage, $page).'</div>';
       }
     }
     $content[] = '</div>';

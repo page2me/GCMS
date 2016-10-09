@@ -34,9 +34,7 @@ class Controller extends \Kotchasan\Controller
   public function init(Request $request, $module, $message = '')
   {
     $template = Template::create($module, '', '404');
-    if ($message == '') {
-      $message = Language::get('Sorry, cannot find a page called Please check the URL or try the call again.');
-    }
+    $message = Language::get($message == '' ? 'Sorry, cannot find a page called Please check the URL or try the call again.' : $message);
     $template->add(array(
       '/{TOPIC}/' => $message,
       '/{DETAIL}/' => $message

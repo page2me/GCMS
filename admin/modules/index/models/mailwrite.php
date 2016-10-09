@@ -94,7 +94,7 @@ class Model extends \Kotchasan\Model
             $id = 0;
           } else {
             // มีอีเมล์ในภาษาที่เลือกอยู่แล้ว
-            $ret['ret_language'] = Language::get('This item already in the chosen language');
+            $ret['ret_language'] = Language::get('This entry is in selected language');
             $input = !$input ? 'language' : $input;
           }
         }

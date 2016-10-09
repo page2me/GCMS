@@ -75,12 +75,14 @@ class View extends \Gcms\Adminview
     ));
     // ภาษาปัจจุบัน
     $lng = Language::name();
-    $multi_language = sizeof(Language::installedLanguage()) > 1;
+    // ภาษาที่ติดตั้ง
+    $languages = Gcms::installedLanguage();
+    $multi_language = sizeof($languages) > 1;
     // topic,detail,icon
     $topic = ArrayTool::unserialize($index->topic);
     $detail = ArrayTool::unserialize($index->detail);
     $icon = ArrayTool::unserialize($index->icon);
-    foreach (Language::installedLanguage() as $item) {
+    foreach ($languages as $item) {
       $fieldset = $form->add('fieldset', array(
         'title' => '{LNG_Details of} {LNG_Category} <img src="'.WEB_URL.'language/'.$item.'.gif" alt="'.$item.'">'
       ));

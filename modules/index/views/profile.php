@@ -26,11 +26,13 @@ class View extends \Gcms\View
 {
 
   /**
-   * แสดงผล
+   * แสดงข้อมูลส่วนตัวสมาชิก
    *
-   * @return string
+   * @param Request $request
+   * @param object $index
+   * @return object
    */
-  public function render(Request $request)
+  public function render(Request $request, $index)
   {
     // อ่านข้อมูลสมาชิก
     $model = new Model;
@@ -71,6 +73,8 @@ class View extends \Gcms\View
     Gcms::$view->setContents(array(
       '/:type/' => empty(self::$cfg->user_icon_typies) ? 'jpg' : implode(', ', (self::$cfg->user_icon_typies))
       ), false);
-    return $template->render();
+    $index->detail = $template->render();
+    // คืนค่า
+    return $index;
   }
 }

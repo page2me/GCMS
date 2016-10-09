@@ -8,6 +8,7 @@
 
 namespace Index\Languageedit;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 
@@ -18,13 +19,39 @@ use \Kotchasan\Language;
  *
  * @since 1.0
  */
-class Model extends \Kotchasan\KBase
+class Model extends \Kotchasan\Model
 {
+
+  public static function getOwners()
+  {
+    $model = new static;
+    $query = $model->db()->createQuery()
+      ->select('owner')
+      ->from('language')
+      ->groupBy('owner')
+      ->toArray();
+    $result = array();
+    foreach ($query->execute() as $item) {
+      $result[$item['owner']] = $item['owner'];
+    }
+    return $result;
+  }
+
+  /**
+   * ยอมรับ tag บางตัว ในภาษา em b strong ul ol li dd dt dl
+   *
+   * @param string $string
+   * @return string
+   */
+  public function allowTags($string)
+  {
+    return preg_replace('/(&lt;)(\/?(em|b|strong|ul|ol|li|dd|dt|dl))(&gt;)/isu', '<\\2>', $string);
+  }
 
   /**
    * form submit
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
@@ -32,66 +59,86 @@ class Model extends \Kotchasan\KBase
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
-        // ชนิดของภาษาที่เลือก php,js
-        $type = self::$request->post('write_type')->toString();
-        $type = $type == 'js' ? 'js' : 'php';
-        // โหลดไฟล์ภาษา ที่ติดตั้ง
-        $languages = Language::installed($type);
-        // -1 ใหม่ มากกว่า -1แก้ไข
-        $write_id = self::$request->post('write_id', -1)->toInt();
-        $id = $write_id >= 0 ? $write_id : sizeof($languages);
-        // ข้อมูลที่ POST มา
-        $key = self::$request->post('write_topic')->quote();
-        // ตรวจสอบข้อมูลซ้ำ
-        $search = Language::keyExists($languages, $key);
-        if ($search == -1 || $search == $id) {
-          $save = array();
-          $languages[$id] = array('key' => $key);
-          foreach (self::$request->post('save_array')->toString() AS $key => $value) {
-            foreach (Language::installedLanguage() as $lng) {
-              $v = self::$request->post('language_'.$lng)->get($key)->quote();
-              if ($type == 'php') {
-                if ($v != '' && $v != $languages[$id]['key']) {
-                  $languages[$id][$lng]["$value"] = $v;
-                }
-              } elseif ($type == 'js') {
-                if ($v == '' || $v == $languages[$id]['key']) {
-                  if ($v == '') {
-                    $v = $languages[$id]['key'];
-                  }
-                  $languages[$id]['key'] = strtoupper(trim(preg_replace(array('/[\s_\!]{1,}/', '/[\?\[\]<>\{\}%]/', '/_$/'), array('_', '', ''), $languages[$id]['key'])));
-                }
-                $languages[$id][$lng][''] = $v;
+        // ค่าที่ส่งมา
+        $save = array(
+          'js' => $request->post('write_js')->toBoolean(),
+          'type' => $request->post('write_type')->topic(),
+          'owner' => $request->post('write_owner')->topic(),
+          'key' => $this->allowTags($request->post('write_key')->topic())
+        );
+        // ภาษาที่ติดตั้ง
+        $languages = \Gcms\Gcms::installedLanguage();
+        $array = false;
+        foreach ($request->post('datas')->topic() as $items) {
+          foreach ($languages as $lng) {
+            if ($items[$lng] != '') {
+              $save[$lng][$items['key']] = $items[$lng];
+              if (sizeof($save[$lng]) > 1) {
+                $array = true;
               }
             }
           }
-          foreach ($languages[$id] as $lng => $value) {
-            if ($lng != 'key' && sizeof($value) == 1) {
-              $keys = array_keys($value);
-              if (reset($keys) === '') {
-                $languages[$id][$lng] = $value[$keys[0]];
-              }
-            }
-          }
-          // บันทึกเป็นไฟล์
-          $result = Language::save($languages, $type);
-          // คืนค่า
-          if (empty($result)) {
-            $ret['alert'] = Language::get('Saved successfully');
-            if ($write_id >= 0) {
-              $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'language', 'type' => $type)).'#datatable_'.$id;
-            } else {
-              $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'language', 'type' => $type, 'sort' => 'id', 'sort_type' => 'desc')).'#datatable_'.$id;
-            }
+        }
+        foreach ($languages as $lng) {
+          if ($array) {
+            $save[$lng] = $this->allowTags(serialize($save[$lng]));
+          } elseif (isset($save[$lng])) {
+            $save[$lng] = $this->allowTags(reset($save[$lng]));
           } else {
-            $ret['alert'] = $result;
+            $save[$lng] = '';
           }
+        }
+        if ($array) {
+          $save['type'] = 'array';
+        }
+        if ($save['js'] == 1 && !preg_match('/[^A-Z_]+/', $save['key'])) {
+          if (isset($save['en']) && $save['en'] == '') {
+            $save['en'] = $save['key'];
+          }
+          $save['key'] = strtoupper(preg_replace(array('/[\s]+/', '/([^A-Z_]+)/i'), array('_', ''), $save['key']));
+        }
+        $id = $request->post('write_id')->toInt();
+        // Model
+        $model = new static;
+        // ตาราง
+        $table_language = $model->getTableName('language');
+        // ตรวจสอบรายการที่แก้ไข
+        if ($id > 0) {
+          $language = $model->db()->first($table_language, $id);
+        }
+        if ($id > 0 && !$language) {
+          $ret['alert'] = Language('Sorry, Item not found It&#39;s may be deleted');
+        } elseif ($save['key'] == '') {
+          $ret['ret_write_key'] = Language::get('Please fill in');
         } else {
-          $ret['alert'] = Language::get('This message already exist');
+          // ตรวจสอบข้อมูลซ้ำ
+          $search = $model->db()->first($table_language, array('key', $save['key']));
+          if ($search && ($id == 0 || $id != $search->id)) {
+            $ret['ret_write_key'] = Language::replace('This :name already exist', array(':name', Language::get('Key')));
+          } else {
+            // บันทึก
+            if ($id == 0) {
+              // ใหม่
+              $id = $model->db()->insert($table_language, $save);
+              // redirect
+              $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'language', 'js' => $save['js'], 'sort' => 'id DESC')).'#datatable_'.$id;
+            } else {
+              // แก้ไข
+              $model->db()->update($table_language, $id, $save);
+              // redirect
+              $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'language', 'js' => $save['js'])).'#datatable_'.$id;
+            }
+            // อัปเดทไฟล์ ภาษา
+            $error = \Index\Language\Model::updateLanguageFile();
+            if (empty($error)) {
+              $ret['alert'] = Language::get('Saved successfully');
+            } else {
+              unset($ret['location']);
+              $ret['alert'] = $error;
+            }
+          }
         }
       }
-    } else {
-      $ret['alert'] = Language::get('Unable to complete the transaction');
     }
     // คืนค่า json
     echo json_encode($ret);

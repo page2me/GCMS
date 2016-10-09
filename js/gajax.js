@@ -47,6 +47,26 @@ window.$K = (function () {
     var n = parseFloat(val);
     return isNaN(n) ? 0 : n;
   };
+  window.copyToClipboard = function (text) {
+    function selectElementText(element) {
+      if (document.selection) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+      } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNode(element);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      }
+    }
+    var element = document.createElement('div');
+    element.textContent = text;
+    document.body.appendChild(element);
+    selectElementText(element);
+    document.execCommand('copy');
+    element.remove();
+  };
   window.trans = function (val) {
     try {
       var patt = /^[_]+|[_]+$/g;

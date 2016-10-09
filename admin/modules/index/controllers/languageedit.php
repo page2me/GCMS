@@ -8,8 +8,8 @@
 
 namespace Index\Languageedit;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 use \Kotchasan\Html;
 
 /**
@@ -21,61 +21,56 @@ use \Kotchasan\Html;
  */
 class Controller extends \Kotchasan\Controller
 {
-  public $type;
-  public $id;
-  public $language;
-  public $languages;
 
   /**
    * แสดงผล
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
-      // ชนิดของภาษาที่เลือก php,js
-      $this->type = self::$request->get('type')->toString();
-      $this->type = $this->type == 'js' ? 'js' : 'php';
+      // ภาษาที่ติดตั้ง
+      $languages = \Gcms\Gcms::installedLanguage();
       // รายการที่แก้ไข (id)
-      $this->id = self::$request->get('id', -1)->toInt();
-      // โหลดไฟล์ภาษา ที่ติดตั้ง
-      $languages = Language::installed($this->type);
-      $installed_languages = Language::installedLanguage();
-      $this->languages = array();
-      if ($this->id > -1) {
-        $this->language = $languages[$this->id];
-        foreach ($installed_languages as $item) {
-          if (isset($this->language['array'])) {
-            if (isset($this->language[$item])) {
-              foreach ($this->language[$item] as $k => $v) {
-                if (!isset($this->languages[$k]['key'])) {
-                  $this->languages[$k]['key'] = $k;
-                  foreach ($installed_languages as $a) {
-                    $this->languages[$k][$a] = '';
-                  }
+      $id = $request->get('id')->toInt();
+      if ($id > 0) {
+        // แก้ไข อ่านรายการที่เลือก
+        $model = new \Kotchasan\Model();
+        $language = $model->db()->first($model->getTableName('language'), $id);
+        if ($language && $language->type == 'array') {
+          foreach ($languages as $lng) {
+            if ($language->$lng != '') {
+              $ds = @unserialize($language->$lng);
+              if (is_array($ds)) {
+                foreach ($ds as $key => $value) {
+                  $language->datas[$key]['key'] = $key;
+                  $language->datas[$key][$lng] = $value;
                 }
-                $this->languages[$k][$item] = $v;
               }
             }
-          } else {
-            if (!isset($this->languages[0]['key'])) {
-              $this->languages[0]['key'] = '';
-              foreach ($installed_languages as $a) {
-                $this->languages[0][$a] = '';
-              }
-            }
-            if (isset($this->language[$item])) {
-              $this->languages[0][$item] = $this->language[$item];
-            }
+            unset($language->$lng);
+          }
+        } else {
+          $language->datas[0]['key'] = '';
+          foreach ($languages as $lng) {
+            $language->datas[0][$lng] = $language->$lng;
+            unset($language->$lng);
           }
         }
       } else {
         // ใหม่
-        $this->language = array('key' => '');
-        $this->languages[0]['key'] = '';
-        foreach ($installed_languages as $item) {
-          $this->languages[0][$item] = '';
+        $language = array(
+          'id' => 0,
+          'key' => '',
+          'js' => $request->get('type')->toBoolean(),
+          'owner' => 'index',
+          'type' => 'text'
+        );
+        $language['datas'][0]['key'] = '';
+        foreach ($languages as $lng) {
+          $language['datas'][0][$lng] = '';
         }
+        $language = (object)$language;
       }
       // แสดงผล
       $section = Html::create('section');
@@ -86,17 +81,16 @@ class Controller extends \Kotchasan\Controller
       $ul = $breadcrumbs->add('ul');
       $ul->appendChild('<li><span class="icon-tools">{LNG_Tools}</span></li>');
       $ul->appendChild('<li><a href="{BACKURL?module=language}">{LNG_Language}</a></li>');
-      $ul->appendChild('<li><span>{LNG_'.($this->id > -1 ? 'Edit' : 'Create').'}</span></li>');
+      $ul->appendChild('<li><span>{LNG_'.($id > 0 ? 'Edit' : 'Create').'}</span></li>');
       $section->add('header', array(
         'innerHTML' => '<h1 class="icon-language">'.$this->title().'</h1>'
       ));
       // แสดงฟอร์ม
-      $section->appendChild(createClass('Index\Languageedit\View')->render($this));
+      $section->appendChild(createClass('Index\Languageedit\View')->render($request, $language));
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**

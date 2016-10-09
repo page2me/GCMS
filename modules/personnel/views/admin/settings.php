@@ -11,7 +11,6 @@ namespace Personnel\Admin\Settings;
 use \Kotchasan\Html;
 use \Kotchasan\HtmlTable;
 use \Gcms\Gcms;
-use \Kotchasan\Text;
 
 /**
  * โมดูลสำหรับจัดการการตั้งค่า

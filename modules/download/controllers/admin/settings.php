@@ -29,7 +29,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Index\Module\Model::get('download', $request->get('mid')->toInt());
+    $index = \Index\Adminmodule\Model::get('download', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
@@ -60,6 +60,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Module settings}';
+    return '{LNG_Module settings} Download';
   }
 }

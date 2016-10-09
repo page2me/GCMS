@@ -9,7 +9,6 @@
 namespace Video\Admin\Setup;
 
 use \Kotchasan\DataTable;
-use \Kotchasan\Language;
 use \Kotchasan\Date;
 
 /**
@@ -38,6 +37,7 @@ class View extends \Gcms\Adminview
       'model' => 'Video\Admin\Setup\Model',
       /* รายการต่อหน้า */
       'perPage' => self::$request->cookie('video_perPage', 30)->toInt(),
+      'sort' => 'id DESC',
       /* ฟิลด์ที่กำหนด (หากแตกต่างจาก Model) */
       'fields' => array(
         'id',
