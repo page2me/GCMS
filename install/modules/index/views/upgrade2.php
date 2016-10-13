@@ -43,11 +43,16 @@ class View extends \Gcms\View
       if (!$db->connection()) {
         return createClass('Index\Dberror\View')->render($request);
       }
-      // อัปเกรด
-      $className = 'Index\Upgrade'.str_replace('.', '', self::$cfg->version).'\Model';
-      if (class_exists($className) && method_exists($className, 'upgrade')) {
-        $content[] = $className::upgrade($db);
+      $current_version = self::$cfg->version;
+      while ($current_version != self::$cfg->new_version) {
+        $ret = \Index\Upgrading\Model::upgrade($db, $current_version);
+        $content[] = $ret->content;
+        $current_version = $ret->version;
       }
+      self::$cfg->version = $current_version;
+      unset(self::$cfg->new_version);
+      $f = \Gcms\Config::save(self::$cfg, ROOT_PATH.'settings/config.php');
+      $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update file <b>config.php</b> ...</li>';
       $content[] = '</ul>';
       $content[] = '<p class=warning>กรุณาลบโฟลเดอร์ <em>install/</em> ออกจาก Server ของคุณ</p>';
       $content[] = '<p>เมื่อเรียบร้อยแล้ว กรุณา<b>เข้าระบบผู้ดูแล</b>เพื่อตั้งค่าที่จำเป็นอื่นๆโดยใช้ขื่ออีเมล์และรหัสผ่านเก่าของคุณ</p>';

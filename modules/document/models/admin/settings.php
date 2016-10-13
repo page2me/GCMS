@@ -14,7 +14,7 @@ use \Gcms\Gcms;
 use \Kotchasan\File;
 
 /**
- *  การตั้งค่า
+ *  บันทึกการตั้งค่า
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -110,7 +110,7 @@ class Model extends \Kotchasan\Model
                 }
               }
             }
-            if (!empty($ret)) {
+            if (empty($ret)) {
               $save['new_date'] = $save['new_date'] * 86400;
               $save['can_view'][] = 1;
               $save['can_write'][] = 1;

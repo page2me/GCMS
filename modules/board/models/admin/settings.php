@@ -24,7 +24,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * ค่าติดตั้งเรื่มต้น
+   * ค่าติดตั้งเริ่มต้น
    *
    * @return array
    */
@@ -86,9 +86,8 @@ class Model extends \Kotchasan\Model
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['img_typies'])) {
             // คืนค่า input ที่ error
-            $ret['input'] = 'img_typies_jpg';
+            $ret['ret_img_typies_jpg'] = Language::get('Please select at least one item');
           } else {
-            $input = false;
             $save['default_icon'] = $index->default_icon;
             // อัปโหลดไฟล์
             foreach (self::$request->getUploadedFiles() as $item => $file) {
@@ -96,11 +95,9 @@ class Model extends \Kotchasan\Model
                 if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'board/')) {
                   // ไดเรคทอรี่ไม่สามารถสร้างได้
                   $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'board/');
-                  $input = !$input ? $item : $input;
                 } elseif (!$file->validFileExt($save['img_typies'])) {
                   // รูปภาพเท่านั้น
                   $ret['ret_'.$item] = Language::get('The type of file is invalid');
-                  $input = !$input ? $item : $input;
                 } else {
                   // อัปโหลด
                   $save['default_icon'] = DATA_FOLDER.'board/default-'.$index->module_id.'.'.$file->getClientFileExt();
@@ -109,12 +106,11 @@ class Model extends \Kotchasan\Model
                   } catch (\Exception $exc) {
                     // ไม่สามารถอัปโหลดได้
                     $ret['ret_'.$item] = Language::get($exc->getMessage());
-                    $input = !$input ? $item : $input;
                   }
                 }
               }
             }
-            if (!$input) {
+            if (empty($ret)) {
               $save['new_date'] = $save['new_date'] * 86400;
               $save['can_post'][] = 1;
               $save['can_reply'][] = 1;
@@ -125,9 +121,6 @@ class Model extends \Kotchasan\Model
               // คืนค่า
               $ret['alert'] = Language::get('Saved successfully');
               $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'board-settings', 'mid' => $index->module_id));
-            } else {
-              // คืนค่า input ที่ error
-              $ret['input'] = $input;
             }
           }
         } else {

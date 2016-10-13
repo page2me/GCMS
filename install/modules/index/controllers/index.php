@@ -32,6 +32,7 @@ class Controller extends \Kotchasan\Controller
     define('INSTALL', __FILE__);
     $content = array();
     if (empty(self::$cfg->version)) {
+      // อัปเกรดจาก GCMS 10
       if (is_file('../bin/config.php') && is_file('../bin/vars.php')) {
         // โหลด config
         $config = array();
@@ -80,8 +81,21 @@ class Controller extends \Kotchasan\Controller
         }
       }
     } elseif (version_compare(self::$cfg->version, self::$cfg->new_version) == -1) {
-      // อัปเกรด
-      $page = createClass('Index\Upgrade\View')->render($request);
+      // อัปเกรดจาก GCMS 11
+      $cfg = include(ROOT_PATH.'settings/database.php');
+      $_SESSION['cfg'] = array(
+        'db_username' => $cfg['mysql']['username'],
+        'db_password' => $cfg['mysql']['password'],
+        'db_name' => $cfg['mysql']['dbname'],
+        'db_server' => empty($cfg['mysql']['hostname']) ? 'localhost' : $cfg['mysql']['hostname']
+      );
+      $_SESSION['prefix'] = $cfg['mysql']['prefix'];
+      $class = 'Index\Upgrade'.$request->request('step')->toInt().'\View';
+      if (class_exists($class) && method_exists($class, 'render')) {
+        $page = createClass($class)->render($request);
+      } else {
+        $page = createClass('Index\Upgrade\View')->render($request);
+      }
     } else {
       // ๖ิดตั้งแล้ว
       $page = createClass('Index\Success\View')->render($request);

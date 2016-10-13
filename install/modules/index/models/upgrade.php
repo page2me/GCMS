@@ -48,4 +48,22 @@ class Model extends \Kotchasan\KBase
     $result = $db->customQuery("SHOW COLUMNS FROM `$table_name` LIKE '$field'");
     return empty($result) ? false : true;
   }
+
+  /**
+   * บันทึกไฟล์ settings/database.php
+   *
+   * @param array $tables รายการตารางที่ต้องการอัปเดท (แทนที่ข้อมูลเดิม)
+   * @return boolean คืนค่า true ถ้าสำเร็จ
+   */
+  public static function updateTables($tables)
+  {
+    // โหลด database
+    $database = \Kotchasan\Config::load(ROOT_PATH.'settings/database.php');
+    // อัปเดท tables
+    foreach ($tables as $key => $value) {
+      $database->tables[$key] = $value;
+    }
+    // save database
+    return \Kotchasan\Config::save($database, ROOT_PATH.'settings/database.php');
+  }
 }

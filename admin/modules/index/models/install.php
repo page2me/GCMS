@@ -47,15 +47,22 @@ class Model extends \Kotchasan\Model
           'module' => $module,
           'config' => empty($config) ? '' : serialize($config)
         ));
+        $mktime = time();
         $index = $db->insert($model->getTableName('index'), array(
           'module_id' => $id,
           'index' => 1,
-          'published' => 1
+          'published' => 1,
+          'language' => '',
+          'member_id' => 0,
+          'create_date' => $mktime,
+          'last_update' => $mktime,
+          'visited' => 0
         ));
         $db->insert($model->getTableName('index_detail'), array(
           'module_id' => $id,
           'id' => $index,
-          'topic' => $title
+          'topic' => $title,
+          'language' => ''
         ));
         if ($menupos != '' && $menu != '') {
           $db->insert($model->getTableName('menus'), array(

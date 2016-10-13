@@ -39,12 +39,11 @@ class Controller extends \Kotchasan\Controller
       // แสดงรายการบุคลากร
       $page = createClass('Personnel\Lists\View')->index($request, $index);
     }
-    if ($page) {
-      return $page;
-    } else {
+    if (!$page) {
       // 404
-      return createClass('Index\PageNotFound\Controller')->init($request, 'personnel');
+      $page = createClass('Index\PageNotFound\Controller')->init($request, 'personnel');
     }
+    return $page;
   }
 
   /**

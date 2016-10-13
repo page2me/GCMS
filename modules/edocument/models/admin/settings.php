@@ -13,7 +13,7 @@ use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- *  การตั้งค่า
+ *  บันทึกการตั้งค่า
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -74,7 +74,6 @@ class Model extends \Kotchasan\Model
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['file_typies'])) {
             // คืนค่า input ที่ error
-            $ret['input'] = 'file_typies';
             $ret['ret_file_typies'] = 'this';
           } else {
             $save['can_upload'][] = 1;

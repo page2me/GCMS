@@ -137,8 +137,12 @@ class Date
   {
     if (empty($time)) {
       $time = time();
-    } elseif (is_string($time) && preg_match('/([0-9]+){1,4}-([0-9]+){1,2}-([0-9]+){1,2}(\s([0-9]+){1,2}:([0-9]+){1,2}:([0-9]+){1,2})?/', $time, $match)) {
-      $time = mktime(empty($match[5]) ? 0 : (int)$match[5], empty($match[6]) ? 0 : (int)$match[6], empty($match[7]) ? 0 : (int)$match[7], (int)$match[2], (int)$match[3], (int)$match[1]);
+    } elseif (is_string($time)) {
+      if (preg_match('/([0-9]+){1,4}-([0-9]+){1,2}-([0-9]+){1,2}(\s([0-9]+){1,2}:([0-9]+){1,2}:([0-9]+){1,2})?/', $time, $match)) {
+        $time = mktime(empty($match[5]) ? 0 : (int)$match[5], empty($match[6]) ? 0 : (int)$match[6], empty($match[7]) ? 0 : (int)$match[7], (int)$match[2], (int)$match[3], (int)$match[1]);
+      } elseif (preg_match('/([0-9]+){1,2}:([0-9]+){1,2}:([0-9]+){1,2}/', $time, $match)) {
+        $time = mktime((int)$match[1], (int)$match[2], (int)$match[3]);
+      }
     }
     // create class
     if (!isset(self::$lang)) {

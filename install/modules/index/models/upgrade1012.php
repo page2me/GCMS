@@ -95,7 +95,11 @@ class Model extends \Index\Upgrade\Model
     }
     $f = \Gcms\Config::save($database_cfg, ROOT_PATH.'settings/database.php');
     $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update file <b>database.php</b> ...</li>';
-    return implode('', $content);
+    $content[] = '<li class="correct">Upgrade to Version <b>11.0.0</b> complete.</li>';
+    return (object)array(
+        'content' => implode('', $content),
+        'version' => '11.0.0'
+    );
   }
 
   public static function r2config($data)

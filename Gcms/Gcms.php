@@ -150,7 +150,7 @@ class Gcms extends \Kotchasan\KBase
     $replace[] = $canview ? '<code class="content-code">\\2[/code]' : '<code class="content-code">'.Language::get('Can not view this content').'[/code]';
     $patt[] = '/\[quote(\s+q=[0-9]+)?\]/ui';
     $replace[] = '<blockquote><b>'.Language::replace('Quotations by :name', array(':name' => Language::get('Topic'))).'</b>';
-    $patt[] = '/\[quote]\s+r=([0-9]+)\]/ui';
+    $patt[] = '/\[quote\s+r=([0-9]+)\]/ui';
     $replace[] = '<blockquote><b>'.Language::replace('Quotations by :name', array(':name' => Language::get('Comment'))).' <em>#\\1</em></b>';
     $patt[] = '/\[\/code\]/i';
     $replace[] = '</code>';

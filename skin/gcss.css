@@ -2942,9 +2942,9 @@ table.border > caption,
 }
 .table_nav fieldset {
   display: inline-block;
-  margin: 0 5px 0 0;
+  margin: 0 5px 0 0 !important;
   position: relative;
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
   vertical-align: middle;
   line-height: normal;
 }
