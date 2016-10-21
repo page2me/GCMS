@@ -38,7 +38,8 @@ class Controller extends \Kotchasan\Controller
       // ลิสต์รายการ tag
       $index->tag = $index->alias;
       $index->module = 'document';
-      $index->list_per_page = 20;
+      $index->rows = 20;
+      $index->cols = 1;
       $index->new_date = 0;
       $index->topic = Language::get('Tags').' '.$index->alias;
       $index->description = $index->topic;

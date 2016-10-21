@@ -164,10 +164,10 @@ class Gcms extends \Kotchasan\KBase
     $replace[] = '<span class=\\2>\\1</span>';
     $patt[] = '/(&lt;[\/]?([a-z]+)(.*?)&gt;)/isu';
     $replace[] = '<span class=html>\\1</span>';
-    $patt[] = '/(\/\*(.*?)\*\/)/uis';
+    $patt[] = '/[^:](\/\/[^\r\n]+)/';
     $replace[] = '<span class=comment>\\1</span>';
-    $patt[] = '#(^|[^:])(//)([^\r\n]+)#u';
-    $replace[] = '\\1<span class=comment>\\2\\3</span>';
+    $patt[] = '/(\/\*(.*?)\*\/)/s';
+    $replace[] = '<span class=comment>\\1</span>';
     $patt[] = '/(&lt;!--(.*?)--&gt;)/uis';
     $replace[] = '<span class=comment>\\1</span>';
     $patt[] = '/\[google\](.*?)\[\/google\]/usi';

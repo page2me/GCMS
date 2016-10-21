@@ -105,7 +105,7 @@ class View extends \Gcms\View
         '/{LIST}/' => $listitem->render(),
         '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
         '/{NEWTOPIC}/' => empty($index->can_post) ? 'hidden' : '',
-        '/{CATEGORY}/' => $category_id,
+        '/{CATEGORY}/' => empty($category_id) ? 0 : $category_id,
         '/{MODULE}/' => $index->module
       ));
       // breadcrumb ของหมวดหมู่

@@ -121,13 +121,11 @@ class Model extends \Kotchasan\Model
    * topic, details, keywords, description
    *
    * @param Object $index
-   * @return Object
+   * @return Object ไม่พบคืนค่า null
    */
   public static function getDetails($index)
   {
-    if (empty($index->module_id)) {
-      return null;
-    } else {
+    if (!empty($index->module_id)) {
       // Model
       $model = new static;
       $search = $model->db()->createQuery()
@@ -141,9 +139,10 @@ class Model extends \Kotchasan\Model
         foreach ($search as $key => $value) {
           $index->$key = $value;
         }
+        return $index;
       }
-      return $index;
     }
+    return null;
   }
 
   /**

@@ -57,6 +57,8 @@ class View extends \Gcms\View
       $menu = Gcms::$menu->moduleMenu($index->module);
       if ($menu) {
         Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
+      } elseif ($index->topic != '') {
+        Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
       }
     }
     // current URL

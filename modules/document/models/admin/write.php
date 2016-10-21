@@ -216,7 +216,7 @@ class Model extends \Kotchasan\Model
           $index = ArrayTool::unserialize($index[0]['config'], $index[0]);
           unset($index['config']);
           if (empty($id)) {
-            // เขียนใหม่ตรวสอบกับ can_write
+            // เขียนใหม่ตรวจสอบกับ can_write
             $canWrite = in_array($login['status'], $index['can_write']);
           } else {
             // แก้ไข ตรวจสอบเจ้าของหรือ ผู้ดูแล

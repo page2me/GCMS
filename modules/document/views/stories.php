@@ -38,6 +38,7 @@ class View extends \Gcms\View
     $valid_date = time() - $index->new_date;
     // รายการ
     $listitem = Grid::create($index->owner, $index->module, 'listitem');
+    $listitem->setCols($index->cols);
     foreach ($index->items as $item) {
       if (!empty($item->picture) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$item->picture)) {
         $thumb = WEB_URL.DATA_FOLDER.'document/'.$item->picture;
@@ -104,6 +105,7 @@ class View extends \Gcms\View
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
       '/{LIST}/' => $listitem->render(),
+      '/{COLS}/' => $index->cols,
       '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
       '/{MODULE}/' => $index->module
     ));

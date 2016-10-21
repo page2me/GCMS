@@ -133,7 +133,7 @@ class Form extends \Kotchasan\KBase
       foreach ($event as $on => $func) {
         $this->javascript[] = '$G("'.$id.'").addEvent("'.$on.'", '.$func.');';
       }
-    } elseif (!Html::$form->gform) {
+    } elseif (isset(Html::$form) && !Html::$form->gform) {
       foreach ($event as $on => $func) {
         $prop['on'.$on] = 'on'.$on.'="'.$func.'()"';
       }

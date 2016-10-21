@@ -31,7 +31,14 @@ class Controller extends \Kotchasan\Controller
   {
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     $index = \Index\Module\Model::getDetails($index);
-    // รายการไฟล์ดาวน์โหลด
-    return createClass('Video\Index\View')->index($request, $index);
+    if ($index) {
+      // รายการไฟล์ดาวน์โหลด
+      $page = createClass('Video\Index\View')->index($request, $index);
+      if ($page) {
+        return $page;
+      }
+    }
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init($request, 'video');
   }
 }

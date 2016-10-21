@@ -39,7 +39,7 @@ class Index extends \Kotchasan\View
       $widget[] = '</div></div>';
     }
     if (sizeof($widget) > 0) {
-      return '<div class="widget-album gbox">'.implode('', $widget).'</div>';
+      return '<div class="widget-album document-list thumbview">'.implode('', $widget).'</div>';
     }
   }
 }

@@ -110,13 +110,17 @@ class Model extends \Kotchasan\Model
     // จำนวน
     $index->total = $query->cacheOn()->count();
     // ข้อมูลแบ่งหน้า
-    if (empty($index->list_per_page)) {
-      $index->list_per_page = 20;
+    if (empty($index->rows)) {
+      $index->rows = 20;
     }
+    if (empty($index->cols)) {
+      $index->cols = 1;
+    }
+    $list_per_page = $index->rows * $index->cols;
     $index->page = $request->request('page')->toInt();
-    $index->totalpage = ceil($index->total / $index->list_per_page);
+    $index->totalpage = ceil($index->total / $list_per_page);
     $index->page = max(1, ($index->page > $index->totalpage ? $index->totalpage : $index->page));
-    $index->start = $index->list_per_page * ($index->page - 1);
+    $index->start = $list_per_page * ($index->page - 1);
     // query (sort, split)
     $select = array(
       'M.module',
@@ -148,7 +152,7 @@ class Model extends \Kotchasan\Model
     $query->select($select)
       ->join('user U', 'LEFT', array('U.id', 'I.member_id'))
       ->order(isset($sorts[$index->sort]) ? $sorts[$index->sort] : $sorts[0])
-      ->limit($index->list_per_page, $index->start);
+      ->limit($list_per_page, $index->start);
     $index->items = $query->cacheOn()->execute();
     // คืนค่า
     return $index;

@@ -103,14 +103,14 @@ class View extends \Gcms\Adminview
     $fieldset = $form->add('fieldset', array(
       'title' => '{LNG_Display}'
     ));
-    // list_per_page
+    // rows
     $fieldset->add('number', array(
-      'id' => 'list_per_page',
+      'id' => 'rows',
       'labelClass' => 'g-input icon-published1',
       'itemClass' => 'item',
       'label' => '{LNG_Amount}',
       'comment' => '{LNG_Set the number of entries displayed per page}',
-      'value' => $index->list_per_page
+      'value' => $index->rows
     ));
     // sort
     $sorts = array('{LNG_Last updated}', '{LNG_Article Date}', '{LNG_Published date}', 'ID');

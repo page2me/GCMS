@@ -8,6 +8,7 @@
 
 namespace Document\Admin\Settings;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
@@ -36,7 +37,8 @@ class Model extends \Kotchasan\Model
       'img_typies' => array('jpg', 'jpeg'),
       'default_icon' => 'modules/document/img/default_icon.png',
       'published' => 1,
-      'list_per_page' => 20,
+      'rows' => 20,
+      'cols' => 1,
       'sort' => 1,
       'new_date' => 604800,
       'viewing' => 0,
@@ -53,36 +55,39 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึกข้อมูล config ของโมดูล
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
         $save = array(
-          'icon_width' => max(75, self::$request->post('icon_width')->toInt()),
-          'icon_height' => max(75, self::$request->post('icon_height')->toInt()),
-          'img_typies' => self::$request->post('img_typies', array())->toString(),
-          'published' => self::$request->post('published')->toBoolean(),
-          'list_per_page' => self::$request->post('list_per_page')->toInt(),
-          'sort' => self::$request->post('sort')->toInt(),
-          'new_date' => self::$request->post('new_date')->toInt(),
-          'viewing' => self::$request->post('viewing')->toInt(),
-          'category_display' => self::$request->post('category_display')->toBoolean(),
-          'news_count' => self::$request->post('news_count')->toInt(),
-          'news_sort' => self::$request->post('news_sort')->toInt(),
-          'can_reply' => self::$request->post('can_reply', array())->toInt(),
-          'can_view' => self::$request->post('can_view', array())->toInt(),
-          'can_write' => self::$request->post('can_write', array())->toInt(),
-          'moderator' => self::$request->post('moderator', array())->toInt(),
-          'can_config' => self::$request->post('can_config', array())->toInt(),
+          'icon_width' => max(75, $request->post('icon_width')->toInt()),
+          'icon_height' => max(75, $request->post('icon_height')->toInt()),
+          'img_typies' => $request->post('img_typies', array())->toString(),
+          'published' => $request->post('published')->toBoolean(),
+          'rows' => max(1, $request->post('rows')->toInt()),
+          'cols' => max(1, $request->post('cols')->toInt()),
+          'sort' => $request->post('sort')->toInt(),
+          'new_date' => $request->post('new_date')->toInt(),
+          'viewing' => $request->post('viewing')->toInt(),
+          'category_display' => $request->post('category_display')->toBoolean(),
+          'news_count' => $request->post('news_count')->toInt(),
+          'news_sort' => $request->post('news_sort')->toInt(),
+          'can_reply' => $request->post('can_reply', array())->toInt(),
+          'can_view' => $request->post('can_view', array())->toInt(),
+          'can_write' => $request->post('can_write', array())->toInt(),
+          'moderator' => $request->post('moderator', array())->toInt(),
+          'can_config' => $request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
-        $index = \Index\Adminmodule\Model::get('document', self::$request->post('id')->toInt());
+        $index = \Index\Adminmodule\Model::get('document', $request->post('id')->toInt());
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['img_typies'])) {
             // คืนค่า input ที่ error
@@ -90,7 +95,7 @@ class Model extends \Kotchasan\Model
           } else {
             $save['default_icon'] = $index->default_icon;
             // อัปโหลดไฟล์
-            foreach (self::$request->getUploadedFiles() as $item => $file) {
+            foreach ($request->getUploadedFiles() as $item => $file) {
               if ($file->hasUploadFile()) {
                 if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'document/')) {
                   // ไดเรคทอรี่ไม่สามารถสร้างได้
@@ -119,7 +124,7 @@ class Model extends \Kotchasan\Model
               $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
               // คืนค่า
               $ret['alert'] = Language::get('Saved successfully');
-              $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'document-settings', 'mid' => $index->module_id));
+              $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'document-settings', 'mid' => $index->module_id));
             }
           }
         } else {
