@@ -123,15 +123,14 @@ class View extends \Gcms\Adminview
           $item[$lng] = implode(', ', unserialize($item[$lng]));
         }
       }
-      $item[$lng] = $item[$lng] == '' ? '' : '<span title="'.$item[$lng].'">'.self::toText($item[$lng]).'</span>';
+      $item[$lng] = $item[$lng] == '' ? '' : '<span title="'.htmlspecialchars($item[$lng]).'">'.self::toText($item[$lng]).'</span>';
     }
-    $item['key'] = str_replace('&', '&amp;', $item['key']);
-    $item['key'] = '<a class=icon-copy title="'.$item['key'].'">'.self::toText($item['key']).'</a>';
+    $item['key'] = '<a class=icon-copy title="'.htmlspecialchars($item['key']).'">'.self::toText($item['key']).'</a>';
     return $item;
   }
 
   private static function toText($text)
   {
-    return Text::cut(str_replace(array("\r", "\n"), array('', ' '), strip_tags($text)), 50);
+    return Text::cut(str_replace(array("\r", "\n", '&'), array('', ' ', '&amp;'), strip_tags($text)), 50);
   }
 }

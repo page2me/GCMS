@@ -38,14 +38,16 @@ class Model extends \Kotchasan\Model
   }
 
   /**
-   * ยอมรับ tag บางตัว ในภาษา em b strong ul ol li dd dt dl
+   * ยอมรับ tag บางตัว ในภาษา a em b strong ul ol li dd dt dl
    *
    * @param string $string
    * @return string
    */
   public function allowTags($string)
   {
-    return preg_replace('/(&lt;)(\/?(em|b|strong|ul|ol|li|dd|dt|dl))(&gt;)/isu', '<\\2>', $string);
+    return preg_replace_callback('/(&lt;(\/?(a|em|b|strong|ul|ol|li|dd|dt|dl)).*?&gt;)/is', function($matches) {
+      return html_entity_decode($matches[1]);
+    }, $string);
   }
 
   /**

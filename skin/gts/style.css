@@ -17,9 +17,17 @@ a:hover {
 }
 #top_header {
   background-color: #333;
-  color: #DDD;
+  color: rgba(255,255,255,0.5);
   white-space: nowrap;
   line-height: 24px;
+}
+.widget_share a {
+  color: inherit;
+}
+#login_editprofile:hover,
+.widget_share a:hover,
+.language_menu a:hover {
+  color: #FFF;
 }
 @media only screen and (max-width: 768px) {
   #top_header {
@@ -57,9 +65,12 @@ a:hover {
   text-align: center;
   padding-bottom: 10px;
 }
-.sidebar #widget-search-form {
+.widget-search-form {
   padding: 3px;
-  border: 1px solid #EEE;
+  border-width: 1px;
+  border-style: solid;
+  border-color: inherit;
+  color: #000;
 }
 .sidebar .gallery-box .table_rss_gallery_class a {
   border: 1px solid #DDD;
@@ -67,6 +78,7 @@ a:hover {
 .sidebar_bg_color {
   background-color: #FFF;
   padding: 10px;
+  border-color: rgba(0,0,0,0.2);
 }
 #text-links, .footer {
   padding: 10px;
@@ -148,17 +160,17 @@ nav.breadcrumbs li:before {
   display: inline-block;
 }
 .widget_bg_color, .homepage .widget, .bdr_content {
-  background-color: #FFF;
+  background-color: inherit;
 }
 .bdr_content {
   border-width: 1px;
   border-style: solid;
   border-color: #DDD;
   box-shadow: 0 0 2px rgba(0,0,0,0.1);
-  padding: 0 1% 1%;
+  padding: 0 10px 10px;
 }
 .homepage .bdr_content {
-  margin-bottom: 1%;
+  margin-bottom: 10px;
 }
 .homepage .bdr_content {
   padding: 1%;
@@ -214,11 +226,18 @@ nav.breadcrumbs li:before {
   text-shadow: 1px 1px 0 rgba(255,255,255,0.4), -1px -1px 0 rgba(255,255,255,0.2);
 }
 .sidemenu {
-  border: 1px solid #DDD;
+  border-width: 1px;
+  border-style: solid;
+  border-color: inherit;
   padding: 5px;
 }
-.sidemenu li {
-  border-bottom: 1px solid #DDD;
+.sidemenu > ul > li {
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: inherit;
+}
+.sidemenu > ul ul {
+  box-shadow: 0 0 5px rgba(0,0,0,0.4);
 }
 #GModal_modaldiv > .modaldiv form {
   padding: 10px;
@@ -227,4 +246,8 @@ nav.breadcrumbs li:before {
 .mainform p {
   padding-left: 0;
   padding-right: 0;
+}
+.subcontent .widget_bdr,
+.bdr_content {
+  background-color: #FFF;
 }

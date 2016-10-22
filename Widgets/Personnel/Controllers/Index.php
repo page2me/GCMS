@@ -57,7 +57,7 @@ class Index extends \Kotchasan\Controller
       }
       $widget[] = '</div>';
       if (!empty($query_string['menu'])) {
-        $widget[] = '<nav class=sidemenu><ul>';
+        $widget[] = '<nav class="sidemenu margin-top"><ul>';
         foreach (\Index\Category\Model::categories($index->module_id) as $category_id => $topic) {
           $widget[] = '<li><a href="'.\Gcms\Gcms::createUrl($index->module, '', 0, 0, 'cat='.$category_id).'"><span>'.$topic.'</span></a></li>';
         }

@@ -73,6 +73,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Add New','text','index','0','เพิ่ม','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Add, edit, and reorder the language of the site. The first item is the default language of the site.','text','index','0','เพิ่ม แก้ไข และจัดลำดับภาษาของเว็บไซต์ รายการแรกคือภาษาเริ่มต้นของเว็บไซต์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Add/Edit installed language','text','index','0','เพิ่ม/แก้ไข ภาษาที่ติดตั้ง','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Additional notes of explanation or documentation','text','index','0','คำอธิบายหรือหมายเหตุเพิ่มเติมของเอกสาร','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Address','text','index','0','ที่อยู่','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Address details','text','index','0','รายละเอียดที่อยู่','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Admin','text','index','0','ผู้ดูแลระบบ','');
@@ -200,16 +201,20 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Do not use these names as a member (one per line)','text','index','0','ไม่สามารถใช้ชื่อเหล่านี้เป็นชื่อสมาชิกได้ (หนึ่งบรรทัดต่อหนึ่งชื่อ)','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Do you want to download the file ?','text','index','0','คุณต้องการดาวน์โหลดไฟล์นี้ ?','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Do you want to import the database?','text','index','0','คุณต้องการนำเข้าฐานข้อมูล ?','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Document number','text','index','0','เลขที่เอกสาร','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Document title','text','index','0','ชื่อเอกสาร','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Download','text','index','0','ดาวน์โหลด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Download Details','text','index','0','รายละเอียดการดาวน์โหลด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Download file','text','index','0','ไฟล์ดาวน์โหลด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Drag and drop to reorder','text','index','0','ลากและวางเพื่อจัดลำดับ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('DRAG_THE_MARKER_TO_THE_LOCATION_YOU_WANT','text','index','1','ลากหมุดนี้ไปยังตำแหน่งที่ตั้งที่ต้องการ','Drag the marker to the location you want');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('E-Document','text','index','0','เอกสาร','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('E-mail address for replies. If you do not want a response, please leave blank.','text','index','0','ที่อยู่อีเมล์สำหรับการตอบกลับ หากคุณไม่ต้องการให้มีการตอบกลับกรุณาเว้นว่างไว้','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Edit','text','index','0','แก้ไข','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Edit comment successfully','text','index','0','	แก้ไขความคิดเห็นเรียบร้อย','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Edit post successfully','text','index','0','	แก้ไขโพสต์เรียบร้อย','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Editing your account','text','index','0','แก้ไขข้อมูลส่วนตัวสมาชิก','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Electronic document delivery system','text','index','0','โมดูลระบบรับส่งเอกสารอิเลคทรอนิคส์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Email','text','index','0','อีเมล์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Email addresses for sender and do not reply such as no-reply@domain.tld','text','index','0','ทีอยู่อีเมล์ใช้เป็นผู้ส่งจดหมาย สำหรับจดหมายที่ไม่ต้องการตอบกลับ เช่น no-reply@domain.tld','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Email confirmation','text','index','0','การยืนยันอีเมล์','');
@@ -230,6 +235,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Enter the ID of the video from Youtube 11 characters eg 17IKhjQWT9M (Without a complete URL)','text','index','0','กรอก ID ของ วีดีโอจาก Youtube 11 ตัวอักษร เช่น 17IKhjQWT9M (โดยไม่ต้องนำ URL มาด้วย)','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Enter the name of Textlink english lowercase letters and numbers. Used for grouping similar position.','text','index','0','กรอกชื่อของ Textlink ภาษาอังกฤษตัวพิมพ์เล็กและตัวเลขเท่านั้น ใช้สำหรับจัดกลุ่มลิงค์ที่ตำแหน่งเดียวกัน','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Enter the name of the album','text','index','0','กรอกชื่อของอัลบัมภาพ','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Enter the number of documents For reference','text','index','0','ระบุเลขที่ของเอกสาร ใช้สำหรับอ้างอิงเอกสาร','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Enter your password again','text','index','0','ใส่รหัสผ่านอีกครั้ง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Enter your Twitter username. By entering the site and go to your Profile in the Address Bar will appear on your Twitter account name','text','index','0','ระบุชื่อทวิตเตอร์ โดยเข้าเว็บไซต์และไปที่ Profile ของคุณในช่อง Address Bar จะปรากฏชื่อบัญชีทวิตเตอร์ของคุณ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('ENTER_A_PLACE_NAME_NEARBY_THE_LOCATION_TO_SEARCH','text','index','1','กรอกชื่อสถานที่ ที่ใกล้เคียงตำแหน่งที่ตั้งที่ต้องการค้นหา','Enter a place name nearby the location to search');
@@ -267,7 +273,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('hour','text','index','0','ชั่วโมง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('How to define user authentication for mail servers. If you enable it, you must configure below correctly.','text','index','0','กำหนดวิธีการตรวจสอบผู้ใช้สำหรับเมล์เซิร์ฟเวอร์ หากคุณเปิดใช้งานคุณต้องกำหนดค่าต่างๆด้านล่างถูกต้อง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Icon','text','index','0','ไอคอน','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Identification number','text','index','0','รหัสบัตรประชาชน','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Identification number','text','index','0','เลขประชาชน','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('If you choose to unpublish contributions will not be displayed on the page immediately. The Admin can review and published it later.','text','index','0','ถ้าคุณเลือกระงับการเผยแพร่เรื่องที่เขียนจะไม่สามารถแสดงผลในหน้าเว็บได้โดยทันที ซึ่งแอดมินสามารถตรวจสอบและเผยแพร่ได้ในภายหลัง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('If you enable it, System will send a confirmation email to the email address registered.','text','index','0','ถ้าคุณเปิดการใช้งาน ระบบจะส่งอีเมล์ยืนยันการสมัครสมาชิกไปยังที่อยู่อีเมล์ที่ลงทะเบียนไว้','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Image','text','index','0','รูปภาพ','');
@@ -527,6 +533,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Sorry, you do not have permission to comment','text','index','0','ขออภัย คุณไม่มีสิทธิ์ในการแสดงความคิดเห็น','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Sort','text','index','0','เรียงลำดับ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Specify the file extension that allows uploading. English lowercase letters and numbers 2-4 characters to separate each type with a comma (,) and without spaces. eg zip,rar,doc,docx','text','index','0','ระบุนามสกุลของไฟล์ที่ยอมให้อัปโหลด ภาษาอังกฤษตัวพิมพ์เล็กและตัวเลข 2 - 6 ตัวอักษรต่อ 1 ชนิด คั่นแต่ละชนิดด้วย ลูกน้ำ (,) และไม่ต้องมีช่องว่าง เช่น zip,rar,doc,docx','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Specify the format of the document number as% 04d means adding zeros until the four-digit number on the front, such as 0001.','text','index','0','ระบุรูปแบบของเลขที่เอกสาร เช่น %04d หมายถึง เติมเลขศูนย์ด้านหน้าตัวเลขจนครบสี่หลัก เช่น 0001 เป็นต้น','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Specify the language code of the email, as utf-8','text','index','0','ระบุรหัสภาษาของอีเมล์ที่ส่ง เช่น utf-8','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Specify the start and end of the event','text','index','0','ระบุวันที่เริ่มต้นและสิ้นสุดของกิจกรรม','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Speed','text','index','0','ความเร็ว','');
@@ -606,6 +613,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Tools','text','index','0','เครื่องมือ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Tooltip','text','index','0','ทูลทิป','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Topic','text','index','0','หัวข้อ','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Total','text','index','0','รวม','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Total Members','text','index','0','สมาชิกทั้งหมด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Twitter message box styles','text','index','0','รูปแบบเริ่มต้นของกล่องข้อความทวิตเตอร์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Twitter widget ID, can be found from the URL displayed on the browser Addressbar when visited your Widget settngs','text','index','0','เลขรหัสวิดเจ็ทของทวิตเตอร์ สามารถหาได้จาก Addressbar โดยเข้าไปที่การตั้งค่าวิดเจ็ท','');
@@ -661,6 +669,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Website title','text','index','0','ชื่อเว็บ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Welcome','text','index','0','สวัสดี','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Welcome %s, login complete','text','index','0','สวัสดี คุณ %s ยินดีต้อนรับเข้าสู่ระบบ','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('When adding a new document Email alert to the recipient. When enabled this option.','text','index','0','เมื่อมีการเพิ่มเอกสารใหม่ ส่งอีเมล์แจ้งเตือนไปยังผู้รับด้วย เมื่อเปิดใช้งานตัวเลือกนี้','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('When choosing the menu','text','index','0','เมื่อคลิกเมนู','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('When you press the button below. GCMS will create <em>:dbname.sql</em> file for save on your computer. This file contains all the information in the database. You can use it to restore your system, or used to move data to another site.','text','index','0','เมื่อคุณกดปุ่มด้านล่าง GCMS จะทำการสร้างไฟล์ <em>:dbname.sql</em> สำหรับบันทึกลงในคอมพิวเตอร์ของคุณ ไฟล์นี้จะประกอบไปด้วยข้อมูลทั้งหมดในฐานข้อมูลของ GCMS ตามที่คุณได้เลือกไว้ คุณสามารถใช้ไฟล์นี้ในการกู้คืนระบบของคุณในกรณีฉุกเฉินหรือนำเข้าข้อมูลไปยัง GCMS อื่นได้','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Widget for displaying thumbnails from RSS','text','index','0','ส่วนเสริมสำหรับแสดงรูปภาพจาก RSS','');

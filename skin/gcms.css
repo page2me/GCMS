@@ -32,39 +32,6 @@ a[id^='lang_']:hover, a[id^='lang_']:focus, .font_size:hover, .font_size:focus {
 #logo .description {
   padding: 0 30px 10px;
 }
-/* search form */
-.search-form > p {
-  display: table;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  background-color: rgba(255,255,255,0.3);
-}
-.search-form > p > label {
-  display: table-cell;
-  text-align: center;
-  vertical-align: middle;
-  margin: 0;
-  width: auto !important;
-}
-.search-form [type="text"] {
-  display: block;
-  width: 100%;
-}
-.search-form input,
-.search-form button {
-  color: inherit;
-  background-color: transparent;
-  border-style: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  line-height: 1.5;
-}
-.search-form button:before {
-  margin: 0;
-  font-size: 1.5em;
-}
 body.toTop .fixed_top {
   position: fixed;
   top: 0;
@@ -339,13 +306,14 @@ header.list h2 select {
   color: #000;
 }
 /* search form */
+.widget-search-form > p,
 .search-form > p {
   display: table;
   width: 100%;
   padding: 0;
   margin: 0;
-  background-color: rgba(255,255,255,0.3);
 }
+.widget-search-form > p > label,
 .search-form > p > label {
   display: table-cell;
   text-align: center;
@@ -353,10 +321,13 @@ header.list h2 select {
   margin: 0;
   width: auto !important;
 }
+.widget-search-form [type="text"],
 .search-form [type="text"] {
   display: block;
   width: 100%;
 }
+.widget-search-form input,
+.widget-search-form button,
 .search-form input,
 .search-form button {
   color: inherit;
@@ -367,6 +338,7 @@ header.list h2 select {
   box-shadow: none;
   line-height: 1.5;
 }
+.widget-search-form button:before,
 .search-form button:before {
   margin: 0;
   font-size: 1.5em;
