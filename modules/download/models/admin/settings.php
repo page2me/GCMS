@@ -8,12 +8,13 @@
 
 namespace Download\Admin\Settings;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- *  การตั้งค่า
+ *  บันทึกการตั้งค่า
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +24,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * ค่าติดตั้งเรื่มต้น
+   * ค่าติดตั้งเริ่มต้น
    *
    * @return array
    */
@@ -43,12 +44,14 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึกข้อมูล config ของโมดูล
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
@@ -61,16 +64,16 @@ class Model extends \Kotchasan\Model
         }
         $save = array(
           'file_typies' => array_keys($typies),
-          'upload_size' => self::$request->post('upload_size')->toInt(),
-          'list_per_page' => self::$request->post('list_per_page')->toInt(),
-          'sort' => self::$request->post('sort')->toInt(),
-          'can_download' => self::$request->post('can_download', array())->toInt(),
-          'can_upload' => self::$request->post('can_upload', array())->toInt(),
-          'moderator' => self::$request->post('moderator', array())->toInt(),
-          'can_config' => self::$request->post('can_config', array())->toInt(),
+          'upload_size' => $request->post('upload_size')->toInt(),
+          'list_per_page' => $request->post('list_per_page')->toInt(),
+          'sort' => $request->post('sort')->toInt(),
+          'can_download' => $request->post('can_download', array())->toInt(),
+          'can_upload' => $request->post('can_upload', array())->toInt(),
+          'moderator' => $request->post('moderator', array())->toInt(),
+          'can_config' => $request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
-        $index = \Index\Adminmodule\Model::get('download', self::$request->post('id')->toInt());
+        $index = \Index\Adminmodule\Model::get('download', $request->post('id')->toInt());
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['file_typies'])) {
             // คืนค่า input ที่ error

@@ -39,14 +39,14 @@ html {
 }
 @-webkit-keyframes bugfix {from {padding: 0;} to {padding: 0;}}
 body {
-  font-size: 12px;
+  font-size: 14px;
   position: relative;
   background-color: #FFF;
   font-family: Tahoma, Loma, Arial, Helvetica, sans-serif;
   -webkit-animation: bugfix infinite 1s;
 }
 body, li {
-  line-height: 1.4;
+  line-height: 1.42857;
 }
 table, caption, thead, tbody, tfoot, tr, td, th, p, div, article, section, header, h1, h2, h3, h4, h5, h6, footer, .table, .tr, .th, .td, ul, ol {
   border-color: inherit;
@@ -539,6 +539,7 @@ button {
 input[type="text"],
 input[type="password"],
 input[type="date"],
+input[type="time"],
 input[type="number"],
 input[type="email"],
 input[type="url"],
@@ -570,6 +571,7 @@ textarea,
 input[type="text"],
 input[type="password"],
 input[type="date"],
+input[type="time"],
 input[type="number"],
 input[type="email"],
 input[type="url"],
@@ -586,6 +588,7 @@ textarea,
 input[type="text"],
 input[type="password"],
 input[type="date"],
+input[type="time"],
 input[type="number"],
 input[type="email"],
 input[type="url"],
@@ -634,6 +637,7 @@ select,
 input[type="text"],
 input[type="password"],
 input[type="date"],
+input[type="time"],
 input[type="number"],
 input[type="email"],
 input[type="url"],
@@ -665,15 +669,27 @@ fieldset fieldset > legend {
   vertical-align: middle;
   white-space: nowrap;
 }
-.g-input.table {
-  width: auto;
-  display: table;
+.wlabel .g-input,
+.wlabel .label {
+  display: table-cell;
+}
+.wlabel .label {
+  border-style: solid solid solid none;
+  border-width: 1px;
+  border-color: #CCC;
+  border-color: rgba(0,0,0,0.2);
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #E5E5E5;
+  background-color: rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 0 #FFF;
 }
 .g-input > select,
 .g-input > textarea,
 .g-input > input[type="text"],
 .g-input > input[type="password"],
 .g-input > input[type="date"],
+.g-input > input[type="time"],
 .g-input > input[type="number"],
 .g-input > input[type="email"],
 .g-input > input[type="url"],
@@ -685,6 +701,7 @@ fieldset fieldset > legend {
 .g-input[class*="icon"] > input[type="text"],
 .g-input[class*="icon"] > input[type="password"],
 .g-input[class*="icon"] > input[type="date"],
+.g-input[class*="icon"] > input[type="time"],
 .g-input[class*="icon"] > input[type="number"],
 .g-input[class*="icon"] > input[type="email"],
 .g-input[class*="icon"] > input[type="url"] {
@@ -1205,9 +1222,6 @@ form p, form .item {
   margin: 2px 0;
 }
 .cuttext,
-.fixlabel label,
-.fixlabel .label,
-.fixlabel fieldset fieldset > legend,
 .listview > [class*="col"],
 .listview > .row > [class*="col"] {
   white-space: nowrap;
@@ -1216,40 +1230,10 @@ form p, form .item {
   -ms-text-overflow: ellipsis;
   overflow: hidden;
 }
-.fixlabel label,
-.fixlabel fieldset fieldset > legend {
-  width: 30%;
-  float: left;
-  height: 2.3em;
-  line-height: 2.3em;
-  margin-right: 1%;
-}
-.fixlabel label + :nth-child(2),
-.fixlabel fieldset fieldset > legend + :nth-child(2) {
-  max-width: 69%;
-}
-.fixlabel .inline {
-  width: auto;
-  float: none;
-}
-html[dir="rtl"] .fixlabel label {
-  float: right;
-}
-.fixlabel .comment,
-.fixlabel .validationResult,
-.fixlabel .submit {
-  padding-left: 31%;
-}
-html[dir="rtl"]  .fixlabel .comment,
-html[dir="rtl"]  .fixlabel .validationResult,
-html[dir="rtl"]  .fixlabel .submit {
-  padding-left: 0;
-  padding-right: 31%;
-}
 form .comment {
   line-height: 1.4em;
-  padding-top: 0.1em;
-  padding-bottom: 0.1em;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
 }
 .submit {
   margin-top: 10px;
@@ -2274,24 +2258,52 @@ input[type="text"].gddcolor {
 }
 .input-groups, .input-groups-table {
   display: table;
-  margin: 1px 0;
+}
+.input-groups > .row,
+.input-groups-table > .row {
+  display: table-row;
 }
 .input-groups-table > [class*="width"],
-.input-groups-table > [class^="width"],
-.input-groups > [class*="width"],
-.input-groups > [class^="width"] {
+.input-groups > [class*="width"] {
   width: auto;
   display: table-cell;
-  padding: 0 5px 0 0;
+  padding-right: 5px;
+}
+.input-groups > .row > [class*="width"],
+.input-groups-table > .row > [class*="width"] {
+  display: table-cell;
+  vertical-align: middle;
+  padding-bottom: 5px;
+  padding-right: 5px;
+}
+.input-groups > .row:last-child >[class*="width"],
+.input-groups-table > .row:last-child >[class*="width"] {
+  padding-bottom: 0;
+}
+.input-groups-table > .row > [class*="width"]:last-child,
+.input-groups > .row > [class*="width"]:last-child {
+  padding-right: 0;
 }
 .input-groups-table > [class*="width"]:last-child,
-.input-groups-table > [class^="width"]:last-child,
-.input-groups > [class*="width"]:last-child,
-.input-groups > [class^="width"]:last-child {
+.input-groups > [class*="width"]:last-child {
   padding: 0;
 }
 .input-groups > :first-child {
   padding-left: 0;
+}
+.input-groups > .row label,
+.input-groups-table > .row label,
+.input-groups > .row span,
+.input-groups-table > .row span {
+  display: table-cell;
+}
+.input-groups > .row label,
+.input-groups-table > .row label {
+  padding-right: 5px;
+}
+.input-groups > .row .label,
+.input-groups-table > .row .label {
+
 }
 .width5 {
   width: 5% !important;
@@ -3535,6 +3547,9 @@ td.buttons .button:last-child {
     width: auto;
     margin: 0 0 5px 0;
     clear: both;
+  }
+  body.responsive .input-groups-table > .row > [class*="width"] {
+    margin-top: 5px;
   }
   body.responsive .mobile-block,
   body.responsive .document-list > .col2,

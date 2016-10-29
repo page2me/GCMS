@@ -80,63 +80,9 @@ class Settings extends \Gcms\Adminview
       'readonly' => true,
       'value' => self::$cfg->map_zoom
     ));
-    $fieldset = $form->add('fieldset', array(
-      'title' => '{LNG_Location of the map}'
-    ));
     $groups = $fieldset->add('groups-table', array(
+      'comment' => '{LNG_Location of the info}',
       'comment' => '{LNG_Click Find me button to configure the map to the current location of the computer, or click the Search button to find the approximate location you need.}'
-    ));
-    // map_latitude
-    $groups->add('text', array(
-      'id' => 'map_latitude',
-      'labelClass' => 'g-input icon-location',
-      'label' => '{LNG_Latitude}',
-      'itemClass' => 'width',
-      'pattern' => '[0-9\.]+',
-      'value' => self::$cfg->map_latitude
-    ));
-    // map_lantigude
-    $groups->add('text', array(
-      'id' => 'map_lantigude',
-      'labelClass' => 'g-input icon-location',
-      'label' => '{LNG_Longitude}',
-      'itemClass' => 'width',
-      'pattern' => '[0-9\.]+',
-      'value' => self::$cfg->map_lantigude
-    ));
-    $groups->add('button', array(
-      'id' => 'find_me',
-      'itemClass' => 'width bottom',
-      'title' => '{LNG_Find me}',
-      'class' => 'button hidden go icon-gps'
-    ));
-    $groups->add('button', array(
-      'id' => 'map_search',
-      'itemClass' => 'width bottom',
-      'title' => '{LNG_Search}',
-      'class' => 'button go icon-search'
-    ));
-    $fieldset->add('div', array(
-      'id' => 'map_canvas',
-      'class' => 'item',
-      'innerHTML' => 'Google Map',
-      'style' => 'height:'.self::$cfg->map_height.'px'
-    ));
-    $fieldset = $form->add('fieldset', array(
-      'title' => '{LNG_Settings the dialog box shown on the map}'
-    ));
-    // map_info
-    $fieldset->add('textarea', array(
-      'id' => 'map_info',
-      'labelClass' => 'g-input icon-file',
-      'label' => '{LNG_Info}',
-      'itemClass' => 'item',
-      'comment' => '{LNG_Text (HTML) to be displayed at the location of the shop or company}',
-      'rows' => 5,
-      'value' => isset(self::$cfg->map_info) ? self::$cfg->map_info : ''
-    ));
-    $groups = $fieldset->add('groups-table', array(
-      'comment' => '{LNG_Location of the info}'
     ));
     // map_info_latigude
     $groups->add('text', array(
@@ -156,6 +102,53 @@ class Settings extends \Gcms\Adminview
       'pattern' => '[0-9\.]+',
       'value' => self::$cfg->map_info_lantigude
     ));
+    $groups->add('button', array(
+      'id' => 'find_me',
+      'itemClass' => 'width bottom',
+      'title' => '{LNG_Find me}',
+      'class' => 'button hidden go icon-gps'
+    ));
+    $groups->add('button', array(
+      'id' => 'map_search',
+      'itemClass' => 'width bottom',
+      'title' => '{LNG_Search}',
+      'class' => 'button go icon-search'
+    ));
+    $fieldset->add('div', array(
+      'id' => 'map_canvas',
+      'class' => 'item',
+      'innerHTML' => 'Google Map',
+      'style' => 'height:'.self::$cfg->map_height.'px'
+    ));
+    $groups = $fieldset->add('groups-table');
+    // map_latitude
+    $groups->add('text', array(
+      'id' => 'map_latitude',
+      'labelClass' => 'g-input icon-location',
+      'label' => '{LNG_Latitude}',
+      'itemClass' => 'width',
+      'pattern' => '[0-9\.]+',
+      'value' => self::$cfg->map_latitude
+    ));
+    // map_lantigude
+    $groups->add('text', array(
+      'id' => 'map_lantigude',
+      'labelClass' => 'g-input icon-location',
+      'label' => '{LNG_Longitude}',
+      'itemClass' => 'width',
+      'pattern' => '[0-9\.]+',
+      'value' => self::$cfg->map_lantigude
+    ));
+    // map_info
+    $fieldset->add('textarea', array(
+      'id' => 'map_info',
+      'labelClass' => 'g-input icon-file',
+      'label' => '{LNG_Info}',
+      'itemClass' => 'item',
+      'comment' => '{LNG_Text (HTML) to be displayed at the location of the shop or company}',
+      'rows' => 5,
+      'value' => isset(self::$cfg->map_info) ? self::$cfg->map_info : ''
+    ));
     $fieldset = $form->add('fieldset', array(
       'class' => 'submit'
     ));
@@ -164,7 +157,7 @@ class Settings extends \Gcms\Adminview
       'class' => 'button ok large',
       'value' => '{LNG_Save}'
     ));
-    $form->script('inintMapDemo();');
+    $form->script('initMapDemo();');
     return $form->render();
   }
 }

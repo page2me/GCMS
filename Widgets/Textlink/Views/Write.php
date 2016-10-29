@@ -44,7 +44,7 @@ class Write extends \Gcms\Adminview
     // name
     $groups = $fieldset->add('groups-table', array(
       'label' => '{LNG_Name}',
-      'id' => 'name',
+      'for' => 'name',
       'comment' => '{LNG_Enter the name of Textlink english lowercase letters and numbers. Used for grouping similar position.}',
     ));
     $groups->add('text', array(

@@ -274,7 +274,7 @@ class DataTable extends \Kotchasan\KBase
       $this->uri = Uri::createFromUri($this->uri);
     }
     // รายการต่อหน้า มาจากการเลือกภายในตารง
-    $count = self::$request->request('count')->toInt();
+    $count = self::$request->globals(array('POST', 'GET'), 'count')->toInt();
     if ($count > 0) {
       $this->perPage = $count;
       $this->uri = $this->uri->withParams(array('count' => $count));
@@ -327,7 +327,7 @@ class DataTable extends \Kotchasan\KBase
       }
       $this->headers = $headers;
     }
-    $this->sort = self::$request->request('sort', $this->sort)->toString();
+    $this->sort = self::$request->globals(array('POST', 'GET'), 'sort', $this->sort)->toString();
     if (!empty($this->sort)) {
       $this->uri = $this->uri->withParams(array('sort' => $this->sort));
     }
@@ -358,7 +358,6 @@ class DataTable extends \Kotchasan\KBase
     $hidden_fields = array();
     parse_str($this->uri->getQuery(), $query_string);
     foreach ($query_string as $key => $value) {
-      $value = rawurlencode($value);
       $url_query[$key] = $key.'='.$value;
       // แอเรย์เก็บรายการ input ที่ไม่ต้องสร้าง
       if ($key !== 'search' && $key !== 'count' && $key !== 'page' && $key !== 'action') {
@@ -405,7 +404,7 @@ class DataTable extends \Kotchasan\KBase
       $form[] = '</fieldset>';
     }
     // search
-    $search = self::$request->request('search')->text();
+    $search = self::$request->globals(array('POST', 'GET'), 'search')->text();
     if (!empty($this->searchColumns)) {
       if (!empty($search)) {
         if (isset($this->model)) {
@@ -452,7 +451,7 @@ class DataTable extends \Kotchasan\KBase
       $this->perPage = 0;
     } else {
       // หน้าที่เลือก
-      $page = max(1, self::$request->request('page', 1)->toInt());
+      $page = max(1, self::$request->globals(array('POST', 'GET'), 'page', 1)->toInt());
       // ตรวจสอบหน้าที่เลือกสูงสุด
       $totalpage = round($count / $this->perPage);
       $totalpage += ($totalpage * $this->perPage < $count) ? 1 : 0;

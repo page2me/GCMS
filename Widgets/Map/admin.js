@@ -35,7 +35,7 @@ function findLocation() {
     });
   }
 }
-function inintMapDemo() {
+function initMapDemo() {
   var myLatlng;
   if ($E('map_latigude') && $E('map_latigude')) {
     myLatlng = new google.maps.LatLng($E('map_latigude').value, $E('map_lantigude').value);
@@ -56,6 +56,9 @@ function inintMapDemo() {
   google.maps.event.addListener(my_map, "dragend", function () {
     mapChanged();
   });
+  google.maps.event.addListener(my_map, "zoom_changed", function () {
+    mapChanged();
+  });
   var info = new google.maps.LatLng($E('map_info_latigude').value, $E('map_info_lantigude').value);
   my_marker = new google.maps.Marker({
     position: info,
@@ -68,6 +71,13 @@ function inintMapDemo() {
     my_map.panTo(p);
     mapChanged();
   });
+  var posChanged = function () {
+    var p = new google.maps.LatLng($E('map_info_latigude').value, $E('map_info_lantigude').value);
+    my_marker.setPosition(p);
+    my_map.panTo(p);
+  };
+  $G('map_info_latigude').addEvent('change', posChanged);
+  $G('map_info_lantigude').addEvent('change', posChanged);
   if (navigator.geolocation) {
     $G('find_me').removeClass('hidden');
     callClick("find_me", findMe);
