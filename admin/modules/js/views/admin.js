@@ -242,30 +242,35 @@ var indexActionCallback = function (xhr) {
     toplv = -1,
     ds = xhr.responseText.toJSON();
   if (ds) {
-    for (prop in ds) {
-      val = ds[prop];
-      if (prop == 'location') {
-        if (val == 'reload') {
-          window.location.reload();
-        } else {
-          window.location.href = val;
+    if (ds.showmodal) {
+      new GModal().show(ds.showmodal);
+      ds.showmodal.evalScript();
+    } else {
+      for (prop in ds) {
+        val = ds[prop];
+        if (prop == 'location') {
+          if (val == 'reload') {
+            window.location.reload();
+          } else {
+            window.location.href = val;
+          }
+        } else if (prop == 'delete_id') {
+          $G(val).remove();
+        } else if (prop == 'alert') {
+          alert(val);
+        } else if (prop == 'elem') {
+          el = $E(val);
+          if (el) {
+            el.className = ds.class;
+            el.title = ds.title;
+          }
+        } else if ($E(prop)) {
+          as = val.split('|');
+          $E(prop).innerHTML = as[0];
+          $E('move_left_' + as[2]).className = (as[1] == 0 ? 'hidden' : 'icon-move_left');
+          $E('move_right_' + as[2]).className = (as[1] > toplv ? 'hidden' : 'icon-move_right');
+          toplv = as[1];
         }
-      } else if (prop == 'delete_id') {
-        $G(val).remove();
-      } else if (prop == 'alert') {
-        alert(val);
-      } else if (prop == 'elem') {
-        el = $E(val);
-        if (el) {
-          el.className = ds.class;
-          el.title = ds.title;
-        }
-      } else if ($E(prop)) {
-        as = val.split('|');
-        $E(prop).innerHTML = as[0];
-        $E('move_left_' + as[2]).className = (as[1] == 0 ? 'hidden' : 'icon-move_left');
-        $E('move_right_' + as[2]).className = (as[1] > toplv ? 'hidden' : 'icon-move_right');
-        toplv = as[1];
       }
     }
   } else if (xhr.responseText != '') {

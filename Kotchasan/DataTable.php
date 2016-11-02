@@ -232,6 +232,13 @@ class DataTable extends \Kotchasan\KBase
    */
   private $onCreateButton;
   /**
+   * method เรียกเมื่อต้องการสร้าง footer
+   * คืนค่า tag tr ที่อยู่ภายใน footer
+   *
+   * @var array array($this, methodName)
+   */
+  private $onCreateFooter;
+  /**
    * กำหนดคอลัมน์ หากยอมให้สามารถจัดลำดับตารางด้วยการลากได้
    *
    * @var int
@@ -393,7 +400,14 @@ class DataTable extends \Kotchasan\KBase
       }
       // ไม่ Query รายการ default
       if (!empty($items['options']) && isset($items['value']) && $items['value'] !== $items['default'] && in_array($items['value'], array_keys($items['options']), true)) {
-        $qs[] = array($key, $items['value']);
+        if (isset($items['onFilter'])) {
+          $q = call_user_func($items['onFilter'], $key, $items['value']);
+          if ($q) {
+            $qs[] = $q;
+          }
+        } else {
+          $qs[] = array($key, $items['value']);
+        }
       }
     }
     // ปุ่ม Go
@@ -581,12 +595,18 @@ class DataTable extends \Kotchasan\KBase
         $content[] = '<tbody>'.$this->tbody($start, $end).'</tbody>';
       }
       // tfoot
-      if ($this->checkCol > -1) {
-        $row = array();
-        $row[] = '<td colspan="'.$this->checkCol.'"></td>';
-        $row[] = '<td class="check-column"><a class="checkall icon-uncheck"></a></td>';
-        $row[] = '<td colspan="'.($colCount - $this->checkCol - 1).'"></td>';
-        $content[] = '<tfoot><tr>'.implode('', $row).'</tr></tfoot>';
+      $tfoot = null;
+      if (isset($this->onCreateFooter)) {
+        $tfoot = call_user_func($this->onCreateFooter);
+      } elseif ($this->checkCol > -1) {
+        $tfoot = '<tr>';
+        $tfoot .= '<td colspan="'.$this->checkCol.'"></td>';
+        $tfoot .= '<td class="check-column"><a class="checkall icon-uncheck"></a></td>';
+        $tfoot .= '<td colspan="'.($colCount - $this->checkCol - 1).'"></td>';
+        $tfoot .= '</tr>';
+      }
+      if ($tfoot) {
+        $content[] = '<tfoot>'.$tfoot.'</tfoot>';
       }
       $content[] = '</table></div>';
       $table_nav = array();

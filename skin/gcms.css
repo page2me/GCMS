@@ -25,7 +25,131 @@ a[id^='lang_']:hover, a[id^='lang_']:focus, .font_size:hover, .font_size:focus {
   background-color: rgba(0,0,0,0.2);
   color: inherit;
 }
+/* homepage */
+.content {
+  border-color: #DDD;
+  border-color: rgba(0,0,0,0.1);
+}
+.header h1 {
+  font-size: 4em;
+}
+header p, footer p {
+  margin: 0;
+}
+.header h1 > a {
+  display: block;
+}
+.content h2 a,
+.header h1 > a,
+.header h1 > a:hover {
+  color: inherit;
+}
+.content header {
+  margin-bottom: 10px;
+}
+.subcontent header {
+  margin-bottom: 0;
+}
+.comment,
+.create,
+.date,
+time,
+.visited {
+  font-size: 90%;
+}
+/* Colors */
+.script,
+.date,
+.create,
+time {
+  color: #616161;
+}
+.php {
+  color: rgb(0, 0, 230);
+}
+.payment1 {
+  color: rgb(206, 103, 0);
+}
+.count,
+.no {
+  color: #007FAE;
+}
+.ip,
+.payment2 {
+  color: #7E57C2;
+}
+.asp,
+.payment3,
+.icon-upload:before {
+  color: rgb(108, 61, 3);
+}
+.comment,
+.comments,
+.payment6,
+.icon-edit:before {
+  color: #259B24;
+}
+.xml,
+.icon-published1:before {
+  color: rgb(0, 0, 124);
+}
+.visited,
+.css,
+.icon-loading:before {
+  color: #24B6D5;
+}
+.reply,
+.reply1:before {
+  color: #FD971F;
+}
+.html,
+.icon-widgets:before,
+.icon-unpin:before,
+.icon-pin:before {
+  color: #E91E63;
+}
+.icon-published0:before,
+.reply0:before,
+.icon-sex:before,
+.icon-thumbnail:before,
+.disabled {
+  color: #CCC;
+}
+.sql,
+.tags,
+.keywords,
+.payment7,
+.icon-subcategory:before {
+  color: #03A9F4;
+}
+.htaccess,
+.icon-unlock:before,
+.icon-lock:before {
+  color: rgb(71, 87, 173);
+}
+em,
+.payment5,
+.icon-delete:before,
+.access:before {
+  font-style: normal;
+  color: #FF5722;
+}
+span.icon-sex-f:before {
+  color: #F480D1;
+}
+span.icon-sex-m:before {
+  color: #36C;
+}
+.icon-quote:before {
+  color: #FF7E57;
+}
+.icon-print:before {
+  color: #4488BB;
+}
 /* header */
+#logo {
+  background-position: 0 50%;
+}
 #logo h1 {
   padding: 10px 10px 0;
 }

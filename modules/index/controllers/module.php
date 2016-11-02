@@ -38,7 +38,7 @@ class Controller extends \Kotchasan\Controller
       if (isset($match[3])) {
         $modules['alias'] = $match[3];
       }
-    } elseif (isset($modules['module']) && preg_match('/^([a-z]+)[\/\-]([a-z]+)$/', $modules['module'], $match)) {
+    } elseif (isset($modules['module']) && preg_match('/^([a-z0-9]+)[\/\-]([a-z]+)$/', $modules['module'], $match)) {
       // โมดูลที่ติดตั้ง
       $modules['module'] = $match[1];
       $modules['page'] = ucfirst($match[2]);

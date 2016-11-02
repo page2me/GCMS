@@ -50,8 +50,11 @@ class Model extends \Kotchasan\Model
       // ค่าติดตั้งเริ่มต้น
       $className = ucfirst($index['owner']).'\Admin\Settings\Model';
       if (class_exists($className) && method_exists($className, 'defaultSettings')) {
-        $index = ArrayTool::merge(ArrayTool::unserialize($index['config'], $className::defaultSettings()), $index);
+        $index['config'] = ArrayTool::unserialize($index['config'], $className::defaultSettings());
+      } else {
+        $index['config'] = ArrayTool::unserialize($index['config']);
       }
+      $index = ArrayTool::merge($index['config'], $index);
       unset($index['config']);
       return (object)$index;
     }

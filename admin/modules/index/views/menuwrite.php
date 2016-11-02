@@ -178,7 +178,7 @@ class View extends \Gcms\Adminview
       'label' => '{LNG_installed module}',
       'comment' => '{LNG_Choose the page you want to open when you click a menu item from a list of web pages or modules already installed}',
       'optgroup' => \Index\Menuwrite\Model::getModules(),
-      'value' => $menu->owner.'_'.$menu->index_id
+      'value' => $menu->owner.'_'.$menu->module.'_'.$menu->index_id
     ));
     // menu_url
     $fieldset->add('text', array(

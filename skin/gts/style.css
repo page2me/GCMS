@@ -162,15 +162,18 @@ nav.breadcrumbs li:before {
 .widget_bg_color, .homepage .widget, .bdr_content {
   background-color: inherit;
 }
+.widget p.right {
+  margin: 0;
+}
 .bdr_content {
   border-width: 1px;
   border-style: solid;
   border-color: #DDD;
   box-shadow: 0 0 2px rgba(0,0,0,0.1);
-  padding: 0 10px 10px;
+  padding: 0 1% 1%;
 }
 .homepage .bdr_content {
-  margin-bottom: 10px;
+  margin-bottom: 1%;
 }
 .homepage .bdr_content {
   padding: 1%;
@@ -181,7 +184,7 @@ nav.breadcrumbs li:before {
 .widget > header > h2,
 .member_section > header > h2,
 .bdr_content header h2 {
-  line-height: 2.3em;
+  line-height: 1.6em;
 }
 .bdr_content > header, header.header {
   position: relative;
@@ -190,9 +193,6 @@ nav.breadcrumbs li:before {
 .widget header {
   padding-left: 5px;
   padding-right: 5px;
-}
-.homepage header {
-  margin-bottom: 0;
 }
 .homepage .bar1 {
   background-color: #FF6600;

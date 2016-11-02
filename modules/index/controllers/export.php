@@ -22,7 +22,7 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * GLoader
+   * print.php
    *
    * @param Request $request
    */

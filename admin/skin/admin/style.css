@@ -457,6 +457,7 @@ table {
 caption {
   padding: 5px 10px;
 }
+table .thead th,
 table thead th {
   white-space: nowrap;
   text-shadow: 1px 1px 0 #FFF;
@@ -728,6 +729,7 @@ div#install li.invalid {
 #GModal_modaldiv > .modaldiv form {
   padding: 10px;
   background-color: #FFF;
+  max-width: 600px;
 }
 .postbox {
   margin: 0 10px;

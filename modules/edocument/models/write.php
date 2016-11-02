@@ -78,7 +78,7 @@ class Model extends \Kotchasan\Model
       $query->from('index_detail D')
         ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
         ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))));
-      $select = array('D.topic title', 'D.keywords', 'D.description', $model->buildNext('id', 'edocument'));
+      $select = array('I.module_id', 'D.topic title', 'D.keywords', 'D.description', $model->buildNext('id', 'edocument'));
     } else {
       $query->from('edocument P')
         ->join('index_detail D', 'INNER', array(array('D.module_id', 'P.module_id'), array('D.language', array('', Language::name()))))

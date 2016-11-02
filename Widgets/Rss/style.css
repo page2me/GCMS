@@ -61,14 +61,10 @@
   float: left;
   max-width: 75px;
 }
-.rss_widget .topic {
-  display: block;
-  max-height: 4.9em;
-  overflow: hidden;
-}
+.rss_widget .topic,
 .rss_widget td > span {
   display: block;
-  max-height: 3.2em;
+  max-height: 2.8em;
   overflow: hidden;
 }
 .rss_widget .rss_row, .rss_widget .table_rsstab_class, table.table_rss_class {

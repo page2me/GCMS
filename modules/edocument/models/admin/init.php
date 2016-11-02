@@ -29,8 +29,8 @@ class Model extends \Kotchasan\Model
     $ret = array();
     foreach ($match as $key => $value) {
       $ret[$key] = $value;
-      list($owner, $id) = explode('_', $key);
-      $ret[$owner.'_write_'.$id] = $value.' ({LNG_Add New} {LNG_E-Document})';
+      list($owner, $module, $id) = explode('_', $key);
+      $ret[$owner.'_write_0_'.$module] = $value.' ({LNG_Add New} {LNG_E-Document})';
     }
     return $ret;
   }
@@ -43,6 +43,8 @@ class Model extends \Kotchasan\Model
    */
   public static function parseMenuwrite($match)
   {
-    \Gcms\Gcms::$module_menus[$match[1]][$match[2]] = array('{LNG_Add New} {LNG_E-Document}', '{WEBURL}index.php?module='.$match[1].'-write', $match[1]);
+    if (isset($match[6])) {
+      \Gcms\Gcms::$module_menus[$match[1]]['write'] = array('{LNG_Add New} {LNG_E-Document}', '{WEBURL}index.php?module='.$match[6].'-write', $match[1]);
+    }
   }
 }

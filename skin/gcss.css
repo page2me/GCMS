@@ -39,7 +39,7 @@ html {
 }
 @-webkit-keyframes bugfix {from {padding: 0;} to {padding: 0;}}
 body {
-  font-size: 14px;
+  font-size: 12px;
   position: relative;
   background-color: #FFF;
   font-family: Tahoma, Loma, Arial, Helvetica, sans-serif;
@@ -146,11 +146,6 @@ html[dir="rtl"] ul,
 html[dir="rtl"] ol {
   padding: 10px 25px 10px 0;
 }
-.sidebar ul,
-.sidebar ol {
-  list-style-type: none;
-  padding: 0;
-}
 .list-style-none {
   list-style-type: none
 }
@@ -212,102 +207,6 @@ h4 {
 }
 h5, h6 {
   font-size: 1em;
-}
-.comment,
-.create,
-.date,
-time,
-.visited {
-  font-size: 90%;
-}
-/* Colors */
-.script,
-.date,
-.create,
-time {
-  color: #616161;
-}
-.php {
-  color: rgb(0, 0, 230);
-}
-.payment1 {
-  color: rgb(206, 103, 0);
-}
-.count,
-.no {
-  color: #007FAE;
-}
-.ip,
-.payment2 {
-  color: #7E57C2;
-}
-.asp,
-.payment3,
-.icon-upload:before {
-  color: rgb(108, 61, 3);
-}
-.comment,
-.comments,
-.payment6,
-.icon-edit:before {
-  color: #259B24;
-}
-.xml,
-.icon-published1:before {
-  color: rgb(0, 0, 124);
-}
-.visited,
-.css,
-.icon-loading:before {
-  color: #24B6D5;
-}
-.reply,
-.reply1:before {
-  color: #FD971F;
-}
-.html,
-.icon-widgets:before,
-.icon-unpin:before,
-.icon-pin:before {
-  color: #E91E63;
-}
-.icon-published0:before,
-.reply0:before,
-.icon-sex:before,
-.icon-thumbnail:before,
-.disabled {
-  color: #CCC;
-}
-.sql,
-.tags,
-.keywords,
-.payment7,
-.icon-subcategory:before {
-  color: #03A9F4;
-}
-.htaccess,
-.icon-unlock:before,
-.icon-lock:before {
-  color: rgb(71, 87, 173);
-}
-em,
-.payment5,
-.icon-delete:before,
-.access:before {
-  font-style: normal;
-  color: #FF5722;
-}
-span.icon-sex-f:before {
-  color: #F480D1;
-}
-span.icon-sex-m:before {
-  color: #36C;
-}
-.icon-quote:before {
-  color: #FF7E57;
-}
-.icon-print:before {
-  color: #4488BB;
 }
 mark {
   background-color: transparent;
@@ -384,32 +283,8 @@ body.wide .gcss-wrapper {
 body.fullwidth .gcss-wrapper {
   width: 95%;
 }
-.header h1 {
-  font-size: 4em;
-}
-#logo {
-  background-position: 0 50%;
-}
-.header h1 > a {
-  display: block;
-}
-.header h1 > a,
-.header h1 > a:hover {
-  color: inherit;
-}
-header p, footer p {
-  margin: 0;
-}
 .content {
   width: 100%;
-  border-color: #DDD;
-  border-color: rgba(0,0,0,0.1);
-}
-.content header {
-  margin-bottom: 10px;
-}
-.content h2 a {
-  color: inherit;
 }
 .sidebar {
   width: 230px;
@@ -895,6 +770,7 @@ textarea.cke_editable {
   background-color: #4A4D50;
   color: #FFF;
 }
+html .button:before,
 .button [class^="icon-"]:before {
   color: inherit;
 }
@@ -2750,7 +2626,7 @@ th[scope="rowgroup"],
   background-color: #EEE;
   background-color: rgba(0,0,0,0.04);
 }
-tbody tr:hover, tbody tr.highlight, tbody tr.select, .data tfoot tr {
+tbody tr:not(.thead):not(.tfoot):hover, tbody tr.highlight, tbody tr.select, .data tfoot tr {
   background-color: rgba(0,0,0,0.02);
 }
 .border.horiz-table > thead > tr > td,
@@ -2909,7 +2785,7 @@ td.buttons .button:last-child {
   display: inline;
 }
 .listview [class*="col"] {
-  padding: 0.5% 1%;
+  padding: 1%;
   margin: 0;
 }
 .listview [class*="col"] * {

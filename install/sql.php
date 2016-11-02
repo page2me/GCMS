@@ -73,7 +73,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Add New','text','index','0','เพิ่ม','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Add, edit, and reorder the language of the site. The first item is the default language of the site.','text','index','0','เพิ่ม แก้ไข และจัดลำดับภาษาของเว็บไซต์ รายการแรกคือภาษาเริ่มต้นของเว็บไซต์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Add/Edit installed language','text','index','0','เพิ่ม/แก้ไข ภาษาที่ติดตั้ง','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Additional notes of explanation or documentation','text','index','0','คำอธิบายหรือหมายเหตุเพิ่มเติมของเอกสาร','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Notes or Additional Notes','text','index','0','คำอธิบายหรือหมายเหตุเพิ่มเติม','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Address','text','index','0','ที่อยู่','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Address details','text','index','0','รายละเอียดที่อยู่','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Admin','text','index','0','ผู้ดูแลระบบ','');

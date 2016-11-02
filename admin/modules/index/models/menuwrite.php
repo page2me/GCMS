@@ -8,6 +8,7 @@
 
 namespace Index\Menuwrite;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
@@ -52,9 +53,10 @@ class Model extends \Kotchasan\Model
       } else {
         // อ่านข้อมูลจาก db
         $model = new static;
-        $query = $model->db()->createQuery()->select('I.module_id')->from('index I')->where(array('I.id', 'U.index_id'));
-        $query = $model->db()->createQuery()->select('M.owner')->from('modules M')->where(array('M.id', $query));
-        $index = $model->db()->createQuery()->from('menus U')->where($id)->first('U.*', array($query, 'owner'));
+        $q = $model->db()->createQuery()->select('I.module_id')->from('index I')->where(array('I.id', 'U.index_id'));
+        $q1 = $model->db()->createQuery()->select('M.owner')->from('modules M')->where(array('M.id', $q));
+        $q2 = $model->db()->createQuery()->select('M.module')->from('modules M')->where(array('M.id', $q));
+        $index = $model->db()->createQuery()->from('menus U')->where($id)->first('U.*', array($q1, 'owner'), array($q2, 'module'));
       }
       return $index;
     }
@@ -84,9 +86,9 @@ class Model extends \Kotchasan\Model
         ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
         ->join('modules M', 'INNER', array('M.id', 'I.module_id'))
         ->where(array('I.index', 1))
-        ->order(array('M.owner', 'I.module_id', 'I.language'));
+        ->order(array('M.owner', 'M.module', 'I.module_id', 'I.language'));
       foreach ($query->toArray()->execute() AS $item) {
-        $result[$item['owner']][$item['owner'].'_'.$item['id']] = $item['module'].(empty($item['language']) ? '' : " [$item[language]]").', '.$item['topic'];
+        $result[$item['owner']][$item['owner'].'_'.$item['module'].'_'.$item['id']] = $item['module'].(empty($item['language']) ? '' : " [$item[language]]").', '.$item['topic'];
       }
       foreach (Gcms::$module_menus as $key => $values) {
         foreach ($values as $menu => $details) {
@@ -174,46 +176,49 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึก
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         $input = false;
         // รับค่าจากการ POST
         $save = array(
-          'language' => strtolower(self::$request->post('language')->topic()),
-          'menu_text' => self::$request->post('menu_text')->topic(),
-          'menu_tooltip' => self::$request->post('menu_tooltip')->topic(),
-          'accesskey' => strtolower(self::$request->post('accesskey')->topic()),
-          'alias' => self::$request->post('alias')->topic(),
-          'parent' => strtoupper(self::$request->post('parent')->topic()),
-          'published' => self::$request->post('published')->toInt(),
-          'menu_url' => self::$request->post('menu_url')->url(),
-          'menu_target' => self::$request->post('menu_target')->topic()
+          'language' => strtolower($request->post('language')->topic()),
+          'menu_text' => $request->post('menu_text')->topic(),
+          'menu_tooltip' => $request->post('menu_tooltip')->topic(),
+          'accesskey' => strtolower($request->post('accesskey')->topic()),
+          'alias' => $request->post('alias')->topic(),
+          'parent' => strtoupper($request->post('parent')->topic()),
+          'published' => $request->post('published')->toInt(),
+          'menu_url' => $request->post('menu_url')->url(),
+          'menu_target' => $request->post('menu_target')->topic()
         );
-        $id = self::$request->post('id')->toInt();
-        $type = self::$request->post('type')->toInt();
-        $toplvl = self::$request->post('menu_order')->toInt();
-        $action = self::$request->post('action')->toInt();
-        if ($action == 1 && preg_match('/^([a-z]+)_(([a-z]+)(_([a-z0-9]+))?|([0-9]+))$/', self::$request->post('index_id')->toString(), $match)) {
+        $id = $request->post('id')->toInt();
+        $type = $request->post('type')->toInt();
+        $toplvl = $request->post('menu_order')->toInt();
+        $action = $request->post('action')->toInt();
+        // owner_action_module_moduleid
+        if ($action == 1 && preg_match('/^([a-z]+)_([a-z0-9]+)(_([0-9]+))?(_([a-z0-9]+))?$/', $request->post('index_id')->toString(), $match)) {
           // module Initial
           $class = ucfirst($match[1]).'\Admin\Init\Model';
           if (class_exists($class) && method_exists($class, 'parseMenuwrite')) {
             $class::parseMenuwrite($match);
           }
-          if (empty($match[6])) {
+          if (empty($match[4])) {
             if (isset(Gcms::$module_menus[$match[1]])) {
               $action = 2;
               $save['menu_url'] = Gcms::$module_menus[$match[1]][$match[2]][1];
               $save['alias'] = $save['alias'] == '' ? Gcms::$module_menus[$match[1]][$match[2]][2] : $save['alias'];
             }
           } else {
-            $save['index_id'] = $match[6];
+            $save['index_id'] = $match[4];
           }
         }
         $model = new static;
@@ -304,7 +309,7 @@ class Model extends \Kotchasan\Model
           }
           // ส่งค่ากลับ
           $ret['alert'] = Language::get('Saved successfully');
-          $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'menus', 'id' => null, 'parent' => $save['parent']));
+          $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'menus', 'id' => null, 'parent' => $save['parent']));
         } else {
           // คืนค่า input ตัวแรกที่ error
           $ret['input'] = $input;
