@@ -182,6 +182,9 @@ class Controller extends \Kotchasan\Controller
     }
     // ส่งออก เป็น HTML
     $response = new Response;
+    if (isset($page->status) && $page->status == 404) {
+      $response = $response->withStatus(404)->withAddedHeader('Status', '404 Not Found');
+    }
     $response->withContent(Gcms::$view->renderHTML())->send();
   }
 }

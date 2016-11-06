@@ -160,8 +160,10 @@
   new GValidator('register_displayname', 'keyup,change', checkDisplayname, 'index.php/index/model/checker/displayname', null, 'setup_frm');
   new GValidator('register_phone1', 'keyup,change', checkPhone, 'index.php/index/model/checker/phone', null, 'setup_frm');
   $G('register_birthday').addEvent('change', function () {
-    var age = new Date().compare(this.value);
-    this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_years}, ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
+    if (this.calendar) {
+      var age = new Date().compare(this.value);
+      this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_years}, ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
+    }
   });
   var _contryChanged = function () {
     if (this.value != 'TH') {

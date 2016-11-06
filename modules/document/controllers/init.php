@@ -43,6 +43,10 @@ class Controller extends \Kotchasan\Controller
         Gcms::$member_tabs['documentwrite'] = array(null, 'Document\Write\View');
       }
     }
+    if ($can_write) {
+      // ckeditor
+      Gcms::$view->addJavascript(WEB_URL.'ckeditor/ckeditor.js');
+    }
     if (!empty($rss)) {
       Gcms::$view->setMetas($rss);
     }

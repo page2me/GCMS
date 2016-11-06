@@ -24,7 +24,7 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * GLoader
+   * มาจากการเรียกด้วย GLoader
    *
    * @param Request $request
    */

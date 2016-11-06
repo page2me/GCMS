@@ -63,6 +63,12 @@ class Write extends \Kotchasan\Model
             $this->buildNext('link_order', 'textlink', null, 'link_order'),
             $this->buildNext('id', 'textlink')
           ));
+          if (!$textlink) {
+            $textlink = (object)array(
+                'link_order' => 1,
+                'id' => 1
+            );
+          }
         }
         // ตรวจสอบค่าที่ส่งมา
         $ret = array();

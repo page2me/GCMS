@@ -111,7 +111,7 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
             ->order('time DESC')
             ->toArray()
             ->first('time');
-          if ($online && time() - (int)$online['time'] < self::$cfg->count_gap) {
+          if ($online && time() - (int)$online['time'] < self::$cfg->counter_gap) {
             // login ต่าง ip กัน
             return Language::get('Members of this system already');
           }

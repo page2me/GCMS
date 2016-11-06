@@ -53,8 +53,10 @@
   $G(window).Ready(function () {
     new GForm('register_frm', '{WEBURL}xhr.php/index/model/updateprofile/save').onsubmit(doFormSubmit);
     $G('register_birthday').addEvent('change', function () {
-      var age = new Date().compare(this.value);
-      this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_years} ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
+      if (this.calendar) {
+        var age = new Date().compare(this.value);
+        this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_years} ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
+      }
     });
     new GValidator('register_displayname', 'keyup,change', checkDisplayname, '{WEBURL}index.php/index/model/checker/displayname', null, 'register_frm');
     new GValidator('register_phone1', 'keyup,change', checkPhone, '{WEBURL}index.php/index/model/checker/phone', null, 'register_frm');

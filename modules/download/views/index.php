@@ -17,7 +17,7 @@ use \Kotchasan\Text;
 use \Kotchasan\ArrayTool;
 
 /**
- * แสดงรายการบทความ
+ * แสดงรายการไฟล์ดาวน์โหลด
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -27,7 +27,7 @@ class View extends \Gcms\View
 {
 
   /**
-   * แสดงรายการดาวน์โหลด
+   * แสดงรายการไฟล์ดาวน์โหลด
    *
    * @param Request $request
    * @param object $index ข้อมูลโมดูล

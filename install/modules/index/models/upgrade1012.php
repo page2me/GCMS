@@ -27,17 +27,22 @@ class Model extends \Index\Upgrade\Model
   {
     $content = array();
     // อัปเกรด user
-    if (!self::fieldExists($db, $_SESSION['prefix'].'_user', 'ban')) {
-      $f = $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_user` ADD `ban` INT( 11 ) UNSIGNED NOT NULL;');
-      $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update database <b>'.$_SESSION['prefix'].'_user</b> complete...</li>';
+    $table = $_SESSION['prefix'].'_'.$_SESSION['tables']['user'];
+    if (!self::fieldExists($db, $table, 'ban')) {
+      $f = $db->query("ALTER TABLE `$table` ADD `ban` INT( 11 ) UNSIGNED NOT NULL;");
+      $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update database <b>'.$table.'</b> complete...</li>';
     }
-    // อัปเกรด eventcalendar
-    if (self::tableExists($db, $_SESSION['prefix'].'_eventcalendar')) {
-      $f = $db->query($sql = 'ALTER TABLE `'.$_SESSION['prefix'].'_eventcalendar` ADD `end_date` DATETIME NOT NULL AFTER `begin_date`;');
-      $f = $db->query($sql = 'ALTER TABLE `'.$_SESSION['prefix'].'_eventcalendar` CHANGE `create_date` `create_date` DATETIME NOT NULL;');
-      $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update database <b>'.$_SESSION['prefix'].'_eventcalendar</b> complete...</li>';
+    if (isset($_SESSION['tables']['eventcalendar'])) {
+      // อัปเกรด eventcalendar
+      $table = $_SESSION['prefix'].'_'.$_SESSION['tables']['eventcalendar'];
+      if (self::tableExists($db, $table)) {
+        $f = $db->query($sql = "ALTER TABLE `$table` ADD `end_date` DATETIME NOT NULL AFTER `begin_date`;");
+        $f = $db->query($sql = "ALTER TABLE `$table` CHANGE `create_date` `create_date` DATETIME NOT NULL;");
+        $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update database <b>'.$table.'</b> complete...</li>';
+      }
     }
-    foreach ($db->customQuery('SELECT `id`,`config`,`owner` FROM `'.$_SESSION['prefix'].'_modules` WHERE `owner`!="index"') as $item) {
+    $table = $_SESSION['prefix'].'_'.$_SESSION['tables']['modules'];
+    foreach ($db->customQuery('SELECT `id`,`config`,`owner` FROM `'.$table.'` WHERE `owner`!="index"') as $item) {
       $className = ucfirst($item->owner).'\Admin\Settings\Model';
       if (class_exists($className) && method_exists($className, 'defaultSettings')) {
         $config = $className::defaultSettings();
@@ -64,15 +69,17 @@ class Model extends \Index\Upgrade\Model
             }
           }
         }
-        $db->update($_SESSION['prefix'].'_modules', $item->id, array('config' => serialize($config)));
+        $db->update($table, $item->id, array('config' => serialize($config)));
       }
     }
-    $content[] = '<li class="correct">Update database <b>'.$_SESSION['prefix'].'_modules</b> complete...</li>';
-    foreach ($db->customQuery('SELECT `id`,`config` FROM `'.$_SESSION['prefix'].'_category` WHERE `config`!=""') as $item) {
+    $content[] = '<li class="correct">Update database <b>'.$table.'</b> complete...</li>';
+    // category
+    $table = $_SESSION['prefix'].'_'.$_SESSION['tables']['category'];
+    foreach ($db->customQuery('SELECT `id`,`config` FROM `'.$table.'` WHERE `config`!=""') as $item) {
       $config = self::r2config($item->config);
-      $db->update($_SESSION['prefix'].'_category', $item->id, array('config' => serialize($config)));
+      $db->update($table, $item->id, array('config' => serialize($config)));
     }
-    $content[] = '<li class="correct">Update database <b>'.$_SESSION['prefix'].'_category</b> complete...</li>';
+    $content[] = '<li class="correct">Update database <b>'.$table.'</b> complete...</li>';
     // settings/config.php
     foreach (self::$cfg as $key => $value) {
       if (isset($_SESSION['cfg'][$key])) {

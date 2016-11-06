@@ -40,6 +40,7 @@ class Controller extends \Kotchasan\Controller
       '/{DETAIL}/' => $message
     ));
     return (object)array(
+        'status' => 404,
         'topic' => $message,
         'detail' => $template->render(),
         'description' => $message,

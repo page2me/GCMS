@@ -319,6 +319,7 @@ window.$K = (function () {
       if (this.element()) {
         this.parentNode.removeChild(this);
       }
+      return this;
     },
     setHTML: function (o) {
       try {
@@ -327,6 +328,7 @@ window.$K = (function () {
         o = o.replace(/[\r\n\t]/g, '').replace(/<script[^>]*>.*?<\/script>/ig, '');
         this.appendChild(o.toDOM());
       }
+      return this;
     },
     getTop: function () {
       return this.viewportOffset().top;
@@ -431,6 +433,7 @@ window.$K = (function () {
         range.moveStart('character', start);
         range.select();
       }
+      return this;
     },
     getStyle: function (s) {
       s = (s == 'float' && this.currentStyle) ? 'styleFloat' : s;

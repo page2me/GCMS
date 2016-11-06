@@ -43,8 +43,9 @@ class View extends \Gcms\View
       if (!$db->connection()) {
         return createClass('Index\Dberror\View')->render($request);
       }
+      $new_version = self::$cfg->new_version;
       $current_version = self::$cfg->version;
-      while ($current_version != self::$cfg->new_version) {
+      while ($current_version != $new_version) {
         $ret = \Index\Upgrading\Model::upgrade($db, $current_version);
         $content[] = $ret->content;
         $current_version = $ret->version;

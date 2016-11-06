@@ -8,6 +8,9 @@
 
 namespace Widgets\Search\Controllers;
 
+use \Kotchasan\Template;
+use \Kotchasan\Text;
+
 /**
  * Controller หลัก สำหรับแสดงผล Widget
  *
@@ -26,6 +29,13 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-    return \Widgets\Search\Views\Index::render($query_string);
+    // ฟอร์มค้นหา
+    $template = Template::createFromFile(ROOT_PATH.'Widgets/Search/Views/search.html');
+    $template->add(array(
+      '/{ID}/' => Text::rndname(10),
+      '/{SEARCH}/' => self::$request->get('q')->topic(),
+      '/{MODULE}/' => empty($query_string['module']) ? 'search' : $query_string['module']
+    ));
+    return $template->render();
   }
 }

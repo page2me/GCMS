@@ -97,7 +97,7 @@ class Controller extends \Kotchasan\Controller
         $page = createClass('Index\Upgrade\View')->render($request);
       }
     } else {
-      // ๖ิดตั้งแล้ว
+      // ติดตั้งแล้ว
       $page = createClass('Index\Success\View')->render($request);
     }
     // แสดงผล
