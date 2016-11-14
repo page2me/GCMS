@@ -11,7 +11,6 @@ namespace Event\Admin\Write;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Html;
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
@@ -62,6 +61,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Create or Edit').' '.Language::get('Event');
+    return '{LNG_Create or Edit} {LNG_Event}';
   }
 }

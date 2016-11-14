@@ -33,12 +33,12 @@ class Model extends \Kotchasan\Model
       $id = self::$request->post('id')->toInt();
       $value = self::$request->post('value')->toString();
       if (!Validator::email($value)) {
-        echo str_replace(':name', Language::get('Email'), Language::get('Invalid :name'));
+        echo Language::replace('Invalid :name', array(':name' => Language::get('Email')));
       } else {
         // ตรวจสอบอีเมล์ซ้ำ
         $search = $this->db()->first($this->getFullTableName('user'), array('email', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('Email'), Language::get('This :name already exist'));
+          echo Language::replace('This :name already exist', array(':name' => Language::get('Email')));
         }
       }
     }
@@ -54,13 +54,13 @@ class Model extends \Kotchasan\Model
       $id = self::$request->post('id')->toInt();
       $value = self::$request->post('value')->toString();
       if (!preg_match('/[0-9]{9,10}/', $value)) {
-        echo str_replace(':name', Language::get('phone number'), Language::get('Invalid :name'));
+        echo Language::replace('Invalid :name', array(':name' => Language::get('phone number')));
       } else {
         // ตรวจสอบโทรศัพท์
         $model = new static;
         $search = $model->db()->first($model->getFullTableName('user'), array('phone1', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('phone number'), Language::get('This :name already exist'));
+          echo Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
         }
       }
     }
@@ -76,13 +76,13 @@ class Model extends \Kotchasan\Model
       $id = self::$request->post('id')->toInt();
       $value = self::$request->post('value')->toString();
       if (!preg_match('/[0-9]{13,13}/', $value)) {
-        echo str_replace(':name', Language::get('Identification number'), Language::get('Invalid :name'));
+        echo Language::replace('Invalid :name', array(':name' => Language::get('Identification number')));
       } else {
         // ตรวจสอบ idcard
         $model = new static;
         $search = $model->db()->first($model->getFullTableName('user'), array('idcard', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('idcard'), Language::get('This :name already exist'));
+          echo Language::replace('This :name already exist', array(':name' => Language::get('idcard')));
         }
       }
     }
@@ -102,7 +102,7 @@ class Model extends \Kotchasan\Model
         $model = new static;
         $search = $model->db()->first($model->getFullTableName('user'), array('displayname', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
-          echo str_replace(':name', Language::get('Name'), Language::get('This :name already exist'));
+          echo Language::replace('This :name already exist', array(':name' => Language::get('Name')));
         }
       }
     }
@@ -129,9 +129,9 @@ class Model extends \Kotchasan\Model
   {
     // referer
     if (self::$request->isReferer()) {
-      $id = self::$request->post('id', 0)->toInt();
-      $value = self::$request->post('value')->text();
-      $lng = self::$request->post('lng')->toString();
+      $id = self::$request->post('id')->toInt();
+      $value = self::$request->post('value')->toString();
+      $lng = self::$request->post('lng')->filter('a-z');
       if (!preg_match('/^[a-z0-9]{1,}$/', $value)) {
         echo Language::get('English lowercase and number only');
       } elseif (in_array($value, Gcms::$MODULE_RESERVE) || (is_dir(ROOT_PATH.'modules/'.$value) || is_dir(ROOT_PATH.'widgets/'.$value) || is_dir(ROOT_PATH.$value) || is_file(ROOT_PATH.$value.'.php'))) {
@@ -141,8 +141,8 @@ class Model extends \Kotchasan\Model
         $model = new static;
         // ค้นหาชื่อโมดูลซ้ำ
         $where = array(
-          array('index', '1'),
-          array('module_id', 'IN', $model->db()->createQuery()->select('id')->from('modules')->where(array('module', $value)))
+          array('module_id', 'IN', $model->db()->createQuery()->select('id')->from('modules')->where(array('module', $value))),
+          array('index', 1)
         );
         if ($id > 0) {
           $where[] = array('id', '!=', $id);
@@ -150,19 +150,27 @@ class Model extends \Kotchasan\Model
         $query = $model->db()->createQuery()
           ->select('language')
           ->from('index')
-          ->where($where);
+          ->where($where)
+          ->order('language')
+          ->toArray();
         $error = false;
-        foreach ($query->toArray()->execute() as $item) {
-          if ($lng == '') {
+        foreach ($query->execute() as $item) {
+          if (
+            // ซ้ำกับโมดูลอื่น
+            $id > 0 ||
+            // มีภาษาที่เลือกอยู่แล้ว
+            $item['language'] == $lng ||
+            // ทุกภาษาอยู่แล้ว
+            $item['language'] == '' ||
+            // เลือกทุกภาษาแต่มีภาษาอื่นอยู่แล้ว
+            $lng == ''
+          ) {
             $error = true;
-          } elseif ($item['language'] == '') {
-            $error = true;
-          } elseif ($item['language'] == $lng) {
-            $error = true;
+            break;
           }
         }
         if ($error) {
-          echo Language::replace('This :name already exist', array(':name', Language::get('Module')));
+          echo Language::replace('This :name already exist', array(':name' => Language::get('Module')));
         }
       }
     }
@@ -182,7 +190,7 @@ class Model extends \Kotchasan\Model
       // ค้นหาชื่อเรื่องซ้ำ
       $search = $model->db()->first($model->getFullTableName('index'), array('alias', $value));
       if ($search && ($id == 0 || $id != $search->id)) {
-        echo str_replace(':name', Language::get('Alias'), Language::get('This :name already exist'));
+        echo Language::replace('This :name already exist', array(':name' => Language::get('Alias')));
       }
     }
   }
@@ -220,7 +228,7 @@ class Model extends \Kotchasan\Model
         }
       }
       if ($error) {
-        echo str_replace(':name', Language::get('Topic'), Language::get('This :name already exist'));
+        echo Language::replace('This :name already exist', array(':name' => Language::get('Topic')));
       }
     }
   }

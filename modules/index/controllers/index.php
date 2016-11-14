@@ -55,7 +55,7 @@ class Controller extends \Kotchasan\Controller
       // โมดูลที่ติดตั้ง
       $dir = ROOT_PATH.'modules/';
       // โหลดโมดูลทั้งหมด
-      foreach (\Index\Module\Model::getInstalledModule() AS $owner) {
+      foreach (\Index\Module\Model::getInstalledModule() as $owner) {
         if (is_file($dir.$owner.'/controllers/init.php')) {
           include $dir.$owner.'/controllers/init.php';
           $class = ucfirst($owner).'\Init\Controller';

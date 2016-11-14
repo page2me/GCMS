@@ -8,9 +8,10 @@
 
 namespace Document\Admin\Write;
 
-use Kotchasan\Language;
-use Gcms\Gcms;
-use Kotchasan\Login;
+use \Kotchasan\Http\Request;
+use \Kotchasan\Language;
+use \Gcms\Gcms;
+use \Kotchasan\Login;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\Date;
 use \Kotchasan\File;
@@ -142,33 +143,34 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึก
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
-        $input = false;
         $tab = false;
         // details
         $details = array();
         $alias_topic = '';
         $languages = Language::installedLanguage();
         foreach ($languages as $lng) {
-          $topic = self::$request->post('topic_'.$lng)->topic();
-          $alias = Gcms::aliasName(self::$request->post('topic_'.$lng)->toString());
-          $relate = self::$request->post('relate_'.$lng)->quote();
-          $keywords = self::$request->post('keywords_'.$lng)->keywords();
-          $description = self::$request->post('description_'.$lng)->description();
+          $topic = $request->post('topic_'.$lng)->topic();
+          $alias = Gcms::aliasName($request->post('topic_'.$lng)->toString());
+          $relate = $request->post('relate_'.$lng)->quote();
+          $keywords = $request->post('keywords_'.$lng)->keywords();
+          $description = $request->post('description_'.$lng)->description();
           if (!empty($topic)) {
             $save = array();
             $save['topic'] = $topic;
-            $save['keywords'] = empty($keywords) ? self::$request->post('topic_'.$lng)->keywords(255) : $keywords;
-            $save['description'] = empty($description) ? self::$request->post('details_'.$lng)->description(255) : $description;
-            $save['detail'] = self::$request->post('details_'.$lng)->detail();
+            $save['keywords'] = empty($keywords) ? $request->post('topic_'.$lng)->keywords(255) : $keywords;
+            $save['description'] = empty($description) ? $request->post('details_'.$lng)->description(255) : $description;
+            $save['detail'] = $request->post('details_'.$lng)->detail();
             $save['language'] = $lng;
             $save['relate'] = empty($relate) ? $save['keywords'] : $relate;
             $details[$lng] = $save;
@@ -176,17 +178,17 @@ class Model extends \Kotchasan\Model
           }
         }
         $save = array(
-          'alias' => Gcms::aliasName(self::$request->post('alias')->toString()),
-          'category_id' => self::$request->post('category_id')->toInt(),
-          'can_reply' => self::$request->post('can_reply')->toBoolean(),
-          'show_news' => self::$request->post('show_news', array())->text(),
-          'published' => self::$request->post('published')->toBoolean(),
-          'create_date' => Date::sqlDateTimeToMktime(self::$request->post('create_date')->date().' '.self::$request->post('create_hour')->number().':'.self::$request->post('create_minute')->number().':00'),
-          'published_date' => self::$request->post('published_date')->date(),
+          'alias' => Gcms::aliasName($request->post('alias')->toString()),
+          'category_id' => $request->post('category_id')->toInt(),
+          'can_reply' => $request->post('can_reply')->toBoolean(),
+          'show_news' => $request->post('show_news', array())->text(),
+          'published' => $request->post('published')->toBoolean(),
+          'create_date' => Date::sqlDateTimeToMktime($request->post('create_date')->date().' '.$request->post('create_time')->date()),
+          'published_date' => $request->post('published_date')->date(),
         );
         // id ที่แก้ไข
-        $id = self::$request->post('id')->toInt();
-        $module_id = self::$request->post('module_id')->toInt();
+        $id = $request->post('id')->toInt();
+        $module_id = $request->post('module_id')->toInt();
         // query builder
         $query = $this->db()->createQuery();
         if (empty($id)) {
@@ -226,15 +228,13 @@ class Model extends \Kotchasan\Model
             // ตรวจสอบข้อมูลที่กรอก
             if (empty($details)) {
               $lng = reset($languages);
-              $input = !$input ? 'topic_'.$lng : $input;
+              $ret['ret_topic_'.$lng] = 'this';
               $tab = !$tab ? 'detail_'.$lng : $tab;
             } else {
               foreach ($details as $lng => $values) {
                 if (mb_strlen($values['topic']) < 3) {
-                  $input = !$input ? 'topic_'.$lng : $input;
+                  $ret['ret_topic_'.$lng] = 'this';
                   $tab = !$tab ? 'detail_'.$lng : $tab;
-                } else {
-                  $ret['ret_topic_'.$lng] = '';
                 }
               }
             }
@@ -250,7 +250,7 @@ class Model extends \Kotchasan\Model
             }
             if (in_array($save['alias'], Gcms::$MODULE_RESERVE) || is_dir(ROOT_PATH."modules/$save[alias]") || is_dir(ROOT_PATH."widgets/$save[alias]")) {
               // ชื่อสงวน หรือ ชื่อโฟลเดอร์
-              $input = !$input ? 'alias' : $input;
+              $ret['ret_alias'] = 'this';
               $tab = !$tab ? 'options' : $tab;
             } else {
               // ค้นหาชื่อเรื่องซ้ำ
@@ -260,22 +260,18 @@ class Model extends \Kotchasan\Model
                 array('index', '0')
               ));
               if ($search && ($id == 0 || $id != $search->id)) {
-                $ret['ret_alias'] = str_replace(':name', Language::get('Alias'), Language::get('This :name already exist'));
-                $input = !$input ? 'alias' : $input;
+                $ret['ret_alias'] = Language::replace('This :name already exist', array(':name' => Language::get('Alias')));
                 $tab = !$tab ? 'options' : $tab;
-              } else {
-                $ret['ret_alias'] = '';
               }
             }
-            if (!$input) {
+            if (empty($ret)) {
               // อัปโหลดไฟล์
-              foreach (self::$request->getUploadedFiles() as $item => $file) {
+              foreach ($request->getUploadedFiles() as $item => $file) {
                 /* @var $file UploadedFile */
                 if ($file->hasUploadFile()) {
                   if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'document/')) {
                     // ไดเรคทอรี่ไม่สามารถสร้างได้
                     $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'document/');
-                    $input = !$input ? $item : $input;
                     $tab = !$tab ? 'options' : $tab;
                   } else {
                     // อัปโหลด
@@ -289,17 +285,16 @@ class Model extends \Kotchasan\Model
                     } catch (\Exception $exc) {
                       // ไม่สามารถอัปโหลดได้
                       $ret['ret_'.$item] = Language::get($exc->getMessage());
-                      $input = !$input ? $item : $input;
                       $tab = !$tab ? 'options' : $tab;
                     }
                   }
                 }
               }
             }
-            if (!$input) {
+            if (empty($ret)) {
               $save['last_update'] = time();
               $save['index'] = 0;
-              $save['ip'] = self::$request->getClientIp();
+              $save['ip'] = $request->getClientIp();
               $show_news = array();
               foreach ($save['show_news'] as $item) {
                 $show_news[] = "$item=1";
@@ -328,12 +323,9 @@ class Model extends \Kotchasan\Model
               }
               // ส่งค่ากลับ
               $ret['alert'] = Language::get('Saved successfully');
-              $ret['location'] = self::$request->getUri()->postBack('index.php', array('mid' => $index['module_id'], 'module' => 'document-setup'));
-            } else {
-              $ret['input'] = $input;
-              if ($tab) {
-                $ret['tab'] = $tab;
-              }
+              $ret['location'] = $request->getUri()->postBack('index.php', array('mid' => $index['module_id'], 'module' => 'document-setup'));
+            } elseif ($tab) {
+              $ret['tab'] = $tab;
             }
           } else {
             $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');

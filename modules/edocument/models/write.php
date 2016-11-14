@@ -47,10 +47,10 @@ class Model extends \Kotchasan\Model
         ->where(array(array('M.id', $module_id), array('M.owner', 'edocument')));
     } else {
       // แก้ไข ตรวจสอบรายการที่เลือก
-      $query->select('A.id', 'A.file', 'A.sender_id', 'A.module_id', 'M.module', 'M.config')
+      $query->select('A.id', 'A.file', 'A.sender_id', 'M.id module_id', 'M.module', 'M.config')
         ->from('edocument A')
-        ->join('modules M', 'INNER', array(array('M.id', 'A.module_id'), array('M.owner', 'edocument')))
-        ->where(array(array('A.id', $id), array('A.module_id', $module_id)));
+        ->join('modules M', 'INNER', array(array('M.id', $module_id), array('M.owner', 'edocument')))
+        ->where(array('A.id', $id));
     }
     $result = $query->limit(1)->toArray()->execute();
     if (sizeof($result) == 1) {
@@ -64,53 +64,58 @@ class Model extends \Kotchasan\Model
   /**
    * อ่านข้อมูลรายการที่เลือก
    *
-   * @param object $index Object ข้อมูลโมดูล
    * @param int $id ID 0 ใหม่, > 0 แก้ไข
-   * @param boolean $new true คืนค่า ID ถัดไป, false (default) คืนค่า $id ที่ส่งเข้ามา
+   * @param object $index ข้อมูลที่ส่งมา
    * @return object|null คืนค่าข้อมูล object ไม่พบคืนค่า null
    */
-  public static function getForWrite($index, $id, $new = false)
+  public static function get($id, $index)
   {
+    // login
+    $login = Login::isMember();
+    // รายการโมดูลที่สร้างจาก edocument
+    $modules = array();
+    $config = array();
+    foreach (\Kotchasan\Object::search(Gcms::$install_modules, 'owner', 'edocument') as $module) {
+      if (in_array($login['status'], $module->can_upload)) {
+        $modules[] = $module->module_id;
+        $config[$module->module_id] = (array)$module;
+      }
+    }
     // model
     $model = new static;
     $query = $model->db()->createQuery();
-    if (empty($id)) {
-      $query->from('index_detail D')
-        ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
-        ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))));
-      $select = array('I.module_id', 'D.topic title', 'D.keywords', 'D.description', $model->buildNext('id', 'edocument'));
-    } else {
+    if ($id > 0) {
+      // แก้ไข
       $query->from('edocument P')
         ->join('index_detail D', 'INNER', array(array('D.module_id', 'P.module_id'), array('D.language', array('', Language::name()))))
         ->join('index I', 'INNER', array(array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.index', '1'), array('I.language', 'D.language')))
-        ->where(array(array('P.id', $id), array('P.module_id', (int)$index->module_id)));
-      $select = array('P.*', 'D.topic title', 'D.description', 'D.keywords');
+        ->where(array(array('P.id', $id), array('P.module_id', $modules)));
+      $select = array('P.*', 'D.topic title');
+    } else {
+      // ใหม่
+      $query->from('index_detail D')
+        ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
+        ->where(array(array('I.module_id', $modules), array('D.language', array(Language::name(), ''))));
+      $select = array('I.module_id', 'D.topic title', $model->buildNext('id', 'edocument'));
     }
     $search = $query->toArray()->first($select);
     if ($search) {
-      foreach ($search as $key => $value) {
-        $index->$key = $value;
-      }
-      // login
-      $login = Login::isMember();
-      $login = $login ? array('id' => (int)$login['id'], 'status' => $login['status']) : array('id' => 0, 'status' => -1);
+      $search = ArrayTool::merge($config[$search['module_id']], $search);
       if ($id > 0) {
         // แก้ไข
-        if ($index->id == $login['id'] || in_array($login['status'], $index->moderator)) {
-          $reciever = @unserialize($search['reciever']);
-          $index->reciever = is_array($reciever) ? $reciever : array();
-        } else {
-          $index = null;
-        }
-      } elseif (in_array($login['status'], $index->can_upload)) {
-        // ใหม่
-        $index->reciever = array();
-        $index->document_no = sprintf($index->format_no, $search['id']);
-        $index->id = 0;
+        $reciever = @unserialize($search['reciever']);
+        $search['reciever'] = is_array($reciever) ? $reciever : array();
       } else {
-        $index = null;
+        // ใหม่
+        $search['reciever'] = array();
+        $search['document_no'] = sprintf($search['format_no'], $search['id']);
+        $search['id'] = 0;
       }
-      return $index;
+      $search['tab'] = $index->tab;
+      $search['description'] = $index->description;
+      $search['modules'] = $modules;
+      // คืนค่า
+      return (object)$search;
     }
     return null;
   }
@@ -157,7 +162,7 @@ class Model extends \Kotchasan\Model
             // ค้นหาเลขที่เอกสารซ้ำ
             $search = $this->db()->first($this->getFullTableName('edocument'), array('document_no', $save['document_no']));
             if ($search && ($id == 0 || $id != $search->id)) {
-              $ret['ret_document_no'] = str_replace(':name', Language::get('Document number'), Language::get('This :name already exist'));
+              $ret['ret_document_no'] = Language::replace('This :name already exist', array(':name' => Language::get('Document number')));
               $error = true;
             } else {
               $ret['ret_document_no'] = '';
@@ -234,9 +239,9 @@ class Model extends \Kotchasan\Model
             $save['last_update'] = time();
             $reciever = $save['reciever'];
             $save['reciever'] = serialize($reciever);
+            $save['module_id'] = $index->module_id;
             if ($id == 0) {
               // ใหม่
-              $save['module_id'] = $index->module_id;
               $save['downloads'] = 0;
               $save['sender_id'] = $login['id'];
               $this->db()->insert($this->getFullTableName('edocument'), $save);
@@ -259,7 +264,7 @@ class Model extends \Kotchasan\Model
             } else {
               $ret['alert'] = Language::get('Saved successfully');
             }
-            $ret['location'] = WEB_URL.'index.php?module='.$index->module;
+            $ret['location'] = WEB_URL.'index.php?module=editprofile&tab=edocument';
             // เคลียร์ antispam
             $antispam->delete();
           }

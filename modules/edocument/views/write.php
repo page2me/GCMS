@@ -8,7 +8,6 @@
 
 namespace Edocument\Write;
 
-use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Kotchasan\Text;
@@ -16,6 +15,7 @@ use \Kotchasan\Antispam;
 use \Kotchasan\Login;
 use \Kotchasan\Mime;
 use \Kotchasan\ArrayTool;
+use \Kotchasan\Template;
 
 /**
  * แสดงรายการบทความ
@@ -28,24 +28,16 @@ class View extends \Gcms\View
 {
 
   /**
-   * แสดงรายการดาวน์โหลด
+   * อัปโหลดเอกสาร
    *
    * @param Request $request
-   * @param object $index ข้อมูลโมดูล
+   * @param object $index
    * @return object
    */
-  public function index(Request $request, $index)
+  public function render(Request $request, $index)
   {
-    // breadcrumb ของโมดูล
-    $menu = Gcms::$menu->moduleMenu($index->module);
-    if ($menu) {
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
-    } else {
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->title);
-    }
-    // breadcrumb ของหน้า
-    $index->canonical = Gcms::createUrl($index->module, 'write');
-    Gcms::$view->addBreadcrumb($index->canonical, $index->id == 0 ? '{LNG_Create}' : '{LNG_Edit}');
+    // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
+    $index = \Edocument\Write\Model::get($request->request('id')->toInt(), $index);
     // กลุ่มผู้รับ
     $reciever = array();
     foreach (ArrayTool::merge(array(-1 => '{LNG_Guest}'), self::$cfg->member_status) as $key => $value) {
@@ -53,11 +45,17 @@ class View extends \Gcms\View
       $sel .= $key == -1 ? ' id=reciever' : '';
       $reciever[] = '<label><input type=checkbox value='.$key.$sel.' name=reciever[]>&nbsp;'.$value.'</label>';
     }
+    $modules = array();
+    foreach (\Edocument\Admin\Setup\Model::listModules('edocument', $index->modules) as $module_id => $module) {
+      $sel = $module_id == $index->module_id ? ' selected' : '';
+      $modules[] = '<option value='.$module_id.$sel.'>'.$module.'</option>';
+    }
     // antispam
     $antispam = new Antispam();
     // template
     $template = Template::create($index->owner, $index->module, 'write');
     $template->add(array(
+      '/{TITLE}/' => $index->id == 0 ? '{LNG_Add New}' : '{LNG_Edit}',
       '/{NO}/' => $index->document_no,
       '/{TOPIC}/' => isset($index->topic) ? $index->topic : '',
       '/{DETAIL}/' => isset($index->detail) ? $index->detail : '',
@@ -66,8 +64,7 @@ class View extends \Gcms\View
       '/{ACCEPT}/' => Mime::getEccept($index->file_typies),
       '/{GROUPS}/' => implode('', $reciever),
       '/{ID}/' => $index->id,
-      '/{MODULE_ID}/' => $index->module_id,
-      '/{MODULE}/' => $index->module,
+      '/{MODULES}/' => implode('', $modules),
       '/{SENDMAIL}/' => $index->id == 0 && $index->send_mail ? 'checked' : ''
     ));
     Gcms::$view->setContents(array(

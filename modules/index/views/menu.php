@@ -36,7 +36,7 @@ class View extends \Gcms\View
         if (isset($items[$level]) && sizeof($items[$level]) > 0) {
           $mymenu .= $this->getItem($name, $select, true).'<ul>';
           foreach ($items[$level] AS $level2 => $item2) {
-            if ($item2->published != 0) {
+            if ($item2->menu_published != 0) {
               if (isset($items[$level2]) && sizeof($items[$level2]) > 0) {
                 $mymenu .= $this->getItem($item2, true).'<ul>';
                 foreach ($items[$level2] AS $item3) {
@@ -49,7 +49,7 @@ class View extends \Gcms\View
             }
           }
           $mymenu .= '</ul></li>';
-        } elseif ($name->published != 0) {
+        } elseif ($name->menu_published != 0) {
           $mymenu .= $this->getItem($name, $select).'</li>';
         }
       }

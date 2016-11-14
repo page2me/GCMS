@@ -284,7 +284,7 @@ function doChangeLanguage(btn, url) {
   callClick(btn, doClick);
 }
 function checkIndexModule() {
-  var value = this.input.value;
+  var value = this.value;
   var patt = /^[a-z0-9]{1,}$/;
   if (!patt.test(value)) {
     this.invalid(this.title);
@@ -293,7 +293,7 @@ function checkIndexModule() {
   }
 }
 function checkIndexTopic() {
-  var value = this.input.value;
+  var value = this.value;
   if (value.length < 3) {
     this.invalid(this.title);
   } else {

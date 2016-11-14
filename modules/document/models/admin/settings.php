@@ -88,6 +88,7 @@ class Model extends \Kotchasan\Model
         );
         // โมดูลที่เรียก
         $index = \Index\Adminmodule\Model::get('document', $request->post('id')->toInt());
+        // สามารถตั้งค่าได้
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['img_typies'])) {
             // คืนค่า input ที่ error
@@ -119,8 +120,8 @@ class Model extends \Kotchasan\Model
               $save['new_date'] = $save['new_date'] * 86400;
               $save['can_view'][] = 1;
               $save['can_write'][] = 1;
-              $save['can_config'][] = 1;
               $save['moderator'][] = 1;
+              $save['can_config'][] = 1;
               $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
               // คืนค่า
               $ret['alert'] = Language::get('Saved successfully');

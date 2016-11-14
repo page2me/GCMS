@@ -38,52 +38,47 @@ class Model extends \Kotchasan\Orm\Field
    */
   public static function installedmodules()
   {
-    if (defined('MAIN_INIT')) {
-      // ตรวจสอบโมดูลที่ติดตั้ง ตามโฟลเดอร์
-      $dir = ROOT_PATH.'modules/';
-      $f = @opendir($dir);
-      if ($f) {
-        while (false !== ($text = readdir($f))) {
-          if ($text !== '.' && $text !== '..' && $text !== 'css' && $text !== 'js') {
-            Gcms::$install_owners[$text] = array();
-          }
-        }
-        closedir($f);
-      }
-      // ตรวจสอบ Widgets ที่ติดตั้ง ตามโฟลเดอร์
-      $dir = ROOT_PATH.'Widgets/';
-      $f = @opendir($dir);
-      if ($f) {
-        while (false !== ($text = readdir($f))) {
-          Gcms::$install_widgets[] = $text;
-        }
-        closedir($f);
-      }
-      // model
-      $model = new \Kotchasan\Model;
-      // โหลดโมดูลที่ติดตั้ง เรียงตามลำดับโฟลเดอร์
-      $query = $model->db()->createQuery()
-        ->select('id', 'module', 'owner')
-        ->from('modules')
-        ->where(array('owner', '!=', 'index'))
-        ->order('owner');
-      foreach ($query->execute() as $item) {
-        Gcms::$install_modules[$item->module] = $item;
-        Gcms::$install_owners[$item->owner][] = $item;
-      }
-      // โหลดเมนู
-      self::$menus = self::loadMenus();
-      // called Initial
-      foreach (Gcms::$install_owners as $owner => $items) {
-        $class = ucfirst($owner).'\Admin\Init\Controller';
-        if (class_exists($class) && method_exists($class, 'init')) {
-          // module Initial
-          $class::init($items);
+    // ตรวจสอบโมดูลที่ติดตั้ง ตามโฟลเดอร์
+    $dir = ROOT_PATH.'modules/';
+    $f = @opendir($dir);
+    if ($f) {
+      while (false !== ($text = readdir($f))) {
+        if ($text !== '.' && $text !== '..' && $text !== 'css' && $text !== 'js') {
+          Gcms::$install_owners[$text] = array();
         }
       }
-    } else {
-      // เรียก method โดยตรง
-      new \Kotchasan\Http\NotFound('Do not call method directly');
+      closedir($f);
+    }
+    // ตรวจสอบ Widgets ที่ติดตั้ง ตามโฟลเดอร์
+    $dir = ROOT_PATH.'Widgets/';
+    $f = @opendir($dir);
+    if ($f) {
+      while (false !== ($text = readdir($f))) {
+        Gcms::$install_widgets[] = $text;
+      }
+      closedir($f);
+    }
+    // model
+    $model = new \Kotchasan\Model;
+    // โหลดโมดูลที่ติดตั้ง เรียงตามลำดับโฟลเดอร์
+    $query = $model->db()->createQuery()
+      ->select('id', 'module', 'owner')
+      ->from('modules')
+      ->where(array('owner', '!=', 'index'))
+      ->order('owner');
+    foreach ($query->execute() as $item) {
+      Gcms::$install_modules[$item->module] = $item;
+      Gcms::$install_owners[$item->owner][] = $item;
+    }
+    // โหลดเมนู
+    self::$menus = self::loadMenus();
+    // called Initial
+    foreach (Gcms::$install_owners as $owner => $items) {
+      $class = ucfirst($owner).'\Admin\Init\Controller';
+      if (class_exists($class) && method_exists($class, 'init')) {
+        // module Initial
+        $class::init($items);
+      }
     }
   }
 

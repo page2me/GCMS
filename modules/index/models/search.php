@@ -72,7 +72,7 @@ class Model extends \Kotchasan\Model
       foreach (Gcms::$install_owners as $item => $modules) {
         if ($item != 'index' && is_file(ROOT_PATH."modules/$item/models/search.php")) {
           include (ROOT_PATH."modules/$item/models/search.php");
-          //createClass(ucfirst($item).'\Search\Model')->findAll($request, $index);
+          createClass(ucfirst($item).'\Search\Model')->findAll($request, $index);
         }
       }
       // union all queries

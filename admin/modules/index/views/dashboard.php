@@ -60,7 +60,7 @@ class View extends \Gcms\Adminview
     $content[] = '<div class="block4 float-left">';
     // site report
     $content[] = '<section class=section>';
-    $content[] = '<header><h1 class=icon-summary>{LNG_Overview report of the system}</h1></header>';
+    $content[] = '<header><h2 class=icon-summary>{LNG_Overview report of the system}</h2></header>';
     $content[] = '<table class="summary fullwidth">';
     $content[] = '<caption>{LNG_Overview and summary of this site}</caption>';
     $content[] = '<tbody>';
@@ -89,10 +89,10 @@ class View extends \Gcms\Adminview
     $content[] = '</section>';
     // news
     $content[] = '<section class=section>';
-    $content[] = '<header><h1 class=icon-rss>{LNG_News}</h1></header>';
+    $content[] = '<header><h2 class=icon-rss>{LNG_News}</h2></header>';
     $content[] = '<ol id=news_div></ol>';
     $content[] = '<div class="bottom right padding-top-right">';
-    $content[] = '<a class=icon-next href="http://gcms.in.th/news.html" target=_blank>{LNG_all items}</a>';
+    $content[] = '<a class=icon-next href="https://gcms.in.th/news.html" target=_blank>{LNG_all items}</a>';
     $content[] = '</div>';
     $content[] = '</section>';
     $content[] = '</div>';
@@ -112,7 +112,7 @@ class View extends \Gcms\Adminview
       $visited[] = '<td class="'.$c.'">'.number_format($item['visited']).'</td>';
     }
     $content[] = '<section class=section>';
-    $content[] = '<header><h1 class=icon-stats>{LNG_People visit the site}</h1></header>';
+    $content[] = '<header><h2 class=icon-stats>{LNG_People visit the site}</h2></header>';
     $content[] = '<div id=pageview_graph class=ggraphs>';
     $content[] = '<canvas></canvas>';
     $content[] = '<table class="data fullwidth border">';
@@ -132,7 +132,7 @@ class View extends \Gcms\Adminview
       $visited[] = '<td>'.$item['visited_today'].'</td>';
     }
     $content[] = '<section class=section>';
-    $content[] = '<header><h1 class=icon-pie>{LNG_Popular daily} ({LNG_Module} Document)</h1></header>';
+    $content[] = '<header><h2 class=icon-pie>{LNG_Popular daily} ({LNG_Module} Document)</h2></header>';
     $content[] = '<div id=visited_graph class=ggraphs>';
     $content[] = '<canvas></canvas>';
     $content[] = '<table class=hidden>';
@@ -141,8 +141,6 @@ class View extends \Gcms\Adminview
     $content[] = '<tr><th>{LNG_Visited}</th>'.implode('', $visited).'</tr>';
     $content[] = '</tbody>';
     $content[] = '</table>';
-    $content[] = '</div>';
-    $content[] = '</section>';
     $content[] = '</div>';
     $content[] = '</section>';
     $content[] = '</div>';

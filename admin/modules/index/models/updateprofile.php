@@ -94,7 +94,7 @@ class Model extends \Kotchasan\Model
             // ตรวจสอบอีเมล์ซ้ำ
             $search = $db->first($user_table, array('email', $save['email']));
             if ($search !== false && $user->id != $search->id) {
-              $ret['ret_register_email'] = str_replace(':name', Language::get('Email'), Language::get('This :name already exist'));
+              $ret['ret_register_email'] = Language::replace('This :name already exist', array(':name' => Language::get('Email')));
               $input = !$input ? 'register_email' : $input;
             } else {
               $requirePassword = $user->email !== $save['email'];
@@ -106,7 +106,7 @@ class Model extends \Kotchasan\Model
             // ตรวจสอบ ชื่อเรียก
             $search = $db->first($user_table, array('displayname', $save['displayname']));
             if ($search !== false && $user->id != $search->id) {
-              $ret['ret_register_displayname'] = str_replace(':name', Language::get('Name'), Language::get('This :name already exist'));
+              $ret['ret_register_displayname'] = Language::replace('This :name already exist', array(':name' => Language::get('Name')));
               $input = !$input ? 'register_displayname' : $input;
             } else {
               $ret['ret_register_displayname'] = '';
@@ -129,13 +129,13 @@ class Model extends \Kotchasan\Model
           // โทรศัพท์
           if (!empty($save['phone1'])) {
             if (!preg_match('/[0-9]{9,10}/', $save['phone1'])) {
-              $ret['ret_register_phone1'] = str_replace(':name', Language::get('phone number'), Language::get('Invalid :name'));
+              $ret['ret_register_phone1'] = Language::replace('Invalid :name', array(':name' => Language::get('phone number')));
               $input = !$input ? 'register_phone1' : $input;
             } else {
               // ตรวจสอบโทรศัพท์
               $search = $db->first($user_table, array('phone1', $save['phone1']));
               if ($search !== false && $user->id != $search->id) {
-                $ret['ret_register_phone1'] = str_replace(':name', Language::get('phone number'), Language::get('This :name already exist'));
+                $ret['ret_register_phone1'] = Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
                 $input = !$input ? 'register_phone1' : $input;
               } else {
                 $ret['ret_register_phone1'] = '';

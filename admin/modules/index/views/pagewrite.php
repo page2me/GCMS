@@ -25,7 +25,6 @@ class View extends \Gcms\Adminview
   /**
    * module=pagewrite
    *
-   * @param string $id
    * @return string
    */
   public function render($index)
@@ -45,7 +44,7 @@ class View extends \Gcms\Adminview
     ));
     $groups = $fieldset->add('groups-table', array(
       'label' => '{LNG_Language}',
-      'id' => 'language',
+      'for' => 'language',
       'comment' => '{LNG_Select the language of this item (Select the first Is present in every language)}',
     ));
     // language

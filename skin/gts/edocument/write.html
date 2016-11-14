@@ -1,12 +1,12 @@
-<div class=bdr_content>
-  <header>
-    <h2>{LNG_Details of} {LNG_E-Document}</h2>
-    <nav class="breadcrumbs cuttext">
-      <ul>{BREADCRUMBS}</ul>
-    </nav>
-  </header>
+<div class=member_section>
+  <header><h2 class="icon-edocument">{LNG_E-Document} - {LNG_Details of} {LNG_Document}</h2></header>
   <form class=main_frm id=write_frm method=post action=index.php autocomplete=off>
     <fieldset>
+      <div class="item">
+        <label for="module_id">{LNG_Module}</label>
+        <span class="g-input icon-config"><select name="module_id" id="module_id" title="{LNG_Please choose}">{MODULES}</select></span>
+        <div class="comment">{LNG_Please choose}</div>
+      </div>
       <div class="item">
         <label for="document_no">{LNG_Document number}</label>
         <span class="g-input icon-edit"><input id="document_no" maxlength="20" type="text" name="document_no" value="{NO}" title="{LNG_Enter the number of documents For reference}"></span>
@@ -43,7 +43,6 @@
       <button class="button ok large" type="submit">{LNG_Save}</button>
       <label><input id="send_mail" type="checkbox" name="send_mail" {SENDMAIL} value="1">&nbsp;{LNG_Send an email to members}</label>
       <input id="id" type="hidden" name="id" value="{ID}">
-      <input id="module_id" type="hidden" name="module_id" value="{MODULE_ID}">
       <input type=hidden name=antispamid value={ANTISPAM}>
     </fieldset>
   </form>

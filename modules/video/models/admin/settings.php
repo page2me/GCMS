@@ -8,12 +8,13 @@
 
 namespace Video\Admin\Settings;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- *  การตั้งค่า
+ *  บันทึกการตั้งค่า
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +24,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * ค่าติดตั้งเรื่มต้น
+   * ค่าติดตั้งเริ่มต้น
    *
    * @return array
    */
@@ -39,32 +40,35 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึกข้อมูล config ของโมดูล
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
         $save = array(
-          'google_api_key' => self::$request->post('google_api_key')->topic(),
-          'rows' => self::$request->post('rows')->toInt(),
-          'cols' => self::$request->post('cols')->toInt(),
-          'can_write' => self::$request->post('can_write', array())->toInt(),
-          'can_config' => self::$request->post('can_config', array())->toInt(),
+          'google_api_key' => $request->post('google_api_key')->topic(),
+          'rows' => $request->post('rows')->toInt(),
+          'cols' => $request->post('cols')->toInt(),
+          'can_write' => $request->post('can_write', array())->toInt(),
+          'can_config' => $request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
-        $index = \Index\Adminmodule\Model::get('video', self::$request->post('id')->toInt());
+        $index = \Index\Adminmodule\Model::get('video', $request->post('id')->toInt());
+        // สามารถตั้งค่าได้
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           $save['can_write'][] = 1;
           $save['can_config'][] = 1;
           $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
           // คืนค่า
           $ret['alert'] = Language::get('Saved successfully');
-          $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'video-settings', 'mid' => $index->module_id));
+          $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'video-settings', 'mid' => $index->module_id));
         } else {
           $ret['alert'] = Language::get('Unable to complete the transaction');
         }

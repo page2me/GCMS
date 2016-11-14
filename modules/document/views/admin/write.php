@@ -111,46 +111,24 @@ class View extends \Gcms\Adminview
       'comment' => '{LNG_Used for the URL of the web page (SEO) can use letters, numbers and _ only can not have duplicate names.}',
       'value' => $index->alias
     ));
+    // create_date
     $groups = $fieldset->add('groups-table', array(
       'label' => '{LNG_Article Date}',
       'comment' => '{LNG_The date that the story was written}'
     ));
-    // create_date
-    preg_match('/([0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2})\s([0-9]+):([0-9]+)/', date('Y-m-d H:i', $index->create_date), $match);
-    $groups->add('date', array(
+    $row = $groups->add('row');
+    $row->add('date', array(
       'id' => 'create_date',
       'labelClass' => 'g-input icon-calendar',
       'itemClass' => 'width',
-      'value' => $match[1]
+      'value' => date('Y-m-d', $index->create_date)
     ));
-    // create_hour
-    $datas = array();
-    for ($i = 0; $i < 24; $i++) {
-      $d = sprintf('%02d', $i);
-      $datas[$d] = $d;
-    }
-    $groups->add('select', array(
-      'id' => 'create_hour',
-      'labelClass' => 'width',
+    $row->add('time', array(
+      'id' => 'create_time',
+      'labelClass' => 'g-input icon-clock',
+      'itemClass' => 'width',
       'label' => '{LNG_Time}',
-      'options' => $datas,
-      'value' => $match[2]
-    ));
-    $groups->add('span', array(
-      'class' => 'width',
-      'innerHTML' => ':'
-    ));
-    // create_minute
-    $datas = array();
-    for ($i = 0; $i < 60; $i++) {
-      $d = sprintf('%02d', $i);
-      $datas[$d] = $d;
-    }
-    $groups->add('select', array(
-      'id' => 'create_minute',
-      'labelClass' => 'width',
-      'options' => $datas,
-      'value' => $match[3]
+      'value' => date('H:i:s', $index->create_date)
     ));
     // picture
     if (!empty($index->picture) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$index->picture)) {

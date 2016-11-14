@@ -8,6 +8,7 @@
 
 namespace Index\Pagewrite;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\Date;
@@ -35,7 +36,7 @@ class Model extends \Kotchasan\Model
     if (is_int($id)) {
       if (empty($id)) {
         // ใหม่
-        $index = (object)array(
+        return (object)array(
             'owner' => $owner,
             'id' => 0,
             'published' => 1,
@@ -64,32 +65,30 @@ class Model extends \Kotchasan\Model
           'M.module',
           'M.owner'
         );
-        $index = $model->db()->createQuery()
-          ->select($select)
-          ->from('index I')
-          ->join('modules M', 'INNER', array(array('M.id', 'I.module_id')))
-          ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
-          ->where(array(
-            array('I.id', $id),
-            array('I.index', 1)
-          ))
-          ->limit(1)
-          ->execute();
-        $index = sizeof($index) == 1 ? $index[0] : null;
+        return $model->db()->createQuery()
+            ->from('index I')
+            ->join('modules M', 'INNER', array(array('M.id', 'I.module_id')))
+            ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
+            ->where(array(
+              array('I.id', $id),
+              array('I.index', 1)
+            ))
+            ->first($select);
       }
-      return $index;
     }
     return null;
   }
 
   /**
    * บันทึก
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
@@ -98,26 +97,26 @@ class Model extends \Kotchasan\Model
         $module_id = 0;
         // index
         $index_save = array(
-          'language' => strtolower(self::$request->post('language')->text()),
-          'published' => self::$request->post('published')->toBoolean(),
-          'published_date' => self::$request->post('published_date')->date()
+          'language' => strtolower($request->post('language')->text()),
+          'published' => $request->post('published')->toBoolean(),
+          'published_date' => $request->post('published_date')->date()
         );
         // modules
         $module_save = array(
-          'owner' => strtolower(self::$request->post('owner')->text()),
-          'module' => strtolower(self::$request->post('module')->text())
+          'owner' => $request->post('owner')->filter('a-z'),
+          'module' => $request->post('module')->filter('a-z0-9')
         );
         // index_detail
         $detail_save = array(
           'language' => $index_save['language'],
-          'topic' => self::$request->post('topic')->topic(),
-          'keywords' => self::$request->post('keywords')->keywords(),
-          'detail' => self::$request->post('detail')->detail(),
-          'description' => self::$request->post('description')->description(),
+          'topic' => $request->post('topic')->topic(),
+          'keywords' => $request->post('keywords')->keywords(),
+          'detail' => $request->post('detail')->detail(),
+          'description' => $request->post('description')->description(),
         );
-        $index_id = self::$request->post('id')->toInt();
-        $detail_save['keywords'] = empty($detail_save['keywords']) ? self::$request->post('topic')->keywords(149) : $detail_save['keywords'];
-        $detail_save['description'] = empty($detail_save['description']) ? self::$request->post('detail')->keywords(149) : $detail_save['description'];
+        $index_id = $request->post('id')->toInt();
+        $detail_save['keywords'] = empty($detail_save['keywords']) ? $request->post('topic')->keywords(149) : $detail_save['keywords'];
+        $detail_save['description'] = empty($detail_save['description']) ? $request->post('detail')->keywords(149) : $detail_save['description'];
         // model
         $model = new static;
         // ชื่อตาราง
@@ -127,75 +126,61 @@ class Model extends \Kotchasan\Model
         if (!empty($index_id)) {
           // หน้าที่แก้ไข
           $index = $model->db()->createQuery()
-            ->select('D.id', 'D.language', 'D.module_id')
             ->from('index I')
             ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
             ->where(array('I.id', $index_id))
             ->limit(1)
             ->toArray()
-            ->execute();
-          $index = sizeof($index) == 1 ? $index[0] : false;
+            ->first('D.id', 'D.language', 'D.module_id');
         }
-        if ((!empty($index_id) && !$index) || !preg_match('/^[a-z]+$/', $module_save['owner']) || !is_dir(ROOT_PATH.'modules/'.$module_save['owner'])) {
+        if ((!empty($index_id) && !$index) || !preg_match('/[a-z]{3,}/', $module_save['owner']) || !is_dir(ROOT_PATH.'modules/'.$module_save['owner'])) {
+          // owner ไม่ถูกต้อง
           $ret['alert'] = Language::get('Unable to complete the transaction');
+        } elseif (!preg_match('/^[a-z0-9]{2,}$/', $module_save['module'])) {
+          // module ไม่ถูกต้อง
+          $ret['ret_module'] = 'this';
+        } elseif (is_dir(ROOT_PATH.$module_save['module']) || is_file(ROOT_PATH.$module_save['module'].'.php')) {
+          // ชื่อไฟล์หรือไดเร็คทอรี่
+          $ret['ret_module'] = Language::get('Invalid name');
+        } elseif ($module_save['owner'] === 'index' && (is_dir(ROOT_PATH.'modules/'.$module_save['module']) || is_dir(ROOT_PATH.'widgets/'.$module_save['module']))) {
+          // index ไม่สามารถใช้ชื่อโมดูลหรือวิดเจ็ตได้
+          $ret['ret_module'] = Language::get('Invalid name');
         } else {
-          // ตรวจสอบค่าที่ส่งมา
-          if ($module_save['owner'] === 'index') {
-            // ตรวจสอบชื่อโมดูล
-            if (empty($module_save['module'])) {
-              $ret['ret_module'] = Language::get('Please fill in');
+          // ค้นหาชื่อโมดูลซ้ำ
+          $where = array(array('M.module', $module_save['module']));
+          if ($index_id > 0) {
+            $where[] = array('I.id', '!=', $index_id);
+          }
+          $query = $model->db()->createQuery()
+            ->select('I.language', 'I.module_id')
+            ->from('modules M')
+            ->join('index I', 'INNER', array(array('I.module_id', 'M.id'), array('I.index', 1)))
+            ->where($where)
+            ->toArray();
+          foreach ($query->execute() as $item) {
+            if (empty($detail_save['language']) ||
+              empty($item['language']) ||
+              $item['language'] == $detail_save['language']
+            ) {
+              $ret['ret_module'] = Language::replace('This :name already exist', array(':name', Language::get('Module')));
               $input = !$input ? 'module' : $input;
-            } elseif (!preg_match('/^[a-z0-9]{1,}$/', $module_save['module'])) {
-              $ret['ret_module'] = Language::get('English lowercase and number only');
-              $input = !$input ? 'module' : $input;
-            } elseif ((is_dir(ROOT_PATH.'modules/'.$module_save['module']) || is_dir(ROOT_PATH.'widgets/'.$module_save['module']) || is_dir(ROOT_PATH.$module_save['module']) || is_file(ROOT_PATH.$module_save['module'].'.php'))) {
-              // เป็นชื่อโฟลเดอร์หรือชื่อไฟล์
-              $ret['ret_module'] = Language::get('Invalid name');
-              $input = !$input ? 'module' : $input;
-            } else {
-              // ค้นหาชื่อโมดูลซ้ำ
-              $where = array(array('M.module', $module_save['module']));
-              if ($index_id > 0) {
-                $where[] = array('I.id', '!=', $index_id);
-              }
-              $query = $model->db()->createQuery()
-                ->select('I.language', 'I.module_id')
-                ->from('modules M')
-                ->join('index I', 'INNER', array(array('I.module_id', 'M.id'), array('I.index', 1)))
-                ->where($where);
-              foreach ($query->toArray()->execute() as $item) {
-                if (empty($detail_save['language']) ||
-                  empty($item['language']) ||
-                  $item['language'] == $detail_save['language']
-                ) {
-                  $ret['ret_module'] = Language::replace('This :name already exist', array(':name', Language::get('Module')));
-                  $input = !$input ? 'module' : $input;
-                }
-                $module_id = (int)$item['module_id'];
-              }
-              if (!$input) {
-                $ret['ret_module'] = '';
-              }
             }
           }
           // topic
           if (mb_strlen($detail_save['topic']) < 3) {
-            $input = !$input ? 'topic' : $input;
-          } else {
+            $ret['ret_topic'] = 'this';
+          } elseif (empty($ret)) {
             // ค้นหาชื่อไตเติลซ้ำ
             $search = $model->db()->first($table_index_detail, array(
               array('topic', $detail_save['topic']),
               array('language', array('', $detail_save['language']))
             ));
             if ($search && (empty($index_id) || $index_id != $search->id)) {
-              $ret['ret_topic'] = str_replace(':name', Language::get('Topic'), Language::get('This :name already exist'));
-              $input = !$input ? 'topic' : $input;
-            } else {
-              $ret['ret_topic'] = '';
+              $ret['ret_topic'] = Language::replace('This :name already exist', array(':name' => Language::get('Topic')));
             }
           }
-          if (!$input) {
-            $index_save['ip'] = self::$request->getClientIp();
+          if (empty($ret)) {
+            $index_save['ip'] = $request->getClientIp();
             $index_save['last_update'] = time();
             if (empty($index_id)) {
               // ใหม่
@@ -227,10 +212,7 @@ class Model extends \Kotchasan\Model
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = self::$request->getUri()->postBack('index.php', array('id' => $index_id, 'module' => 'pagewrite'));
-          } else {
-            // คืนค่า input ตัวแรกที่ error
-            $ret['input'] = $input;
+            $ret['location'] = $request->getUri()->postBack('index.php', array('id' => $index_id, 'module' => 'pagewrite'));
           }
         }
       }

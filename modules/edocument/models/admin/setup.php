@@ -29,6 +29,38 @@ class Model extends \Kotchasan\Orm\Field
   protected $table = 'edocument A';
 
   /**
+   * อ่านรายชื่อโมดูลทั้งหมดที่สร้างจาก $owner
+   * สำหรับใส่ลงใน list
+   *
+   * @param string $owner
+   * @param array $modules รายการโมดูลที่ต้องการ ถ้าไม่ระบุจะคืนค่าโมดูลของ edocument ทั้งหมด
+   * @return array
+   */
+  public static function listModules($owner, $modules = array())
+  {
+    $where = array(array('M.owner', $owner));
+    if (!empty($modules)) {
+      $where[] = array('M.id', $modules);
+    }
+    // Model
+    $model = new \Kotchasan\Model;
+    $query = $model->db()->createQuery()
+      ->select('M.id', 'D.topic')
+      ->from('modules M')
+      ->join('index I', 'INNER', array('I.module_id', 'M.id'))
+      ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'M.id'), array('D.language', 'I.language')))
+      ->where($where)
+      ->order('M.module')
+      ->toArray()
+      ->cacheOn();
+    $result = array();
+    foreach ($query->execute() as $item) {
+      $result[$item['id']] = $item['topic'];
+    }
+    return $result;
+  }
+
+  /**
    * รับค่าจาก action ของ table
    */
   public static function action()

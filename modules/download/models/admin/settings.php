@@ -57,7 +57,7 @@ class Model extends \Kotchasan\Model
       } else {
         // รับค่าจากการ POST
         $typies = array();
-        foreach (explode(',', strtolower(self::$request->post('file_typies')->filter('a-zA-Z0-9,'))) as $typ) {
+        foreach (explode(',', strtolower($request->post('file_typies')->filter('a-zA-Z0-9,'))) as $typ) {
           if ($typ != '') {
             $typies[$typ] = $typ;
           }
@@ -74,10 +74,10 @@ class Model extends \Kotchasan\Model
         );
         // โมดูลที่เรียก
         $index = \Index\Adminmodule\Model::get('download', $request->post('id')->toInt());
+        // สามารถตั้งค่าได้
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['file_typies'])) {
             // คืนค่า input ที่ error
-            $ret['input'] = 'file_typies';
             $ret['ret_file_typies'] = 'this';
           } else {
             $save['can_upload'][] = 1;
@@ -86,7 +86,7 @@ class Model extends \Kotchasan\Model
             $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
             // คืนค่า
             $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'download-settings', 'mid' => $index->module_id));
+            $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'download-settings', 'mid' => $index->module_id));
           }
         } else {
           $ret['alert'] = Language::get('Unable to complete the transaction');

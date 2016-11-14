@@ -31,14 +31,14 @@ class Controller extends \Kotchasan\Controller
     // เขียนได้
     $can_write = file_exists(ROOT_PATH.'modules/document/views/member.php');
     $rss = array();
-    foreach (Gcms::$install_owners['document'] as $item) {
-      $module = Gcms::$install_modules[$item];
+    foreach (Gcms::$install_owners['document'] as $module) {
+      $index = Gcms::$install_modules[$module];
       // RSS Menu
-      $topic = empty($module->menu_text) ? ucwords($module->module) : $module->menu_text;
-      $rss[$module->module] = '<link rel=alternate type="application/rss+xml" title="'.$topic.'" href="'.WEB_URL.$module->module.'.rss">';
+      $topic = empty($index->menu_text) ? ucwords($module) : $index->menu_text;
+      $rss[$module] = '<link rel=alternate type="application/rss+xml" title="'.$topic.'" href="'.WEB_URL.$module.'.rss">';
       if ($can_write) {
-        if (in_array($login['status'], $module->can_write)) {
-          Gcms::$member_tabs[$module->module] = array($topic, 'Document\Member\View');
+        if (in_array($login['status'], $index->can_write)) {
+          Gcms::$member_tabs[$module] = array($topic, 'Document\Member\View');
         }
         Gcms::$member_tabs['documentwrite'] = array(null, 'Document\Write\View');
       }

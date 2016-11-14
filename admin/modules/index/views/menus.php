@@ -20,6 +20,12 @@ use \Kotchasan\Language;
  */
 class View extends \Gcms\Adminview
 {
+  /**
+   * ข้อมูลโมดูล
+   *
+   * @var array
+   */
+  private $publisheds;
 
   /**
    * module=menus
@@ -28,6 +34,7 @@ class View extends \Gcms\Adminview
    */
   public function render()
   {
+    $this->publisheds = Language::get('MENU_PUBLISHEDS');
     // menu ที่เลือก default คือ MAINMENU
     $parent = self::$request->get('parent')->toString();
     $installed_menus = Language::find('MENU_PARENTS', array('MAINMENU' => 'Main menu'));
@@ -36,7 +43,7 @@ class View extends \Gcms\Adminview
     $this->toplvl = -1;
     // Uri
     $uri = self::$request->getUri();
-    // ตารางรายการเมนู
+    // ตาราง
     $table = new DataTable(array(
       /* model */
       'model' => 'Index\Menus\Model',
@@ -46,7 +53,7 @@ class View extends \Gcms\Adminview
       'hideColumns' => array('id', 'index_id', 'level', 'menu_url', 'ilanguage'),
       /* enable drag row */
       'dragColumn' => 4,
-      /* table action */
+      /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
       'action' => 'index.php/index/model/menus/action',
       'actionCallback' => 'indexActionCallback',
       'actionConfirm' => 'confirmAction',
@@ -143,8 +150,7 @@ class View extends \Gcms\Adminview
     $item['menu_text'] = (empty($text) ? '' : $text.'↳&nbsp;').$item['menu_text'];
     $item['move_left'] = '<a id=move_left_'.$item['move_left'].' title="{LNG_Move submenu to the top}" class='.($item['level'] == 0 ? 'hidden' : 'icon-move_left').'></a>';
     $item['move_right'] = '<a id=move_right_'.$item['move_right'].' title="{LNG_Move menu to submenu of the top}" class='.($item['level'] > $this->toplvl ? 'hidden' : 'icon-move_right').'></a>';
-    $menu_publisheds = Language::get('MENU_PUBLISHEDS');
-    $item['published'] = $menu_publisheds[$item['published']];
+    $item['published'] = $this->publisheds[$item['published']];
     $item['language'] = empty($item['language']) ? '' : '<img src="'.WEB_URL.'language/'.$item['language'].'.gif" alt="'.$item['language'].'">';
     if (empty($item['index_id'])) {
       $item['module'] = str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $item['menu_url']);

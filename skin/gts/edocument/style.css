@@ -11,13 +11,13 @@
 #edocument-list td.detail > span {
   display: block;
 }
-#edocument-list td.detail > a:before {
-  font-size: 1.4em;
-  margin-right: 15px;
-}
 #edocument-list .size {
   color: #F9C;
   font-size: 0.9em;
+}
+#edocument-list .icon-download:before {
+  font-size: 1.6em;
+  margin-right: 0;
 }
 #edocument-list .icon-download {
   color: #04C;

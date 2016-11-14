@@ -58,6 +58,6 @@ class Model extends \Kotchasan\Model
       unset($index['config']);
       return (object)$index;
     }
-    return $index;
+    return null;
   }
 }

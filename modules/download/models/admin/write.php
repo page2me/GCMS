@@ -71,6 +71,8 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึก
+   *
+   * @param Request $request
    */
   public function save(Request $request)
   {

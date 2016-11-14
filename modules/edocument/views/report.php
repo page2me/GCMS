@@ -8,14 +8,16 @@
 
 namespace Edocument\Report;
 
-use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
+use \Kotchasan\DataTable;
+use \Kotchasan\Login;
 use \Kotchasan\Date;
-use \Kotchasan\Grid;
+use \Kotchasan\Http\Uri;
+use \Kotchasan\Template;
 
 /**
- * แสดงรายการบทความ
+ * รายงานการดาวน์โหลด
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,57 +25,104 @@ use \Kotchasan\Grid;
  */
 class View extends \Gcms\View
 {
+  /**
+   * ข้อมูลโมดูล
+   */
+  private $modules;
 
   /**
-   * แสดงรายการดาวน์โหลด
+   * รายงานการดาวน์โหลด
    *
    * @param Request $request
-   * @param object $index ข้อมูลโมดูล
+   * @param object $index
    * @return object
    */
-  public function index(Request $request, $index)
+  public function render(Request $request, $index)
   {
-    // รายการ
-    $listitem = Grid::create($index->owner, $index->module, 'reportitem');
-    foreach ($index->items as $item) {
-      $displayname = trim($item->fname.' '.$item->lname);
-      $listitem->add(array(
-        '/{ID}/' => $item->id,
-        '/{NAME}/' => $displayname == '' ? $item->email : $displayname,
-        '/{GROUP}/' => isset(self::$cfg->member_status[$item->status]) ? self::$cfg->member_status[$item->status] : '{LNG_Guest}',
-        '/{STATUS}/' => $item->status,
-        '/{DATE}/' => Date::format($item->last_update, 'd M Y'),
-        '/{DOWNLOADS}/' => number_format($item->downloads)
+    // login
+    $login = Login::isMember();
+    if ($login && isset(Gcms::$install_owners['edocument'])) {
+      // ตรวจสอบรายการที่ต้องการ
+      $index = \Edocument\Write\Model::get($request->request('id')->toInt(), $index);
+      // ตาราง
+      $table = new DataTable(array(
+        /* Model */
+        'model' => 'Edocument\Admin\Report\Model',
+        /* คอลัมน์ที่ไม่ต้องแสดงผล */
+        'hideColumns' => array('lname', 'email', 'id'),
+        /* Uri */
+        'uri' => Uri::createFromUri(WEB_URL.'index.php?module=editprofile&tab='.$index->tab.'&id='.$index->id),
+        /* รายการต่อหน้า */
+        'perPage' => $request->cookie('edocument_perPage', 30)->toInt(),
+        /* query where */
+        'defaultFilters' => array(
+          array('D.document_id', $index->id)
+        ),
+        /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
+        'onRow' => array($this, 'onRow'),
+        /* คอลัมน์ที่สามารถค้นหาได้ */
+        'searchColumns' => array('fname', 'lname', 'email'),
+        /* ส่วนหัวของตาราง และการเรียงลำดับ (thead) */
+        'headers' => array(
+          'fname' => array(
+            'text' => '{LNG_Name} {LNG_Surname}'
+          ),
+          'status' => array(
+            'text' => '{LNG_Recipient}',
+            'class' => 'center'
+          ),
+          'last_update' => array(
+            'text' => '{LNG_Lastest}',
+            'class' => 'center'
+          ),
+          'downloads' => array(
+            'text' => '{LNG_Download}',
+            'class' => 'center'
+          )
+        ),
+        /* รูปแบบการแสดงผลของคอลัมน์ (tbody) */
+        'cols' => array(
+          'status' => array(
+            'class' => 'center'
+          ),
+          'downloads' => array(
+            'class' => 'center reply'
+          ),
+          'last_update' => array(
+            'class' => 'date'
+          )
+        )
       ));
+      // save cookie
+      setcookie('edocument_perPage', $table->perPage, time() + 3600 * 24 * 365, '/');
+      // template
+      $template = Template::create('edocument', 'edocument', 'report');
+      $template->add(array(
+        '/{TOPIC}/' => $index->title,
+        '/{NO}/' => $index->document_no,
+        '/{DETAIL}/' => $index->detail,
+        '/{LIST}/' => $table->render()
+      ));
+      $index->topic = '{LNG_Download Details} '.$index->document_no;
+      $index->detail = $template->render();
+      // คืนค่า
+      return $index;
     }
-    // breadcrumb ของโมดูล
-    if (Gcms::isHome($index->module)) {
-      $index->canonical = WEB_URL.'index.php';
-    } else {
-      $index->canonical = Gcms::createUrl($index->module);
-      $menu = Gcms::$menu->moduleMenu($index->module);
-      if ($menu) {
-        Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
-      } else {
-        Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
-      }
-    }
-    // breadcrumb ของหน้า
-    $index->canonical = Gcms::createUrl($index->module, 'report', 0, 0, 'id='.$index->id);
-    Gcms::$view->addBreadcrumb($index->canonical, '{LNG_Download Details} '.$index->document_no);
-    // current URL
-    $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
-    // template
-    $template = Template::create($index->owner, $index->module, $listitem->hasItem() ? 'report' : 'empty');
-    $template->add(array(
-      '/{TOPIC}/' => $index->topic,
-      '/{DETAIL}/' => $index->detail,
-      '/{LIST}/' => $listitem->render(),
-      '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
-      '/{MODULE}/' => $index->module
-    ));
-    // คืนค่า
-    $index->detail = $template->render();
-    return $index;
+    return null;
+  }
+
+  /**
+   * จัดรูปแบบการแสดงผลในแต่ละแถว
+   *
+   * @param array $item
+   * @return array
+   */
+  public function onRow($item)
+  {
+    $name = trim($item['fname'].' '.$item['lname']);
+    $item['fname'] = '<a href="'.WEB_URL.'index.php?module=member&amp;id='.$item['id'].'">'.( empty($name) ? $item['email'] : $name).'</a>';
+    $item['last_update'] = Date::format($item['last_update'], 'd M Y H:i:s');
+    $item['status'] = isset(self::$cfg->member_status[$item['status']]) ? '<span class=status'.$item['status'].'>'.self::$cfg->member_status[$item['status']].'</span>' : '';
+    return $item;
   }
 }

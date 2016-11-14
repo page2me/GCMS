@@ -153,14 +153,16 @@ class Model extends \Kotchasan\Model
    * @param int $module_id
    * @return object|false คืนค่าข้อมูลโมดูล (Object) ไม่พบคืนค่า false
    */
-  public static function get($owner, $module, $module_id = 0)
+  public static function get($owner, $module = '', $module_id = 0)
   {
     // Model
     $model = new static;
-    if (empty($module_id)) {
-      $where = array(array('module', $module), array('owner', $owner));
+    if (empty($module) && empty($module_id)) {
+      $where = array('owner', $owner);
     } elseif (empty($owner) && empty($module)) {
       $where = array('id', (int)$module_id);
+    } elseif (empty($module_id)) {
+      $where = array(array('module', $module), array('owner', $owner));
     } else {
       $where = array(array('id', (int)$module_id), array('owner', $owner));
     }

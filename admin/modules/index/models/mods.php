@@ -34,7 +34,6 @@ class Model extends \Kotchasan\Orm\Field
    */
   public function getConfig()
   {
-
     return array(
       'select' => array(
         'I.id',

@@ -1642,7 +1642,7 @@ window.$K = (function () {
         });
         self.div.style.display = 'block';
         var dm = self.body.getDimensions();
-        var hOffset = dm.height - self.body.getClientHeight() + parseInt(self.body.getStyle('marginTop')) + parseInt(self.body.getStyle('marginBottom')) + 20;
+        var hOffset = dm.height - self.body.getClientHeight() + parseInt(self.body.getStyle('marginTop')) + parseInt(self.body.getStyle('marginBottom')) + 40;
         var wOffset = dm.width - self.body.getClientWidth() + parseInt(self.body.getStyle('marginLeft')) + parseInt(self.body.getStyle('marginRight')) + 20;
         var h = document.viewport.getHeight() - hOffset;
         if (dm.height > h) {
@@ -2315,7 +2315,7 @@ window.$K = (function () {
     },
     validate: function () {
       this.abort();
-      var ret = Object.isFunction(this.validtor) ? this.validtor.call(this) : true;
+      var ret = Object.isFunction(this.validtor) ? this.validtor.call(this.input) : true;
       if (this.form && ret && this.action && ret !== '' && this.action !== '') {
         this.input.addClass('wait');
         var temp = this;

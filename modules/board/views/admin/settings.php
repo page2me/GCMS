@@ -195,11 +195,6 @@ class View extends \Gcms\Adminview
       'title' => '{LNG_Role of Members}'
     ));
     // สถานะสมาชิก
-    $status = array();
-    $status[-1] = '{LNG_Guest}';
-    foreach (self::$cfg->member_status AS $i => $item) {
-      $status[$i] = $item;
-    }
     $table = new HtmlTable(array(
       'class' => 'responsive config_table'
     ));
@@ -211,7 +206,7 @@ class View extends \Gcms\Adminview
       array('text' => '{LNG_Moderator}'),
       array('text' => '{LNG_Settings}')
     ));
-    foreach ($status AS $i => $item) {
+    foreach (\Kotchasan\ArrayTool::merge(array(-1 => '{LNG_Guest}'), self::$cfg->member_status) as $i => $item) {
       if ($i != 1) {
         $row = array();
         $row[] = array(

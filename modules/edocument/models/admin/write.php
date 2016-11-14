@@ -114,7 +114,7 @@ class Model extends \Kotchasan\Model
             // ค้นหาเลขที่เอกสารซ้ำ
             $search = $this->db()->first($this->getFullTableName('edocument'), array('document_no', $save['document_no']));
             if ($search && ($id == 0 || $id != $search->id)) {
-              $ret['ret_document_no'] = str_replace(':name', Language::get('Document number'), Language::get('This :name already exist'));
+              $ret['ret_document_no'] = Language::replace('This :name already exist', array(':name' => Language::get('Document number')));
             }
           }
           if (empty($ret)) {

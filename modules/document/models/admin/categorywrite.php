@@ -160,7 +160,7 @@ class Model extends \Kotchasan\Model
               $input = 'category_id';
             } elseif ($index['cid'] > 0 && $index['cid'] != $index['id']) {
               $input = 'category_id';
-              $ret['ret_category_id'] = str_replace(':name', Language::get('ID'), Language::get('This :name already exist'));
+              $ret['ret_category_id'] = Language::replace('This :name already exist', array(':name' => Language::get('ID')));
             } elseif (empty($topic)) {
               $input = 'topic_'.Language::name();
               $ret['ret_'.$input] = Language::get('Please fill in');

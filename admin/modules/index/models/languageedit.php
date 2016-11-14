@@ -116,7 +116,7 @@ class Model extends \Kotchasan\Model
           // ตรวจสอบข้อมูลซ้ำ
           $search = $model->db()->first($table_language, array('key', $save['key']));
           if ($search && ($id == 0 || $id != $search->id)) {
-            $ret['ret_write_key'] = Language::replace('This :name already exist', array(':name', Language::get('Key')));
+            $ret['ret_write_key'] = Language::replace('This :name already exist', array(':name' => Language::get('Key')));
           } else {
             // บันทึก
             if ($id == 0) {

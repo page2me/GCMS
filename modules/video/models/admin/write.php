@@ -90,7 +90,7 @@ class Model extends \Kotchasan\Model
               array('module_id', (int)$index->module_id)
             ));
             if ($search && ($id == 0 || $id != $search->id)) {
-              $ret['ret_write_youtube'] = str_replace(':name', Language::get('Video'), Language::get('This :name already exist'));
+              $ret['ret_write_youtube'] = Language::replace('This :name already exist', array(':name' => Language::get('Video')));
             } else {
               $ret['ret_write_youtube'] = '';
               // get youtube data

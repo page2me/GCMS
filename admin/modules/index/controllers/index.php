@@ -11,7 +11,6 @@ namespace Index\Index;
 use \Kotchasan\Http\Request;
 use \Gcms\Login;
 use \Kotchasan\Template;
-use \Kotchasan\Language;
 use \Gcms\Gcms;
 use \Kotchasan\Http\Response;
 

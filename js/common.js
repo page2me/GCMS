@@ -188,96 +188,96 @@ function initWriteTab(id, sel) {
 }
 function checkUsername() {
   var patt = /[a-zA-Z0-9]+/;
-  var value = this.input.value;
-  var ids = this.input.id.split('_');
+  var value = this.value;
+  var ids = this.id.split('_');
   var id = '&id=' + floatval($E(ids[0] + '_id').value);
   if (value == '') {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   } else if (patt.test(value)) {
     return 'value=' + encodeURIComponent(value) + id;
   } else {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   }
 }
 function checkEmail() {
-  var value = this.input.value;
-  var ids = this.input.id.split('_');
+  var value = this.value;
+  var ids = this.id.split('_');
   var id = '&id=' + floatval($E(ids[0] + '_id').value);
   if (value == '') {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   } else if (/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$/.test(value)) {
     return 'value=' + encodeURIComponent(value) + id;
   } else {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   }
 }
 function checkPhone() {
-  var value = this.input.value;
-  var ids = this.input.id.split('_');
+  var value = this.value;
+  var ids = this.id.split('_');
   var id = '&id=' + floatval($E(ids[0] + '_id').value);
   if (value != '') {
     return 'value=' + encodeURIComponent(value) + id;
   }
 }
 function checkDisplayname() {
-  var value = this.input.value;
-  var ids = this.input.id.split('_');
+  var value = this.value;
+  var ids = this.id.split('_');
   var id = '&id=' + floatval($E(ids[0] + '_id').value);
   if (value.length < 2) {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   } else {
     return 'value=' + encodeURIComponent(value) + '&id=' + id;
   }
 }
 function checkPassword() {
-  var ids = this.input.id.split('_');
+  var ids = this.id.split('_');
   var id = '&id=' + floatval($E(ids[0] + '_id').value);
   var Password = $E(ids[0] + '_password');
   var Repassword = $E(ids[0] + '_repassword');
   if (Password.value == '' && Repassword.value == '') {
     if (id == 0) {
-      this.input.Validator.invalid(this.input.Validator.title);
+      this.Validator.invalid(this.Validator.title);
     } else {
-      this.input.Validator.reset();
+      this.Validator.reset();
     }
-    this.input.Validator.reset();
+    this.Validator.reset();
   } else if (Password.value == Repassword.value) {
     Password.Validator.valid();
     Repassword.Validator.valid();
   } else {
-    this.input.Validator.invalid(this.input.Validator.title);
+    this.Validator.invalid(this.Validator.title);
   }
 }
 function checkAntispam() {
-  var value = this.input.value;
+  var value = this.value;
   if (value.length > 3) {
     return 'value=' + value + '&id=' + $E('antispam_id').value;
   } else {
-    this.invalid(this.input.placeholder);
+    this.invalid(this.placeholder);
   }
 }
 function checkIdcard() {
-  var value = this.input.value;
-  var ids = this.input.id.split('_');
+  var value = this.value;
+  var ids = this.id.split('_');
   var id = '&id=' + floatval($E(ids[0] + '_id').value);
   var i, sum;
   if (value.length != 13) {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   } else {
     for (i = 0, sum = 0; i < 12; i++) {
       sum += parseFloat(value.charAt(i)) * (13 - i);
     }
     if ((11 - sum % 11) % 10 != parseFloat(value.charAt(12))) {
-      this.invalid(this.input.title);
+      this.invalid(this.title);
     } else {
       return 'value=' + encodeURIComponent(value) + '&id=' + id;
     }
   }
 }
 function checkAlias() {
-  var value = this.input.value;
+  var value = this.value;
   if (value.length < 3) {
-    this.invalid(this.input.title);
+    this.invalid(this.title);
   } else {
     return 'val=' + encodeURIComponent(value) + '&id=' + $E('id').value;
   }

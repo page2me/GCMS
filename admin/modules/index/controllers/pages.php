@@ -10,7 +10,6 @@ namespace Index\Pages;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 use \Kotchasan\Html;
 
 /**
@@ -45,10 +44,9 @@ class Controller extends \Kotchasan\Controller
       // แสดงตาราง
       $section->appendChild(createClass('Index\Pages\View')->render());
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**
@@ -56,6 +54,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('List of all available main pages');
+    return '{LNG_List of all available main pages}';
   }
 }

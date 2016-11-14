@@ -10,6 +10,7 @@ namespace Event\Admin\Write;
 
 use \Kotchasan\Html;
 use \Kotchasan\Language;
+use \Kotchasan\Date;
 
 /**
  * ฟอร์มเพิ่ม/แก้ไข Event
@@ -64,62 +65,31 @@ class View extends \Gcms\Adminview
       'comment' => '{LNG_Specify the start and end of the event}',
       'label' => '{LNG_Date and time of event}'
     ));
+    $row = $group->add('row');
     // begin_date
-    $begin_date = isset($index->begin_date) ? $index->begin_date : date('Y-m-d H:i');
-    if (preg_match('/^([0-9\-\/]+)\s([0-9]{2,2})\:([0-9]{2,2}).*$/', $begin_date, $match)) {
-      $d = $match[1];
-      $from_h = (int)$match[2];
-      $from_m = (int)$match[3];
-    }
-    // end_date
-    $end_date = isset($index->end_date) ? $index->end_date : date('Y-m-d H:i');
-    if (preg_match('/^([0-9\-\/]+)\s([0-9]{2,2})\:([0-9]{2,2}).*$/', $end_date, $match)) {
-      $to_h = (int)$match[2];
-      $to_m = (int)$match[3];
-    }
-    $group->add('date', array(
+    $begin_date = isset($index->begin_date) ? Date::sqlDateTimeToMktime($index->begin_date) : time();
+    $row->add('date', array(
       'id' => 'begin_date',
       'labelClass' => 'g-input icon-calendar',
       'itemClass' => 'width',
-      'value' => $d
+      'value' => date('Y-m-d', $begin_date)
     ));
-    $hours = array();
-    for ($i = 0; $i < 24; $i++) {
-      $hours[$i] = sprintf('%02d', $i);
-    }
-    $minutes = array();
-    for ($i = 0; $i < 60; $i++) {
-      $minutes[$i] = sprintf('%02d', $i);
-    }
-    $group->add('select', array(
-      'id' => 'from_h',
-      'label' => '{LNG_from time}&nbsp;',
+    $row->add('time', array(
+      'id' => 'begin_time',
+      'labelClass' => 'g-input icon-clock',
       'itemClass' => 'width',
-      'options' => $hours,
-      'value' => $from_h
+      'label' => '{LNG_from time}',
+      'value' => date('H:i:s', $begin_date)
     ));
-    $group->add('select', array(
-      'id' => 'from_m',
-      'label' => ':&nbsp;',
+    $end_date = isset($index->end_date) ? Date::sqlDateTimeToMktime($index->end_date) : time();
+    $row->add('time', array(
+      'id' => 'to_time',
+      'labelClass' => 'g-input icon-clock',
       'itemClass' => 'width',
-      'options' => $minutes,
-      'value' => $from_m
+      'label' => '{LNG_to time}',
+      'value' => date('H:i:s', $end_date)
     ));
-    $group->add('select', array(
-      'id' => 'to_h',
-      'label' => '{LNG_to time}&nbsp;',
-      'itemClass' => 'width',
-      'options' => $hours,
-      'value' => $to_h
-    ));
-    $group->add('select', array(
-      'id' => 'to_m',
-      'label' => ':&nbsp;',
-      'itemClass' => 'width',
-      'options' => $minutes,
-      'value' => $to_m
-    ));
-    $group->add('checkbox', array(
+    $row->add('checkbox', array(
       'id' => 'forever',
       'label' => '{LNG_forever}',
       'itemClass' => 'width',

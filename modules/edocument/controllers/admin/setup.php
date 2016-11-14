@@ -15,7 +15,7 @@ use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- * แสดงรายการอัลบัม
+ * แสดงรายการเอกสาร
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

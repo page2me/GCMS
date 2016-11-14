@@ -8,13 +8,14 @@
 
 namespace Event\Admin\Write;
 
-use Kotchasan\Language;
-use Gcms\Gcms;
-use Kotchasan\Login;
+use \Kotchasan\Http\Request;
+use \Kotchasan\Language;
+use \Gcms\Gcms;
+use \Kotchasan\Login;
 use \Kotchasan\ArrayTool;
 
 /**
- * อ่านข้อมูลโมดูล.
+ * อ่านข้อมูลโมดูล
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -33,7 +34,7 @@ class Model extends \Kotchasan\Model
   public static function get($module_id, $id)
   {
     // model
-    $model = new static();
+    $model = new static;
     $query = $model->db()->createQuery();
     if (empty($id)) {
       // ใหม่ ตรวจสอบโมดูล
@@ -61,57 +62,52 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึก
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // ค่าที่ส่งมา
         $save = array(
-          'topic' => self::$request->post('topic')->topic(),
-          'color' => self::$request->post('color')->topic(),
-          'keywords' => self::$request->post('keywords')->keywords(),
-          'description' => self::$request->post('description')->description(),
-          'detail' => self::$request->post('detail')->detail(),
-          'published' => self::$request->post('published')->toBoolean(),
-          'begin_date' => self::$request->post('begin_date')->date().' '.self::$request->post('from_h')->number().':'.self::$request->post('from_m')->number().':00',
-          'published_date' => self::$request->post('published_date')->date()
+          'topic' => $request->post('topic')->topic(),
+          'color' => $request->post('color')->topic(),
+          'keywords' => $request->post('keywords')->keywords(),
+          'description' => $request->post('description')->description(),
+          'detail' => $request->post('detail')->detail(),
+          'published' => $request->post('published')->toBoolean(),
+          'begin_date' => $request->post('begin_date')->date().' '.$request->post('begin_time')->date(),
+          'published_date' => $request->post('published_date')->date()
         );
-        if (self::$request->post('forever')->toBoolean()) {
+        if ($request->post('forever')->toBoolean()) {
           $save['end_date'] = '0000-00-00 00:00:00';
         } else {
-          $save['end_date'] = self::$request->post('begin_date')->date().' '.self::$request->post('to_h')->number().':'.self::$request->post('to_m')->number().':00';
+          $save['end_date'] = $request->post('begin_date')->date().' '.$request->post('to_time')->date();
         }
         if (empty($save['keywords'])) {
-          $save['keywords'] = self::$request->post('topic')->keywords(255);
+          $save['keywords'] = $request->post('topic')->keywords(255);
         }
         if (empty($save['description'])) {
-          $save['description'] = self::$request->post('detail')->description(255);
+          $save['description'] = $request->post('detail')->description(255);
         }
-        $id = self::$request->post('id')->toInt();
+        $id = $request->post('id')->toInt();
         // ตรวจสอบรายการที่เลือก
-        $index = self::get(self::$request->post('module_id')->toInt(), $id);
+        $index = self::get($request->post('module_id')->toInt(), $id);
         if ($index && Gcms::canConfig($login, $index, 'can_write')) {
-          $error = false;
           // topic
           if (mb_strlen($save['topic']) < 4) {
             $ret['ret_topic'] = 'this';
-            $error = true;
-          } else {
-            $ret['ret_topic'] = '';
           }
           // detail
           if ($save['detail'] == '') {
             $ret['ret_detail'] = Language::get('Please fill in').' '.Language::get('Detail');
-            $error = true;
-          } else {
-            $ret['ret_detail'] = '';
           }
-          if (!$error) {
+          if (empty($ret)) {
             $save['last_update'] = time();
             if ($id == 0) {
               // ใหม่
@@ -125,7 +121,7 @@ class Model extends \Kotchasan\Model
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = self::$request->getUri()->postBack('index.php', array('mid' => $index->module_id, 'module' => 'event-setup'));
+            $ret['location'] = $request->getUri()->postBack('index.php', array('mid' => $index->module_id, 'module' => 'event-setup'));
           }
         } else {
           $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');

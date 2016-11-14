@@ -13,7 +13,7 @@ use \Kotchasan\Login;
 use \Kotchasan\Html;
 
 /**
- * ฟอร์มสร้าง/แก้ไข หน้าเว็บไซต์
+ * ฟอร์มสร้าง/แก้ไข โมดูล
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -21,18 +21,18 @@ use \Kotchasan\Html;
  */
 class Controller extends \Kotchasan\Controller
 {
+  private $index;
 
   /**
-   * แสดงผล
+   * สร้างหรือแก้ไข โมดูล
    */
   public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
       // รายการที่ต้องการ
-      $index = \Index\Pagewrite\Model::getIndex($request->get('id')->toInt(), $request->get('owner', 'index')->topic());
-      if ($index) {
-        // สร้างหรือแก้ไข
+      $this->index = \Index\Pagewrite\Model::getIndex($request->get('id')->toInt(), $request->get('owner', 'index')->topic());
+      if ($this->index) {
         // แสดงผล
         $section = Html::create('section');
         // breadcrumbs
@@ -42,15 +42,13 @@ class Controller extends \Kotchasan\Controller
         $ul = $breadcrumbs->add('ul');
         $ul->appendChild('<li><span class="icon-modules">{LNG_Menus} &amp; {LNG_Web pages}</span></li>');
         $ul->appendChild('<li><a href="{BACKURL?module=pages&id=0}">{LNG_Web pages}</a></li>');
-        $ul->appendChild('<li><span>{LNG_'.(empty($index->id) ? 'Create' : 'Edit').'}</span></li>');
+        $ul->appendChild('<li><span>{LNG_'.(empty($this->index->id) ? 'Create' : 'Edit').'}</span></li>');
         $section->add('header', array(
           'innerHTML' => '<h1 class="icon-write">'.$this->title().'</h1>'
         ));
-        if ($index) {
-          // แสดงฟอร์ม
-          $section->appendChild(createClass('Index\Pagewrite\View')->render($index));
-          return $section->render();
-        }
+        // แสดงฟอร์ม
+        $section->appendChild(createClass('Index\Pagewrite\View')->render($this->index));
+        return $section->render();
       }
     }
     // 404.html
@@ -62,6 +60,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Create or Edit} {LNG_Webpage}';
+    return '{LNG_Create or Edit} {LNG_Module} ('.$this->index->owner.')';
   }
 }

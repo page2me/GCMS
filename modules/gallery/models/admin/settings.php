@@ -8,12 +8,13 @@
 
 namespace Gallery\Admin\Settings;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- *  การตั้งค่า
+ *  บันทึกการตั้งค่า
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +24,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * ค่าติดตั้งเรื่มต้น
+   * ค่าติดตั้งเริ่มต้น
    *
    * @return array
    */
@@ -44,30 +45,33 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึกข้อมูล config ของโมดูล
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isMember()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
         $save = array(
-          'icon_width' => max(75, self::$request->post('icon_width')->toInt()),
-          'icon_height' => max(75, self::$request->post('icon_height')->toInt()),
-          'image_width' => max(400, self::$request->post('image_width')->toInt()),
-          'img_typies' => self::$request->post('img_typies', array())->toString(),
-          'rows' => self::$request->post('rows')->toInt(),
-          'cols' => self::$request->post('cols')->toInt(),
-          'sort' => self::$request->post('sort')->toInt(),
-          'can_view' => self::$request->post('can_view', array())->toInt(),
-          'can_write' => self::$request->post('can_write', array())->toInt(),
-          'can_config' => self::$request->post('can_config', array())->toInt(),
+          'icon_width' => max(75, $request->post('icon_width')->toInt()),
+          'icon_height' => max(75, $request->post('icon_height')->toInt()),
+          'image_width' => max(400, $request->post('image_width')->toInt()),
+          'img_typies' => $request->post('img_typies', array())->toString(),
+          'rows' => $request->post('rows')->toInt(),
+          'cols' => $request->post('cols')->toInt(),
+          'sort' => $request->post('sort')->toInt(),
+          'can_view' => $request->post('can_view', array())->toInt(),
+          'can_write' => $request->post('can_write', array())->toInt(),
+          'can_config' => $request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
-        $index = \Index\Adminmodule\Model::get('gallery', self::$request->post('id')->toInt());
+        $index = \Index\Adminmodule\Model::get('gallery', $request->post('id')->toInt());
+        // สามารถตั้งค่าได้
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           if (empty($save['img_typies'])) {
             // คืนค่า input ที่ error
@@ -79,7 +83,7 @@ class Model extends \Kotchasan\Model
             $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
             // คืนค่า
             $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'gallery-settings', 'mid' => $index->module_id));
+            $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'gallery-settings', 'mid' => $index->module_id));
           }
         } else {
           $ret['alert'] = Language::get('Unable to complete the transaction');

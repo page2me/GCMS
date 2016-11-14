@@ -13,7 +13,7 @@ use \Kotchasan\Language;
 use \Kotchasan\Date;
 
 /**
- * module=mods
+ * แสดงรายการโมดูลที่ติดตั้งแล้ว
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -21,17 +21,22 @@ use \Kotchasan\Date;
  */
 class View extends \Gcms\Adminview
 {
+  /**
+   * ข้อมูลโมดูล
+   */
+  private $publisheds;
 
   /**
-   * ตารางโมดูลที่ติดตั้งแล้ว
+   * module=mods
    *
    * @return string
    */
   public function render()
   {
-
+    $this->publisheds = Language::get('PUBLISHEDS');
     // Uri
     $uri = self::$request->getUri();
+    // ตาราง
     $table = new DataTable(array(
       /* Model */
       'model' => 'Index\Mods\Model',
@@ -42,7 +47,7 @@ class View extends \Gcms\Adminview
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
       'hideColumns' => array('module_id', 'id'),
-      /* table action */
+      /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
       'action' => 'index.php/index/model/mods/action',
       'actionCallback' => 'indexActionCallback',
       /* ส่วนหัวของตาราง และการเรียงลำดับ (thead) */
@@ -119,10 +124,9 @@ class View extends \Gcms\Adminview
    */
   public function onRow($item)
   {
-    $publisheds = Language::get('PUBLISHEDS');
-    $item['published'] = '<a id=published_'.$item['id'].' class="icon-published'.$item['published'].'" title="'.$publisheds[$item['published']].'"></a>';
     $item['last_update'] = Date::format($item['last_update'], 'd M Y H:i');
     $item['language'] = empty($item['language']) ? '' : '<img src="'.WEB_URL.'language/'.$item['language'].'.gif" alt="'.$item['language'].'">';
+    $item['published'] = '<a id=published_'.$item['id'].' class="icon-published'.$item['published'].'" title="'.$this->publisheds[$item['published']].'"></a>';
     return $item;
   }
 }

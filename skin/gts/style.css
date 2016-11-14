@@ -184,7 +184,7 @@ nav.breadcrumbs li:before {
 .widget > header > h2,
 .member_section > header > h2,
 .bdr_content header h2 {
-  line-height: 1.6em;
+  line-height: 2;
 }
 .bdr_content > header, header.header {
   position: relative;

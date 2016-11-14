@@ -279,6 +279,7 @@ header.list h2 {
 header.list h2 > * {
   display: table-cell;
   vertical-align: middle;
+  text-align: left;
 }
 header.list .newtopic {
   text-align: right;

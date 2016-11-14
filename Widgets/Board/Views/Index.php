@@ -44,7 +44,7 @@ class Index extends \Gcms\View
       $icon = '';
     }
     return array(
-      '/{URL}/' => Controller::url($index->module, 0, $item->id),
+      '/{URL}/' => Controller::url($index->module, $item->id),
       '/{TOPIC}/' => $item->topic,
       '/{DATE}/' => Date::format($item->create_date, 'd M Y'),
       '/{UID}/' => $item->member_id,

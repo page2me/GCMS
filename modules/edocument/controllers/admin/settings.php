@@ -60,6 +60,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Module settings}';
+    return '{LNG_Module settings} E-Document';
   }
 }

@@ -96,7 +96,7 @@ class Model extends \Kotchasan\Model
               // ตรวจสอบ displayname ซ้ำ
               $search = $db->first($user_table, array('displayname', $save['displayname']));
               if ($search !== false && $user->id != $search->id) {
-                $ret['ret_register_displayname'] = str_replace(':name', Language::get('Name'), Language::get('This :name already exist'));
+                $ret['ret_register_displayname'] = Language::replace('This :name already exist', array(':name' => Language::get('Name')));
                 $input = !$input ? 'register_displayname' : $input;
               } else {
                 $ret['ret_register_displayname'] = '';
@@ -107,7 +107,7 @@ class Model extends \Kotchasan\Model
           if (!empty($save['fname']) || !empty($save['lname'])) {
             $search = $db->first($user_table, array(array('fname', $save['fname']), array('lname', $save['lname'])));
             if ($search !== false && $user->id != $search->id) {
-              $ret['ret_register_fname'] = str_replace(':name', Language::get('Name').' '.Language::get('Surname'), Language::get('This :name already exist'));
+              $ret['ret_register_fname'] = Language::replace('This :name already exist', array(':name' => Language::get('Name').' '.Language::get('Surname')));
               $input = !$input ? 'register_fname' : $input;
             } else {
               $ret['ret_register_fname'] = '';
@@ -122,7 +122,7 @@ class Model extends \Kotchasan\Model
               // ตรวจสอบโทรศัพท์
               $search = $db->first($user_table, array('phone1', $save['phone1']));
               if ($search !== false && $user->id != $search->id) {
-                $ret['ret_register_phone1'] = str_replace(':name', Language::get('phone number'), Language::get('This :name already exist'));
+                $ret['ret_register_phone1'] = Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
                 $input = !$input ? 'register_phone1' : $input;
               } else {
                 $ret['ret_register_phone1'] = '';
