@@ -26,7 +26,7 @@ class Model extends \Kotchasan\Model
   public static function get()
   {
     // url ของข่าว
-    $url = 'http://gcms.in.th/news.php';
+    $url = 'https://gcms.in.th/news.php';
     if ($feedRef = @fopen($url, 'rb')) {
       $contents = '';
       while (!feof($feedRef)) {

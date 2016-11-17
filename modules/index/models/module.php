@@ -73,8 +73,8 @@ class Model extends \Kotchasan\Model
     $result = array();
     $model = new static;
     $query = $model->db()->createQuery()
-      ->select('id module_id', 'module', 'owner', 'config')
-      ->from('modules')
+      ->select('M.id module_id', 'M.module', 'M.owner', 'M.config')
+      ->from('modules M')
       ->cacheOn()
       ->toArray();
     foreach ($query->execute() as $item) {
@@ -131,7 +131,7 @@ class Model extends \Kotchasan\Model
       $search = $model->db()->createQuery()
         ->from('index_detail D')
         ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
-        ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(\Kotchasan\Language::name(), ''))))
+        ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(\Kotchasan\Language::name(), '')), array('I.published', 1)))
         ->cacheOn()
         ->toArray()
         ->first('D.topic', 'D.detail', 'D.keywords', 'D.description');

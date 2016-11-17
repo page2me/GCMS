@@ -89,13 +89,13 @@ class Model extends \Kotchasan\Model
       $query->from('edocument P')
         ->join('index_detail D', 'INNER', array(array('D.module_id', 'P.module_id'), array('D.language', array('', Language::name()))))
         ->join('index I', 'INNER', array(array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.index', '1'), array('I.language', 'D.language')))
-        ->where(array(array('P.id', $id), array('P.module_id', $modules)));
+        ->where(array(array('P.id', $id), array('P.module_id', $modules), array('I.published', 1)));
       $select = array('P.*', 'D.topic title');
     } else {
       // ใหม่
       $query->from('index_detail D')
         ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
-        ->where(array(array('I.module_id', $modules), array('D.language', array(Language::name(), ''))));
+        ->where(array(array('I.module_id', $modules), array('D.language', array(Language::name(), '')), array('I.published', 1)));
       $select = array('I.module_id', 'D.topic title', $model->buildNext('id', 'edocument'));
     }
     $search = $query->toArray()->first($select);

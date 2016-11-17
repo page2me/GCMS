@@ -38,7 +38,10 @@ class Model extends \Kotchasan\Orm\Field
    */
   public static function listModules($owner, $modules = array())
   {
-    $where = array(array('M.owner', $owner));
+    $where = array(
+      array('M.owner', $owner),
+      array('I.published', 1)
+    );
     if (!empty($modules)) {
       $where[] = array('M.id', $modules);
     }
