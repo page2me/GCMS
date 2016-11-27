@@ -61,14 +61,11 @@ class Model extends \Kotchasan\Model
           $this->db()->createQuery()->update('user')->set($save)->where($search['id'])->execute();
           // คืนค่า
           $ret['alert'] = Language::get('Your message was sent successfully');
-          $ret['ret_forgot_email'] = '';
           $location = $request->post('modal')->url();
           $ret['location'] = $location === 'true' ? 'close' : $location;
         } else {
           $ret['ret_forgot_email'] = $err;
         }
-      } else {
-        $ret['input'] = 'forgot_email';
       }
       // คืนค่าเป็น JSON
       echo json_encode($ret);

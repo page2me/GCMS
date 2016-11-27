@@ -9,7 +9,6 @@
 namespace Index\Login;
 
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 
 /**
  * Login Form
@@ -39,6 +38,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Administrator Area');
+    return'{LNG_Administrator Area}';
   }
 }

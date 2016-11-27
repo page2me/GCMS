@@ -40,11 +40,11 @@ class View extends \Gcms\View
    */
   public function render(Request $request, $index)
   {
-    // login
-    $login = Login::isMember();
-    if ($login && isset(Gcms::$install_owners['edocument'])) {
+    if ($login = Login::isMember()) {
       // รายการโมดูล edocument ที่ติดตั้งแล้ว
-      $this->modules = \Edocument\Admin\Setup\Model::listModules('edocument');
+      foreach (Gcms::$module->findByOwner('edocument') as $item) {
+        $this->modules[$item->module_id] = $item->topic;
+      }
       if (!empty($this->modules)) {
         // โมดูลที่เลือก
         $module_id = $request->request('mid')->toInt();

@@ -36,8 +36,6 @@ class Model extends \Kotchasan\KBase
       } else {
         // โหลด config
         $config = Config::load(ROOT_PATH.'settings/config.php');
-        // ตรวจสอบค่าที่ส่งมา
-        $input = false;
         // อัปโหลดไฟล์
         foreach (self::$request->getUploadedFiles() as $item => $file) {
           if (self::$request->post('delete_'.$item)->toBoolean() == 1) {
@@ -48,19 +46,16 @@ class Model extends \Kotchasan\KBase
           } elseif (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'image/')) {
             // ไดเรคทอรี่ไม่สามารถสร้างได้
             $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'image/');
-            $input = !$input ? $item : $input;
           } elseif ($file->hasUploadFile()) {
             // ตรวจสอบไฟล์อัปโหลด
             if (!$file->validFileExt(array('jpg'))) {
               $ret['ret_'.$item] = Language::get('The type of file is invalid');
-              $input = !$input ? $item : $input;
             } else {
               try {
                 $file->moveTo(ROOT_PATH.DATA_FOLDER.'image/'.$item.'.jpg');
               } catch (\Exception $exc) {
                 // ไม่สามารถอัปโหลดได้
                 $ret['ret_'.$item] = Language::get($exc->getMessage());
-                $input = !$input ? $item : $input;
               }
             }
           }
@@ -74,7 +69,7 @@ class Model extends \Kotchasan\KBase
             $config->$item = $value;
           }
         }
-        if (!$input) {
+        if (empty($ret)) {
           // save config
           if (Config::save($config, ROOT_PATH.'settings/config.php')) {
             $ret['alert'] = Language::get('Saved successfully');
@@ -82,9 +77,6 @@ class Model extends \Kotchasan\KBase
           } else {
             $ret['alert'] = sprintf(Language::get('File %s cannot be created or is read-only.'), 'settings/config.php');
           }
-        } else {
-          // คืนค่า input ที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

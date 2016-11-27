@@ -22,6 +22,11 @@ use \Kotchasan\Language;
 class Model extends \Kotchasan\Model
 {
 
+  /**
+   * อ่านรายการ owner จากฐานข้อมูลภาษา
+   *
+   * @return array
+   */
   public static function getOwners()
   {
     $model = new static;

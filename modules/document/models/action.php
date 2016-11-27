@@ -64,8 +64,8 @@ class Model extends \Kotchasan\Model
         $ret['alert'] = Language::get('Sorry, Item not found It&#39;s may be deleted');
       } else {
         // config
-        $index = ArrayTool::unserialize($index['config'], $index);
-        unset($index['config']);
+        $index = (object)ArrayTool::unserialize($index['config'], $index);
+        unset($index->config);
         // login
         $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
         // สมาชิก true
@@ -74,14 +74,14 @@ class Model extends \Kotchasan\Model
         $moderator = Gcms::canConfig($login, $index, 'moderator');
         if ($action === 'quote') {
           // อ้างอิง
-          if (empty($index['detail'])) {
+          if (empty($index->detail)) {
             $ret['detail'] = '';
           } else {
-            $ret['detail'] = '[quote'.($rid > 0 ? " r=$no]" : ']').Gcms::quote($index['detail'], true).'[/quote]';
+            $ret['detail'] = '[quote'.($rid > 0 ? " r=$no]" : ']').Gcms::quote($index->detail, true).'[/quote]';
           }
         } elseif ($action === 'delete' && $isMember) {
           // สามารถลบได้ (mod=ลบ,สมาชิก=แจ้งลบ)
-          if ($moderator || $index['member_id'] == $login['id']) {
+          if ($moderator || $index->member_id == $login['id']) {
             // ลบ
             if ($rid > 0) {
               $ret['confirm'] = Language::replace('You want to :action :name', array(':action' => Language::get('Delete'), ':name' => Language::get('comments'))).' ?';
@@ -94,15 +94,15 @@ class Model extends \Kotchasan\Model
             // ลบความคิดเห็น
             $this->db()->delete($this->getFullTableName('comment'), $rid);
             // อัปเดทจำนวนคำตอบของคำถาม
-            \Index\Comment\Model::update($qid, (int)$index['module_id']);
+            \Index\Comment\Model::update($qid, (int)$index->module_id);
             $ret['remove'] = "R_$rid";
           }
           // อัปเดทหมวดหมู่
-          if ($index['category_id'] > 0) {
+          if ($index->category_id > 0) {
             // อัปเดทจำนวนเรื่อง และ ความคิดเห็น ในหมวด
-            \Document\Admin\Write\Model::updateCategories((int)$index['module_id']);
+            \Document\Admin\Write\Model::updateCategories((int)$index->module_id);
           }
-        } elseif ($action == 'edit' && ($moderator || ($isMember && $index['member_id'] == $login['id']))) {
+        } elseif ($action == 'edit' && ($moderator || ($isMember && $index->member_id == $login['id']))) {
           // แก้ไข mod หรือ เจ้าของ
           if ($rid > 0) {
             $ret['location'] = WEB_URL."index.php?module=$module-edit&rid=$rid";

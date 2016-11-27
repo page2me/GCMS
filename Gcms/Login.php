@@ -11,8 +11,6 @@ namespace Gcms;
 use \Kotchasan\Model;
 use \Kotchasan\Language;
 use \Kotchasan\Http\Request;
-use \Kotchasan\Text;
-use \Gcms\Email;
 
 /**
  * คลาสสำหรับตรวจสอบการ Login สำหรับ GCMS
@@ -169,14 +167,14 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
         self::$login_message = Language::get('not a registered user');
       } else {
         // รหัสผ่านใหม่
-        $password = Text::rndname(6);
+        $password = \Kotchasan\Text::rndname(6);
         // ข้อมูลอีเมล์
         $replace = array(
           '/%PASSWORD%/' => $password,
           '/%EMAIL%/' => $search->email
         );
         // send mail
-        $err = Email::send(3, 'member', $replace, $search->email);
+        $err = \Gcms\Email::send(3, 'member', $replace, $search->email);
         if (empty($err)) {
           // อัปเดทรหัสผ่านใหม่
           $model->db()->update($user_table, (int)$search->id, array('password' => md5($password.$search->email)));

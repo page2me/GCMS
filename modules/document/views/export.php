@@ -33,29 +33,28 @@ class View extends \Gcms\View
    */
   public function printer(Request $request, $index)
   {
-    // ค่าที่ส่งมา
-    $id = $request->get('id')->toInt();
-    // อ่านรายการที่เลือก
-    $story = \Document\View\Model::get((int)$index->module_id, $id, '');
-    if ($story) {
+    // อ่านรายการที่เลือก จาก ID ที่ส่งมา
+    $index = \Document\View\Model::get((object)array('id' => $request->get('id')->toInt()));
+    if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // แสดงความคิดเห็นได้
-      $canReply = !empty($story->can_reply);
+      $canReply = !empty($index->can_reply);
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
       $canView = Gcms::canConfig($login, $index, 'can_view');
       // dir ของรูปภาพอัปโหลด
       $imagedir = ROOT_PATH.DATA_FOLDER.'document/';
       $imageurl = WEB_URL.DATA_FOLDER.'document/';
       // รูปภาพ
-      if (!empty($story->picture) && is_file($imagedir.$story->picture)) {
-        $story->image_src = $imageurl.$story->picture;
+      if (!empty($index->picture) && is_file($imagedir.$index->picture)) {
+        $index->image_src = $imageurl.$index->picture;
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
+          // /document/printcommentitem.html
+          $listitem = Grid::create('document', $index->module, 'printcommentitem');
           // รายการแสดงความคิดเห็น
-          $listitem = Grid::create($index->owner, $index->module, 'printcommentitem');
-          foreach (\Document\Comment\Model::get($story) as $no => $item) {
+          foreach (\Index\Comment\Model::get($index) as $no => $item) {
             $listitem->add(array(
               '/{DETAIL}/' => Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true),
               '/{DISPLAYNAME}/' => $item->name,
@@ -66,18 +65,19 @@ class View extends \Gcms\View
           }
         }
         // เนื้อหา
-        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $story->detail), $canView, true, true);
+        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $index->detail), $canView, true, true);
         $replace = array(
           '/{COMMENTLIST}/' => isset($listitem) ? $listitem->render() : '',
-          '/{TOPIC}/' => $story->topic,
-          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($story->image_src) ? '' : '$1',
-          '/{IMG}/' => empty($story->image_src) ? '' : $story->image_src,
+          '/{TOPIC}/' => $index->topic,
+          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($index->image_src) ? '' : '$1',
+          '/{IMG}/' => empty($index->image_src) ? '' : $index->image_src,
           '/{DETAIL}/' => $detail,
-          '/{DATE}/' => Date::format($story->create_date),
-          '/{URL}/' => \Document\Index\Controller::url($index->module, $story->alias, $story->id, false),
-          '/{DISPLAYNAME}/' => empty($story->displayname) ? $story->email : $story->displayname
+          '/{DATE}/' => Date::format($index->create_date),
+          '/{URL}/' => \Document\Index\Controller::url($index->module, $index->alias, $index->id, false),
+          '/{DISPLAYNAME}/' => empty($index->displayname) ? $index->email : $index->displayname
         );
-        return Template::create($index->owner, $index->module, 'print')->add($replace)->render();
+        // /document/print.html
+        return Template::create('document', $index->module, 'print')->add($replace)->render();
       }
     }
     return false;
@@ -92,29 +92,27 @@ class View extends \Gcms\View
    */
   public function pdf(Request $request, $index)
   {
-    // ค่าที่ส่งมา
-    $id = $request->get('id')->toInt();
     // อ่านรายการที่เลือก
-    $story = \Document\View\Model::get((int)$index->module_id, $id, '');
-    if ($story) {
+    $index = \Document\View\Model::get((int)$index->module_id, $request->get('id')->toInt(), '');
+    if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // แสดงความคิดเห็นได้
-      $canReply = !empty($story->can_reply);
+      $canReply = !empty($index->can_reply);
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
       $canView = Gcms::canConfig($login, $index, 'can_view');
       // dir ของรูปภาพอัปโหลด
       $imagedir = ROOT_PATH.DATA_FOLDER.'document/';
       $imageurl = WEB_URL.DATA_FOLDER.'document/';
       // รูปภาพ
-      if (!empty($story->picture) && is_file($imagedir.$story->picture)) {
-        $story->image_src = $imageurl.$story->picture;
+      if (!empty($index->picture) && is_file($imagedir.$index->picture)) {
+        $index->image_src = $imageurl.$index->picture;
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
           // รายการแสดงความคิดเห็น
           $listitem = Grid::create($index->owner, $index->module, 'printcommentitem');
-          foreach (\Document\Comment\Model::get($story) as $no => $item) {
+          foreach (\Document\Comment\Model::get($index) as $no => $item) {
             $listitem->add(array(
               '/{DETAIL}/' => Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true),
               '/{DISPLAYNAME}/' => $item->name,
@@ -125,16 +123,16 @@ class View extends \Gcms\View
           }
         }
         // เนื้อหา
-        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $story->detail), $canView, true, true);
+        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $index->detail), $canView, true, true);
         $replace = array(
           '/{COMMENTLIST}/' => isset($listitem) ? $listitem->render() : '',
-          '/{TOPIC}/' => $story->topic,
-          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($story->image_src) ? '' : '$1',
-          '/{IMG}/' => empty($story->image_src) ? '' : $story->image_src,
+          '/{TOPIC}/' => $index->topic,
+          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($index->image_src) ? '' : '$1',
+          '/{IMG}/' => empty($index->image_src) ? '' : $index->image_src,
           '/{DETAIL}/' => $detail,
-          '/{DATE}/' => Date::format($story->create_date),
-          '/{URL}/' => \Document\Index\Controller::url($index->module, $story->alias, $story->id, false),
-          '/{DISPLAYNAME}/' => empty($story->displayname) ? $story->email : $story->displayname,
+          '/{DATE}/' => Date::format($index->create_date),
+          '/{URL}/' => \Document\Index\Controller::url($index->module, $index->alias, $index->id, false),
+          '/{DISPLAYNAME}/' => empty($index->displayname) ? $index->email : $index->displayname,
           '/{LNG_([\w\s\.\-\'\(\),%\/:&\#;]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))'
         );
         $pdf = new \Kotchasan\Pdf();

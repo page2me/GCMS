@@ -50,8 +50,8 @@ class View extends \Gcms\View
     }
     // antispam
     $antispam = new Antispam();
-    // template
-    $template = Template::create($index->owner, $index->module, 'write');
+    // /board/write.html
+    $template = Template::create('board', $index->module, 'write');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{CATEGORIES}/' => implode('', $category_options),
@@ -68,12 +68,12 @@ class View extends \Gcms\View
       '/:type/' => implode(', ', $index->img_upload_type)
       ), false);
     // breadcrumb ของโมดูล
-    if (!Gcms::isHome($index->module)) {
-      $menu = Gcms::$menu->moduleMenu($index->module);
+    if (!Gcms::$menu->isHome($index->index_id)) {
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic, $index->description);
       }
     }
     // breadcrumb ของหมวดหมู่

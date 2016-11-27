@@ -8,8 +8,6 @@
 
 namespace Gcms;
 
-use Kotchasan\Template;
-
 /**
  * View base class สำหรับ GCMS.
  *
@@ -25,24 +23,6 @@ class View extends \Kotchasan\View
    * @var array
    */
   protected $breadcrumbs = array();
-  /**
-   * template ของ breadcrumb.
-   *
-   * @var type
-   */
-  protected $breadcrumb_template;
-
-  /**
-   * Class constructor.
-   */
-  public function __construct()
-  {
-    try {
-      $this->breadcrumb_template = Template::load('', '', 'breadcrumb');
-    } catch (\Exception $exc) {
-      $this->breadcrumb_template = '';
-    }
-  }
 
   /**
    * เพิ่ม breadcrumb.
@@ -74,7 +54,7 @@ class View extends \Kotchasan\View
     // เนื้อหา
     parent::setContents(array(
       // กรอบ login
-      '/{LOGIN}/' => method_exists('Index\Login\Controller', 'init') ? \Index\Login\Controller::init(Login::isMember()) : '',
+      '/{LOGIN}/' => \Index\Login\Controller::init(Login::isMember()),
       // widgets
       '/{WIDGET_([A-Z]+)(([_\s]+)([^}]+))?}/e' => '\Gcms\View::getWidgets(array(1=>"$1",3=>"$3",4=>"$4"))',
       // breadcrumbs
@@ -89,6 +69,7 @@ class View extends \Kotchasan\View
       '/{QURIES}/' => \Kotchasan\Database\Driver::queryCount(),
       /* ภาษา */
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
+      /* ภาษา ที่ใช้งานอยู่ */
       '/{LANGUAGE}/' => \Kotchasan\Language::name()
     ));
     return parent::renderHTML($template);

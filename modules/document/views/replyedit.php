@@ -13,6 +13,7 @@ use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Kotchasan\Login;
 use \Kotchasan\Antispam;
+use \Kotchasan\Language;
 
 /**
  * แก้ไขความคิดเห็น
@@ -39,8 +40,8 @@ class View extends \Gcms\View
     $isMember = $login['status'] > -1;
     // antispam
     $antispam = new Antispam();
-    // template
-    $template = Template::create($index->owner, $index->module, 'replyedit');
+    // /document/replyedit.html
+    $template = Template::create('document', $index->module->module, 'replyedit');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
@@ -51,28 +52,28 @@ class View extends \Gcms\View
       '/{RID}/' => $index->id
     ));
     // breadcrumb ของโมดูล
-    if (!Gcms::isHome($index->module)) {
-      $menu = Gcms::$menu->moduleMenu($index->module);
+    if (!Gcms::$menu->isHome($index->module->index_id)) {
+      $menu = Gcms::$menu->findTopLevelMenu($index->module->index_id);
       if ($menu) {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->title);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module), $index->module->topic, $index->module->description);
       }
     }
     // breadcrumb ของหมวดหมู่
     if (!empty($index->category_id)) {
       $category = Gcms::ser2Str($index->category);
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $category);
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module, '', $index->category_id), $category);
     }
     // breadcrumb ของกระทู้
-    Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'id='.$index->id), $index->topic);
+    Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module, '', 0, 0, 'id='.$index->id), $index->topic);
     // breadcrumb ของหน้า
-    $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;rid='.$index->id;
-    $topic = '{LNG_Edit} {LNG_comments}';
+    $canonical = WEB_URL.'index.php?module='.$index->module->module.'-edit&amp;rid='.$index->id;
+    $topic = Language::get('Edit').' '.Language::get('Comment');
     Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
     return (object)array(
-        'module' => $index->module,
+        'module' => $index->module->module,
         'canonical' => $canonical,
         'topic' => $topic.' - '.$index->topic,
         'detail' => $template->render(),

@@ -8,7 +8,7 @@
 
 namespace Download\Admin\Init;
 
-use \Index\Index\Model as Menu;
+use \Gcms\Gcms;
 
 /**
  * จัดการการตั้งค่าเริ่มต้น
@@ -30,14 +30,16 @@ class Controller extends \Kotchasan\Controller
 
   /**
    * ฟังก์ชั่นเรียกโดย admin
+   *
+   * @param array $modules
    */
-  public static function init($items)
+  public static function init($modules)
   {
-    if (!empty($items)) {
+    if (!empty($modules)) {
       // เมนู
-      foreach ($items AS $item) {
-        Menu::$menus['modules'][$item->module]['write'] = '<a href="index.php?module=download-write&amp;mid='.$item->id.'"><span>{LNG_Add New} {LNG_Download file}</span></a>';
-        Menu::$menus['modules'][$item->module]['setup'] = '<a href="index.php?module=download-setup&amp;mid='.$item->id.'"><span>{LNG_List of} {LNG_Download file}</span></a>';
+      foreach ($modules as $item) {
+        Gcms::$menu->menus['modules'][$item->module]['write'] = '<a href="index.php?module=download-write&amp;mid='.$item->id.'"><span>{LNG_Add New} {LNG_Download file}</span></a>';
+        Gcms::$menu->menus['modules'][$item->module]['setup'] = '<a href="index.php?module=download-setup&amp;mid='.$item->id.'"><span>{LNG_List of} {LNG_Download file}</span></a>';
       }
     }
   }

@@ -11,7 +11,6 @@ namespace Board\Module;
 use \Gcms\Gcms;
 use \Kotchasan\Language;
 use \Kotchasan\Http\Request;
-use \Kotchasan\ArrayTool;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -51,11 +50,10 @@ class Model extends \Kotchasan\Model
       // จำนวนหมวดในโมดูล
       $query = $model->db()->createQuery()->selectCount()->from('category')->where(array('module_id', 'D.module_id'));
       $select = array(
-        'D.topic',
         'D.detail',
         'D.keywords',
-        array($query, 'categories'),
-        'D.description'
+        'D.description',
+        array($query, 'categories')
       );
       $query = $model->db()->createQuery()
         ->from('index_detail D')
@@ -95,9 +93,9 @@ class Model extends \Kotchasan\Model
               break;
           }
         }
-      }
-      if (!empty($categories) && empty($index->category_id)) {
-        $index->category_id = $categories;
+        if (!empty($categories) && empty($index->category_id)) {
+          $index->category_id = $categories;
+        }
       }
       return $index;
     }
@@ -108,31 +106,26 @@ class Model extends \Kotchasan\Model
    *
    * @param int $id ID ที่แก้ไข
    * @param object $index ข้อมูลโมดูล
-   * @return object|null ข้อมูล (Object), false ถ้าไม่พบ
+   * @return object|null ข้อมูล (Object), null ถ้าไม่พบ
    */
   public static function getQuestionById($id, $index)
   {
     $model = new static;
-    $query = $model->db()->createQuery()
+    $search = $model->db()->createQuery()
       ->from('board_q Q')
-      ->join('index I', 'INNER', array(array('I.index', 1), array('I.module_id', 'Q.module_id'), array('I.language', array('', Language::name()))))
-      ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
       ->join('category C', 'LEFT', array(array('C.category_id', 'Q.category_id'), array('C.module_id', 'Q.module_id')))
       ->where(array(
         array('Q.id', $id),
         array('Q.module_id', (int)$index->module_id)
       ))
       ->toArray()
-      ->first('Q.*', 'C.config', 'D.topic title');
-    if ($query) {
-      $query = ArrayTool::unserialize($query['config'], $query);
-      unset($query['config']);
-      foreach ($query as $k => $v) {
-        $index->$k = $v;
-      }
-      return $index;
+      ->first('Q.*', 'C.config');
+    if ($search) {
+      $search['module'] = $index;
+      $search['config'] = @unserialize($search['config']);
+      return (object)$search;
     }
-    return false;
+    return null;
   }
 
   /**
@@ -140,28 +133,23 @@ class Model extends \Kotchasan\Model
    *
    * @param int $id ID ที่แก้ไข
    * @param object $index ข้อมูลโมดูล
-   * @return object|null ข้อมูล (Object), false ถ้าไม่พบ
+   * @return object|null ข้อมูล (Object), null ถ้าไม่พบ
    */
   public static function getCommentById($id, $index)
   {
     $model = new static;
-    $query = $model->db()->createQuery()
+    $search = $model->db()->createQuery()
       ->from('board_r R')
       ->join('board_q Q', 'INNER', array(array('Q.id', 'R.index_id'), array('Q.module_id', 'R.module_id')))
-      ->join('index I', 'INNER', array(array('I.index', 1), array('I.module_id', 'Q.module_id'), array('I.language', array('', Language::name()))))
-      ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
       ->join('category C', 'LEFT', array(array('C.category_id', 'Q.category_id'), array('C.module_id', 'Q.module_id')))
       ->where(array(array('R.id', $id), array('Q.module_id', (int)$index->module_id)))
       ->toArray()
-      ->first('R.*', 'C.config', 'Q.topic', 'Q.category_id', 'C.topic category', 'D.topic title');
-    if ($query) {
-      $query = ArrayTool::unserialize($query['config'], $query);
-      unset($query['config']);
-      foreach ($query as $k => $v) {
-        $index->$k = $v;
-      }
-      return $index;
+      ->first('R.*', 'C.config', 'Q.topic', 'Q.category_id', 'C.topic category');
+    if ($search) {
+      $search['module'] = $index;
+      $search['config'] = @unserialize($search['config']);
+      return (object)$search;
     }
-    return false;
+    return null;
   }
 }

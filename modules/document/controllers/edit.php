@@ -34,14 +34,12 @@ class Controller extends \Kotchasan\Controller
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     if ($rid > 0) {
       $index = \Document\Module\Model::getCommentById($rid, $module);
+      if ($index) {
+        // ฟอร์มแก้ไขความคิดเห็น
+        return createClass('Document\Replyedit\View')->index($request, $index);
+      }
     }
-    if (empty($index)) {
-      // 404
-      $page = createClass('Index\PageNotFound\Controller')->init($request, 'document');
-    } elseif ($rid > 0) {
-      // ฟอร์มแก้ไขความคิดเห็น
-      $page = createClass('Document\Replyedit\View')->index($request, $index);
-    }
-    return $page;
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('document');
   }
 }

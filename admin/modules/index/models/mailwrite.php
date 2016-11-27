@@ -62,7 +62,6 @@ class Model extends \Kotchasan\Model
       if ($login['email'] == 'demo' || !empty($login['fb'])) {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
-        $input = false;
         $model = new static;
         $table_email = $model->getFullTableName('emailtemplate');
         // รับค่าจากการ POST
@@ -95,33 +94,26 @@ class Model extends \Kotchasan\Model
           } else {
             // มีอีเมล์ในภาษาที่เลือกอยู่แล้ว
             $ret['ret_language'] = Language::get('This entry is in selected language');
-            $input = !$input ? 'language' : $input;
           }
         }
         // from_email
         if (!empty($save['from_email']) && !Validator::email($save['from_email'])) {
-          $input = !$input ? 'from_email' : $input;
-        } else {
-          $ret['ret_from_email'] = '';
+          $ret['ret_from_email'] = 'this';
         }
         // copy_to
         if (!empty($save['copy_to'])) {
           foreach (explode(',', $save['copy_to']) as $item) {
             if (!Validator::email($item)) {
-              if (!$input) {
-                $input = 'copy_to';
+              if (empty($ret)) {
+                $ret['ret_copy_to'] = 'this';
                 break;
               }
             }
           }
-        } else {
-          $ret['ret_copy_to'] = '';
         }
         // subject
         if (empty($save['subject'])) {
-          $input = !$input ? 'subject' : $input;
-        } else {
-          $ret['ret_subject'] = '';
+          $ret['ret_subject'] = 'this';
         }
         // detail
         $patt = array(
@@ -131,7 +123,7 @@ class Model extends \Kotchasan\Model
         );
         $save['detail'] = trim(preg_replace(array_keys($patt), array_values($patt), $save['detail']));
         $save['last_update'] = time();
-        if (!$input) {
+        if (empty($ret)) {
           if (empty($id)) {
             // ใหม่
             $model->db()->insert($table_email, $save);
@@ -142,9 +134,6 @@ class Model extends \Kotchasan\Model
           // ส่งค่ากลับ
           $ret['alert'] = Language::get('Saved successfully');
           $ret['location'] = self::$request->getUri()->postBack('index.php', array('module' => 'mailtemplate', 'id' => 0));
-        } else {
-          // คืนค่า input ตัวแรกที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

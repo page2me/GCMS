@@ -9,7 +9,7 @@
 namespace Index\Comment;
 
 /**
- * ตาราง comment
+ *  Model สำหรับแสดงรายการความคิดเห็น
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -17,6 +17,26 @@ namespace Index\Comment;
  */
 class Model extends \Kotchasan\Model
 {
+
+  /**
+   * รายการแสดงความคิดเห็น
+   *
+   * @param object $story
+   * @param string $table ชื่อตารางที่ต้องการอ่านความคิดเห็น ถ้าไม่ระบุอ่านจากตาราง comment
+   * @return array
+   */
+  public static function get($story, $table = 'comment')
+  {
+    $model = new static;
+    return $model->db()->createQuery()
+        ->select('C.*', 'U.status', "(CASE WHEN ISNULL(U.`id`) THEN C.`email` WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) AS `name`")
+        ->from($table.' C')
+        ->join('user U', 'LEFT', array('U.id', 'C.member_id'))
+        ->where(array(array('C.index_id', (int)$story->id), array('C.module_id', (int)$story->module_id)))
+        ->order('C.id')
+        ->cacheOn()
+        ->execute();
+  }
 
   /**
    * อัปเดทจำนวนความคิดเห็น

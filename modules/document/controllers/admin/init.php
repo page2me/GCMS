@@ -8,7 +8,7 @@
 
 namespace Document\Admin\Init;
 
-use \Index\Index\Model as Menu;
+use \Gcms\Gcms;
 
 /**
  * จัดการการตั้งค่าเริ่มต้น
@@ -21,23 +21,25 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
+   * ฟังก์ชั่นเรียกโดย admin
+   *
+   * @param array $modules
+   */
+  public static function init($modules)
+  {
+    if (!empty($modules)) {
+      // เมนู
+      foreach ($modules AS $item) {
+        Gcms::$menu->menus['modules'][$item->module]['write'] = '<a href="index.php?module=document-write&amp;mid='.$item->id.'"><span>{LNG_Add New} {LNG_Content}</span></a>';
+      }
+    }
+  }
+
+  /**
    * คำอธิบายเกี่ยวกับโมดูล ถ้าไม่มีฟังก์ชั่นนี้ โมดูลนี้จะไม่สามารถใช้ซ้ำได้
    */
   public static function description()
   {
     return '{LNG_Modules for writing blogs, news or article}';
-  }
-
-  /**
-   * ฟังก์ชั่นเรียกโดย admin
-   */
-  public static function init($items)
-  {
-    if (!empty($items)) {
-      // เมนู
-      foreach ($items AS $item) {
-        Menu::$menus['modules'][$item->module]['write'] = '<a href="index.php?module=document-write&amp;mid='.$item->id.'"><span>{LNG_Add New} {LNG_Content}</span></a>';
-      }
-    }
   }
 }

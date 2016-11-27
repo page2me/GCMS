@@ -8,8 +8,8 @@
 
 namespace Board\Index;
 
-use \Gcms\Gcms;
 use \Kotchasan\Http\Request;
+use \Gcms\Gcms;
 
 /**
  * Controller หลัก สำหรับแสดง frontend ของ GCMS
@@ -30,31 +30,29 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $index)
   {
-    // รายการที่เลือก (wbid หรือ id)
-    $id = $request->get('wbid', $request->get('id')->toInt())->toInt();
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
-    $index = \Board\Module\Model::get($request, $index);
-    if (empty($index)) {
-      // 404
-      $page = createClass('Index\PageNotFound\Controller')->init($request, 'board');
-    } elseif (!empty($id)) {
-      // หน้าแสดงกระทู้
-      $index->id = $id;
-      $page = createClass('Board\View\View')->index($request, $index);
-    } elseif (!empty($index->category_id) || empty($index->categories) || empty($index->category_display)) {
-      // เลือกหมวดมา หรือไม่มีหมวด หรือปิดการแสดงผลหมวดหมู่ แสดงรายการกระทู้
-      $page = createClass('Board\Stories\View')->index($request, $index);
-    } else {
-      // หน้าแสดงรายการหมวดหมู่
-      $page = createClass('Board\Categories\View')->index($request, $index);
+    $module = \Board\Module\Model::get($request, $index);
+    if ($module) {
+      if ($request->get('wbid')->exists() || $request->get('id')->exists()) {
+        // หน้าแสดงกระทู้
+        $page = createClass('Board\View\View')->index($request, $module);
+      } elseif (!empty($module->category_id) || empty($module->categories) || empty($module->category_display)) {
+        // เลือกหมวดมา หรือไม่มีหมวด หรือปิดการแสดงผลหมวดหมู่ แสดงรายการกระทู้
+        $page = createClass('Board\Stories\View')->index($request, $module);
+      } else {
+        // หน้าแสดงรายการหมวดหมู่
+        $page = createClass('Board\Categories\View')->index($request, $module);
+      }
     }
-    // menu
-    $page->menu = empty($index->alias) ? $index->module : $index->alias;
+    if (empty($page)) {
+      // ไม่พบหน้าที่เรียก (board)
+      $page = createClass('Index\PageNotFound\Controller')->init('board');
+    }
     return $page;
   }
 
   /**
-   * ฟังก์ชั่นสร้าง URL ของบทความ
+   * ฟังก์ชั่นสร้าง URL
    *
    * @param string $module
    * @param int $id

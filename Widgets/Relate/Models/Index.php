@@ -38,19 +38,14 @@ class Index extends \Kotchasan\Model
       $index = $model->db()->createQuery()
         ->from('index Q')
         ->join('index_detail D', 'INNER', array(array('D.id', 'Q.id'), array('D.module_id', 'Q.module_id')))
-        ->join('modules M', 'INNER', array('M.id', 'D.module_id'))
         ->where(array(
           array('Q.id', $id),
-          array('M.owner', 'document'),
           array('Q.index', '0')
         ))
         ->toArray()
         ->cacheOn()
-        ->first('M.config', 'M.module', 'D.relate', 'Q.id', 'Q.module_id');
+        ->first('D.relate', 'Q.id', 'Q.module_id');
       if ($index && $index['relate'] !== '') {
-        // config
-        $index = ArrayTool::unserialize($index['config'], $index);
-        unset($index['config']);
         // relate
         $qs = array();
         foreach (explode(',', $index['relate']) as $q) {

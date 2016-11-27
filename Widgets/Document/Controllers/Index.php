@@ -33,9 +33,7 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-    if (preg_match('/^[a-z0-9]{3,}$/', $query_string['module']) && isset(Gcms::$install_modules[$query_string['module']])) {
-      // module
-      $index = Gcms::$install_modules[$query_string['module']];
+    if ($index = Gcms::$module->findByModule($query_string['module'])) {
       // ค่าที่ส่งมา
       $cols = isset($query_string['cols']) ? (int)$query_string['cols'] : 1;
       if (isset($query_string['count'])) {
@@ -52,7 +50,7 @@ class Index extends \Kotchasan\Controller
         $sort = isset($query_string['sort']) ? (int)$query_string['sort'] : $index->news_sort;
         $show = isset($query_string['show']) && preg_match('/^[a-z0-9]+$/', $query_string['show']) ? $query_string['show'] : '';
         $style = isset($query_string['style']) && in_array($query_string['style'], array('list', 'icon', 'thumb')) ? $query_string['style'] : 'list';
-        // template
+        // /document/widget.html
         $template = Template::create('document', $index->module, 'widget');
         $template->add(array(
           '/{DETAIL}/' => '<script>getWidgetNews("{ID}", "Document", '.$interval.')</script>',
@@ -79,15 +77,15 @@ class Index extends \Kotchasan\Controller
       $rows = (int)$match[4];
       $cols = (int)$match[5];
       // ตรวจสอบโมดูล
-      $index = \Index\Module\Model::get('document', null, $match[2]);
+      $index = \Index\Module\Model::getModuleWithConfig('document', '', $match[2]);
       if ($index) {
-        // รายการ
+        // /document/widgetitem.html
         $listitem = Grid::create('document', $index->module, 'widgetitem');
         $listitem->setCols($cols);
         // เครื่องหมาย new
         $valid_date = time() - (int)$index->new_date;
         // query ข้อมูล
-        foreach (\Widgets\Document\Models\Index::get($index->module_id, $match[3], $match[7], $match[6], $rows * $cols) as $item) {
+        foreach (\Widgets\Document\Models\Index::get($match[2], $match[3], $match[7], $match[6], $rows * $cols) as $item) {
           $listitem->add(View::renderItem($index, $item, $valid_date, $cols));
         }
         echo createClass('Gcms\View')->renderHTML($listitem->render());

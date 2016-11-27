@@ -26,17 +26,12 @@ class Model extends \Kotchasan\Model
    */
   public static function getStories($ids)
   {
-    if (defined('MAIN_INIT')) {
-      $model = new static;
-      return $model->db()->createQuery()
-          ->select('id', 'module_id', 'last_update', 'comment_date')
-          ->from('board_q')
-          ->where(array('module_id', $ids))
-          ->cacheOn()
-          ->execute();
-    } else {
-      // เรียก method โดยตรง
-      new \Kotchasan\Http\NotFound('Do not call method directly');
-    }
+    $model = new static;
+    return $model->db()->createQuery()
+        ->select('id', 'module_id', 'last_update', 'comment_date')
+        ->from('board_q')
+        ->where(array('module_id', $ids))
+        ->cacheOn()
+        ->execute();
   }
 }

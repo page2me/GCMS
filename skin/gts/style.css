@@ -100,7 +100,8 @@ a:hover {
 #register_frm dl.info dt {
   padding-bottom: 5px;
 }
-.member_section, .tab > ul > li.select > a {
+.member_section,
+.tab > ul > li.select > a {
   background-color: #FFF;
 }
 .reaction {
@@ -115,7 +116,8 @@ a:hover {
 #board-view div.body {
   margin-bottom: 0;
 }
-fieldset > legend > span, .bdr_content header > h3.icon-tags {
+fieldset > legend > span,
+.bdr_content header > h3.icon-tags {
   font-size: 1.4em;
   padding-top: 10px;
   overflow: hidden;
@@ -159,31 +161,38 @@ nav.breadcrumbs li:before {
   content: "";
   display: inline-block;
 }
-.widget_bg_color, .homepage .widget, .bdr_content {
-  background-color: inherit;
-}
 .widget p.right {
   margin: 0;
 }
+.subcontent .widget_bdr,
 .bdr_content {
+  background-color: #FFF;
+}
+.bdr_content {
+  padding: 0 1% 1%;
+}
+.subcontent .widget_bdr,
+.subcontent .bdr_content {
   border-width: 1px;
   border-style: solid;
   border-color: #DDD;
   box-shadow: 0 0 2px rgba(0,0,0,0.1);
-  padding: 0 1% 1%;
-}
-.homepage .bdr_content {
   margin-bottom: 1%;
 }
-.homepage .bdr_content {
-  padding: 1%;
+.mainform.bdr_content,
+#comment-list .r,
+.homepage .widget_bdr {
+  padding: 0;
+}
+.homepage .widget_bdr .document-list {
+  padding: 0 1%;
 }
 .bdr_content > header {
   padding: 2.3em 0 0;
 }
-.widget > header > h2,
-.member_section > header > h2,
-.bdr_content header h2 {
+.widget h2,
+.member_section h2,
+.bdr_content h2 {
   line-height: 2;
 }
 .bdr_content > header, header.header {
@@ -246,8 +255,4 @@ nav.breadcrumbs li:before {
 .mainform p {
   padding-left: 0;
   padding-right: 0;
-}
-.subcontent .widget_bdr,
-.bdr_content {
-  background-color: #FFF;
 }

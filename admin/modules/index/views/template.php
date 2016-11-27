@@ -49,7 +49,6 @@ class View extends \Gcms\Adminview
     // template ปัจจุบัน
     $info = $this->parseTheme("$dir/".$config->skin."/style.css");
     if (!empty($info)) {
-
       $article = $div->add('article', array(
         'class' => 'current clear'
       ));

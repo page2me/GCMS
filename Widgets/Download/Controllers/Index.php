@@ -8,6 +8,8 @@
 
 namespace Widgets\Download\Controllers;
 
+use \Gcms\Gcms;
+
 /**
  * Controller หลัก สำหรับแสดงผล Widget
  *
@@ -32,9 +34,7 @@ class Index extends \Kotchasan\Controller
       if ($file) {
         return \Widgets\Download\Views\Download::render($file);
       }
-    } elseif (preg_match('/^[a-z0-9]{3,}$/', $query_string['module']) && isset(\Gcms\Gcms::$install_modules[$query_string['module']])) {
-      // module
-      $index = \Gcms\Gcms::$install_modules[$query_string['module']];
+    } elseif ($index = Gcms::$module->findByModule($query_string['module'])) {
       // ค่าที่ส่งมา
       $query_string['cat'] = isset($query_string['cat']) ? $query_string['cat'] : 0;
       $query_string['count'] = isset($query_string['count']) ? (int)$query_string['count'] : 10;

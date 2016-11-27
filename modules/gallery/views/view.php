@@ -42,11 +42,11 @@ class View extends \Gcms\View
       $login = Login::isMember();
       $login_status = $login ? $login['status'] : -1;
       // breadcrumb ของโมดูล
-      $menu = Gcms::$menu->moduleMenu($index->module);
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->title);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic, $index->description);
       }
       // หน้านี้
       $index->canonical = Controller::url($index->module, $index->id);
@@ -54,8 +54,9 @@ class View extends \Gcms\View
       // current URL
       $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
       if (in_array($login_status, $index->can_view)) {
-        // รายการ
-        $listitem = Grid::create($index->owner, $index->module, 'listitem');
+        // /gallery/listitem.html
+        $listitem = Grid::create('gallery', $index->module, 'listitem');
+        // ลิสต์รายการ
         foreach ($index->items as $item) {
           // image
           if (is_file(ROOT_PATH.DATA_FOLDER.'gallery/'.$index->id.'/'.$item->image)) {
@@ -71,8 +72,8 @@ class View extends \Gcms\View
             '/{URL}/' => $img
           ));
         }
-        // template
-        $template = Template::create($index->owner, $index->module, 'list');
+        // /gallery/list.html
+        $template = Template::create('gallery', $index->module, 'list');
         $template->add(array(
           '/{LIST}/' => $listitem->render(),
           '/{TOPIC}/' => $index->topic,
@@ -93,7 +94,7 @@ class View extends \Gcms\View
           '/{TOPIC}/' => $index->topic,
           '/{DETAIL}/' => '<div class=error>{LNG_Members Only}</div>'
         );
-        $index->detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
+        $index->detail = Template::create('gallery', $index->module, 'error')->add($replace)->render();
       }
       return $index;
     }

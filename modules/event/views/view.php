@@ -45,11 +45,11 @@ class View extends \Gcms\View
           'TO_TIME'
       ));
       // breadcrumb ของโมดูล
-      $menu = Gcms::$menu->moduleMenu($index->module);
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic, $index->description);
       }
       // วันที่
       preg_match('/^([0-9]+)\-([0-9]+)\-([0-9]+)\s([0-9]{2,2}:[0-9]{2,2}):([0-9]{2,2})$/', $index->begin_date, $match);
@@ -60,8 +60,8 @@ class View extends \Gcms\View
       // breadcrumb ของหน้า
       $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'id='.$index->id);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
-      // template หน้าแสดงรายละเอียด (view.html)
-      $template = Template::create($index->owner, $index->module, 'view');
+      // /event/view.html
+      $template = Template::create('event', $index->module, 'view');
       $template->add(array(
         '/{TOPIC}/' => $index->topic,
         '/{DETAIL}/' => Text::highlighter($index->detail),

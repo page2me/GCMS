@@ -8,7 +8,6 @@
 
 namespace Index\PageNotFound;
 
-use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
 use \Kotchasan\Template;
 
@@ -25,13 +24,11 @@ class Controller extends \Kotchasan\Controller
   /**
    * แสดงข้อผิดพลาด (เช่น 404 page not found)
    *
-   *
-   * @param Request $request
    * @param string $module ชื่อโมดูลที่เรียก
    * @param string $message ข้อความที่จะแสดง ถ้าไม่กำหนดจะใช้ข้อความของระบบ
    * @return object
    */
-  public function init(Request $request, $module, $message = '')
+  public function init($module, $message = '')
   {
     $template = Template::create($module, '', '404');
     $message = Language::get($message == '' ? 'Sorry, cannot find a page called Please check the URL or try the call again.' : $message);
@@ -45,9 +42,7 @@ class Controller extends \Kotchasan\Controller
         'detail' => $template->render(),
         'description' => $message,
         'keywords' => $message,
-        'owner' => 'index',
-        'module' => $module,
-        'menu' => $module
+        'module' => $module
     );
   }
 }

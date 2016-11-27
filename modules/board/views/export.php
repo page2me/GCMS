@@ -33,15 +33,13 @@ class View extends \Gcms\View
    */
   public function printer(Request $request, $index)
   {
-    // ค่าที่ส่งมา
-    $id = $request->get('id')->toInt();
     // อ่านรายการที่เลือก
-    $story = \Board\View\Model::get((int)$index->module_id, $id);
+    $story = \Board\View\Model::get($request->get('id')->toInt());
     if ($story) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // แสดงความคิดเห็นได้
-      $canReply = !empty($story->can_reply);
+      $canReply = !empty($index->can_reply);
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
       $canView = Gcms::canConfig($login, $index, 'can_view');
       // dir ของรูปภาพอัปโหลด
@@ -53,9 +51,10 @@ class View extends \Gcms\View
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
+          // /board/printcommentitem.html
+          $listitem = Grid::create('board', $index->module, 'printcommentitem');
           // รายการแสดงความคิดเห็น
-          $listitem = Grid::create($index->owner, $index->module, 'printcommentitem');
-          foreach (\Board\Comment\Model::get($story) as $no => $item) {
+          foreach (\Index\Comment\Model::get($story, 'board_r') as $no => $item) {
             // รูปภาพของความคิดเห็น
             $picture = $item->picture != '' && is_file($imagedir.$item->picture) ? '<figure><img src="'.$imageurl.$item->picture.'" alt="'.$story->topic.'"></figure>' : '';
             $listitem->add(array(
@@ -79,7 +78,8 @@ class View extends \Gcms\View
           '/{URL}/' => \Board\Index\Controller::url($index->module, $story->id),
           '/{DISPLAYNAME}/' => $story->name
         );
-        return Template::create($index->owner, $index->module, 'print')->add($replace)->render();
+        // /board/print.html
+        return Template::create('board', $index->module, 'print')->add($replace)->render();
       }
     }
     return false;

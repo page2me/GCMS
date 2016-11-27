@@ -8,16 +8,14 @@
 
 namespace Index\Menu;
 
-use \Index\Index\Model as Menu;
-
 /**
- * เมนูหลัก
+ * แสดงผลเมนูหลัก
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class View extends \Gcms\Adminview
+class View
 {
 
   /**
@@ -25,15 +23,16 @@ class View extends \Gcms\Adminview
    *
    * @return string
    */
-  public static function render()
+  public static function render($menus)
   {
+    // แสดงผลเมนู
     $mymenu = '';
-    foreach (Menu::$menus['sections'] AS $section => $name) {
+    foreach ($menus['sections'] AS $section => $name) {
       $link = preg_match('/<a.*>.*<\/a>/', $name[1]) ? $name[1] : '<a accesskey='.$name[0].' class=menu-arrow><span>'.$name[1].'</span></a>';
       $mymenu .= '<li class="'.$section.'">'.$link;
-      if (isset(Menu::$menus[$section]) && sizeof(Menu::$menus[$section]) > 0) {
+      if (isset($menus[$section]) && sizeof($menus[$section]) > 0) {
         $mymenu .= '<ul>';
-        foreach (Menu::$menus[$section] AS $key => $value) {
+        foreach ($menus[$section] AS $key => $value) {
           if (is_array($value)) {
             $mymenu .= '<li class="'.$key.'"><a class=menu-arrow tabindex=0><span>{LNG_'.ucfirst($key).'}</span></a><ul>';
             foreach ($value AS $key2 => $value2) {

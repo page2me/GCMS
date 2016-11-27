@@ -8,8 +8,8 @@
 
 namespace Document\Index;
 
-use \Gcms\Gcms;
 use \Kotchasan\Http\Request;
+use \Gcms\Gcms;
 
 /**
  * Controller หลัก สำหรับแสดง frontend ของ GCMS
@@ -30,36 +30,29 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $index)
   {
-    // รายการที่เลือก
-    $id = $request->request('id')->toInt();
-    $document = $request->request('alias')->text();
-    // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
-    $index = \Document\Module\Model::get($request, $index);
-    if (empty($index)) {
-      // 404
-      $page = createClass('Index\PageNotFound\Controller')->init($request, 'document');
-    } elseif (!empty($document) || !empty($id)) {
+    if ($request->get('alias')->exists() || $request->get('id')->exists()) {
       // หน้าแสดงบทความ
-      if (MAIN_INIT === 'amphtml') {
-        $page = createClass('Document\Amp\View')->index($request, $index);
-      } else {
-        $page = createClass('Document\View\View')->index($request, $index);
-      }
-    } elseif (!empty($index->category_id) || empty($index->categories) || empty($index->category_display)) {
-      // เลือกหมวดมา หรือไม่มีหมวด หรือปิดการแสดงผลหมวดหมู่ แสดงรายการบทความ
-      $stories = \Document\Stories\Model::stories($request, $index);
-      if (empty($stories)) {
-        // 404
-        $page = createClass('Index\PageNotFound\Controller')->init($request, 'document');
-      } else {
-        $page = createClass('Document\Stories\View')->index($request, $stories);
-      }
+      $page = createClass('Document\View\View')->index($request, $index);
     } else {
-      // หน้าแสดงรายการหมวดหมู่
-      $page = createClass('Document\Categories\View')->index($request, $index);
+      // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
+      $module = \Document\Module\Model::get($request, $index);
+      if ($module) {
+        if (!empty($module->category_id) || empty($module->categories) || empty($module->category_display)) {
+          // เลือกหมวดมา หรือไม่มีหมวด หรือปิดการแสดงผลหมวดหมู่ แสดงรายการบทความ
+          $stories = \Document\Stories\Model::stories($request, $module);
+          if (!empty($stories)) {
+            $page = createClass('Document\Stories\View')->index($request, $stories);
+          }
+        } else {
+          // หน้าแสดงรายการหมวดหมู่
+          $page = createClass('Document\Categories\View')->index($request, $module);
+        }
+      }
     }
-    // menu
-    $page->menu = empty($index->alias) ? $index->module : $index->alias;
+    if (empty($page)) {
+      // ไม่พบหน้าที่เรียก (document)
+      $page = createClass('Index\PageNotFound\Controller')->init('document');
+    }
     return $page;
   }
 

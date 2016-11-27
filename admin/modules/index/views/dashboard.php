@@ -12,7 +12,7 @@ use \Kotchasan\Date;
 use \Gcms\Gcms;
 
 /**
- * Database
+ * Dashboard
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

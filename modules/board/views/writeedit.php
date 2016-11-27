@@ -52,64 +52,47 @@ class View extends \Gcms\View
     }
     // antispam
     $antispam = new Antispam();
-    // วันที่ของบอร์ด
-    preg_match('/([0-9]{4,4}\-[0-9]{2,2}\-[0-9]{2,2})\s([0-9]+):([0-9]+)/', date('Y-m-d H:i', $index->create_date), $match);
-    // hour
-    $hour = array();
-    for ($i = 0; $i < 24; $i++) {
-      $d = sprintf('%02d', $i);
-      $sel = $d == $match[2] ? ' selected' : '';
-      $hour[] = '<option value='.$d.$sel.'>'.$d.'</option>';
-    }
-    // minute
-    $minute = array();
-    for ($i = 0; $i < 60; $i++) {
-      $d = sprintf('%02d', $i);
-      $sel = $d == $match[3] ? ' selected' : '';
-      $minute[] = '<option value='.$d.$sel.'>'.$d.'</option>';
-    }
-    // template
-    $template = Template::create($index->owner, $index->module, 'writeedit');
+    // /board/writeedit.html
+    $template = Template::create('board', $index->module->module, 'writeedit');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
       '/{CATEGORIES}/' => implode('', $category_options),
       '/<MODERATOR>(.*)<\/MODERATOR>/s' => Gcms::canConfig($login, $index, 'moderator') ? '$1' : '',
-      '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->img_upload_type) ? '' : '$1',
-      '/{DATE}/' => $match[1],
-      '/{HOUR}/' => implode('', $hour),
-      '/{MINUTE}/' => implode('', $minute),
+      '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->module->img_upload_type) ? '' : '$1',
+      '/{DATE}/' => date('Y-m-d', $index->create_date),
+      '/{TIME}/' => date('H:i:s', $index->create_date),
       '/{MODULEID}/' => $index->module_id,
       '/{ANTISPAM}/' => $antispam->getId(),
       '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
       '/{QID}/' => $index->id
     ));
     Gcms::$view->setContents(array(
-      '/:size/' => $index->img_upload_size,
-      '/:type/' => implode(', ', $index->img_upload_type)
+      '/:size/' => $index->module->img_upload_size,
+      '/:type/' => implode(', ', $index->module->img_upload_type)
       ), false);
     // breadcrumb ของโมดูล
-    if (!Gcms::isHome($index->module)) {
-      $menu = Gcms::$menu->moduleMenu($index->module);
+    if (!Gcms::$menu->isHome($index->module->index_id)) {
+      $menu = Gcms::$menu->findTopLevelMenu($index->module->index_id);
       if ($menu) {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->title);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module), $index->module->topic, $index->module->description);
       }
     }
     // breadcrumb ของหมวดหมู่
     if (!empty($index->category)) {
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->category);
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module, '', $index->category_id), $index->category);
     }
     // breadcrumb ของกระทู้
-    Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'wbid='.$index->id), $index->topic);
+    Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module, '', 0, 0, 'wbid='.$index->id), $index->topic);
     // breadcrumb ของหน้า
-    $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;qid='.$index->id;
-    $topic = Language::get('Edit');
+    $canonical = WEB_URL.'index.php?module='.$index->module->module.'-edit&amp;qid='.$index->id;
+    $topic = Language::get('Edit').' '.Language::get('Post');
     Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
     return (object)array(
-        'module' => $index->module,
+        'module' => $index->module->module,
         'canonical' => $canonical,
         'topic' => $topic.' - '.$index->topic,
         'detail' => $template->render(),

@@ -30,6 +30,7 @@ class Adminview extends \Kotchasan\View
     parent::setContents(array(
       /* ภาษา */
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
+      /* ภาษา ที่ใช้งานอยู่ */
       '/{LANGUAGE}/' => \Kotchasan\Language::name()
     ));
     return parent::renderHTML($template);

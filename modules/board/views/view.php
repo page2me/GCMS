@@ -37,19 +37,17 @@ class View extends \Gcms\View
   public function index(Request $request, $index)
   {
     // ค่าที่ส่งมา
+    $id = $request->get('wbid', $request->get('id')->toInt())->toInt();
     $search = preg_replace('/[+\s]+/u', ' ', $request->get('q')->text());
     // อ่านรายการที่เลือก
-    $story = \Board\View\Model::get((int)$index->module_id, $index->id);
-    if (empty($story)) {
-      // 404
-      return createClass('Index\PageNotFound\Controller')->init($request, 'board');
-    } else {
+    $story = \Board\View\Model::get($id);
+    if ($story) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // สมาชิก true
       $isMember = $login['status'] > -1;
       // แสดงความคิดเห็นได้
-      $canReply = !empty($story->can_reply);
+      $canReply = !empty($index->can_reply);
       // ผู้ดูแล
       $moderator = Gcms::canConfig($login, $index, 'moderator');
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
@@ -67,9 +65,10 @@ class View extends \Gcms\View
         if ($canReply) {
           // antispam
           $antispam = new Antispam();
+          // /board/commentitem.html
+          $listitem = Grid::create('board', $index->module, 'commentitem');
           // รายการแสดงความคิดเห็น
-          $listitem = Grid::create($index->owner, $index->module, 'commentitem');
-          foreach (\Board\Comment\Model::get($story) as $no => $item) {
+          foreach (\Index\Comment\Model::get($story, 'board_r') as $no => $item) {
             // moderator และ เจ้าของ สามารถแก้ไขความคิดเห็นได้
             $canEdit = $moderator || ($isMember && $login['id'] == $item->member_id);
             // รูปภาพของความคิดเห็น
@@ -134,7 +133,8 @@ class View extends \Gcms\View
           '/{PIN_TITLE}/' => '{LNG_click to} '.($story->pin == 1 ? '{LNG_Unpin}' : '{LNG_Pin}'),
           '/{LOCK_TITLE}/' => '{LNG_click to} '.($story->locked == 1 ? '{LNG_Unlock}' : '{LNG_Lock}')
         );
-        $detail = Template::create($index->owner, $index->module, 'view')->add($replace)->render();
+        // /board/view.html
+        $detail = Template::create('board', $index->module, 'view')->add($replace)->render();
       } else {
         // not login
         $replace = array(
@@ -144,12 +144,12 @@ class View extends \Gcms\View
         $detail = Template::create($index->owner, $index->module, 'error')->add($replace)->render();
       }
       // breadcrumb ของโมดูล
-      if (!Gcms::isHome($index->module)) {
-        $menu = Gcms::$menu->moduleMenu($index->module);
+      if (!Gcms::$menu->isHome($index->index_id)) {
+        $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
         if ($menu) {
           Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
         } else {
-          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic);
+          Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic, $index->description);
         }
       }
       // breadcrumb ของหมวดหมู่
@@ -169,5 +169,7 @@ class View extends \Gcms\View
           'detail' => $detail
       );
     }
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('board');
   }
 }

@@ -33,8 +33,9 @@ class View extends \Gcms\View
   {
     // อ่านรายการหมวดหมู่ทั้งหมด
     $categories = \Index\Category\Model::all((int)$index->module_id);
+    // /board/categoryitem.html
+    $listitem = Template::create('board', $index->module, 'categoryitem');
     // รายการ
-    $listitem = Template::create($index->owner, $index->module, 'categoryitem');
     foreach ($categories as $item) {
       if (!empty($item->icon) && is_file(ROOT_PATH.DATA_FOLDER.'board/'.$item->icon)) {
         $icon = WEB_URL.DATA_FOLDER.'board/'.$item->icon;
@@ -50,8 +51,8 @@ class View extends \Gcms\View
         '/{COMMENTS}/' => number_format($item->c2)
       ));
     }
-    // template
-    $template = Template::create($index->owner, $index->module, 'category');
+    // /board/category.html
+    $template = Template::create('board', $index->module, 'category');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
@@ -59,11 +60,11 @@ class View extends \Gcms\View
       '/{MODULE}/' => $index->module
     ));
     // breadcrumb ของโมดูล
-    if (Gcms::isHome($index->module)) {
+    if (Gcms::$menu->isHome($index->index_id)) {
       $index->canonical = WEB_URL.'index.php';
     } else {
       $index->canonical = Gcms::createUrl($index->module);
-      $menu = Gcms::$menu->moduleMenu($index->module);
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
       }

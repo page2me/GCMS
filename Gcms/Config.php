@@ -92,7 +92,7 @@ class Config extends \Kotchasan\Config
    *
    * @var int
    */
-  public $module_url = 1;
+  public $module_url = 0;
   /**
    * กำหนดวิธีการหากเข้าระบบเรียบร้อย
    * 0 (ค่าเริ่มต้น) Ajax Login
@@ -130,7 +130,7 @@ class Config extends \Kotchasan\Config
    *
    * @var int
    */
-  public $use_ajax = 1;
+  public $use_ajax = 0;
   /**
    * เวลาสำหรับการตรวจสอบคนออนไลน์ (วินาที)
    * 0 หมายถึงไม่มีการตรวจสอบคนออนไลน์

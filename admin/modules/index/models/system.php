@@ -53,15 +53,11 @@ class Model extends \Kotchasan\KBase
       } else {
         // โหลด config
         $config = Config::load(ROOT_PATH.'settings/config.php');
-        // ตรวจสอบค่าที่ส่งมา
-        $input = false;
         foreach (array('web_title', 'web_description') as $key) {
           $value = self::$request->post($key)->quote();
           if (empty($value)) {
             $ret['ret_'.$key] = Language::get('Please fill in');
-            $input = !$input ? $key : $input;
           } else {
-            $ret['ret_'.$key] = '';
             $config->$key = $value;
           }
         }
@@ -69,9 +65,7 @@ class Model extends \Kotchasan\KBase
           $value = self::$request->post($key)->text();
           if (empty($value)) {
             $ret['ret_'.$key] = Language::get('Please select at least one item');
-            $input = !$input ? $key : $input;
           } else {
-            $ret['ret_'.$key] = '';
             $config->$key = $value;
           }
         }
@@ -88,7 +82,7 @@ class Model extends \Kotchasan\KBase
         $config->member_phone = self::$request->post('member_phone')->toInt();
         $config->member_idcard = self::$request->post('member_idcard')->toInt();
         $config->use_ajax = self::$request->post('use_ajax')->toBoolean();
-        if (!$input) {
+        if (empty($ret)) {
           // save config
           if (Config::save($config, ROOT_PATH.'settings/config.php')) {
             $ret['alert'] = Language::get('Saved successfully');
@@ -96,9 +90,6 @@ class Model extends \Kotchasan\KBase
           } else {
             $ret['alert'] = sprintf(Language::get('File %s cannot be created or is read-only.'), 'settings/config.php');
           }
-        } else {
-          // คืนค่า input ที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

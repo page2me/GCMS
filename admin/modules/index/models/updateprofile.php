@@ -8,10 +8,10 @@
 
 namespace Index\Updateprofile;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\File;
-use \Kotchasan\Http\Request;
 
 /**
  * บันทึกข้อมูลสมาชิก
@@ -84,21 +84,17 @@ class Model extends \Kotchasan\Model
             $save['email'] = $user->email;
           }
           // ตรวจสอบค่าที่ส่งมา
-          $input = false;
           $requirePassword = false;
           // อีเมล์
           if (empty($save['email'])) {
             $ret['ret_register_email'] = 'this';
-            $input = !$input ? 'register_email' : $input;
           } else {
             // ตรวจสอบอีเมล์ซ้ำ
             $search = $db->first($user_table, array('email', $save['email']));
             if ($search !== false && $user->id != $search->id) {
               $ret['ret_register_email'] = Language::replace('This :name already exist', array(':name' => Language::get('Email')));
-              $input = !$input ? 'register_email' : $input;
             } else {
               $requirePassword = $user->email !== $save['email'];
-              $ret['ret_register_email'] = '';
             }
           }
           // ชื่อเรียก
@@ -107,11 +103,8 @@ class Model extends \Kotchasan\Model
             $search = $db->first($user_table, array('displayname', $save['displayname']));
             if ($search !== false && $user->id != $search->id) {
               $ret['ret_register_displayname'] = Language::replace('This :name already exist', array(':name' => Language::get('Name')));
-              $input = !$input ? 'register_displayname' : $input;
-            } else {
-              $ret['ret_register_displayname'] = '';
             }
-          } elseif ($id == 0) {
+          } elseif ($id == 0 && !empty($save['email'])) {
             // ใหม่ ใช้ชื่อจาก email
             list($displayname, $domain) = explode('@', ucwords($save['email']));
             $save['fname'] = $displayname;
@@ -130,15 +123,11 @@ class Model extends \Kotchasan\Model
           if (!empty($save['phone1'])) {
             if (!preg_match('/[0-9]{9,10}/', $save['phone1'])) {
               $ret['ret_register_phone1'] = Language::replace('Invalid :name', array(':name' => Language::get('phone number')));
-              $input = !$input ? 'register_phone1' : $input;
             } else {
               // ตรวจสอบโทรศัพท์
               $search = $db->first($user_table, array('phone1', $save['phone1']));
               if ($search !== false && $user->id != $search->id) {
                 $ret['ret_register_phone1'] = Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
-                $input = !$input ? 'register_phone1' : $input;
-              } else {
-                $ret['ret_register_phone1'] = '';
               }
             }
           }
@@ -149,22 +138,17 @@ class Model extends \Kotchasan\Model
             if (mb_strlen($password) < 4) {
               // รหัสผ่านต้องไม่น้อยกว่า 4 ตัวอักษร
               $ret['ret_register_password'] = 'this';
-              $input = !$input ? 'register_password' : $input;
             } elseif ($repassword != $password) {
               // ถ้าต้องการเปลี่ยนรหัสผ่าน กรุณากรอกรหัสผ่านสองช่องให้ตรงกัน
               $ret['ret_register_repassword'] = 'this';
-              $input = !$input ? 'register_repassword' : $input;
             } else {
-              $ret['ret_register_password'] = '';
-              $ret['ret_register_repassword'] = '';
               $save['password'] = md5($password.$save['email']);
               $requirePassword = false;
             }
           }
           // มีการเปลี่ยน email ต้องการรหัสผ่าน
-          if (!$input && $requirePassword) {
+          if (empty($ret) && $requirePassword) {
             $ret['ret_register_password'] = 'this';
-            $input = !$input ? 'register_password' : $input;
           }
           // อัปโหลดไฟล์
           foreach ($request->getUploadedFiles() as $item => $file) {
@@ -172,10 +156,9 @@ class Model extends \Kotchasan\Model
               if (!File::makeDirectory(ROOT_PATH.self::$cfg->usericon_folder)) {
                 // ไดเรคทอรี่ไม่สามารถสร้างได้
                 $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), self::$cfg->usericon_folder);
-                $input = !$input ? $item : $input;
-              } else {
+              } elseif (empty($ret)) {
+                // ลบไฟล์เดิม
                 if (!empty($user->icon)) {
-                  // ลบไฟล์เดิม
                   @unlink(ROOT_PATH.self::$cfg->usericon_folder.$user->icon);
                 }
                 try {
@@ -185,12 +168,11 @@ class Model extends \Kotchasan\Model
                 } catch (\Exception $exc) {
                   // ไม่สามารถอัปโหลดได้
                   $ret['ret_'.$item] = Language::get($exc->getMessage());
-                  $input = !$input ? $item : $input;
                 }
               }
             }
           }
-          if (!$input) {
+          if (empty($ret)) {
             // ไม่ใช่แอดมิน
             if (!$isAdmin) {
               unset($save['status']);
@@ -231,9 +213,6 @@ class Model extends \Kotchasan\Model
             }
             // คืนค่า
             $ret['alert'] = Language::get('Saved successfully');
-          } else {
-            // error
-            $ret['input'] = $input;
           }
         }
       }

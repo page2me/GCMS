@@ -33,19 +33,23 @@ class Controller extends \Kotchasan\Controller
     $qid = $request->get('id')->toInt();
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     if ($qid > 0) {
+      // แก้ไข
       $index = \Board\Module\Model::getQuestionById($qid, $module);
+      if ($index) {
+        // ฟอร์มแก้ไขกระทู้
+        $page = createClass('Board\Writeedit\View')->index($request, $index);
+      }
     } else {
+      // ใหม่
       $index = \Board\Module\Model::get($request, $module);
+      if ($index) {
+        // ฟอร์มโพสต์กระทู้
+        $page = createClass('Board\Write\View')->index($request, $index);
+      }
     }
-    if (empty($index)) {
-      // 404
-      $page = createClass('Index\PageNotFound\Controller')->init($request, 'board');
-    } elseif ($qid > 0) {
-      // ฟอร์มแก้ไขกระทู้
-      $page = createClass('Board\Writeedit\View')->index($request, $index);
-    } else {
-      // ฟอร์มโพสต์กระทู้
-      $page = createClass('Board\Write\View')->index($request, $index);
+    if (empty($page)) {
+      // ไม่พบหน้าที่เรียก (board)
+      $page = createClass('Index\PageNotFound\Controller')->init('board');
     }
     return $page;
   }

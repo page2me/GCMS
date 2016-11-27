@@ -11,7 +11,7 @@ namespace Widgets\Document\Models;
 use \Kotchasan\Language;
 
 /**
- * อ่านรายการอัลบัมทั้งหมด
+ * รายการบทความ
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

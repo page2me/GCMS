@@ -31,22 +31,18 @@ class Controller extends \Kotchasan\Controller
   {
     // ลิสต์รายการ tag
     $index = \Document\Stories\Model::tags($request, $module);
-    if (empty($index)) {
-      // 404
-      $list = createClass('Index\PageNotFound\Controller')->init($request, 'document');
-    } else {
-      // ลิสต์รายการ tag
-      $index->tag = $index->alias;
+    if ($index) {
       $index->module = 'document';
       $index->rows = 20;
       $index->cols = 1;
       $index->new_date = 0;
-      $index->topic = Language::get('Tags').' '.$index->alias;
+      $index->topic = Language::get('Tags').' '.$index->tag;
       $index->description = $index->topic;
       $index->keywords = $index->topic;
       $index->detail = '';
-      $list = createClass('Document\Stories\View')->index($request, $index);
+      return createClass('Document\Stories\View')->index($request, $index);
     }
-    return $list;
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('document');
   }
 }

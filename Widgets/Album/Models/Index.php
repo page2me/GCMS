@@ -32,7 +32,7 @@ class Index extends \Kotchasan\Model
         ->select('C.id', 'C.topic', 'G.image', 'M.module')
         ->from('gallery_album C')
         ->join('gallery G', 'INNER', array(array('G.album_id', 'C.id'), array('G.module_id', 'C.module_id'), array('G.count', 0)))
-        ->join('modules M', 'INNER', array(array('M.id', 'C.module_id'), array('M.owner', 'gallery')))
+        ->join('modules M', 'INNER', array('M.id', 'C.module_id'))
         ->order('C.id DESC')
         ->limit($query_string['rows'] * $query_string['cols'])
         ->cacheOn()

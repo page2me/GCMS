@@ -9,7 +9,6 @@
 namespace Index\Index;
 
 use \Kotchasan\Date;
-use \Kotchasan\Language;
 
 /**
  * ตาราง index
@@ -28,102 +27,45 @@ class Model extends \Kotchasan\Orm\Field
   protected $table = 'index I';
 
   /**
-   * อ่านข้อมูลโมดูลจาก $module_id
+   * อ่านข้อมูลโมดูล Index
    *
-   * @param int $module_id
+   * @param object $index
    * @return object|false คืนค่าข้อมูล object ไม่พบ คืนค่า false
    */
-  public static function getIndex($module_id)
+  public static function get($index)
   {
-    if (is_int($module_id) && $module_id > 0) {
-      $model = new \Kotchasan\Model;
-      $select = array('I.id', 'M.module', 'M.owner', 'D.topic', 'D.description', 'D.keywords', 'D.detail', 'I.visited');
+    $model = new \Kotchasan\Model;
+    if (isset($index->id)) {
       $where = array(
-        array('I.index', 1),
-        array('I.module_id', $module_id),
-        array('I.published', 1),
-        array('I.published_date', '<=', Date::mktimeToSqlDate(time()))
+        array('I.id', (int)$index->id),
       );
-      $result = $model->db()->createQuery()
-        ->from('modules M')
-        ->join('index I', 'INNER', array('I.module_id', 'M.id'))
-        ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'M.id'), array('D.language', 'I.language')))
-        ->where($where)
-        ->toArray()
-        ->cacheOn(false)
-        ->first($select);
-      if ($result) {
-        $result['visited'] ++;
-        $model->db()->cacheSave(array($result));
-        $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited']));
-        return (object)$result;
-      }
+    } else {
+      $where = array(
+        array('I.module_id', (int)$index->module_id),
+        array('I.id', (int)$index->index_id)
+      );
     }
-    return false;
-  }
-
-  /**
-   * อ่านข้อมูลโมดูลจาก $id
-   *
-   * @param int $id
-   * @return object|false คืนค่าข้อมูล object ไม่พบ คืนค่า false
-   */
-  public static function getIndexById($id)
-  {
-    if (is_int($id) && $id > 0) {
-      $model = new \Kotchasan\Model;
-      $select = array('I.id', 'M.module', 'M.owner', 'D.topic', 'D.description', 'D.keywords', 'D.detail', 'I.visited');
-      $where = array(
-        array('I.id', $id),
-        array('I.index', 1),
-        array('I.published', 1),
-        array('I.published_date', '<=', Date::mktimeToSqlDate(time()))
-      );
-      $result = $model->db()->createQuery()
-        ->from('index I')
-        ->join('modules M', 'INNER', array('M.id', 'I.module_id'))
-        ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'M.id'), array('D.language', 'I.language')))
-        ->where($where)
-        ->toArray()
-        ->cacheOn(false)
-        ->first($select);
-      if ($result) {
-        $result['visited'] ++;
-        $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited']));
-        $model->db()->cacheSave(array($result));
-        return (object)$result;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * อ่านข้อมูลโมดูลจากชื่อโมดูล
-   *
-   * @param string $module
-   * @param type $owner
-   * @return object|false คืนค่าข้อมูล object ไม่พบ คืนค่า false
-   */
-  public static function getModule($module, $owner)
-  {
-    if (is_string($module) && is_string($owner)) {
-      $model = new \Kotchasan\Model;
-      $select = array('I.id', 'I.module_id', 'M.module', 'M.owner', 'D.topic', 'D.description', 'D.keywords', 'D.detail', 'I.visited');
-      $where = array(
-        array('I.index', 1),
-        array('M.module', $module),
-        array('M.owner', $owner),
-        array('I.published', 1),
-        array('I.published_date', '<=', Date::mktimeToSqlDate(time())),
-        array('D.language', array(Language::name(), ''))
-      );
-      return $model->db()->createQuery()
-          ->from('index I')
-          ->join('modules M', 'INNER', array('M.id', 'I.module_id'))
-          ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'M.id'), array('D.language', 'I.language')))
-          ->where($where)
-          ->cacheOn()
-          ->first($select);
+    $where[] = array('I.index', 1);
+    $where[] = array('I.published', 1);
+    $where[] = array('I.published_date', '<=', Date::mktimeToSqlDate(time()));
+    $result = $model->db()->createQuery()
+      ->from('index I')
+      ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', 'I.language')))
+      ->where($where)
+      ->toArray()
+      ->cacheOn(false)
+      ->first('I.id', 'D.keywords', 'D.detail', 'D.description', 'I.visited');
+    if ($result) {
+      // อัปเดทการเยี่ยมชม
+      $result['visited'] ++;
+      $model->db()->cacheSave(array($result));
+      $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited']));
+      // คืนค่า
+      $index->keywords = $result['keywords'];
+      $index->detail = $result['detail'];
+      $index->description = $result['description'];
+      $index->visited = $result['visited'];
+      return $index;
     }
     return false;
   }

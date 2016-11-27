@@ -33,7 +33,7 @@ class Controller extends \Kotchasan\Controller
     // กำหนด skin ให้กับ template
     Template::init(self::$cfg->skin);
     // ตรวจสอบโมดูลที่เรียก
-    $index = \Index\Export\Model::module($request->get('module')->toString());
+    $index = \Index\Module\Model::getModuleWithConfig('', $request->get('module')->filter('a-z0-9'));
     if ($index) {
       $className = ucfirst($index->owner).'\Export\Controller';
       if (class_exists($className) && method_exists($className, 'init')) {

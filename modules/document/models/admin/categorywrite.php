@@ -155,18 +155,14 @@ class Model extends \Kotchasan\Model
               }
             }
             // ตรวจสอบค่าที่ส่งมา
-            $input = false;
             if ($category_id == 0) {
-              $input = 'category_id';
+              $ret['ret_category_id'] = 'this';
             } elseif ($index['cid'] > 0 && $index['cid'] != $index['id']) {
-              $input = 'category_id';
               $ret['ret_category_id'] = Language::replace('This :name already exist', array(':name' => Language::get('ID')));
             } elseif (empty($topic)) {
-              $input = 'topic_'.Language::name();
-              $ret['ret_'.$input] = Language::get('Please fill in');
+              $ret['ret_topic_'.Language::name()] = Language::get('Please fill in');
             } elseif (empty($detail)) {
-              $input = 'detail_'.Language::name();
-              $ret['ret_'.$input] = Language::get('Please fill in');
+              $ret['ret_detail_'.Language::name()] = Language::get('Please fill in');
             } else {
               // อัปโหลดไฟล์
               $icon = ArrayTool::unserialize($index['icon']);
@@ -175,10 +171,8 @@ class Model extends \Kotchasan\Model
                   if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'document/')) {
                     // ไดเรคทอรี่ไม่สามารถสร้างได้
                     $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'document/');
-                    $input = !$input ? $item : $input;
                   } elseif (!$file->validFileExt(array('jpg', 'gif', 'png'))) {
                     $ret['ret_'.$item] = Language::get('The type of file is invalid');
-                    $input = !$input ? $item : $input;
                   } else {
                     $old_icon = empty($icon[$item]) ? '' : $icon[$item];
                     $icon[$item] = "cat-$item-$index[id].".$file->getClientFileExt();
@@ -190,7 +184,6 @@ class Model extends \Kotchasan\Model
                     } catch (\Exception $exc) {
                       // ไม่สามารถอัปโหลดได้
                       $ret['ret_icon_'.$item] = Language::get($exc->getMessage());
-                      $input = !$input ? 'icon_'.$item : $input;
                     }
                   }
                 }
@@ -199,7 +192,7 @@ class Model extends \Kotchasan\Model
                 $save['icon'] = Gcms::array2Ser($icon);
               }
             }
-            if (!$input) {
+            if (empty($ret)) {
               $save['category_id'] = $category_id;
               $save['topic'] = Gcms::array2Ser($topic);
               $save['detail'] = Gcms::array2Ser($detail);
@@ -216,8 +209,6 @@ class Model extends \Kotchasan\Model
               // ส่งค่ากลับ
               $ret['alert'] = Language::get('Saved successfully');
               $ret['location'] = self::$request->getUri()->postBack('index.php', array('id' => $index['module_id'], 'module' => 'document-category'));
-            } else {
-              $ret['input'] = $input;
             }
           } else {
             $ret['alert'] = Language::get('Unable to complete the transaction');

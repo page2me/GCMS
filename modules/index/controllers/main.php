@@ -29,13 +29,8 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $module)
   {
-    // เรียกจากโมดูล index
-    $index = null;
-    if (!empty($module->module_id)) {
-      $index = \Index\Index\Model::getIndex((int)$module->module_id);
-    } elseif (!empty($module->id)) {
-      $index = \Index\Index\Model::getIndexById((int)$module->id);
-    }
+    // อ่านข้อมูลโมดูล Index
+    $index = \Index\Index\Model::get($module);
     if ($index && MAIN_INIT == 'indexhtml') {
       // view (index)
       return createClass('Index\Index\View')->render($index);

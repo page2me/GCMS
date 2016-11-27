@@ -39,6 +39,6 @@ class Controller extends \Kotchasan\Controller
       }
     }
     // 404
-    return createClass('Index\PageNotFound\Controller')->init($request, 'gallery');
+    return createClass('Index\PageNotFound\Controller')->init('download');
   }
 }

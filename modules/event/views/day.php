@@ -35,6 +35,16 @@ class View extends \Gcms\View
   {
     $index = \Event\Day\Model::get($request, $index);
     if ($index) {
+      // breadcrumb ของโมดูล
+      if (Gcms::$menu->isHome($index->index_id)) {
+        $index->canonical = WEB_URL.'index.php';
+      } else {
+        $index->canonical = Gcms::createUrl($index->module);
+        $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
+        if ($menu) {
+          Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
+        }
+      }
       // ภาษา
       $lng = Language::getItems(array(
           'MONTH_SHORT',
@@ -42,8 +52,8 @@ class View extends \Gcms\View
           'FROM_TIME',
           'TO_TIME'
       ));
-      // template รายวัน (dayitem.html)
-      $listitem = Template::create($index->owner, $index->module, 'dayitem');
+      // /event/dayitem.html
+      $listitem = Template::create('event', $index->module, 'dayitem');
       foreach ($index->items as $item) {
         $listitem->add(array(
           '/{URL}/' => Gcms::createUrl($index->module, '', 0, 0, 'id='.$item->id),
@@ -54,8 +64,8 @@ class View extends \Gcms\View
           '/{COLOR}/' => $item->color
         ));
       }
-      // template หน้าแสดงรายการ Event (day.html)
-      $template = Template::create($index->owner, $index->module, 'day');
+      // /event/day.html
+      $template = Template::create('event', $index->module, 'day');
       $template->add(array(
         '/{YEAR}/' => $index->year + $lng['YEAR_OFFSET'],
         '/{MONTH}/' => $lng['MONTH_SHORT'][$index->month],

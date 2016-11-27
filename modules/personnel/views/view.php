@@ -14,7 +14,7 @@ use \Gcms\Gcms;
 use \Personnel\Index\Controller;
 
 /**
- * แสดงรูปภาพในอัลบัม
+ * แสดงข้อมูลบุคลากรรายบุคคล
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -24,7 +24,7 @@ class View extends \Gcms\View
 {
 
   /**
-   * แสดงรูปภาพในอัลบัม
+   * แสดงข้อมูลบุคลากรรายบุคคล
    *
    * @param Request $request
    * @param object $index ข้อมูลโมดูล
@@ -36,7 +36,7 @@ class View extends \Gcms\View
     $index = \Personnel\View\Model::get($request, $index);
     if ($index) {
       // breadcrumb ของโมดูล
-      $menu = Gcms::$menu->moduleMenu($index->module);
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
@@ -55,8 +55,8 @@ class View extends \Gcms\View
       } else {
         $img = WEB_URL.'modules/personnel/img/noimage.jpg';
       }
-      // template
-      $template = Template::create($index->owner, $index->module, 'view');
+      // /personnel/view.html
+      $template = Template::create('personnel', $index->module, 'view');
       $template->add(array(
         '/{NAME}/' => $index->name,
         '/{POSITION}/' => $index->position,

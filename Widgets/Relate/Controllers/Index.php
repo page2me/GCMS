@@ -30,14 +30,13 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-    if (!empty($query_string['id']) && !empty($query_string['module']) && isset(Gcms::$install_modules[$query_string['module']])) {
-      // module
-      $index = Gcms::$install_modules[$query_string['module']];
+
+    if (!empty($query_string['id']) && $index = Gcms::$module->findByModule($query_string['module'])) {
       $cols = isset($query_string['cols']) ? (int)$query_string['cols'] : 1;
       $rows = isset($query_string['rows']) ? (int)$query_string['rows'] : 1;
       if ($cols > 0 && $rows > 0) {
         $style = isset($query_string['style']) && in_array($query_string['style'], array('list', 'icon', 'thumb')) ? $query_string['style'] : 'list';
-        // template
+        // /document/relate.html
         $template = Template::create('document', $index->module, 'relate');
         $template->add(array(
           '/{DETAIL}/' => '<script>getWidgetNews("{ID}", "Relate", 0)</script>',

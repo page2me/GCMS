@@ -29,29 +29,24 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $index)
   {
-    // รายการที่เลือก
-    $id = $request->request('id')->toInt();
-
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     $index = \Index\Module\Model::getDetails($index);
-    if (empty($index)) {
-      // ไม่สามารถอ่านข้อมูลโมดูลได้
-      $page = null;
-    } elseif ($request->request('id')->exists()) {
-      // แสดงรายการที่เลือก
-      $page = createClass('Event\View\View')->index($request, $index);
-    } elseif ($request->request('d')->exists()) {
-      // แสดง event รายวัน
-      $page = createClass('Event\Day\View')->index($request, $index);
-    } else {
-      // แสดง event รายเดือน
-      $page = createClass('Event\Month\View')->index($request, $index);
+    if ($index) {
+      if ($request->request('id')->exists()) {
+        // แสดงรายการที่เลือก
+        $page = createClass('Event\View\View')->index($request, $index);
+      } elseif ($request->request('d')->exists()) {
+        // แสดง event รายวัน
+        $page = createClass('Event\Day\View')->index($request, $index);
+      } else {
+        // แสดง event รายเดือน
+        $page = createClass('Event\Month\View')->index($request, $index);
+      }
     }
     if ($page) {
       return $page;
-    } else {
-      // 404
-      return createClass('Index\PageNotFound\Controller')->init($request, 'event');
     }
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('event');
   }
 }

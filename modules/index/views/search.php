@@ -30,35 +30,25 @@ class View extends \Gcms\View
    */
   public function render($index)
   {
-    // รายการ
+    // /search/searchitem.html
     $listitem = Grid::create('search', 'search', 'searchitem');
+    // รายการ
     foreach ($index->items as $item) {
-      if ($item->index == 0 && $item->owner == 'document') {
-        // document
-        $uri1 = \Document\Index\Controller::url($item->module, $item->alias, $item->id);
-        $uri2 = \Document\Index\Controller::url($item->module, $item->alias, $item->id, false);
-      } elseif ($item->index == 0 && $item->owner == 'board') {
-        // board
-        $uri1 = \Board\Index\Controller::url($item->module, 0, $item->id);
-        $uri2 = $uri1;
+      if ($item->index == 1) {
+        // หน้าหลักโมดูล
+        $uri = WEB_URL.'index.php?module='.$item->module;
       } else {
-        // other
-        if (self::$cfg->module_url == 1) {
-          $uri1 = Gcms::createUrl($item->module, $item->alias);
-          $uri2 = Gcms::createUrl($item->module, $item->alias, 0, 0, '', false);
-        } else {
-          $uri1 = Gcms::createUrl($item->module, '', 0, $item->id, '');
-          $uri2 = $uri1;
-        }
+        // รายการ
+        $uri = WEB_URL.'index.php?module='.$item->module.'&amp;id='.$item->id;
       }
       $listitem->add(array(
-        '/{URL}/' => $uri1,
+        '/{URL}/' => $uri,
         '/{TOPIC}/' => $item->topic,
-        '/{LINK}/' => $uri2,
+        '/{LINK}/' => $uri,
         '/{DETAIL}/' => $item->description
       ));
     }
-    // template search/search.html
+    // /search/search.html
     $template = Template::create('search', 'search', 'search');
     // canonical
     $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'q='.rawurlencode($index->q));

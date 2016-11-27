@@ -32,9 +32,7 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-    if (preg_match('/^[a-z0-9]{4,}$/', $query_string['module']) && isset(Gcms::$install_modules[$query_string['module']])) {
-      // module
-      $index = Gcms::$install_modules[$query_string['module']];
+    if ($index = Gcms::$module->findByModule($query_string['module'])) {
       // ค่าที่ส่งมา
       $cat = isset($query_string['cat']) ? $query_string['cat'] : 0;
       $interval = isset($query_string['interval']) ? (int)$query_string['interval'] : 0;
@@ -62,14 +60,14 @@ class Index extends \Kotchasan\Controller
   {
     if ($request->isReferer() && preg_match('/^([0-9]+)_([0-9,]+)_([0-9]+)$/', $request->post('id')->toString(), $match)) {
       // ตรวจสอบโมดูล
-      $index = \Index\Module\Model::get('board', null, $match[1]);
+      $index = \Index\Module\Model::getModuleWithConfig('board', '', $match[1]);
       if ($index) {
-        // รายการ
+        // /board/widgetitem.html
         $listitem = Grid::create('board', $index->module, 'widgetitem');
         // เครื่องหมาย new
         $valid_date = time() - (int)$index->new_date;
         // query ข้อมูล
-        foreach (\Widgets\Board\Models\Index::get($index->module_id, $match[2], $match[3]) as $item) {
+        foreach (\Widgets\Board\Models\Index::get($match[1], $match[2], $match[3]) as $item) {
           $listitem->add(View::renderItem($index, $item, $valid_date));
         }
         echo createClass('Gcms\View')->renderHTML($listitem->render());

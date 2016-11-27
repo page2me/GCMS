@@ -8,12 +8,6 @@
 
 namespace Index\Pagesview;
 
-use \Kotchasan\Http\Request;
-use \Kotchasan\DataTable;
-use \Kotchasan\Html;
-use \Kotchasan\Login;
-use \Kotchasan\Template;
-
 /**
  * ฟอร์ม forgot
  *

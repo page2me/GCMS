@@ -70,6 +70,6 @@ class View extends \Gcms\View
       }
     }
     // ไม่ได้ login
-    return createClass('Index\PageNotFound\Controller')->init($request, 'index');
+    return createClass('Index\PageNotFound\Controller')->init('index');
   }
 }

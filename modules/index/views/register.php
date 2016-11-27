@@ -10,9 +10,9 @@ namespace Index\Register;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
-use \Kotchasan\Text;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
+use \Kotchasan\Antispam;
 
 /**
  * module=register
@@ -39,8 +39,8 @@ class View extends \Gcms\View
         'description' => self::$cfg->web_description
     );
     // antispam
-    $antispamchar = Text::rndname(32);
-    $_SESSION[$antispamchar] = Text::rndname(4);
+    $antispam = new Antispam();
+    // /member/registerfrm.html
     $template = Template::create('member', 'member', 'registerfrm');
     $template->add(array(
       '/<PHONE>(.*)<\/PHONE>/isu' => empty(self::$cfg->member_phone) ? '' : '\\1',
@@ -48,7 +48,7 @@ class View extends \Gcms\View
       '/<INVITE>(.*)<\/INVITE>/isu' => empty(self::$cfg->member_invitation) ? '' : '\\1',
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
       '/{TOPIC}/' => $index->topic,
-      '/{ANTISPAM}/' => $antispamchar,
+      '/{ANTISPAM}/' => $antispam->getId(),
       '/{WEBURL}/' => WEB_URL,
       '/{NEXT}/' => $modal ? 'close' : WEB_URL.'index.php',
       '/{INVITE}/' => self::$request->cookie('invite')->topic()

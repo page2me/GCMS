@@ -35,8 +35,9 @@ class View extends \Gcms\View
   {
     $topic = Language::get('Personal information').' '.self::$cfg->web_title;
     if (Login::isMember()) {
-      $user = \Index\Member\Model::getUserById($request->get('id')->toInt());
+      $user = \Index\User\Model::getUserById($request->get('id')->toInt());
       if ($user) {
+        // /member/view.html
         $template = Template::create('member', 'member', 'view');
         $template->add(array(
           '/{ID}/' => $user->id,
@@ -69,10 +70,10 @@ class View extends \Gcms\View
         );
       }
       // ไม่พบสมาชิก
-      return createClass('Index\PageNotFound\Controller')->init($request, 'index');
+      return createClass('Index\PageNotFound\Controller')->init('index');
     } else {
       // ไม่ได้ login
-      return createClass('Index\PageNotFound\Controller')->init($request, 'index', 'Members Only');
+      return createClass('Index\PageNotFound\Controller')->init('index', 'Members Only');
     }
   }
 }

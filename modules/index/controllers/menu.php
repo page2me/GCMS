@@ -18,71 +18,74 @@ namespace Index\Menu;
 class Controller extends \Kotchasan\Controller
 {
   /**
-   * Model
+   * ข้อมูลเมนู
    *
    * @var \Index\Menu\Model
    */
   private $menu;
 
   /**
-   * create Menus
+   * initial class
    *
    * @return \static
    */
   public static function create()
   {
     $obj = new static;
-    // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
-    $obj->menu = \Index\Menu\Model::create();
+    $obj->menu = new \Index\Menu\Model();
     return $obj;
   }
 
   /**
    * อ่านรายการเมนูทั้งหมด
    *
-   * @return object
+   * @return array
    */
   public function getMenus()
   {
-    return $this->menu->getMenus();
+    return $this->menu->menus;
+  }
+
+  /**
+   * อ่านค่าเมนูระดับบนสุดจาก index_id
+   *
+   * @param int $index_id
+   * @return object|null คืนค่าข้อมูลเมนู (Object) ไม่พบคืนค่า null
+   */
+  public function findTopLevelMenu($index_id)
+  {
+    foreach ($this->menu->menus as $menu) {
+      if ($menu->index_id == $index_id && $menu->level == 0) {
+        return $menu;
+      }
+    }
+    return null;
   }
 
   /**
    * อ่านเมนูรายการแรกสุด (หน้าหลัก)
    *
-   * @return array|bool แอเรย์ของเมนูรายการแรก ถ้าไม่พบคืนค่า false
+   * @return array|boolean แอเรย์ของเมนูรายการแรก ถ้าไม่พบคืนค่า false
    */
   public function homeMenu()
   {
-    $menus = $this->menu->get('MAINMENU');
-    if (isset($menus['toplevel'][0])) {
-      $menu = $menus['toplevel'][0];
-    } else {
-      $menu = false;
+    $menus = reset($this->menu->menus_by_pos);
+    if ($menus && isset($menus['toplevel'])) {
+      return reset($menus['toplevel']);
     }
-    return $menu;
+    return false;
   }
 
   /**
-   * อ่านเมนู (MAINMENU) ของโมดูล
+   * ตรวจสอบว่าเป็นข้อมูลหน้าแรกสุดหรือไม่
    *
-   * @param string $module ชื่อโมดูลที่ต้องการ
-   *
-   * @return array รายการเมนูของเมนูที่เลือก ถ้าไม่พบคืนค่าแอเรย์ว่าง
+   * @param int $index_id ID ของตาราง Index
+   * @return boolean
    */
-  public function moduleMenu($module)
+  public function isHome($index_id)
   {
-    $result = array();
-    $menus = $this->menu->get('MAINMENU');
-    if (isset($menus['toplevel'])) {
-      foreach ($menus['toplevel'] as $item) {
-        if ($item->module == $module) {
-          $result = $item;
-          break;
-        }
-      }
-    }
-    return $result;
+    $home = $this->homeMenu();
+    return $home && $home->module->index_id == $index_id;
   }
 
   /**
@@ -93,13 +96,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function render($select)
   {
-    $view = new \Index\Menu\View;
-    $result = array();
-    foreach ($this->menu->getMenusByPos() AS $parent => $items) {
-      if ($parent != '') {
-        $result['/{'.$parent.'}/'] = $view->render($items, $select);
-      }
-    }
-    return $result;
+    return \Index\Menu\View::render($this->menu->menus_by_pos, $select);
   }
 }

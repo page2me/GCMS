@@ -83,23 +83,17 @@ class Model extends \Kotchasan\Model
           // ไม่พบสมาชิกที่แก้ไข
           $ret['alert'] = Language::get('not a registered user');
         } else {
-          $input = false;
           // ชื่อเล่น
           if (isset($save['displayname'])) {
             if (mb_strlen($save['displayname']) < 2) {
               $ret['ret_register_displayname'] = Language::get('Name for the show on the site at least 2 characters');
-              $input = !$input ? 'register_displayname' : $input;
             } elseif (in_array($save['displayname'], self::$cfg->member_reserv)) {
               $ret['ret_register_displayname'] = Language::get('Invalid name');
-              $input = !$input ? 'register_displayname' : $input;
             } else {
               // ตรวจสอบ displayname ซ้ำ
               $search = $db->first($user_table, array('displayname', $save['displayname']));
               if ($search !== false && $user->id != $search->id) {
                 $ret['ret_register_displayname'] = Language::replace('This :name already exist', array(':name' => Language::get('Name')));
-                $input = !$input ? 'register_displayname' : $input;
-              } else {
-                $ret['ret_register_displayname'] = '';
               }
             }
           }
@@ -108,24 +102,17 @@ class Model extends \Kotchasan\Model
             $search = $db->first($user_table, array(array('fname', $save['fname']), array('lname', $save['lname'])));
             if ($search !== false && $user->id != $search->id) {
               $ret['ret_register_fname'] = Language::replace('This :name already exist', array(':name' => Language::get('Name').' '.Language::get('Surname')));
-              $input = !$input ? 'register_fname' : $input;
-            } else {
-              $ret['ret_register_fname'] = '';
             }
           }
           // โทรศัพท์
           if (!empty($save['phone1'])) {
             if (!preg_match('/[0-9]{9,10}/', $save['phone1'])) {
               $ret['ret_register_phone1'] = str_replace(':name', Language::get('phone number'), Language::get('Invalid :name'));
-              $input = !$input ? 'register_phone1' : $input;
             } else {
               // ตรวจสอบโทรศัพท์
               $search = $db->first($user_table, array('phone1', $save['phone1']));
               if ($search !== false && $user->id != $search->id) {
                 $ret['ret_register_phone1'] = Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
-                $input = !$input ? 'register_phone1' : $input;
-              } else {
-                $ret['ret_register_phone1'] = '';
               }
             }
           }
@@ -134,16 +121,12 @@ class Model extends \Kotchasan\Model
             if (mb_strlen($password) < 4) {
               // รหัสผ่านต้องไม่น้อยกว่า 4 ตัวอักษร
               $ret['ret_register_password'] = Language::get('Passwords must be at least four characters');
-              $input = !$input ? 'register_password' : $input;
             } elseif ($repassword != $password) {
               // ถ้าต้องการเปลี่ยนรหัสผ่าน กรุณากรอกรหัสผ่านสองช่องให้ตรงกัน
               $ret['ret_register_repassword'] = Language::get('To change your password, enter your password to match the two inputs');
-              $input = !$input ? 'register_repassword' : $input;
             } else {
               // password ใหม่ถูกต้อง
               $save['password'] = md5($password.$user->email);
-              $ret['ret_register_password'] = '';
-              $ret['ret_register_repassword'] = '';
             }
           }
           // อัปโหลดไฟล์
@@ -153,7 +136,6 @@ class Model extends \Kotchasan\Model
               if (!File::makeDirectory(ROOT_PATH.self::$cfg->usericon_folder)) {
                 // ไดเรคทอรี่ไม่สามารถสร้างได้
                 $ret['ret_register_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), self::$cfg->usericon_folder);
-                $input = !$input ? 'ret_register_'.$item : $input;
               } else {
                 if (!empty($user->icon)) {
                   // ลบไฟล์เดิม
@@ -166,13 +148,12 @@ class Model extends \Kotchasan\Model
                 } catch (\Exception $exc) {
                   // ไม่สามารถอัปโหลดได้
                   $ret['ret_register_'.$item] = Language::get($exc->getMessage());
-                  $input = !$input ? 'ret_register_'.$item : $input;
                 }
               }
             }
           }
           if (!empty($save)) {
-            if (!$input) {
+            if (empty($ret)) {
               // save
               $db->update($user_table, $user->id, $save);
               // เปลี่ยน password ที่ login ใหม่
@@ -182,9 +163,6 @@ class Model extends \Kotchasan\Model
               // คืนค่า
               $ret['alert'] = Language::get('Saved successfully');
               $ret['location'] = 'index.php?module=editprofile&tab='.$request->post('tab')->toString();
-            } else {
-              // error
-              $ret['input'] = $input;
             }
           }
         }

@@ -55,26 +55,22 @@ class Model extends \Kotchasan\Model
           'subject' => self::$request->post('subject')->topic(),
           'detail' => self::$request->post('detail')->toString()
         );
-        // ตรวจสอบค่าที่ส่งมา
-        $input = false;
         // reciever
-        if (!empty($save['reciever'])) {
+        if (empty($save['reciever'])) {
+          $ret['ret_reciever'] = 'this';
+        } else {
           foreach (explode(',', $save['reciever']) as $item) {
             if (!Validator::email($item)) {
-              if (!$input) {
-                $input = 'reciever';
+              if (empty($ret)) {
+                $ret['ret_reciever'] = 'this';
                 break;
               }
             }
           }
-        } else {
-          $ret['reciever'] = '';
         }
         // subject
         if (empty($save['subject'])) {
-          $input = !$input ? 'subject' : $input;
-        } else {
-          $ret['ret_subject'] = '';
+          $ret['ret_subject'] = 'this';
         }
         // from
         if (Login::isAdmin()) {
@@ -103,7 +99,7 @@ class Model extends \Kotchasan\Model
           '@<script[^>]*?>.*?</script>@siu' => ''
         );
         $save['detail'] = trim(preg_replace(array_keys($patt), array_values($patt), $save['detail']));
-        if (!$input) {
+        if (empty($ret)) {
           $err = Email::send($save['reciever'], $save['from'], $save['subject'], $save['detail']);
           if (empty($err)) {
             // ส่งอีเมล์สำเร็จ
@@ -115,9 +111,6 @@ class Model extends \Kotchasan\Model
           }
           // clear
           self::$request->removeToken();
-        } else {
-          // คืนค่า input ตัวแรกที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

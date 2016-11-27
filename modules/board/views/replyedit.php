@@ -40,12 +40,12 @@ class View extends \Gcms\View
     $isMember = $login['status'] > -1;
     // antispam
     $antispam = new Antispam();
-    // template
-    $template = Template::create($index->owner, $index->module, 'replyedit');
+    // /board/replyedit.html
+    $template = Template::create('board', $index->module->module, 'replyedit');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
-      '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->img_upload_type) ? '' : '$1',
+      '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->module->img_upload_type) ? '' : '$1',
       '/{MODULEID}/' => $index->module_id,
       '/{ANTISPAM}/' => $antispam->getId(),
       '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
@@ -53,32 +53,32 @@ class View extends \Gcms\View
       '/{RID}/' => $index->id
     ));
     Gcms::$view->setContents(array(
-      '/:size/' => $index->img_upload_size,
-      '/:type/' => implode(', ', $index->img_upload_type)
+      '/:size/' => $index->module->img_upload_size,
+      '/:type/' => implode(', ', $index->module->img_upload_type)
       ), false);
     // breadcrumb ของโมดูล
-    if (!Gcms::isHome($index->module)) {
-      $menu = Gcms::$menu->moduleMenu($index->module);
+    if (!Gcms::$menu->isHome($index->module->index_id)) {
+      $menu = Gcms::$menu->findTopLevelMenu($index->module->index_id);
       if ($menu) {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $menu->menu_text, $menu->menu_tooltip);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module), $menu->menu_text, $menu->menu_tooltip);
       } else {
-        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->title);
+        Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module), $index->module->topic, $index->module->description);
       }
     }
     // breadcrumb ของหมวดหมู่
     if (!empty($index->category_id)) {
       $category = Gcms::ser2Str($index->category);
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $category);
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module, '', $index->category_id), $category);
     }
     // breadcrumb ของกระทู้
-    Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'wbid='.$index->index_id), $index->topic);
+    Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module->module, '', 0, 0, 'wbid='.$index->index_id), $index->topic);
     // breadcrumb ของหน้า
-    $canonical = WEB_URL.'index.php?module='.$index->module.'-edit&amp;rid='.$index->id;
-    $topic = Language::get('Edit').' '.Language::get('comments');
+    $canonical = WEB_URL.'index.php?module='.$index->module->module.'-edit&amp;rid='.$index->id;
+    $topic = Language::get('Edit').' '.Language::get('Comment');
     Gcms::$view->addBreadcrumb($canonical, $topic);
     // คืนค่า
     return (object)array(
-        'module' => $index->module,
+        'module' => $index->module->module,
         'canonical' => $canonical,
         'topic' => $topic.' - '.$index->topic,
         'detail' => $template->render(),

@@ -68,8 +68,8 @@ class Model extends \Kotchasan\Model
         $ret['alert'] = Language::get('Sorry, Item not found It&#39;s may be deleted');
       } else {
         // config
-        $index = ArrayTool::unserialize($index['config'], $index);
-        unset($index['config']);
+        $index = (object)ArrayTool::unserialize($index['config'], $index);
+        unset($index->config);
         // login
         $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
         // สมาชิก true
@@ -78,24 +78,24 @@ class Model extends \Kotchasan\Model
         $moderator = Gcms::canConfig($login, $index, 'moderator');
         if ($action === 'quote') {
           // อ้างอิง
-          if (empty($index['detail'])) {
+          if (empty($index->detail)) {
             $ret['detail'] = '';
           } else {
-            $ret['detail'] = '[quote'.($rid > 0 ? " r=$no]" : ']').Gcms::quote($index['detail'], true).'[/quote]';
+            $ret['detail'] = '[quote'.($rid > 0 ? " r=$no]" : ']').Gcms::quote($index->detail, true).'[/quote]';
           }
         } elseif ($qid > 0 && in_array($action, array('pin', 'lock')) && $moderator) {
           if ($action == 'pin') {
-            $ret['value'] = $index['pin'] == 0 ? 1 : 0;
+            $ret['value'] = $index->pin == 0 ? 1 : 0;
             $this->db()->update($this->getFullTableName('board_q'), $qid, array('pin' => $ret['value']));
             $ret['title'] = Language::get('click to').' '.Language::get($ret['value'] == 1 ? 'Unpin' : 'Pin');
           } elseif ($action == 'lock') {
-            $ret['value'] = $index['locked'] == 0 ? 1 : 0;
+            $ret['value'] = $index->locked == 0 ? 1 : 0;
             $this->db()->update($this->getFullTableName('board_q'), $qid, array('locked' => $ret['value']));
             $ret['title'] = Language::get('click to').' '.Language::get($ret['value'] == 1 ? 'Unlock' : 'Lock');
           }
         } elseif ($action === 'delete' && $isMember) {
           // สามารถลบได้ (mod=ลบ,สมาชิก=แจ้งลบ)
-          if ($moderator || $index['member_id'] == $login['id']) {
+          if ($moderator || $index->member_id == $login['id']) {
             // ลบ
             if ($rid > 0) {
               $ret['confirm'] = Language::replace('You want to :action :name', array(':action' => Language::get('Delete'), ':name' => Language::get('comments'))).' ?';
@@ -108,7 +108,7 @@ class Model extends \Kotchasan\Model
           // ลบ mod หรือ เจ้าของ
           if ($rid > 0) {
             // ลบรูปภาพในคำตอบ
-            @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index['picture']);
+            @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index->picture);
             // ลบความคิดเห็น
             $this->db()->delete($this->getFullTableName('board_r'), $rid);
             // อ่านคำตอบล่าสุดของคำถามนี้
@@ -116,7 +116,7 @@ class Model extends \Kotchasan\Model
             $r = $this->db()->createQuery()
               ->from('board_r C')
               ->join('user U', 'LEFT', array('U.id', 'C.member_id'))
-              ->where(array(array('C.index_id', $qid), array('C.module_id', $index['module_id'])))
+              ->where(array(array('C.index_id', $qid), array('C.module_id', $index->module_id)))
               ->order('C.id DESC')
               ->toArray()
               ->first('C.id', 'C.module_id', 'C.last_update', 'U.id member_id', 'U.status', "($name) name");
@@ -128,8 +128,8 @@ class Model extends \Kotchasan\Model
                 'commentator' => $r ? $r['name'] : '',
                 'commentator_id' => $r ? (int)$r['member_id'] : 0,
                 'comment_date' => $r ? (int)$r['last_update'] : 0,
-                'comments' => $this->db()->createQuery()->selectCount()->from('board_r')->where(array(array('index_id', $qid), array('module_id', $index['module_id']))),
-                'hassubpic' => $this->db()->createQuery()->selectCount()->from('board_r')->where(array(array('index_id', $qid), array('module_id', $index['module_id']), array('picture', '!=', ''))),
+                'comments' => $this->db()->createQuery()->selectCount()->from('board_r')->where(array(array('index_id', $qid), array('module_id', $index->module_id))),
+                'hassubpic' => $this->db()->createQuery()->selectCount()->from('board_r')->where(array(array('index_id', $qid), array('module_id', $index->module_id), array('picture', '!=', ''))),
                 'last_update' => time()
               ))
               ->where($qid)
@@ -143,19 +143,19 @@ class Model extends \Kotchasan\Model
               ->from('board_r')
               ->where(array(
                 array('index_id', $qid),
-                array('module_id', $index['module_id']),
+                array('module_id', $index->module_id),
                 array('picture', '!=', "''")
               ))
               ->toArray();
             foreach ($query->execute() as $item) {
-              @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index['picture']);
+              @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index->picture);
             }
             // ลบรูปภาพของคำถาม
-            @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index['picture']);
-            @unlink(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$index['picture']);
+            @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index->picture);
+            @unlink(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$index->picture);
             // ลบ
             $this->db()->delete($this->getFullTableName('board_q'), $qid);
-            $this->db()->delete($this->getFullTableName('board_r'), array(array('index_id', $qid), array('module_id', $index['module_id'])));
+            $this->db()->delete($this->getFullTableName('board_r'), array(array('index_id', $qid), array('module_id', $index->module_id)));
             if ($action == 'deleting') {
               // กลับไปหน้าหลักของโมดูลที่เลือก
               $ret['location'] = WEB_URL."index.php?module=$module";
@@ -165,11 +165,11 @@ class Model extends \Kotchasan\Model
             }
           }
           // อัปเดทหมวดหมู่
-          if ($index['category_id'] > 0) {
+          if ($index->category_id > 0) {
             // อัปเดทจำนวนเรื่อง และ ความคิดเห็น ในหมวด
-            \Board\Admin\Write\Model::updateCategories((int)$index['module_id']);
+            \Board\Admin\Write\Model::updateCategories((int)$index->module_id);
           }
-        } elseif ($action == 'edit' && ($moderator || ($isMember && $index['member_id'] == $login['id']))) {
+        } elseif ($action == 'edit' && ($moderator || ($isMember && $index->member_id == $login['id']))) {
           // แก้ไข mod หรือ เจ้าของ
           if ($rid > 0) {
             $ret['location'] = WEB_URL."index.php?module=$module-edit&rid=$rid";

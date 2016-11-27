@@ -75,7 +75,7 @@ class Model extends \Kotchasan\Model
           } elseif ($action === 'delete') {
             // ลบ
             if ($login['id'] == $download->sender_id || \Gcms\Gcms::canConfig($login, $download, 'moderator')) {
-              unlink(ROOT_PATH.DATA_FOLDER.'edocument/'.$download->file);
+              @unlink(ROOT_PATH.DATA_FOLDER.'edocument/'.$download->file);
               $this->db()->delete($this->getTableName('edocument'), (int)$download->id);
               $this->db()->delete($this->getTableName('edocument_download'), array('document_id', (int)$download->id), 0);
             } else {

@@ -32,13 +32,12 @@ class Model extends \Kotchasan\Model
   public function action(Request $request)
   {
     if ($request->initSession() && $request->isReferer()) {
-      // login
-      $login = Login::isMember();
       // ค่าที่ส่งมา
       $action = $request->post('action')->toString();
-      $id = $request->post('id')->toString();
       if (($action == 'download' || $action == 'downloading') && preg_match('/[a-z]+_([0-9]+)/', $request->post('id')->toString(), $match)) {
-        // ไฟล์ดเวน์โหลด
+        // login
+        $login = Login::isMember();
+        // ไฟล์ดาวน์โหลด
         $download = $this->get($match[1]);
         // สถานะสมาชิก guest = -1
         $status = $login ? $login['status'] : -1;

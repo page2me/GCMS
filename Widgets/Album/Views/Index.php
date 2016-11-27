@@ -30,7 +30,7 @@ class Index extends \Kotchasan\View
   {
     $dir = DATA_FOLDER.'gallery/';
     $widget = array();
-    foreach (\Widgets\Gallery\Models\Index::get($query_string) AS $item) {
+    foreach (\Widgets\Album\Models\Index::get($query_string) AS $item) {
       $img = is_file(ROOT_PATH.$dir.$item->id.'/'.$item->image) ? WEB_URL.$dir.$item->id.'/thumb_'.$item->image : WEB_URL.'modules/gallery/img/noimage.jpg';
       $url = Controller::url($item->module, $item->id);
       $widget[] = '<div class=col'.$query_string['cols'].'><div class=figure>';

@@ -148,12 +148,12 @@ class View extends \Gcms\Adminview
         $check = isset($index->can_write) && is_array($index->can_write) && in_array($i, $index->can_write) ? ' checked' : '';
         $row[] = array(
           'class' => 'center',
-          'text' => '<label data-text="{LNG_Upload}"><input type=checkbox name=can_write[] title="{LNG_Members of this group can create albums}" value='.$i.$check.'></label>'
+          'text' => $i > 0 ? '<label data-text="{LNG_Upload}"><input type=checkbox name=can_write[] title="{LNG_Members of this group can create albums}" value='.$i.$check.'></label>' : ''
         );
         $check = isset($index->can_config) && is_array($index->can_config) && in_array($i, $index->can_config) ? ' checked' : '';
         $row[] = array(
           'class' => 'center',
-          'text' => '<label data-text="{LNG_Settings}"><input type=checkbox name=can_config[] title="{LNG_Members of this group can setting the module (not recommend)}" value='.$i.$check.'></label>'
+          'text' => $i > 1 ? '<label data-text="{LNG_Settings}"><input type=checkbox name=can_config[] title="{LNG_Members of this group can setting the module (not recommend)}" value='.$i.$check.'></label>' : ''
         );
         $table->addRow($row, array(
           'class' => 'status'.$i

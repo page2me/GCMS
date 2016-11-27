@@ -8,7 +8,6 @@
 
 namespace Gallery\Index;
 
-use \Gcms\Gcms;
 use \Kotchasan\Http\Request;
 
 /**
@@ -40,24 +39,23 @@ class Controller extends \Kotchasan\Controller
         // หน้าแสดงรายการอัลบัม
         $page = createClass('Gallery\Album\View')->index($request, $index);
       }
-
       if ($page) {
         return $page;
       }
     }
     // 404
-    return createClass('Index\PageNotFound\Controller')->init($request, 'gallery');
+    return createClass('Index\PageNotFound\Controller')->init('gallery');
   }
 
   /**
-   * ฟังก์ชั่นสร้าง URL ของอัลบัม
+   * ฟังก์ชั่นสร้าง URL
    *
    * @param string $module ชื่อโมดูล
-   * @param int $id ID ของบทความ
+   * @param int $id ID
    * @return string
    */
   public static function url($module, $id)
   {
-    return Gcms::createUrl($module, '', 0, 0, 'id='.$id);
+    return \Gcms\Gcms::createUrl($module, '', 0, 0, 'id='.$id);
   }
 }

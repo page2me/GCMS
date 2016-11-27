@@ -25,14 +25,14 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * แสดงผลหน้าหลักเว็บไซต์
+   * หน้าหลักเว็บไซต์ (index.html)
    *
    * @param Request $request
    */
   public function index(Request $request)
   {
     // ตัวแปรป้องกันการเรียกหน้าเพจโดยตรง
-    define('MAIN_INIT', __FILE__);
+    define('MAIN_INIT', 'indexhtml');
     // session cookie
     $request->initSession();
     // ตรวจสอบการ login
@@ -43,7 +43,16 @@ class Controller extends \Kotchasan\Controller
     Gcms::$view = new \Gcms\Adminview;
     if ($login = Login::adminAccess()) {
       // โหลดโมดูลที่ติดตั้งแล้ว
-      \Index\Index\Model::installedmodules();
+      Gcms::$module = \Index\Module\Controller::create();
+      // โหลดเมนู
+      Gcms::$menu = \Index\Menu\Controller::init();
+      // เรียก init ของโมดูล
+      foreach (Gcms::$module->getInstalledOwners() as $owner => $modules) {
+        $class = ucfirst($owner).'\Admin\Init\Controller';
+        if (class_exists($class) && method_exists($class, 'init')) {
+          $class::init($modules);
+        }
+      }
       // Controller หลัก
       $main = new \Index\Main\Controller;
     } else {
@@ -82,7 +91,7 @@ class Controller extends \Kotchasan\Controller
         // สถานะสมาชิก
         '/{STATUS}/' => $login['status'],
         // เมนู
-        '/{MENUS}/' => \Index\Menu\View::render()
+        '/{MENUS}/' => Gcms::$menu->render()
       ));
     }
     // ส่งออก เป็น HTML

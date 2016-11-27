@@ -31,7 +31,7 @@ class Model extends \Kotchasan\Orm\Field
       'join' => array(
         array(
           'LEFT',
-          'Index\Member\Model',
+          'Index\User\Model',
           array(
             array('U.id', 'D.member_id')
           )

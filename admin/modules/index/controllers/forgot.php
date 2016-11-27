@@ -8,8 +8,6 @@
 
 namespace Index\Forgot;
 
-use \Kotchasan\Language;
-
 /**
  * Forgot Form
  *
@@ -33,6 +31,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Request new password');
+    return '{LNG_Request new password}';
   }
 }

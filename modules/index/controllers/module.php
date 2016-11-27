@@ -1,6 +1,6 @@
 <?php
 /*
- * @filesource index/controllers/module.php
+ * @filesource module.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
@@ -8,10 +8,8 @@
 
 namespace Index\Module;
 
-use \Gcms\Gcms;
-
 /**
- * คลาสสำหรับตรวจสอบโมดูลที่เลือก
+ * Description
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -19,17 +17,89 @@ use \Gcms\Gcms;
  */
 class Controller extends \Kotchasan\Controller
 {
+  /**
+   * ข้อมูลโมดูล
+   *
+   * @var  \Index\Module\Model
+   */
+  private $module;
 
   /**
-   * ตรวจสอบโมดูลที่เลือก
+   * initial class
+   *
+   * @param \Index\Menu\Controller $menu
+   * @param boolean $new_day true เรียกครั้งแรกของวัน
+   * @return \static
+   */
+  public static function create(\Index\Menu\Controller $menu, $new_day)
+  {
+    // create Class
+    $obj = new static;
+    // ไดเร็คทอรี่ที่ติดตั้งโมดูล
+    $dir = ROOT_PATH.'modules/';
+    // อ่านรายชื่อโมดูลและไดเร็คทอรี่ของโมดูลทั้งหมดที่ติดตั้งไว้
+    $obj->module = new \Index\Module\Model($dir, $menu);
+    // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
+    foreach ($obj->module->by_owner as $owner => $modules) {
+      if (is_file($dir.$owner.'/controllers/init.php')) {
+        include $dir.$owner.'/controllers/init.php';
+        $class = ucfirst($owner).'\Init\Controller';
+        if (method_exists($class, 'init')) {
+          createClass($class)->init($modules);
+        }
+      }
+      if ($new_day && is_file($dir.$owner.'/controllers/cron.php')) {
+        include $dir.$owner.'/controllers/cron.php';
+        $class = ucfirst($owner).'\Cron\Controller';
+        if (method_exists($class, 'init')) {
+          createClass($class)->init($modules);
+        }
+      }
+    }
+    // โหลด init ของส่วนเสริม
+    $dir = ROOT_PATH.'Widgets/';
+    $f = @opendir($dir);
+    if ($f) {
+      while (false !== ($text = readdir($f))) {
+        if ($text != "." && $text != "..") {
+          if (is_dir($dir.$text)) {
+            if (is_file($dir.$text.'/Controllers/Init.php')) {
+              include $dir.$text.'/Controllers/Init.php';
+              $class = 'Widgets\\'.ucfirst($text).'\Controllers\Init';
+              if (method_exists($class, 'init')) {
+                createClass($class)->init();
+              }
+            }
+          }
+        }
+      }
+      closedir($f);
+    }
+    // คืนค่า Class
+    return $obj;
+  }
+
+  /**
+   * อ่านข้อมูลโมดูลทั้งหมด จากชื่อไดเร็คทอรี่
+   *
+   * @param string $owner
+   * @return array
+   */
+  public function getInstalledOwners()
+  {
+    return $this->module->by_owner;
+  }
+
+  /**
+   * ตรวจสอบโมดูลที่เรียก
    *
    * @param array $modules ข้อมูลจาก $_GET หรือ $_POST
    * @return object||null คืนค่าโมดูลที่ใช้งานได้ ไม่พบคืนค่า null
    */
-  public static function get($modules)
+  public function checkModuleCalled($modules)
   {
     // รายชื่อโมดูลทั้งหมด
-    $module_list = array_keys(Gcms::$install_modules);
+    $module_list = array_keys($this->module->by_module);
     // ตรวจสอบโมดูลที่เรียก
     if (isset($modules['module']) && preg_match('/^(tag|calendar)([\/\-](.*)|)$/', $modules['module'], $match)) {
       // โมดูล document (tag, calendar)
@@ -51,7 +121,7 @@ class Controller extends \Kotchasan\Controller
     if (!empty($module_list)) {
       if (empty($modules['module'])) {
         // ไม่ได้กำหนดโมดูลมา ใช้โมดูลแรกสุด
-        $module = Gcms::$install_modules[reset($module_list)];
+        $module = $this->module->by_module[reset($module_list)];
       } elseif ($modules['module'] == 'search') {
         // เรียกหน้าค้นหา (โมดูล index)
         $module = (object)array(
@@ -65,8 +135,8 @@ class Controller extends \Kotchasan\Controller
         );
       } elseif (in_array($modules['module'], $module_list)) {
         // โมดูลที่เลือก
-        $module = Gcms::$install_modules[$modules['module']];
-      } elseif (in_array($modules['module'], array_keys(Gcms::$install_owners))) {
+        $module = $this->module->by_module[$modules['module']];
+      } elseif (in_array($modules['module'], array_keys($this->module->by_owner))) {
         // เรียกโมดูลที่ติดตั้ง (ไดเร็คทอรี่)
         $modules['owner'] = $modules['module'];
         $module = (object)$modules;
@@ -107,5 +177,60 @@ class Controller extends \Kotchasan\Controller
         'method' => $method,
         'module' => $module
     );
+  }
+
+  /**
+   * อ่านชื่อโมดูลแรกสุด
+   *
+   * @return string ไม่พบคืนค่าข้อความว่าง
+   */
+  public function getFirst()
+  {
+    if (empty($this->module->by_module)) {
+      return '';
+    } else {
+      reset($this->module->by_module);
+      return key($this->module->by_module);
+    }
+  }
+
+  /**
+   * อ่านข้อมูลโมดูลทั้งหมด จากชื่อไดเร็คทอรี่
+   *
+   * @param string $owner
+   * @return array
+   */
+  public function findByOwner($owner)
+  {
+    return isset($this->module->by_owner[$owner]) ? $this->module->by_owner[$owner] : array();
+  }
+
+  /**
+   * อ่านข้อมูลโมดูลจากชื่อโมดูล
+   *
+   * @param string $module ชื่อโมดูล
+   * @return object|null ข้อมูลโมดูล (Object) ไม่พบคืนค่า null
+   */
+  public function findByModule($module)
+  {
+    return isset($this->module->by_module[$module]) ? $this->module->by_module[$module] : null;
+  }
+
+  /**
+   * อ่านข้อมูลโมดูลจาก ID ของโมดูล
+   *
+   * @param int $id ID ของโมดูล
+   * @return object|null ข้อมูลโมดูล (Object) ไม่พบคืนค่า null
+   */
+  public function findByID($id)
+  {
+    if (!empty($this->module->by_module)) {
+      foreach ($this->module->by_module as $item) {
+        if ($item->module_id == $id) {
+          return $item;
+        }
+      }
+    }
+    return null;
   }
 }

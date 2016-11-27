@@ -1,3 +1,6 @@
+.widget-album {
+  margin-top: 5px;
+}
 .widget-album .figure {
   text-align: center;
   position: relative;
@@ -48,4 +51,8 @@
   filter: alpha(opacity=1);
   opacity: 1;
   background-color: rgba(0,0,0,0.5);
+}
+.widget-album [class*="col"] {
+  border-bottom: none;
+  padding-bottom: 0;
 }

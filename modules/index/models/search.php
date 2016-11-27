@@ -69,7 +69,7 @@ class Model extends \Kotchasan\Model
       // groub by id
       $index->sqls[] = $db->createQuery()->select()->from(array($q3, 'Q'))->groupBy('Q.id');
       // ค้นหาจากโมดูลอื่นๆที่ติดตั้ง
-      foreach (Gcms::$install_owners as $item => $modules) {
+      foreach (Gcms::$module->getInstalledOwners() as $item => $modules) {
         if ($item != 'index' && is_file(ROOT_PATH."modules/$item/models/search.php")) {
           include (ROOT_PATH."modules/$item/models/search.php");
           createClass(ucfirst($item).'\Search\Model')->findAll($request, $index);

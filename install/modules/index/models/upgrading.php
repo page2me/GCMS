@@ -22,8 +22,8 @@ class Model extends \Kotchasan\Model
   {
     if ($version == '10.1.2') {
       return \Index\Upgrade1012\Model::upgrade($db);
-    } elseif ($version == '11.0.0') {
-      return \Index\Upgrade1100\Model::upgrade($db);
+    } elseif ($version > '10.1.2') {
+      return \Index\Upgrade1120\Model::upgrade($db);
     }
   }
 }

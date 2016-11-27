@@ -93,7 +93,6 @@ class Model extends \Kotchasan\Model
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
-        $input = false;
         $module_id = 0;
         // index
         $index_save = array(
@@ -163,7 +162,6 @@ class Model extends \Kotchasan\Model
               $item['language'] == $detail_save['language']
             ) {
               $ret['ret_module'] = Language::replace('This :name already exist', array(':name', Language::get('Module')));
-              $input = !$input ? 'module' : $input;
             }
           }
           // topic

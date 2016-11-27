@@ -48,18 +48,13 @@ class Model extends \Kotchasan\KBase
           'email_Username' => self::$request->post('email_Username')->quote(),
           'email_Password' => self::$request->post('email_Password')->quote()
         );
-        // ตรวจสอบค่าที่ส่งมา
-        $input = false;
         // อีเมล์
         if (empty($save['noreply_email'])) {
           $ret['ret_noreply_email'] = Language::get('Please fill in').' '.Language::get('Email');
-          $input = !$input ? 'noreply_email' : $input;
         } elseif (!Validator::email($save['noreply_email'])) {
           $ret['ret_noreply_email'] = str_replace(':name', Language::get('Email'), Language::get('Invalid :name'));
-          $input = !$input ? 'noreply_email' : $input;
         } else {
           $config->noreply_email = $save['noreply_email'];
-          $ret['ret_noreply_email'] = '';
         }
         $config->email_charset = empty($save['email_charset']) ? 'utf-8' : strtolower($save['email_charset']);
         if (empty($save['email_Host'])) {
@@ -79,7 +74,7 @@ class Model extends \Kotchasan\KBase
         }
         $config->email_use_phpMailer = $save['email_use_phpMailer'];
         $config->email_SMTPAuth = $save['email_SMTPAuth'];
-        if (!$input) {
+        if (empty($ret)) {
           // save config
           if (Config::save($config, ROOT_PATH.'settings/config.php')) {
             $ret['alert'] = Language::get('Saved successfully');
@@ -87,9 +82,6 @@ class Model extends \Kotchasan\KBase
           } else {
             $ret['alert'] = sprintf(Language::get('File %s cannot be created or is read-only.'), 'settings/config.php');
           }
-        } else {
-          // คืนค่า input ที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

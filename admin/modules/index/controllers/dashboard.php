@@ -42,10 +42,9 @@ class Controller extends \Kotchasan\Controller
       // แสดงฟอร์ม
       $section->appendChild(createClass('Index\Dashboard\View')->render());
       return $section->render();
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**

@@ -36,16 +36,13 @@ class View extends \Gcms\View
   {
     // ลิสต์รายการ
     $index = \Board\Stories\Model::get($request, $index);
-    if (empty($index)) {
-      // 404
-      return createClass('Index\PageNotFound\Controller')->init($request, 'board');
-    } else {
+    if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // วันที่สำหรับเครื่องหมาย new
       $valid_date = time() - $index->new_date;
-      // รายการ
-      $listitem = Grid::create($index->owner, $index->module, 'listitem');
+      // /board/listitem.html
+      $listitem = Grid::create('board', $index->module, 'listitem');
       foreach ($index->items as $item) {
         if (!empty($item->picture) && is_file(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$item->picture)) {
           $thumb = WEB_URL.DATA_FOLDER.'board/thumb-'.$item->picture;
@@ -86,19 +83,19 @@ class View extends \Gcms\View
         ));
       }
       // breadcrumb ของโมดูล
-      if (Gcms::isHome($index->module)) {
+      if (Gcms::$menu->isHome($index->index_id)) {
         $index->canonical = WEB_URL.'index.php';
       } else {
         $index->canonical = Gcms::createUrl($index->module);
-        $menu = Gcms::$menu->moduleMenu($index->module);
+        $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
         if ($menu) {
           Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
         }
       }
       // current URL
       $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
-      // template
-      $template = Template::create($index->owner, $index->module, $listitem->hasItem() ? 'list' : 'empty');
+      // /board/list.html หรือ /board/empty.html หากไม่มีข้อมูล
+      $template = Template::create('board', $index->module, $listitem->hasItem() ? 'list' : 'empty');
       $template->add(array(
         '/{TOPIC}/' => $index->topic,
         '/{DETAIL}/' => $index->detail,
@@ -122,5 +119,7 @@ class View extends \Gcms\View
           'detail' => $template->render()
       );
     }
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('board');
   }
 }

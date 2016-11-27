@@ -52,7 +52,6 @@ class Model extends \Kotchasan\Model
         );
         $id = $request->post('board_id')->toInt();
         // ตรวจสอบค่าที่ส่งมา
-        $ret = array();
         $antispam = new Antispam($request->post('board_antispamid')->toString());
         if (!$antispam->valid($request->post('board_antispam')->toString())) {
           // Antispam ไม่ถูกต้อง
@@ -69,15 +68,15 @@ class Model extends \Kotchasan\Model
               $password = $login['password'];
             }
             // true = guest โพสต์ได้
-            $guest = in_array(-1, $index['can_post']);
+            $guest = in_array(-1, $index->can_post);
             // รายการไฟล์อัปโหลด
             $fileUpload = array();
-            if (empty($index['img_upload_type'])) {
+            if (empty($index->img_upload_type)) {
               // ไม่สามารถอัปโหลดได้ ต้องมีรายละเอียด
               $requireDetail = true;
             } else {
               // ต้องมีรายละเอียด ถ้าเป็นโพสต์ใหม่ หรือ แก้ไขและไม่มีรูป
-              $requireDetail = ($id == 0 || ($id > 0 && empty($index['picture'])));
+              $requireDetail = ($id == 0 || ($id > 0 && empty($index->picture)));
               foreach ($request->getUploadedFiles() as $item => $file) {
                 if ($file->hasUploadFile()) {
                   $fileUpload[$item] = $file;
@@ -88,10 +87,10 @@ class Model extends \Kotchasan\Model
             }
             // moderator สามารถ แก้ไขวันที่ได้
             if ($id > 0 && $moderator) {
-              $post['create_date'] = Date::sqlDateTimeToMktime($request->post('board_create_date')->toString().' '.$request->post('board_hour')->toString().':'.$request->post('board_minute')->toString().':00');
+              $post['create_date'] = Date::sqlDateTimeToMktime($request->post('board_create_date')->toString().' '.$request->post('board_create_time')->toString());
             }
           }
-          if (!$index || empty($index['can_post'])) {
+          if (!$index || empty($index->can_post)) {
             // ไม่พบรายการที่ต้องการ หรือไม่สามารถโพสต์ได้
             $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
           } elseif (!empty($fileUpload) && !File::makeDirectory(ROOT_PATH.DATA_FOLDER.'board/')) {
@@ -100,7 +99,7 @@ class Model extends \Kotchasan\Model
           } elseif ($post['topic'] == '') {
             // คำถาม ไม่ได้กรอกคำถาม
             $ret['ret_board_topic'] = 'this';
-          } elseif ($index['categories'] > 0 && $post['category_id'] == 0) {
+          } elseif ($index->categories > 0 && $post['category_id'] == 0) {
             // คำถาม มีหมวด ไม่ได้เลือกหมวด
             $ret['ret_board_category_id'] = 'this';
           } elseif ($post['detail'] == '' && $requireDetail) {
@@ -122,7 +121,7 @@ class Model extends \Kotchasan\Model
                 } else {
                   $ret['ret_board_email'] = $user;
                 }
-              } elseif (!in_array($user['status'], $index['can_reply'])) {
+              } elseif (!in_array($user['status'], $index->can_reply)) {
                 // ไม่สามารถแสดงความคิดเห็นได้
                 $ret['alert'] = Language::get('Sorry, you do not have permission to comment');
               } else {
@@ -152,7 +151,7 @@ class Model extends \Kotchasan\Model
               // สมาชิกเท่านั้น
               $ret['alert'] = Language::get('Members Only');
             }
-          } elseif (!($index['member_id'] == $login['id'] || $moderator)) {
+          } elseif (!($index->member_id == $login['id'] || $moderator)) {
             // แก้ไข ไม่ใช่เจ้าของ และ ไม่ใช่ผู้ดูแล
             $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
           }
@@ -164,7 +163,7 @@ class Model extends \Kotchasan\Model
                 array('topic', $post['topic']),
                 array('detail', $post['detail']),
                 array('email', $post['email']),
-                array('module_id', $index['module_id']),
+                array('module_id', $index->module_id),
                 array('last_update', '>', time() - 86400),
               ))
               ->first('id');
@@ -175,12 +174,12 @@ class Model extends \Kotchasan\Model
           // เวลาปัจจุบัน
           $mktime = time();
           // ไฟล์อัปโหลด
-          if (empty($ret) && !empty($index['img_upload_type'])) {
+          if (empty($ret) && !empty($index->img_upload_type)) {
             foreach ($fileUpload as $item => $file) {
               $k = str_replace('board_', '', $item);
-              if (!$file->validFileExt($index['img_upload_type'])) {
+              if (!$file->validFileExt($index->img_upload_type)) {
                 $ret['ret_'.$item] = Language::get('The type of file is invalid');
-              } elseif ($file->getSize() > ($index['img_upload_size'] * 1024)) {
+              } elseif ($file->getSize() > ($index->img_upload_size * 1024)) {
                 $ret['ret_'.$item] = Language::get('The file size larger than the limit');
               } else {
                 // อัปโหลดได้
@@ -191,10 +190,10 @@ class Model extends \Kotchasan\Model
                   $post[$k] = "$mktime.$ext";
                 }
                 try {
-                  $file->cropImage($index['img_upload_type'], ROOT_PATH.DATA_FOLDER.'board/thumb-'.$post[$k], $index['icon_width'], $index['icon_height']);
+                  $file->cropImage($index->img_upload_type, ROOT_PATH.DATA_FOLDER.'board/thumb-'.$post[$k], $index->icon_width, $index->icon_height);
                   // ลบรูปภาพเก่า
-                  if (!empty($index[$k]) && $index[$k] != $post[$k]) {
-                    @unlink(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$index[$k]);
+                  if (!empty($index->$k) && $index->$k != $post[$k]) {
+                    @unlink(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$index->$k);
                   }
                 } catch (\Exception $exc) {
                   // ไม่สามารถอัปโหลดได้
@@ -203,8 +202,8 @@ class Model extends \Kotchasan\Model
                 try {
                   $file->moveTo(ROOT_PATH.DATA_FOLDER.'board/'.$post[$k]);
                   // ลบรูปภาพเก่า
-                  if (!empty($index[$k]) && $index[$k] != $post[$k]) {
-                    @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index[$k]);
+                  if (!empty($index->$k) && $index->$k != $post[$k]) {
+                    @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index->$k);
                   }
                 } catch (\Exception $exc) {
                   // ไม่สามารถอัปโหลดได้
@@ -215,7 +214,7 @@ class Model extends \Kotchasan\Model
           }
           if (empty($ret)) {
             $post['last_update'] = $mktime;
-            $post['can_reply'] = empty($index['can_reply']) ? 0 : 1;
+            $post['can_reply'] = empty($index->can_reply) ? 0 : 1;
             if ($id > 0) {
               // แก้ไข
               $this->db()->update($this->getFullTableName('board_q'), $id, $post);
@@ -225,7 +224,7 @@ class Model extends \Kotchasan\Model
               // ใหม่
               $post['ip'] = $request->getClientIp();
               $post['create_date'] = $mktime;
-              $post['module_id'] = $index['module_id'];
+              $post['module_id'] = $index->module_id;
               $id = $this->db()->insert($this->getFullTableName('board_q'), $post);
               // อัปเดทสมาชิก
               if ($post['member_id'] > 0) {
@@ -236,12 +235,12 @@ class Model extends \Kotchasan\Model
             }
             if ($post['category_id'] > 0) {
               // อัปเดทจำนวนเรื่อง และ ความคิดเห็น ในหมวด
-              \Board\Admin\Write\Model::updateCategories((int)$index['module_id']);
+              \Board\Admin\Write\Model::updateCategories($index->module_id);
             }
             // เคลียร์ antispam
             $antispam->delete();
             // คืนค่า url ของบอร์ด
-            $ret['location'] = WEB_URL."index.php?module=$index[module]&id=$id&visited=$mktime";
+            $ret['location'] = WEB_URL.'index.php?module='.$index->module.'&id='.$id.'&visited='.$mktime;
           }
         }
       }
@@ -256,7 +255,7 @@ class Model extends \Kotchasan\Model
    * @param int $id ID ของคำถาม, 0 ถ้าเป็นคำถามใหม่
    * @param int $module_id ID ของโมดูล
    * @param int $category_id หมวดหมู่ที่เลือก
-   * @return array|bool คืนค่าผลลัพท์ที่พบ ไม่พบข้อมูลคืนค่า false
+   * @return object|bool คืนค่าผลลัพท์ที่พบ (Object) ไม่พบข้อมูลคืนค่า false
    */
   private function get($id, $module_id, $category_id)
   {
@@ -284,13 +283,14 @@ class Model extends \Kotchasan\Model
     if ($index) {
       // config จากโมดูล
       $index = ArrayTool::unserialize($index['mconfig'], $index);
-      // config จากหมวด
+      // config จากหมวด แทนที่ config จากโมดูล
       if (!empty($index['category_id'])) {
         $index = ArrayTool::unserialize($index['config'], $index);
       }
       unset($index['mconfig']);
       unset($index['config']);
+      return (object)$index;
     }
-    return $index;
+    return false;
   }
 }

@@ -1411,18 +1411,16 @@ window.$K = (function () {
               this.element.addClass('required').highlight().focus();
               ret = false;
               return true;
-            } else if (this.pattern !== null && val !== '') {
-              if (this.pattern.test(val)) {
-                this.element.valid();
-              } else {
-                title = this.title !== '' ? this.title : trans('Invalid data');
-                this.element.invalid(title);
-                alert(title);
-                this.element.highlight().focus();
-                this.element.select();
-                ret = false;
-                return true;
-              }
+            } else if (this.pattern !== null && val !== '' && !this.pattern.test(val)) {
+              title = this.title !== '' ? this.title : trans('Invalid data');
+              this.element.invalid(title);
+              alert(title);
+              this.element.highlight().focus();
+              this.element.select();
+              ret = false;
+              return true;
+            } else {
+              this.element.reset();
             }
           });
           if (ret && Object.isFunction(temp.callback)) {

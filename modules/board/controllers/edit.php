@@ -35,19 +35,18 @@ class Controller extends \Kotchasan\Controller
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     if ($qid > 0) {
       $index = \Board\Module\Model::getQuestionById($qid, $module);
+      if ($index) {
+        // ฟอร์มแก้ไขกระทู้
+        return createClass('Board\Writeedit\View')->index($request, $index);
+      }
     } elseif ($rid > 0) {
       $index = \Board\Module\Model::getCommentById($rid, $module);
+      if ($index) {
+        // ฟอร์มแก้ไขความคิดเห็น
+        return createClass('Board\Replyedit\View')->index($request, $index);
+      }
     }
-    if (empty($index)) {
-      // 404
-      $page = createClass('Index\PageNotFound\Controller')->init($request, 'board');
-    } elseif ($qid > 0) {
-      // ฟอร์มแก้ไขกระทู้
-      $page = createClass('Board\Writeedit\View')->index($request, $index);
-    } elseif ($rid > 0) {
-      // ฟอร์มแก้ไขความคิดเห็น
-      $page = createClass('Board\Replyedit\View')->index($request, $index);
-    }
-    return $page;
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('board');
   }
 }

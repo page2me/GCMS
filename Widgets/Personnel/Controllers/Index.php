@@ -9,6 +9,7 @@
 namespace Widgets\Personnel\Controllers;
 
 use \Personnel\Index\Controller;
+use \Gcms\Gcms;
 
 /**
  * Controller หลัก สำหรับแสดงผล Widget
@@ -34,7 +35,7 @@ class Index extends \Kotchasan\Controller
       $query_string['module'] = 'personnel';
     }
     // ตรวจสอบโมดูล
-    $index = \Index\Module\Model::get('personnel', $query_string['module']);
+    $index = Gcms::$module->findByModule($query_string['module']);
     if ($index) {
       $id = \Kotchasan\Text::rndname(10);
       $widget = array();
@@ -59,7 +60,7 @@ class Index extends \Kotchasan\Controller
       if (!empty($query_string['menu'])) {
         $widget[] = '<nav class="sidemenu margin-top"><ul>';
         foreach (\Index\Category\Model::categories($index->module_id) as $category_id => $topic) {
-          $widget[] = '<li><a href="'.\Gcms\Gcms::createUrl($index->module, '', 0, 0, 'cat='.$category_id).'"><span>'.$topic.'</span></a></li>';
+          $widget[] = '<li><a href="'.Gcms::createUrl($index->module, '', 0, 0, 'cat='.$category_id).'"><span>'.$topic.'</span></a></li>';
         }
         $widget[] = '</ul></nav>';
       }

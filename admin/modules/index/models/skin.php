@@ -42,8 +42,6 @@ class Model extends \Kotchasan\KBase
           'delete_bg_image' => self::$request->post('delete_bg_image')->toBoolean(),
           'bg_color' => self::$request->post('bg_color')->color()
         );
-        // ตรวจสอบค่าที่ส่งมา
-        $input = false;
         // อัปโหลดไฟล์
         foreach (self::$request->getUploadedFiles() as $item => $file) {
           if ($save['delete_'.$item] == 1) {
@@ -58,11 +56,9 @@ class Model extends \Kotchasan\KBase
             if (!$file->validFileExt($typies)) {
               // ชนิดของไฟล์ไม่รองรับ
               $ret['ret_'.$item] = Language::get('The type of file is invalid');
-              $input = !$input ? $item : $input;
             } elseif (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'image/')) {
               // ไดเรคทอรี่ไม่สามารถสร้างได้
               $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'image/');
-              $input = !$input ? $item : $input;
             } else {
               try {
                 $ext = $file->getClientFileExt();
@@ -71,7 +67,6 @@ class Model extends \Kotchasan\KBase
               } catch (\Exception $exc) {
                 // ไม่สามารถอัปโหลดได้
                 $ret['ret_'.$item] = Language::get($exc->getMessage());
-                $input = !$input ? $item : $input;
               }
             }
           }
@@ -82,7 +77,7 @@ class Model extends \Kotchasan\KBase
         } else {
           $config->bg_color = strtoupper($save['bg_color']);
         }
-        if (!$input) {
+        if (empty($ret)) {
           // save config
           if (Config::save($config, ROOT_PATH.'settings/config.php')) {
             $ret['alert'] = Language::get('Saved successfully');
@@ -90,9 +85,6 @@ class Model extends \Kotchasan\KBase
           } else {
             $ret['alert'] = sprintf(Language::get('File %s cannot be created or is read-only.'), 'settings/config.php');
           }
-        } else {
-          // คืนค่า input ที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

@@ -27,17 +27,12 @@ class Model extends \Kotchasan\Model
    */
   public static function getStories($ids, $date)
   {
-    if (defined('MAIN_INIT')) {
-      $model = new static;
-      return $model->db()->createQuery()
-          ->select('id', 'module_id', 'alias', 'create_date')
-          ->from('index')
-          ->where(array(array('module_id', $ids), array('index', 0), array('published', 1), array('published_date', '<=', $date)))
-          ->cacheOn()
-          ->execute();
-    } else {
-      // เรียก method โดยตรง
-      new \Kotchasan\Http\NotFound('Do not call method directly');
-    }
+    $model = new static;
+    return $model->db()->createQuery()
+        ->select('id', 'module_id', 'alias', 'create_date')
+        ->from('index')
+        ->where(array(array('module_id', $ids), array('index', 0), array('published', 1), array('published_date', '<=', $date)))
+        ->cacheOn()
+        ->execute();
   }
 }

@@ -20,33 +20,27 @@ use \Kotchasan\Language;
 class Model extends \Kotchasan\Model
 {
   /**
+   * รายการเมนูเรียงลำดับตามระดับของเมนู
+   *
+   * @var array
+   */
+  public $menus_by_pos = array();
+  /**
    * รายการเมนูทั้งหมด
    *
-   * @var object
+   * @var array
    */
-  private $datas;
-  /**
-   * รายการเมนูเรียงลำกับตามระดับของเมนู
-   *
-   * @var object
-   */
-  private $menus_by_pos;
+  public $menus = array();
 
   /**
    * โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
-   *
-   * @return array
    */
-  public static function create()
+  public function __construct()
   {
-    $model = new static;
+    parent::__construct();
     // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
     $lng = array(Language::name(), '');
     $select = array(
-      'M.id module_id',
-      'M.module',
-      'M.owner',
-      'M.config',
       'U.index_id',
       'U.parent',
       'U.level',
@@ -56,69 +50,26 @@ class Model extends \Kotchasan\Model
       'U.menu_url',
       'U.menu_target',
       'U.alias',
-      'U.published menu_published',
-      "(CASE U.`parent` WHEN 'MAINMENU' THEN 0 WHEN 'BOTTOMMENU' THEN 1 WHEN 'SIDEMENU' THEN 2 ELSE 3 END ) AS `pos`"
+      'U.published',
+      "(CASE U.`parent` WHEN 'MAINMENU' THEN 0 WHEN 'SIDEMENU' THEN 1 ELSE 2 END ) AS `pos`"
     );
-    $query = $model->db()->createQuery()
+    $query = $this->db()->createQuery()
       ->select($select)
       ->from('menus U')
-      ->join('index I', 'LEFT', array(array('I.id', 'U.index_id'), array('I.index', '1'), array('I.language', $lng)))
-      ->join('modules M', 'LEFT', array('M.id', 'I.module_id'))
       ->where(array(array('U.language', $lng), array('U.parent', '!=', '')))
-      ->order(array('pos', 'U.parent', 'U.menu_order'));
+      ->order(array('pos', 'U.parent', 'U.menu_order'))
+      ->cacheOn()
+      ->toArray();
     // จัดลำดับเมนูตามระดับของเมนู
-    $datas = array();
-    $model->datas = $query->cacheOn()->execute();
-    foreach ($model->datas AS $i => $item) {
-      if (!empty($item->config)) {
-        $config = @unserialize($item->config);
-        if (is_array($config)) {
-          foreach ($config as $key => $value) {
-            $item->$key = $value;
-          }
-        }
-      }
-      unset($item->config);
-      $level = $item->level;
-      if ($level == 0) {
-        $datas[$item->parent]['toplevel'][$i] = $item;
+    foreach ($query->execute() AS $i => $item) {
+      $menu_obj = (object)$item;
+      $this->menus[] = $menu_obj;
+      if ($item['level'] == 0) {
+        $this->menus_by_pos[$item['parent']]['toplevel'][$i] = $menu_obj;
       } else {
-        $datas[$item->parent][$toplevel[$level - 1]][$i] = $item;
+        $this->menus_by_pos[$item['parent']][$toplevel[$item['level'] - 1]][$i] = $menu_obj;
       }
-      $toplevel[$level] = $i;
+      $toplevel[$item['level']] = $i;
     }
-    $model->menus_by_pos = (object)$datas;
-    return $model;
-  }
-
-  /**
-   * อ่านรายการเมนูทั้งหมด
-   *
-   * @return object
-   */
-  public function getMenus()
-  {
-    return $this->datas;
-  }
-
-  /**
-   * อ่านรายการเมนูทั้งหมด เรียงลำดับตามตำแหน่งของเมนู
-   *
-   * @return object
-   */
-  public function getMenusByPos()
-  {
-    return $this->menus_by_pos;
-  }
-
-  /**
-   * อ่านเมนูตามตำแหน่งที่กำหนด
-   *
-   * @param string $pos
-   * @return array ไม่พบคืนค่าแอเรย์ว่าง
-   */
-  public function get($pos)
-  {
-    return isset($this->menus_by_pos->{$pos}) ? $this->menus_by_pos->{$pos} : array();
   }
 }

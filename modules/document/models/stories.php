@@ -56,7 +56,7 @@ class Model extends \Kotchasan\Model
     // query
     $where = array(
       array('D.language', array(Language::name(), '')),
-      array('D.relate', 'LIKE', '%'.$index->alias.'%')
+      array('D.relate', 'LIKE', '%'.$index->tag.'%')
     );
     // คืนค่า
     return self::execute($request, $index, $where);
@@ -104,7 +104,7 @@ class Model extends \Kotchasan\Model
     // query
     $query = $model->db()->createQuery()
       ->from('index_detail D')
-      ->join('modules M', 'INNER', array(array('M.id', 'D.module_id'), array('M.owner', 'document')))
+      ->join('modules M', 'INNER', array('M.id', 'D.module_id'))
       ->join('index I', 'INNER', array(array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.index', 0), array('I.published', 1), array('I.published_date', '<=', Date::mktimeToSqlDate())))
       ->where($where);
     // จำนวน
@@ -123,7 +123,6 @@ class Model extends \Kotchasan\Model
     $index->start = $list_per_page * ($index->page - 1);
     // query (sort, split)
     $select = array(
-      'M.module',
       'I.id',
       'D.topic',
       'I.alias',
@@ -137,7 +136,8 @@ class Model extends \Kotchasan\Model
       'I.member_id',
       'U.status',
       'U.displayname',
-      'U.email'
+      'U.email',
+      'M.module'
     );
     // เรียงลำดับ
     $sorts = array(

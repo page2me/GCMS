@@ -187,7 +187,6 @@ class Model extends \Kotchasan\Model
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
-        $input = false;
         // รับค่าจากการ POST
         $save = array(
           'language' => strtolower($request->post('language')->topic()),
@@ -228,35 +227,33 @@ class Model extends \Kotchasan\Model
         } else {
           $menu = (object)array('id' => 0);
         }
-        // ตรวจสอบค่าที่ส่งมา
-        $input = false;
         if ($id > 0 && !$menu) {
           $ret['alert'] = Language::get('Unable to complete the transaction');
         } else {
           // accesskey
           if ($save['accesskey'] != '') {
             if (!preg_match('/[a-z0-9]{1,1}/', $save['accesskey'])) {
-              $input = !$input ? 'accesskey' : $input;
+              $ret['ret_accesskey'] = 'this';
             }
           }
           // menu order (top level)
           if ($type != 0 && $toplvl == 0) {
-            $input = !$input ? 'menu_order' : $input;
+            $ret['ret_menu_order'] = 'this';
           } elseif ($action == 1 && $save['index_id'] == 0) {
-            $input = !$input ? 'menu_order' : $input;
+            $ret['ret_menu_order'] = 'this';
           }
           // menu_url
           if ($action == 2 && $save['menu_url'] == '') {
-            $input = !$input ? 'menu_url' : $input;
+            $ret['ret_menu_url'] = 'this';
           }
           if ($action != 2) {
-            $save['menu_url'] = '';
+            unset($ret['ret_menu_url']);
           }
           if ($action != 1) {
             $save['index_id'] = 0;
           }
         }
-        if (!$input) {
+        if (empty($ret)) {
           if ($type == 0) {
             // เป็นเมนูลำดับแรกสุด
             $save['menu_order'] = 1;
@@ -310,9 +307,6 @@ class Model extends \Kotchasan\Model
           // ส่งค่ากลับ
           $ret['alert'] = Language::get('Saved successfully');
           $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'menus', 'id' => null, 'parent' => $save['parent']));
-        } else {
-          // คืนค่า input ตัวแรกที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

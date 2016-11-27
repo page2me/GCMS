@@ -40,7 +40,7 @@ class View extends \Gcms\View
       '/{DISPLAYNAME}/' => empty($login['displayname']) ? (empty($login['email']) ? 'Unname' : $login['email']) : $login['displayname'],
       '/{ID}/' => (int)$login['id'],
       '/{STATUS}/' => $login['status'],
-      '/{ADMIN}/' => $login && Login::isAdmin() ? '' : 'hidden',
+      '/{ADMIN}/' => Login::adminAccess() ? '' : 'hidden',
       '/{WEBURL}/' => WEB_URL,
       '/:name/' => self::$cfg->member_status[1]
     ));

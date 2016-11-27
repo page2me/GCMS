@@ -36,9 +36,11 @@ class View extends \Gcms\View
   {
     // วันที่สำหรับเครื่องหมาย new
     $valid_date = time() - $index->new_date;
-    // รายการ
-    $listitem = Grid::create($index->owner, $index->module, 'listitem');
+    // /document/listitem.html
+    $listitem = Grid::create('document', $index->module, 'listitem');
+    // คอลัมน์
     $listitem->setCols($index->cols);
+    // ลิสต์รายการ
     foreach ($index->items as $item) {
       if (!empty($item->picture) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$item->picture)) {
         $thumb = WEB_URL.DATA_FOLDER.'document/'.$item->picture;
@@ -67,25 +69,26 @@ class View extends \Gcms\View
         '/{ICON}/' => $icon
       ));
     }
-    // breadcrumb ของโมดูล
-    if (Gcms::isHome($index->module)) {
-      $index->canonical = WEB_URL.'index.php';
-    } else {
-      if (empty($index->category_id)) {
-        $index->canonical = Gcms::createUrl($index->module);
+    if (isset($index->index_id)) {
+      // breadcrumb ของโมดูล
+      if (Gcms::$menu->isHome($index->index_id)) {
+        $index->canonical = WEB_URL.'index.php';
       } else {
-        if (is_array($index->category_id)) {
-          $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'cat='.implode(',', $index->category_id));
+        if (empty($index->category_id)) {
+          $index->canonical = Gcms::createUrl($index->module);
         } else {
-          $index->canonical = Gcms::createUrl($index->module, '', $index->category_id);
+          if (is_array($index->category_id)) {
+            $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'cat='.implode(',', $index->category_id));
+          } else {
+            $index->canonical = Gcms::createUrl($index->module, '', $index->category_id);
+          }
+        }
+        $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
+        if ($menu) {
+          Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
         }
       }
-      $menu = Gcms::$menu->moduleMenu($index->module);
-      if ($menu) {
-        Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
-      }
-    }
-    if (isset($index->tag)) {
+    } elseif (isset($index->tag)) {
       // breadcrumb ของ tags
       $index->canonical = Gcms::createUrl('tag', $index->tag);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
@@ -93,14 +96,15 @@ class View extends \Gcms\View
       // breadcrumb ของ calendar
       $index->canonical = Gcms::createUrl('calendar', $index->alias);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
-    } elseif (!empty($index->category_id) && is_int($index->category_id)) {
+    }
+    if (!empty($index->category_id) && is_int($index->category_id)) {
       // breadcrumb ของหมวดหมู่
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->topic);
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->category, $index->category_description);
     }
     // current URL
     $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
-    // template
-    $template = Template::create($index->owner, $index->module, $listitem->hasItem() ? 'list' : 'empty');
+    // /document/list.html หรือ /document/empty.html ถ้าไม่มีข้อมูล
+    $template = Template::create('document', $index->module, $listitem->hasItem() ? 'list' : 'empty');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,

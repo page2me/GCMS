@@ -44,7 +44,7 @@ class Controller extends \Kotchasan\Controller
       ));
       // owner
       $modules = array();
-      foreach (Gcms::$install_owners as $owner => $item) {
+      foreach (Gcms::$module->getInstalledOwners() as $owner => $item) {
         $class = ucfirst($owner).'\Admin\Init\Controller';
         if (class_exists($class) && method_exists($class, 'description')) {
           // get module description

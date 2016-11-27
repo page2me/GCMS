@@ -1,0 +1,26 @@
+<form id=login_frm class=memberfrm method=post action="{WEBURL}index.php" autocomplete=off>
+  <p class=head>{LNG_Visitors please login}</p>
+  <p class="title center">{WEBTITLE}</p>
+  <p class="subtitle center">{SUBTITLE}</p>
+  <p><label class="g-input icon-email"><input type=text name=login_username id=login_username maxlength=255 value="{EMAIL}" placeholder="{LNG_Email}"></label></p>
+  <p><label class="g-input icon-password"><input type=password name=login_password id=login_password maxlength=20 value="{PASSWORD}" placeholder="{LNG_Password}"></label></p>
+  <p class=right>
+    <input type=checkbox name=login_remember id=login_remember value=1 title="{LNG_Remember me}" {REMEMBER}>
+    <label for=login_remember>{LNG_Remember me}</label>
+  </p>
+  <p class="{FACEBOOK} center"><a id=login_fb class="blue button"><span class="icon-facebook">{LNG_Login With Facebook}</span></a></p>
+  <p class=center>
+    <input type=button class="button register" id=register value="Register" title="{LNG_Create new account}">
+    <input type=button class="button forgot" id=forgot value="Forgot" title="{LNG_Request new password}">
+    <input type=submit class="button login" id=login_submit value="Login" title="{LNG_Member Login}">
+    <input type="hidden" id="token" name="token" value="{TOKEN}">
+  </p>
+</form>
+<script>
+  $G(window).Ready(function () {
+    new GForm('login_frm', '{WEBURL}xhr.php/index/model/login/chklogin').onsubmit(doLoginSubmit);
+    callClick('register', doMember);
+    callClick('forgot', doMember);
+    callClick('login_fb', fbLogin);
+  });
+</script>

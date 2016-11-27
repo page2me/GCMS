@@ -11,7 +11,6 @@ namespace Index\Member;
 use \Kotchasan\Login;
 use \Kotchasan\Text;
 use \Gcms\Email;
-use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
 
 /**
@@ -31,18 +30,68 @@ class Model extends \Kotchasan\Orm\Field
   protected $table = 'user U';
 
   /**
+   * อ่านข้อมูลสมาชิกที่ $user_id
+   *
+   * @param int $user_id
+   * @return object|null คืนค่า Object ของข้อมูล ไม่พบคืนค่า null
+   */
+  public static function get($user_id)
+  {
+    if (is_int($user_id) && $user_id > 0) {
+      // query ข้อมูลสมาชิกที่เลือก
+      $model = new \Kotchasan\Model;
+      $query = $model->db()->createQuery();
+      $array = array(
+        'U.id',
+        'U.pname',
+        'U.fname',
+        'U.lname',
+        'U.email',
+        'U.displayname',
+        'U.website',
+        'U.company',
+        'U.address1',
+        'U.address2',
+        'U.phone1',
+        'U.phone2',
+        'U.sex',
+        'U.birthday',
+        'U.zipcode',
+        'U.country',
+        'U.status',
+        'U.subscrib',
+        'U.admin_access',
+        'U.provinceID',
+        'U.province',
+        'U.icon',
+        'U.fb',
+        'V.email invite'
+      );
+      $result = $query->select($array)
+        ->from('user U')
+        ->join('user V', 'LEFT', array('V.id', 'U.invite_id'))
+        ->where(array('U.id', $user_id))
+        ->limit(1)
+        ->toArray()
+        ->execute();
+      return sizeof($result) == 1 ? (object)$result[0] : null;
+    }
+    return null;
+  }
+
+  /**
    * รับค่าจาก action
    */
-  public function action(Request $request)
+  public function action()
   {
-    if ($request->initSession() && $request->isReferer() && $login = Login::isAdmin()) {
+    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo' || !empty($login['fb'])) {
         echo Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
-        $action = $request->post('action')->toString();
+        $action = self::$request->post('action')->toString();
         // id ที่ส่งมา
-        if (preg_match_all('/,?([0-9]+),?/', $request->post('id')->toString(), $match)) {
+        if (preg_match_all('/,?([0-9]+),?/', self::$request->post('id')->toString(), $match)) {
           // Model
           $model = new \Kotchasan\Model;
           // ตาราง user
@@ -127,7 +176,7 @@ class Model extends \Kotchasan\Orm\Field
                 echo implode("\n", $msgs);
               }
             }
-          } elseif ($request->post('module')->toString() === 'status') {
+          } elseif (self::$request->post('module')->toString() === 'status') {
             // เปลี่ยนสถานะสมาชิก
             $model->db()->update($user_table, array(
               array('id', $match[1]),

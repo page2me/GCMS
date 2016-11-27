@@ -25,7 +25,7 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * แสดงผล index.html
+   * หน้าหลักเว็บไซต์ (index.html)
    *
    * @param Request $request
    */
@@ -38,8 +38,8 @@ class Controller extends \Kotchasan\Controller
     // ตรวจสอบการ login
     Login::create();
     // กำหนด skin ให้กับ template
-    self::$cfg->skin = $request->get('skin', self::$request->session('skin', self::$cfg->skin)->toString())->toString();
-    self::$cfg->skin = is_file(ROOT_PATH.'skin/'.self::$cfg->skin.'/style.css') ? self::$cfg->skin : 'bighead';
+    self::$cfg->skin = $request->get('skin', $request->session('skin', self::$cfg->skin)->toString())->toString();
+    self::$cfg->skin = is_file(ROOT_PATH.'skin/'.self::$cfg->skin.'/index.html') ? self::$cfg->skin : 'bighead';
     $_SESSION['skin'] = self::$cfg->skin;
     Template::init(self::$cfg->skin);
     // ตรวจสอบหน้าที่จะแสดง
@@ -52,44 +52,10 @@ class Controller extends \Kotchasan\Controller
       $new_day = \Index\Counter\Model::init();
       // View
       Gcms::$view = new \Gcms\View;
-      // โมดูลที่ติดตั้ง
-      $dir = ROOT_PATH.'modules/';
-      // โหลดโมดูลทั้งหมด
-      foreach (\Index\Module\Model::getInstalledModule() as $owner) {
-        if (is_file($dir.$owner.'/controllers/init.php')) {
-          include $dir.$owner.'/controllers/init.php';
-          $class = ucfirst($owner).'\Init\Controller';
-          if (method_exists($class, 'init')) {
-            createClass($class)->init();
-          }
-        }
-        if ($new_day && is_file($dir.$owner.'/controllers/cron.php')) {
-          include $dir.$owner.'/controllers/cron.php';
-          $class = ucfirst($owner).'\Cron\Controller';
-          if (method_exists($class, 'init')) {
-            createClass($class)->init();
-          }
-        }
-      }
-      // โหลด Init ของ Widgets
-      $dir = ROOT_PATH.'Widgets/';
-      $f = @opendir($dir);
-      if ($f) {
-        while (false !== ($text = readdir($f))) {
-          if ($text != "." && $text != "..") {
-            if (is_dir($dir.$text)) {
-              if (is_file($dir.$text.'/Controllers/Init.php')) {
-                include $dir.$text.'/Controllers/Init.php';
-                $class = 'Widgets\\'.ucfirst($text).'\Controllers\Init';
-                if (method_exists($class, 'init')) {
-                  createClass($class)->init();
-                }
-              }
-            }
-          }
-        }
-        closedir($f);
-      }
+      // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
+      Gcms::$menu = \Index\Menu\Controller::create();
+      // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
+      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, $new_day);
       // หน้า home มาจากเมนูรายการแรก
       $home = Gcms::$menu->homeMenu();
       if ($home) {
@@ -98,20 +64,20 @@ class Controller extends \Kotchasan\Controller
         Gcms::$view->addBreadcrumb($home->canonical, $home->menu_text, $home->menu_tooltip, 'icon-home');
       }
       // ตรวจสอบโมดูลที่เรียก
-      $modules = \Index\Module\Controller::get($request->getQueryParams());
+      $modules = Gcms::$module->checkModuleCalled($request->getQueryParams());
       if (!empty($modules)) {
         // โหลดโมดูลที่เรียก
         $page = createClass($modules->className)->{$modules->method}($request, $modules->module);
       }
       if (empty($page)) {
         // ไม่พบหน้าที่เรียก (index)
-        $page = createClass('Index\PageNotFound\Controller')->init($request, 'index');
+        $page = createClass('Index\PageNotFound\Controller')->init('index');
       }
       // title ของเว็บไซต์
       $web_title = strip_tags($page->topic);
       // meta tag
       $meta = array(
-        'generator' => '<meta name=generator content="GCMS AJAX CMS design by http://gcms.in.th">',
+        'generator' => '<meta name=generator content="GCMS AJAX CMS design by https://gcms.in.th">',
         'og:title' => '<meta property="og:title" content="'.$web_title.'">',
         'description' => '<meta name=description content="'.$page->description.'">',
         'keywords' => '<meta name=keywords content="'.$page->keywords.'">',
@@ -119,16 +85,14 @@ class Controller extends \Kotchasan\Controller
         'og:type' => '<meta property="og:type" content="article">'
       );
       // โมดูลแรกสุด ใส่ลงใน Javascript
-      $module_list = array_keys(Gcms::$install_modules);
-      $script = array('var FIRST_MODULE = "'.reset($module_list).'";');
+      $script = array('var FIRST_MODULE = "'.Gcms::$module->getFirst().'";');
       // logo
       $image_logo = '';
       if (!empty(self::$cfg->logo) && is_file(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo)) {
         $image_src = WEB_URL.DATA_FOLDER.'image/'.self::$cfg->logo;
         $info = getImageSize(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo);
         if ($info[0] > 0 || $info[1] > 0) {
-          $ext = explode('.', self::$cfg->logo);
-          $ext = strtolower(end($ext));
+          $ext = strtolower(ArrayTool::end(explode('.', self::$cfg->logo)));
           $script[] = '$G(window).Ready(function(){';
           $script[] = 'if ($E("logo")) {';
           $script[] = "new GMedia('logo_$ext', '".$image_src."', $info[0], $info[1]).write('logo');";

@@ -42,40 +42,13 @@ class Controller extends \Kotchasan\Controller
       }
       Template::init(self::$cfg->skin);
       // counter และ useronline
-      \Index\Counter\Model::init();
+      $new_day = \Index\Counter\Model::init();
       // View
       Gcms::$view = new \Index\Loader\View;
-      // โมดูลที่ติดตั้ง
-      $dir = ROOT_PATH.'modules/';
-      // โหลดโมดูลทั้งหมด
-      foreach (\Index\Module\Model::getInstalledModule() AS $owner) {
-        if (is_file($dir.$owner.'/controllers/init.php')) {
-          include $dir.$owner.'/controllers/init.php';
-          $class = ucfirst($owner).'\Init\Controller';
-          if (method_exists($class, 'init')) {
-            createClass($class)->init();
-          }
-        }
-      }
-      // โหลด Init ของ Widgets
-      $dir = ROOT_PATH.'Widgets/';
-      $f = @opendir($dir);
-      if ($f) {
-        while (false !== ($text = readdir($f))) {
-          if ($text != "." && $text != "..") {
-            if (is_dir($dir.$text)) {
-              if (is_file($dir.$text.'/Controllers/Init.php')) {
-                include $dir.$text.'/Controllers/Init.php';
-                $class = 'Widgets\\'.ucfirst($text).'\Controllers\Init';
-                if (method_exists($class, 'init')) {
-                  createClass($class)->init();
-                }
-              }
-            }
-          }
-        }
-        closedir($f);
-      }
+      // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
+      Gcms::$menu = \Index\Menu\Controller::create();
+      // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
+      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, $new_day);
       // หน้า home มาจากเมนูรายการแรก
       $home = Gcms::$menu->homeMenu();
       if ($home) {
@@ -85,14 +58,14 @@ class Controller extends \Kotchasan\Controller
       }
       // ตรวจสอบโมดูลที่เรียก
       $posts = $request->getParsedBody();
-      $modules = \Index\Module\Controller::get($posts);
+      $modules = Gcms::$module->checkModuleCalled($posts);
       if (!empty($modules)) {
         // โหลดโมดูลที่เรียก
         $page = createClass($modules->className)->{$modules->method}($request->withQueryParams($posts), $modules->module);
       }
       if (empty($page)) {
         // ไม่พบหน้าที่เรียก (index)
-        $page = createClass('Index\PageNotFound\Controller')->init($request, 'index');
+        $page = createClass('Index\PageNotFound\Controller')->init('index');
       }
       // output เป็น HTML
       $ret = array(
@@ -106,6 +79,7 @@ class Controller extends \Kotchasan\Controller
         $ret['menu'] = $ret['module'];
       }
       $ret['detail'] = Gcms::$view->renderHTML($page->detail);
+      // คืนค่า JSON
       echo json_encode($ret);
     }
   }

@@ -42,17 +42,14 @@ class Model extends \Kotchasan\KBase
           'language' => self::$request->post('language')->text()
         );
         // ตรวจสอบค่าที่ส่งมา
-        $input = false;
-        if (preg_match('/^[a-z]{2,2}$/', $post['language_name'])) {
-          $ret['ret_language_name'] = '';
-        } else {
-          $input = !$input ? 'language_name' : $input;
+        if (!preg_match('/^[a-z]{2,2}$/', $post['language_name'])) {
+          $ret['ret_language_name'] = 'this';
         }
         // Model
         $model = new \Kotchasan\Model;
         // ชื่อตาราง
         $language_table = $model->getTableName('language');
-        if (!$input) {
+        if (empty($ret)) {
           if (empty($post['language'])) {
             // สร้างภาษาใหม่
             if (!@copy(ROOT_PATH.'language/'.$post['copy'].'.php', ROOT_PATH.'language/'.$post['language_name'].'.php')) {
@@ -85,19 +82,17 @@ class Model extends \Kotchasan\KBase
               // ตรวจสอบไฟล์อัปโหลด
               if (!$file->validFileExt(array('gif'))) {
                 $ret['alert'] = Language::get('The type of file is invalid');
-                $input = !$input ? $item : $input;
               } else {
                 try {
                   $file->moveTo(ROOT_PATH.'language/'.$post['language_name'].'.gif');
                 } catch (\Exception $exc) {
                   // ไม่สามารถอัปโหลดได้
                   $ret['ret_'.$item] = Language::get($exc->getMessage());
-                  $input = !$input ? $item : $input;
                 }
               }
             }
           }
-          if (!$input) {
+          if (empty($ret)) {
             // save config
             if (Config::save($config, ROOT_PATH.'settings/config.php')) {
               $ret['alert'] = Language::get('Saved successfully');
@@ -106,10 +101,6 @@ class Model extends \Kotchasan\KBase
               $ret['alert'] = sprintf(Language::get('File %s cannot be created or is read-only.'), 'settings/config.php');
             }
           }
-        }
-        if ($input) {
-          // คืนค่า input ที่ error
-          $ret['input'] = $input;
         }
       }
     } else {

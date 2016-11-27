@@ -8,10 +8,9 @@
 
 namespace Document\Module;
 
-use \Gcms\Gcms;
-use \Kotchasan\Language;
 use \Kotchasan\Http\Request;
-use \Kotchasan\ArrayTool;
+use \Kotchasan\Language;
+use \Gcms\Gcms;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -51,16 +50,18 @@ class Model extends \Kotchasan\Model
       // จำนวนหมวดในโมดูล
       $query = $model->db()->createQuery()->selectCount()->from('category')->where(array('module_id', 'D.module_id'));
       $select = array(
-        'D.topic',
         'D.detail',
         'D.keywords',
-        array($query, 'categories'),
-        'D.description'
+        'D.description',
+        array($query, 'categories')
       );
       $query = $model->db()->createQuery()
         ->from('index_detail D')
         ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
-        ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))))
+        ->where(array(
+          array('I.module_id', (int)$index->module_id),
+          array('D.language', array(Language::name(), ''))
+        ))
         ->cacheOn()
         ->toArray();
       if (sizeof($categories) == 1) {
@@ -69,6 +70,7 @@ class Model extends \Kotchasan\Model
         $select[] = 'C.topic category';
         $select[] = 'C.detail category_description';
         $select[] = 'C.icon';
+        $select[] = 'C.published';
         $select[] = 'C.config';
         $query->join('category C', 'LEFT', array(
           array('C.category_id', (int)reset($categories)),
@@ -85,11 +87,9 @@ class Model extends \Kotchasan\Model
               $index->$key = Gcms::ser2Str($value);
               break;
             case 'config':
-              $value = @unserialize($value);
-              if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                  $index->$k = $v;
-                }
+              $config = @unserialize($value);
+              if (is_array($config) && empty($config['can_reply'])) {
+                $index->can_reply = array();
               }
               break;
             default:
@@ -97,9 +97,9 @@ class Model extends \Kotchasan\Model
               break;
           }
         }
-      }
-      if (!empty($categories) && empty($index->category_id)) {
-        $index->category_id = $categories;
+        if (!empty($categories) && empty($index->category_id)) {
+          $index->category_id = $categories;
+        }
       }
       return $index;
     }
@@ -110,12 +110,12 @@ class Model extends \Kotchasan\Model
    *
    * @param int $id ID ที่แก้ไข
    * @param object $index ข้อมูลโมดูล
-   * @return object|null ข้อมูล (Object), false ถ้าไม่พบ
+   * @return object|null ข้อมูล (Object), null ถ้าไม่พบ
    */
   public static function getCommentById($id, $index)
   {
     $model = new static;
-    $query = $model->db()->createQuery()
+    $search = $model->db()->createQuery()
       ->from('comment R')
       ->join('index Q', 'INNER', array(array('Q.id', 'R.index_id'), array('Q.index', 0)))
       ->join('index_detail D', 'INNER', array(array('D.id', 'Q.id'), array('D.module_id', 'Q.module_id'), array('D.language', array(Language::name(), ''))))
@@ -123,14 +123,11 @@ class Model extends \Kotchasan\Model
       ->where(array(array('R.id', $id), array('R.module_id', (int)$index->module_id)))
       ->toArray()
       ->first('R.id', 'R.index_id', 'R.detail', 'R.module_id', 'R.member_id', 'C.config', 'C.category_id', 'C.topic category', 'D.topic');
-    if ($query) {
-      $query = ArrayTool::unserialize($query['config'], $query);
-      unset($query['config']);
-      foreach ($query as $k => $v) {
-        $index->$k = $v;
-      }
-      return $index;
+    if ($search) {
+      $search['module'] = $index;
+      $search['config'] = @unserialize($search['config']);
+      return (object)$search;
     }
-    return false;
+    return null;
   }
 }

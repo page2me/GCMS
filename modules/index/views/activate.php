@@ -31,10 +31,10 @@ class View extends \Gcms\View
   public function render(Request $request)
   {
     // ตรวจสอบข้อมูล
-    $user = \Index\Member\Model::getUserByActivateCode($request->get('id')->topic());
+    $user = \Index\User\Model::getUserByActivateCode($request->get('id')->topic());
     if ($user) {
       // activate
-      \Index\Member\Model::activateUser($user);
+      \Index\User\Model::activateUser($user);
       // ข้อมูลแสดงผล (สำเร็จ)
       $details = array(
         '/{DETAIL}/' => Language::get('<b>Congratulations!</b> your members have already confirmed. You can use your email address and password sent with the email address used to login.'),
@@ -47,7 +47,7 @@ class View extends \Gcms\View
         '/{CLASS}/' => 'error'
       );
     }
-    // template
+    // /member/activate.html
     $template = Template::create('member', 'member', 'activate');
     $template->add($details);
     // คืนค่า

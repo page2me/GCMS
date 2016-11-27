@@ -9,7 +9,6 @@
 namespace Edocument\Report;
 
 use \Kotchasan\Http\Request;
-use \Gcms\Gcms;
 use \Kotchasan\DataTable;
 use \Kotchasan\Login;
 use \Kotchasan\Date;
@@ -39,9 +38,7 @@ class View extends \Gcms\View
    */
   public function render(Request $request, $index)
   {
-    // login
-    $login = Login::isMember();
-    if ($login && isset(Gcms::$install_owners['edocument'])) {
+    if (Login::isMember()) {
       // ตรวจสอบรายการที่ต้องการ
       $index = \Edocument\Write\Model::get($request->request('id')->toInt(), $index);
       // ตาราง
@@ -95,17 +92,17 @@ class View extends \Gcms\View
       ));
       // save cookie
       setcookie('edocument_perPage', $table->perPage, time() + 3600 * 24 * 365, '/');
-      // template
+      // /edocument/report.html
       $template = Template::create('edocument', 'edocument', 'report');
       $template->add(array(
-        '/{TOPIC}/' => $index->title,
+        '/{TOPIC}/' => $index->module->topic,
         '/{NO}/' => $index->document_no,
         '/{DETAIL}/' => $index->detail,
         '/{LIST}/' => $table->render()
       ));
+      // คืนค่า
       $index->topic = '{LNG_Download Details} '.$index->document_no;
       $index->detail = $template->render();
-      // คืนค่า
       return $index;
     }
     return null;

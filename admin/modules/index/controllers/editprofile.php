@@ -37,7 +37,7 @@ class Controller extends \Kotchasan\Controller
       // id ที่ต้องการ ถ้าไม่มีใช้คนที่ login
       $id = self::$request->get('id', $login['id'])->toInt();
       // อ่านข้อมูลสมาชิก
-      $user = \Index\Editprofile\Model::getUser($id);
+      $user = \Index\Member\Model::get($id);
       if ($user && ($login['status'] == 1 || $login['id'] == $user->id)) {
         $template = Template::create('', '', 'editprofile');
         $contents = array();
@@ -80,14 +80,10 @@ class Controller extends \Kotchasan\Controller
           '/:type/' => implode(', ', self::$cfg->user_icon_typies)
           ), false);
         return $template->render();
-      } else {
-        // 404.html
-        return \Index\Error\Controller::page404();
       }
-    } else {
-      // 404.html
-      return \Index\Error\Controller::page404();
     }
+    // 404.html
+    return \Index\Error\Controller::page404();
   }
 
   /**
@@ -95,6 +91,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Editing your account');
+    return '{LNG_Editing your account}';
   }
 }

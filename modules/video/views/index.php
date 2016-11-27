@@ -35,8 +35,9 @@ class View extends \Gcms\View
   {
     // query ข้อมูล
     $index = \Video\Index\Model::getItems($request, $index);
+    // /video/listitem.html
+    $listitem = Grid::create('video', $index->module, 'listitem');
     // รายการ
-    $listitem = Grid::create($index->owner, $index->module, 'listitem');
     foreach ($index->items as $item) {
       $listitem->add(array(
         '/{ID}/' => $item->id,
@@ -50,21 +51,21 @@ class View extends \Gcms\View
       ));
     }
     // breadcrumb ของโมดูล
-    if (Gcms::isHome($index->module)) {
+    if (Gcms::$menu->isHome($index->index_id)) {
       $index->canonical = WEB_URL.'index.php';
     } else {
       $index->canonical = Gcms::createUrl($index->module);
-      $menu = Gcms::$menu->moduleMenu($index->module);
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
       } elseif ($index->topic != '') {
-        Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
+        Gcms::$view->addBreadcrumb($index->canonical, $index->topic, $index->description);
       }
     }
     // current URL
     $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
-    // template
-    $template = Template::create($index->owner, $index->module, $listitem->hasItem() ? 'list' : 'empty');
+    // /video/list.html หรือ /video/empty.html ถ้าไม่มีข้อมูล
+    $template = Template::create('video', $index->module, $listitem->hasItem() ? 'list' : 'empty');
     $template->add(array(
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,

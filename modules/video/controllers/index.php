@@ -39,6 +39,6 @@ class Controller extends \Kotchasan\Controller
       }
     }
     // 404
-    return createClass('Index\PageNotFound\Controller')->init($request, 'video');
+    return createClass('Index\PageNotFound\Controller')->init('video');
   }
 }

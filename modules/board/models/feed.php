@@ -30,32 +30,27 @@ class Model extends \Kotchasan\Model
    */
   public static function getStories(Request $request, $index, $count)
   {
-    if (defined('MAIN_INIT')) {
-      $model = new static;
-      $where = array(
-        array('module_id', (int)$index->module_id)
-      );
-      if (preg_match('/^([0-9,]+)$/', $request->get('cat')->toString(), $cat)) {
-        $where[] = array('category_id', explode(',', $cat[0]));
-      }
-      $user = $request->get('user')->toInt();
-      if ($user > 0) {
-        $where[] = array('member_id', $user);
-      }
-      if ($request->get('album')->exists()) {
-        $where[] = array('picture', '!=', '');
-      }
-      return $model->db()->createQuery()
-          ->select('id', 'topic', 'detail', 'picture', '(CASE WHEN `comment_date`=0 THEN `last_update` ELSE `comment_date` END) last_update')
-          ->from('board_q')
-          ->where($where)
-          ->limit($count)
-          ->order(($request->get('rnd')->exists() ? 'RAND()' : 'last_update DESC'))
-          ->cacheOn()
-          ->execute();
-    } else {
-      // เรียก method โดยตรง
-      new \Kotchasan\Http\NotFound('Do not call method directly');
+    $model = new static;
+    $where = array(
+      array('module_id', (int)$index->module_id)
+    );
+    if (preg_match('/^([0-9,]+)$/', $request->get('cat')->toString(), $cat)) {
+      $where[] = array('category_id', explode(',', $cat[0]));
     }
+    $user = $request->get('user')->toInt();
+    if ($user > 0) {
+      $where[] = array('member_id', $user);
+    }
+    if ($request->get('album')->exists()) {
+      $where[] = array('picture', '!=', '');
+    }
+    return $model->db()->createQuery()
+        ->select('id', 'topic', 'detail', 'picture', '(CASE WHEN `comment_date`=0 THEN `last_update` ELSE `comment_date` END) last_update')
+        ->from('board_q')
+        ->where($where)
+        ->limit($count)
+        ->order(($request->get('rnd')->exists() ? 'RAND()' : 'last_update DESC'))
+        ->cacheOn()
+        ->execute();
   }
 }

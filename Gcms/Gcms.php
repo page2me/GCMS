@@ -9,7 +9,6 @@
 namespace Gcms;
 
 use \Kotchasan\Language;
-use \Kotchasan\Text;
 
 /**
  * GCMS utility class
@@ -21,31 +20,19 @@ use \Kotchasan\Text;
 class Gcms extends \Kotchasan\KBase
 {
   /**
-   * รายการโมดูลที่ใช้งานอยู่
-   *
-   * @var array
-   */
-  public static $install_modules = array();
-  /**
-   * รายการโมดูลทั้งหมด
-   *
-   * @var array
-   */
-  public static $install_owners = array();
-  /**
-   * รายการ Widgets ทั้งหมด
-   *
-   * @var array
-   */
-  public static $install_widgets = array();
-  /**
    * รายการ breadcrumb ทั้งหมด
    *
    * @var array
    */
   public static $breadcrumbs = array();
   /**
-   * Menu Controller (Frontend)
+   * Menu Model (Frontend)
+   *
+   * @var \Index\Module\Controller
+   */
+  public static $module;
+  /**
+   * Menu Model (Frontend)
    *
    * @var \Index\Menu\Controller
    */
@@ -183,8 +170,8 @@ class Gcms extends \Kotchasan\KBase
    * ฟังก์ชั่น ตรวจสอบสถานะที่กำหนด และ แอดมิน
    *
    * @param array $login
-   * @param object|array $cfg ตัวแปรที่มีคีย์ที่ต้องการตรวจสอบเช่น $config
-   * @param string $key คีย์ของ $cfg ที่ต้องการตรวจสอบ, $cfg->$key หรือ $cfg[$key]
+   * @param object $cfg ตัวแปรที่มีคีย์ที่ต้องการตรวจสอบเช่น $config
+   * @param string $key คีย์ของ $cfg ที่ต้องการตรวจสอบ, $cfg->$key
    * @return boolean คืนค่า true ถ้าสมาชิกที่ login มีสถานะที่กำหนดอยู่ใน $cfg->$key หรือ $cfg[$key]
    */
   public static function canConfig($login, $cfg, $key)
@@ -192,10 +179,8 @@ class Gcms extends \Kotchasan\KBase
     if (isset($login['status'])) {
       if ($login['status'] == 1) {
         return true;
-      } elseif (is_object($cfg) && isset($cfg->$key)) {
+      } else {
         return in_array($login['status'], $cfg->$key);
-      } elseif (is_array($cfg) && isset($cfg[$key])) {
-        return in_array($login['status'], $cfg[$key]);
       }
     }
     return false;
@@ -419,22 +404,6 @@ class Gcms extends \Kotchasan\KBase
   }
 
   /**
-   * ตรวจสอบว่าเป็นหน้าหลัก (โมดูลที่ติดตั้งแรกสุด) หรือไม่
-   *
-   * @param string $module
-   * @return boolean ถ้าเป็นโมดูลแรกที่ติดตั้ง (เป็นหน้าหลัก) คืนค่า true
-   */
-  public static function isHome($module)
-  {
-    if (empty(self::$install_modules)) {
-      return false;
-    } else {
-      $first = reset(self::$install_modules);
-      return $first->module == $module;
-    }
-  }
-
-  /**
    * ฟังก์ชั่น แปลงข้อความสำหรับการ quote
    *
    * @param string $text ข้อความ
@@ -485,7 +454,7 @@ class Gcms extends \Kotchasan\KBase
     $replace[] = ' ';
     $text = trim(preg_replace($patt, $replace, $text));
     if ($len > 0) {
-      $text = Text::cut($text, $len);
+      $text = \Kotchasan\Text::cut($text, $len);
     }
     return $text;
   }

@@ -9,7 +9,7 @@
 namespace Widgets\Board\Models;
 
 /**
- * อ่านรายการอัลบัมทั้งหมด
+ * รายการกระทู้
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

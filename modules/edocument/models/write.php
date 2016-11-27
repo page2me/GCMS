@@ -72,50 +72,41 @@ class Model extends \Kotchasan\Model
   {
     // login
     $login = Login::isMember();
-    // รายการโมดูลที่สร้างจาก edocument
-    $modules = array();
-    $config = array();
-    foreach (\Kotchasan\Object::search(Gcms::$install_modules, 'owner', 'edocument') as $module) {
-      if (in_array($login['status'], $module->can_upload)) {
-        $modules[] = $module->module_id;
-        $config[$module->module_id] = (array)$module;
-      }
-    }
     // model
     $model = new static;
     $query = $model->db()->createQuery();
     if ($id > 0) {
       // แก้ไข
-      $query->from('edocument P')
-        ->join('index_detail D', 'INNER', array(array('D.module_id', 'P.module_id'), array('D.language', array('', Language::name()))))
-        ->join('index I', 'INNER', array(array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.index', '1'), array('I.language', 'D.language')))
-        ->where(array(array('P.id', $id), array('P.module_id', $modules), array('I.published', 1)));
-      $select = array('P.*', 'D.topic title');
+      $search = $query->from('edocument')->where($id)->toArray()->first();
     } else {
       // ใหม่
-      $query->from('index_detail D')
-        ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
-        ->where(array(array('I.module_id', $modules), array('D.language', array(Language::name(), '')), array('I.published', 1)));
-      $select = array('I.module_id', 'D.topic title', $model->buildNext('id', 'edocument'));
+      $search = $query->toArray()->first($model->buildNext('id', 'edocument'));
     }
-    $search = $query->toArray()->first($select);
     if ($search) {
-      $search = ArrayTool::merge($config[$search['module_id']], $search);
-      if ($id > 0) {
-        // แก้ไข
-        $reciever = @unserialize($search['reciever']);
-        $search['reciever'] = is_array($reciever) ? $reciever : array();
-      } else {
-        // ใหม่
-        $search['reciever'] = array();
-        $search['document_no'] = sprintf($search['format_no'], $search['id']);
-        $search['id'] = 0;
+      $search['modules'] = array();
+      foreach (Gcms::$module->findByOwner('edocument') as $item) {
+        $search['modules'][$item->module_id] = $item->topic;
+        if (empty($search['module_id']) || $search['module_id'] == $item->module_id) {
+          $search['module'] = $item;
+        }
       }
-      $search['tab'] = $index->tab;
-      $search['description'] = $index->description;
-      $search['modules'] = $modules;
-      // คืนค่า
-      return (object)$search;
+      if (isset($search['module'])) {
+        if ($id > 0) {
+          // แก้ไข
+          $reciever = @unserialize($search['reciever']);
+          $search['reciever'] = is_array($reciever) ? $reciever : array();
+        } else {
+          // ใหม่
+          $search['module_id'] = $search['module']->module_id;
+          $search['reciever'] = array();
+          $search['document_no'] = sprintf($search['module']->format_no, $search['id']);
+          $search['id'] = 0;
+        }
+        $search['description'] = $index->description;
+        $search['tab'] = $index->tab;
+        // คืนค่า
+        return (object)$search;
+      }
     }
     return null;
   }
@@ -138,7 +129,7 @@ class Model extends \Kotchasan\Model
           'topic' => $request->post('topic')->topic(),
           'detail' => $request->post('detail')->textarea()
         );
-        $id = self::$request->post('id')->toInt();
+        $id = $request->post('id')->toInt();
         // ตรวจสอบรายการที่เลือก
         $index = self::getForSave($request->post('module_id')->toInt(), $id);
         // antispam
@@ -153,59 +144,44 @@ class Model extends \Kotchasan\Model
           // แก้ไข ไม่ใช่เจ้าของหรือ moderator
           $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
         } else {
-          $error = false;
           // document_no
           if ($save['document_no'] == '') {
             $ret['ret_document_no'] = 'this';
-            $error = true;
           } else {
             // ค้นหาเลขที่เอกสารซ้ำ
             $search = $this->db()->first($this->getFullTableName('edocument'), array('document_no', $save['document_no']));
             if ($search && ($id == 0 || $id != $search->id)) {
               $ret['ret_document_no'] = Language::replace('This :name already exist', array(':name' => Language::get('Document number')));
-              $error = true;
-            } else {
-              $ret['ret_document_no'] = '';
             }
           }
           // reciever
           if (empty($save['reciever'])) {
-            $ret['ret_reciever'] = 'this';
-            $error = true;
-          } else {
-            $ret['ret_reciever'] = '';
+            $ret['ret_reciever'] = Language::replace('Please select :name at least one item', array(':name' => Language::get('Reciever')));
           }
           // detail
           if ($save['detail'] == '') {
             $ret['ret_detail'] = 'this';
-            $error = true;
-          } else {
-            $ret['ret_detail'] = '';
           }
-          if (!$error) {
+          if (empty($ret)) {
             // อัปโหลดไฟล์
-            foreach (self::$request->getUploadedFiles() as $item => $file) {
+            foreach ($request->getUploadedFiles() as $item => $file) {
               /* @var $file UploadedFile */
               if ($file->hasUploadFile()) {
                 $dir = ROOT_PATH.DATA_FOLDER.'edocument/';
                 if (!File::makeDirectory($dir)) {
                   // ไดเรคทอรี่ไม่สามารถสร้างได้
                   $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'edocument/');
-                  $error = true;
                 } elseif (!$file->validFileExt($index->file_typies)) {
                   // ชนิดของไฟล์ไม่ถูกต้อง
                   $ret['ret_'.$item] = Language::get('The type of file is invalid');
-                  $error = true;
                 } elseif ($file->getSize() > $index->upload_size) {
                   // ขนาดของไฟล์ใหญ่เกินไป
                   $ret['ret_'.$item] = Language::get('The file size larger than the limit');
-                  $error = true;
                 } else {
                   $save['ext'] = $file->getClientFileExt();
                   $file_name = str_replace('.'.$save['ext'], '', $file->getClientFilename());
                   if ($file_name == '' && $save['topic'] == '') {
                     $ret['ret_topic'] = 'this';
-                    $error = true;
                   } else {
                     // อัปโหลด
                     $save['file'] = Text::rndname(10).'.'.$save['ext'];
@@ -224,18 +200,16 @@ class Model extends \Kotchasan\Model
                     } catch (\Exception $exc) {
                       // ไม่สามารถอัปโหลดได้
                       $ret['ret_'.$item] = Language::get($exc->getMessage());
-                      $error = true;
                     }
                   }
                 }
               } elseif ($id == 0) {
                 // ใหม่ ต้องมีไฟล์
                 $ret['ret_'.$item] = Language::get('Please select file');
-                $error = true;
               }
             }
           }
-          if (!$error) {
+          if (empty($ret)) {
             $save['last_update'] = time();
             $reciever = $save['reciever'];
             $save['reciever'] = serialize($reciever);

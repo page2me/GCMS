@@ -14,7 +14,7 @@ use \Gcms\Gcms;
 use \Personnel\Index\Controller;
 
 /**
- * แสดงรายการสมาชิก
+ * แสดงรายการบุคลากร
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -36,8 +36,8 @@ class View extends \Gcms\View
     $category_id = $request->request('cat')->toInt();
     // หมวดหมู่บุคลากร
     $categories = \Index\Category\Model::categories((int)$index->module_id);
-    // รายการ
-    $listitem = Template::create($index->owner, $index->module, 'item');
+    // /personnel/item.html
+    $listitem = Template::create('personnel', $index->module, 'item');
     $n = 0;
     $old_cat = 0;
     $old_order = 0;
@@ -75,11 +75,11 @@ class View extends \Gcms\View
       $n++;
     }
     // breadcrumb ของโมดูล
-    if (Gcms::isHome($index->module)) {
+    if (Gcms::$menu->isHome($index->index_id)) {
       $index->canonical = WEB_URL.'index.php';
     } else {
       $index->canonical = Gcms::createUrl($index->module);
-      $menu = Gcms::$menu->moduleMenu($index->module);
+      $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
         Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
       }
@@ -88,8 +88,8 @@ class View extends \Gcms\View
       // breadcrumb ของหมวดหมู่
       Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $category_id), $categories[$category_id]);
     }
-    // template
-    $template = Template::create($index->owner, $index->module, 'list');
+    // /personnel/list.html
+    $template = Template::create('personnel', $index->module, 'list');
     $template->add(array(
       '/{LIST}/' => $listitem->hasItem() ? $listitem->render() : '<div class="error center">{LNG_Sorry, no information available for this item.}</div>',
       '/{TOPIC}/' => $index->topic,
