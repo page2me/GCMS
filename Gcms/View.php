@@ -22,7 +22,19 @@ class View extends \Kotchasan\View
    *
    * @var array
    */
-  protected $breadcrumbs = array();
+  private $breadcrumbs = array();
+  /**
+   * ลิสต์รายการ breadcrumb สำหรับ JSON-LD
+   *
+   * @var array
+   */
+  private $breadcrumbs_jsonld = array();
+  /**
+   * ลิสต์รายการ JSON-LD
+   *
+   * @var array
+   */
+  private $jsonld = array();
 
   /**
    * เพิ่ม breadcrumb.
@@ -37,10 +49,22 @@ class View extends \Kotchasan\View
     $menu = htmlspecialchars_decode($menu);
     $tooltip = $tooltip == '' ? $menu : $tooltip;
     if ($url) {
+      $this->breadcrumbs_jsonld[] = array('@id' => $url, 'name' => $menu);
       $this->breadcrumbs[] = '<li><a class="'.$class.'" href="'.$url.'" title="'.$tooltip.'"><span>'.$menu.'</span></a></li>';
     } else {
+      $this->breadcrumbs_jsonld[] = array('name' => $menu);
       $this->breadcrumbs[] = '<li><span class="'.$class.'" title="'.$tooltip.'">'.$menu.'</span></li>';
     }
+  }
+
+  /**
+   * กำหนดค่า JSON-LD
+   *
+   * @param array $datas
+   */
+  public function setJsonLd($datas)
+  {
+    $this->jsonld[] = $datas;
   }
 
   /**
@@ -72,6 +96,26 @@ class View extends \Kotchasan\View
       /* ภาษา ที่ใช้งานอยู่ */
       '/{LANGUAGE}/' => \Kotchasan\Language::name()
     ));
+    // BreadcrumbList
+    if (sizeof($this->breadcrumbs_jsonld) > 1) {
+      $elements = array();
+      foreach ($this->breadcrumbs_jsonld as $i => $items) {
+        $elements[] = array(
+          '@type' => 'ListItem',
+          'position' => $i + 1,
+          'item' => $items
+        );
+      }
+      $this->jsonld[] = array(
+        '@context' => 'http://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => $elements
+      );
+    }
+    // JSON-LD
+    if (!empty($this->jsonld)) {
+      $this->metas['JsonLd'] = '<script type="application/ld+json">'.json_encode($this->jsonld).'</script>';
+    }
     return parent::renderHTML($template);
   }
 

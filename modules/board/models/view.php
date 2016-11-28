@@ -39,23 +39,21 @@ class Model extends \Kotchasan\Model
       "(CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN I.`sender`='' THEN I.`email` ELSE I.`sender` END) WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) name",
     );
     $query = $model->db()->createQuery()
-      ->select($fields)
       ->from('board_q I')
       ->join('user U', 'LEFT', array('U.id', 'I.member_id'))
       ->join('category C', 'LEFT', array(array('C.category_id', 'I.category_id'), array('C.module_id', 'I.module_id')))
       ->where(array('I.id', $id))
-      ->limit(1)
       ->toArray();
     if (self::$request->get('visited')->toInt() == 0) {
       $query->cacheOn(false);
     }
-    $result = $query->execute();
-    if (sizeof($result) == 1) {
-      $result[0]['visited'] ++;
-      $model->db()->update($model->getFullTableName('board_q'), $result[0]['id'], array('visited' => $result[0]['visited']));
-      $model->db()->cacheSave($result[0]);
-      $result[0]['config'] = @unserialize($result[0]['config']);
-      return (object)$result[0];
+    $result = $query->first($fields);
+    if ($result) {
+      $result['visited'] ++;
+      $model->db()->update($model->getFullTableName('board_q'), $result['id'], array('visited' => $result['visited']));
+      $model->db()->cacheSave(array($result));
+      $result['config'] = @unserialize($result['config']);
+      return (object)$result;
     }
     return null;
   }

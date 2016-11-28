@@ -31,19 +31,20 @@ class Controller extends \Kotchasan\Controller
     if (!empty($modules)) {
       // login
       $login = Login::isMember();
-      // เขียนได้
-      $can_write = file_exists(ROOT_PATH.'modules/document/views/member.php');
+      $writing = false;
       $rss = array();
       foreach ($modules as $module) {
         // RSS Menu
         $rss[$module->module] = '<link rel=alternate type="application/rss+xml" title="'.$module->topic.'" href="'.WEB_URL.$module->module.'.rss">';
         // ตรวจสอบเมนูเขียนเรื่อง
-        if ($can_write && in_array($login['status'], $module->can_write)) {
-          Gcms::$member_tabs['document'] = array('{LNG_Document}', 'Document\Member\View');
-          Gcms::$member_tabs['documentwrite'] = array(null, 'Document\Write\View');
+        if (in_array($login['status'], $module->can_write)) {
+          Gcms::$member_tabs[$module->module] = array($module->topic, 'Document\Member\View');
+          $writing = true;
         }
       }
-      if (isset(Gcms::$member_tabs['document'])) {
+      if ($writing) {
+        // หน้าสำหรับเขียนบทความ
+        Gcms::$member_tabs['documentwrite'] = array(null, 'Document\Write\View');
         // ckeditor
         Gcms::$view->addJavascript(WEB_URL.'ckeditor/ckeditor.js');
       }

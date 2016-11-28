@@ -32,8 +32,11 @@ class Model
 
   /**
    * อ่านรายชื่อโมดูลและไดเร็คทอรี่ของโมดูลทั้งหมดที่ติดตั้งไว้
+   *
+   * @param string $dir
+   * @param \Index\Menu\Controller $menu
    */
-  public function __construct($dir, \Index\Menu\Controller $menu)
+  public function __construct($dir, $menu)
   {
     $this->by_owner = array('index' => array());
     // โมดูลที่ติดตั้ง
@@ -49,10 +52,12 @@ class Model
     // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
     $modules = $this->getModules();
     // ใส่ข้อมูลโมดูลลงในเมนู
-    foreach ($menu->getMenus() as $item) {
-      if (isset($modules[$item->index_id])) {
-        $item->module = $modules[$item->index_id];
-        $this->by_module[$item->module->module] = null;
+    if ($menu instanceof \Index\Menu\Controller) {
+      foreach ($menu->getMenus() as $item) {
+        if (isset($modules[$item->index_id])) {
+          $item->module = $modules[$item->index_id];
+          $this->by_module[$item->module->module] = null;
+        }
       }
     }
     // เรียงลำดับข้อมูลโมดูลตาม module และ owner

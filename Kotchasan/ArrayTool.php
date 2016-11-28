@@ -340,15 +340,4 @@ class ArrayTool
     }
     return $result;
   }
-
-  /**
-   * อ่านค่าแอเรย์รายการสุดท้าย
-   *
-   * @param array $array
-   * @return mixed คืนค่าแอเรย์รายการสุดท้าย, false ถ้าเป็นแอเรย์ว่าง
-   */
-  public static function end(&$array)
-  {
-    return end($array);
-  }
 }

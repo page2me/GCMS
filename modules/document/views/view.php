@@ -72,8 +72,12 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), Gcms::ser2Str($index->category), Gcms::ser2Str($index->cat_tooltip));
       }
       // breadcrumb ของหน้า
-      $canonical = Controller::url($index->module, $index->alias, $index->id);
-      Gcms::$view->addBreadcrumb($canonical, $index->topic, $index->description);
+      $index->canonical = Controller::url($index->module, $index->alias, $index->id);
+      Gcms::$view->addBreadcrumb($index->canonical, $index->topic, $index->description);
+      // AMP
+      Gcms::$view->metas['amphtml'] = '<link rel="amphtml" href="'.WEB_URL.'amp.php?module='.$index->module.'&amp;id='.$index->id.'">';
+      // ผู้เขียน
+      $index->displayname = empty($index->displayname) ? $index->email : $index->displayname;
       if ($canView || $index->viewing == 1) {
         // แสดงความคิดเห็นได้ จากการตั้งค่าโมดูล
         $canReply = !empty($index->can_reply);
@@ -120,10 +124,9 @@ class View extends \Gcms\View
           '/{IMG}/' => $image_src,
           '/{DETAIL}/' => Gcms::HighlightSearch($detail, $index->q),
           '/{DATE}/' => Date::format($index->create_date),
-          '/{DATEISO}/' => date(DATE_ISO8601, $index->create_date),
           '/{COMMENTS}/' => number_format($index->comments),
           '/{VISITED}/' => number_format($index->visited),
-          '/{DISPLAYNAME}/' => empty($index->displayname) ? $index->email : $index->displayname,
+          '/{DISPLAYNAME}/' => $index->displayname,
           '/{STATUS}/' => $index->status,
           '/{UID}/' => (int)$index->member_id,
           '/{LOGIN_PASSWORD}/' => $login['password'],
@@ -136,11 +139,13 @@ class View extends \Gcms\View
           '/{ANTISPAMVAL}/' => isset($antispam) && Login::isAdmin() ? $antispam->getValue() : '',
           '/{DELETE}/' => $moderator ? '{LNG_Delete}' : '{LNG_Removal request}',
           '/{TAGS}/' => implode(', ', $tags),
-          '/{URL}/' => $canonical,
-          '/{XURL}/' => rawurlencode($canonical)
+          '/{URL}/' => $index->canonical,
+          '/{XURL}/' => rawurlencode($index->canonical)
         );
         // /document/view.html
         $detail = Template::create('document', $index->module, 'view')->add($replace);
+        // JSON-LD
+        Gcms::$view->setJsonLd(\Document\Jsonld\View::generate($index));
       } else {
         // not login
         $replace = array(
@@ -153,7 +158,7 @@ class View extends \Gcms\View
       // คืนค่า
       return (object)array(
           'image_src' => $image_src,
-          'canonical' => $canonical,
+          'canonical' => $index->canonical,
           'module' => $index->module,
           'topic' => $index->topic,
           'description' => $index->description,

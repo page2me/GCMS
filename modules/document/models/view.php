@@ -52,6 +52,7 @@ class Model extends \Kotchasan\Model
       'D.relate',
       'I.can_reply canReply',
       'I.published',
+      'I.published_date',
       '0 vote',
       '0 vote_count',
       'C.topic category',
@@ -74,27 +75,25 @@ class Model extends \Kotchasan\Model
       $where[] = array('I.module_id', $index->module_id);
     }
     $query = $model->db()->createQuery()
-      ->select($fields)
       ->from('index I')
       ->join('modules M', 'INNER', array('M.id', 'I.module_id'))
       ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', array('', Language::name()))))
       ->join('user U', 'INNER', array('U.id', 'I.member_id'))
       ->join('category C', 'LEFT', array(array('C.category_id', 'I.category_id'), array('C.module_id', 'I.module_id')))
       ->where($where)
-      ->limit(1)
       ->toArray();
     if (self::$request->get('visited')->toInt() == 0) {
       $query->cacheOn(false);
     }
-    $result = $query->execute();
-    if (sizeof($result) == 1) {
+    $result = $query->first($fields);
+    if ($result) {
       // อัปเดทการเยี่ยมชม
-      $result[0]['visited'] ++;
-      $result[0]['visited_today'] ++;
-      $model->db()->update($model->getFullTableName('index'), $result[0]['id'], array('visited' => $result[0]['visited'], 'visited_today' => $result[0]['visited_today']));
-      $model->db()->cacheSave($result[0]);
+      $result['visited'] ++;
+      $result['visited_today'] ++;
+      $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited'], 'visited_today' => $result['visited_today']));
+      $model->db()->cacheSave(array($result));
       // อัปเดทตัวแปร
-      foreach ($result[0] as $key => $value) {
+      foreach ($result as $key => $value) {
         switch ($key) {
           case 'mconfig':
           case 'config':

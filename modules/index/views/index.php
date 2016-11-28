@@ -35,6 +35,8 @@ class View extends \Gcms\View
       $index->canonical = WEB_URL.'index.php';
     } else {
       $index->canonical = Gcms::createUrl($index->module);
+      // breadcrumb ของหน้า
+      Gcms::$view->addBreadcrumb($index->canonical, $index->topic, $index->description);
     }
     // add template
     $template->add(array(
@@ -47,8 +49,9 @@ class View extends \Gcms\View
     ));
     // detail
     $index->detail = $template->render();
-    // breadcrumb ของหน้า
-    Gcms::$view->addBreadcrumb($index->canonical, $index->topic, $index->description);
+    // JSON-LD
+    Gcms::$view->setJsonLd(\Index\Jsonld\View::generate($index));
+    // คืนค่า
     return $index;
   }
 }

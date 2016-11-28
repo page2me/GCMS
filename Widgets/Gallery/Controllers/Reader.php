@@ -100,6 +100,7 @@ class Reader extends \Kotchasan\Controller
     $items = preg_split('/<item[\s|>]/', $xml, -1, PREG_SPLIT_NO_EMPTY);
     array_shift($items);
     $i = 0;
+    $array = array();
     foreach ($items AS $item) {
       $array[$i]['title'] = $this->getTextBetweenTags($item, 'title');
       $array[$i]['link'] = $this->getTextBetweenTags($item, 'link');

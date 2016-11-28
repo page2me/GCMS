@@ -92,7 +92,8 @@ class Controller extends \Kotchasan\Controller
         $image_src = WEB_URL.DATA_FOLDER.'image/'.self::$cfg->logo;
         $info = getImageSize(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo);
         if ($info[0] > 0 || $info[1] > 0) {
-          $ext = strtolower(ArrayTool::end(explode('.', self::$cfg->logo)));
+          $exts = explode('.', self::$cfg->logo);
+          $ext = strtolower(end($exts));
           $script[] = '$G(window).Ready(function(){';
           $script[] = 'if ($E("logo")) {';
           $script[] = "new GMedia('logo_$ext', '".$image_src."', $info[0], $info[1]).write('logo');";

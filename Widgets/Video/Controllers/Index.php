@@ -49,6 +49,9 @@ class Index extends \Kotchasan\Controller
       $count = 2;
       $videos = \Widgets\Video\Models\Index::get(0, $count);
     }
+    if ($cols == 1 && $count == 1 && MAIN_INIT == 'amphtml') {
+      return \Widgets\Video\Views\Amp::render($videos);
+    }
     return \Widgets\Video\Views\Index::render($cols, $count, $videos);
   }
 }

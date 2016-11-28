@@ -32,7 +32,11 @@ class Controller extends \Kotchasan\Controller
   {
     if ($request->get('alias')->exists() || $request->get('id')->exists()) {
       // หน้าแสดงบทความ
-      $page = createClass('Document\View\View')->index($request, $index);
+      if (MAIN_INIT === 'amphtml') {
+        $page = createClass('Document\Amp\View')->index($request, $index);
+      } else {
+        $page = createClass('Document\View\View')->index($request, $index);
+      }
     } else {
       // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
       $module = \Document\Module\Model::get($request, $index);

@@ -31,7 +31,7 @@ class Controller extends \Kotchasan\Controller
    * @param boolean $new_day true เรียกครั้งแรกของวัน
    * @return \static
    */
-  public static function create(\Index\Menu\Controller $menu, $new_day)
+  public static function create($menu, $new_day)
   {
     // create Class
     $obj = new static;

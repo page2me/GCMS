@@ -52,6 +52,7 @@ class View extends \Gcms\View
         $uri = Uri::createFromUri(WEB_URL.'index.php?module=editprofile&tab='.$index->tab.($module_id > 0 ? '&mid='.$module_id : ''));
         // ตาราง
         $table = new DataTable(array(
+          'class' => 'data',
           /* Model */
           'model' => 'Edocument\Admin\Setup\Model',
           /* รายชื่อฟิลด์ที่ query (ถ้าแตกต่างจาก Model) */
@@ -70,19 +71,19 @@ class View extends \Gcms\View
           ),
           /* เรียงลำดับ */
           'sort' => 'A.last_update desc',
-          /* คอลัมน์ที่ไม่ต้องแสดงผล */
-          'hideColumns' => array('ext', 'id'),
-          /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
-          'action' => 'xhr.php/edocument/model/member/action',
-          'actionCallback' => 'doFormSubmit',
           /* Uri */
           'uri' => $uri,
           /* รายการต่อหน้า */
           'perPage' => $request->cookie('edocument_perPage', 30)->toInt(),
           /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
           'onRow' => array($this, 'onRow'),
+          /* คอลัมน์ที่ไม่ต้องแสดงผล */
+          'hideColumns' => array('ext', 'id'),
           /* คอลัมน์ที่สามารถค้นหาได้ */
           'searchColumns' => array('document_no', 'detail'),
+          /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
+          'action' => 'xhr.php/edocument/model/member/action',
+          'actionCallback' => 'doFormSubmit',
           /* ตัวเลือกการแสดงผลที่ส่วนหัว */
           'filters' => array(
             'module_id' => array(

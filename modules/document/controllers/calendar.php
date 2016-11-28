@@ -34,10 +34,7 @@ class Controller extends \Kotchasan\Controller
   {
     // ลิสต์รายการ tag
     $index = \Document\Stories\Model::calendar($request, $module);
-    if (empty($index)) {
-      // 404
-      $list = createClass('Index\PageNotFound\Controller')->init($request, 'document');
-    } else {
+    if ($index) {
       // ลิสต์รายการ tag
       $index->module = 'document';
       $index->rows = 20;
@@ -47,9 +44,10 @@ class Controller extends \Kotchasan\Controller
       $index->description = $index->topic;
       $index->keywords = $index->topic;
       $index->detail = '';
-      $list = createClass('Document\Stories\View')->index($request, $index);
+      return createClass('Document\Stories\View')->index($request, $index);
     }
-    return $list;
+    // 404
+    return createClass('Index\PageNotFound\Controller')->init('document');
   }
 
   /**

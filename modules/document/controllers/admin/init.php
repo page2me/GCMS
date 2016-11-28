@@ -29,7 +29,7 @@ class Controller extends \Kotchasan\Controller
   {
     if (!empty($modules)) {
       // เมนู
-      foreach ($modules AS $item) {
+      foreach ($modules as $item) {
         Gcms::$menu->menus['modules'][$item->module]['write'] = '<a href="index.php?module=document-write&amp;mid='.$item->id.'"><span>{LNG_Add New} {LNG_Content}</span></a>';
       }
     }

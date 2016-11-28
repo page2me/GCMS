@@ -138,9 +138,6 @@ class Model extends \Kotchasan\Model
         } elseif (!preg_match('/^[a-z0-9]{2,}$/', $module_save['module'])) {
           // module ไม่ถูกต้อง
           $ret['ret_module'] = 'this';
-        } elseif (is_dir(ROOT_PATH.$module_save['module']) || is_file(ROOT_PATH.$module_save['module'].'.php')) {
-          // ชื่อไฟล์หรือไดเร็คทอรี่
-          $ret['ret_module'] = Language::get('Invalid name');
         } elseif ($module_save['owner'] === 'index' && (is_dir(ROOT_PATH.'modules/'.$module_save['module']) || is_dir(ROOT_PATH.'widgets/'.$module_save['module']))) {
           // index ไม่สามารถใช้ชื่อโมดูลหรือวิดเจ็ตได้
           $ret['ret_module'] = Language::get('Invalid name');
