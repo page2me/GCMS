@@ -8,8 +8,6 @@
 
 namespace Document\Sitemap;
 
-use \Document\Index\Controller AS Module;
-
 /**
  * sitemap.xml
  *
@@ -34,7 +32,7 @@ class Controller extends \Kotchasan\Controller
     foreach (\Document\Sitemap\Model::getStories($ids, $date) as $item) {
       $module = $modules[$item->module_id];
       $result[] = (object)array(
-          'url' => Module::url($module, $item->alias, $item->id),
+          'url' => \Document\Index\Controller::url($module, $item->alias, $item->id, false),
           'date' => date('Y-m-d', $item->create_date)
       );
       $result[] = (object)array(

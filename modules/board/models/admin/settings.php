@@ -32,8 +32,8 @@ class Model extends \Kotchasan\Model
   public static function defaultSettings()
   {
     return array(
-      'icon_width' => 600,
-      'icon_height' => 400,
+      'icon_width' => 696,
+      'icon_height' => 464,
       'img_typies' => array('jpg', 'jpeg'),
       'default_icon' => 'modules/board/img/default_icon.png',
       'list_per_page' => 20,
@@ -41,7 +41,7 @@ class Model extends \Kotchasan\Model
       'viewing' => 0,
       'category_display' => 1,
       'news_count' => 10,
-      'img_upload_type' => array('jpg'),
+      'img_upload_type' => array('jpg', 'jpeg'),
       'img_upload_size' => 1024,
       'img_law' => 0,
       'can_post' => array(1),

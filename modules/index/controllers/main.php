@@ -24,14 +24,14 @@ class Controller extends \Kotchasan\Controller
    * แสดงผลโมดูล Index
    *
    * @param Request $request
-   * @param Object $module ข้อมูลโมดูลจาก database
+   * @param Object $index ข้อมูลโมดูลจาก database
    * @return object||null คืนค่าข้อมูลหน้าที่เรียก ไม่พบคืนค่า null
    */
-  public function init(Request $request, $module)
+  public function init(Request $request, $index)
   {
     // อ่านข้อมูลโมดูล Index
-    $index = \Index\Index\Model::get($module);
-    if ($index && MAIN_INIT == 'indexhtml') {
+    $index = \Index\Index\Model::get($index);
+    if ($index && MAIN_INIT === 'indexhtml') {
       // view (index)
       return createClass('Index\Index\View')->render($index);
     }

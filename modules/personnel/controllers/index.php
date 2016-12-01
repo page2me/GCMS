@@ -30,14 +30,16 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $index)
   {
-    // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
-    $index = \Index\Module\Model::getDetails($index);
-    if ($request->request('id')->exists()) {
-      // แสดงข้อมูลบุคคลาการ
-      $page = createClass('Personnel\View\View')->index($request, $index);
-    } else {
-      // แสดงรายการบุคลากร
-      $page = createClass('Personnel\Lists\View')->index($request, $index);
+    if (MAIN_INIT === 'indexhtml') {
+      // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
+      $index = \Index\Module\Model::getDetails($index);
+      if ($request->request('id')->exists()) {
+        // แสดงข้อมูลบุคคลาการ
+        $page = createClass('Personnel\View\View')->index($request, $index);
+      } else {
+        // แสดงรายการบุคลากร
+        $page = createClass('Personnel\Lists\View')->index($request, $index);
+      }
     }
     if (!$page) {
       // 404

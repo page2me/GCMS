@@ -8,13 +8,14 @@
 
 namespace Document\Amp;
 
-use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
+use \Kotchasan\Template;
 use \Gcms\Gcms;
-use \Document\Index\Controller;
+use \Kotchasan\Date;
+use \Kotchasan\Grid;
 
 /**
- * แสดงบทความ
+ * แสดงหน้าสำหรับ Amp
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,10 +23,9 @@ use \Document\Index\Controller;
  */
 class View extends \Gcms\View
 {
-  private $jsonld;
 
   /**
-   * แสดงบทความ
+   * แสดงหน้าสำหรับ Amp
    *
    * @param Request $request
    * @param object $index ข้อมูลโมดูล
@@ -36,80 +36,69 @@ class View extends \Gcms\View
     // ค่าที่ส่งมา
     $index->id = $request->get('id')->toInt();
     $index->alias = $request->get('alias')->text();
-    $index->q = preg_replace('/[+\s]+/u', ' ', $request->get('q')->text());
     // อ่านรายการที่เลือก
     $index = \Document\View\Model::get($index);
     if ($index && $index->published) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
-      // ผู้ดูแล
-      $moderator = Gcms::canConfig($login, $index, 'moderator');
+      // แสดงความคิดเห็นได้
+      $canReply = !empty($index->can_reply);
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
       $canView = Gcms::canConfig($login, $index, 'can_view');
       if ($canView || $index->viewing == 1) {
-        // URL ของหน้า
-        $canonical = Controller::url($index->module, $index->alias, $index->id);
-        $create_date = date(DATE_ISO8601, $index->create_date);
-        $this->jsonld = array(
-          '@context' => 'http://schema.org',
-          '@type' => 'TechArticle',
-          'mainEntityOfPage' => array(
-            '@type' => 'WebPage',
-            '@id' => Gcms::createUrl($index->module)
-          ),
-          'headline' => $index->topic,
-          'datePublished' => $create_date,
-          'dateModified' => $create_date,
-          'author' => array(
-            '@type' => 'Person',
-            'name' => empty($index->displayname) ? $index->email : $index->displayname
-          ),
-          'publisher' => array(
-            '@type' => 'Organization',
-            'name' => strip_tags(self::$cfg->web_title),
-            'logo' => array(
+        // รูปภาพ
+        $dir = DATA_FOLDER.'document/';
+        $imagedir = ROOT_PATH.$dir;
+        if (!empty($index->picture) && is_file($imagedir.$index->picture)) {
+          $size = @getimagesize($imagedir.$index->picture);
+          if ($size) {
+            $index->image = array(
               '@type' => 'ImageObject',
-              'url' => WEB_URL.'skin/'.self::$cfg->skin.'/img/logo.png',
-              'width' => 80,
-              'height' => 60
-            )
-          ),
-          'description' => $index->description
-        );
-        // img
-        $detail = preg_replace_callback('/<img[^>]+src=["\']([^"\']+)[^>]+/is', function($matchs) {
-          $size = getimagesize($matchs[1]);
-          if (empty($this->jsonld['image'])) {
-            $this->jsonld['image'] = array(
-              '@type' => 'ImageObject',
-              'url' => $matchs[1],
+              'url' => WEB_URL.$dir.$index->picture,
+              'width' => $size[0],
               'height' => $size[1],
-              'width' => $size[0]
             );
           }
-          return '<amp-img src="'.$matchs[1].'" '.$size[3].'></amp-img';
-        }, $index->detail);
+        }
+        // URL ของหน้า
+        $index->canonical = \Document\Index\Controller::url($index->module, $index->alias, $index->id, false);
+        // แสดงความคิดเห็นได้ จากการตั้งค่าโมดูล
+        $canReply = !empty($index->can_reply);
+        if ($canReply) {
+          // query รายการแสดงความคิดเห็น
+          $index->comment_items = \Index\Comment\Model::get($index);
+          // /document/printcommentitem.html
+          $listitem = Grid::create('document', $index->module, 'printcommentitem');
+          // รายการแสดงความคิดเห็น
+          foreach ($index->comment_items as $no => $item) {
+            $item->detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true);
+            $listitem->add(array(
+              '/{DETAIL}/' => $item->detail,
+              '/{DISPLAYNAME}/' => $item->displayname,
+              '/{DATE}/' => Date::format($item->last_update),
+              '/{IP}/' => Gcms::showip($item->ip),
+              '/{NO}/' => $no + 1,
+            ));
+          }
+        }
         // เนื้อหา
-        $detail = Gcms::showDetail(str_replace(array('&#x007B;', '&#x007D;'), array('{', '}'), $detail), $canView, true, true);
-        $replace = array(
-          '/{TOPIC}/' => $index->topic,
-          '/{DETAIL}/' => $detail,
-          '/{URL}/' => $canonical,
-          '/{JSONLD}/' => json_encode($this->jsonld)
-        );
-      } else {
-        // not login
-        $replace = array(
-          '/{TOPIC}/' => $index->topic,
-          '/{DETAIL}/' => '<div class=error>{LNG_Members Only}</div>'
+        $index->detail = Gcms::showDetail(str_replace(array('&#x007B;', '&#x007D;'), array('{', '}'), $index->detail), $canView, true, true);
+        // JSON-LD
+        Gcms::$view->setJsonLd(\Document\Jsonld\View::generate($index));
+        // คืนค่า
+        return (object)array(
+            // /document/amp.html
+            'content' => Template::create('document', $index->module, 'amp')->render(),
+            'canonical' => $index->canonical,
+            'topic' => $index->topic,
+            'detail' => $index->detail,
+            'commentlist' => isset($listitem) ? $listitem->render() : '',
+            'date' => Date::format($index->create_date),
+            'comments' => number_format($index->comments),
+            'visited' => number_format($index->visited),
+            'displayname' => $index->displayname,
         );
       }
-      // คืนค่า
-      return (object)array(
-          'canonical' => $canonical,
-          'topic' => $index->topic,
-          'detail' => Template::create('document', $index->module, 'amp')->add($replace)->render()
-      );
     }
     // 404
     return createClass('Index\PageNotFound\Controller')->init('document');

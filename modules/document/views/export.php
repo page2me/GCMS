@@ -33,31 +33,46 @@ class View extends \Gcms\View
    */
   public function printer(Request $request, $index)
   {
-    // อ่านรายการที่เลือก จาก ID ที่ส่งมา
+    // อ่านรายการที่เลือก
     $index = \Document\View\Model::get((object)array('id' => $request->get('id')->toInt()));
-    if ($index) {
+    if ($index && $index->published) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // แสดงความคิดเห็นได้
       $canReply = !empty($index->can_reply);
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
       $canView = Gcms::canConfig($login, $index, 'can_view');
-      // dir ของรูปภาพอัปโหลด
-      $imagedir = ROOT_PATH.DATA_FOLDER.'document/';
-      $imageurl = WEB_URL.DATA_FOLDER.'document/';
-      // รูปภาพ
-      if (!empty($index->picture) && is_file($imagedir.$index->picture)) {
-        $index->image_src = $imageurl.$index->picture;
-      }
       if ($canView || $index->viewing == 1) {
+        // รูปภาพ
+        $dir = DATA_FOLDER.'document/';
+        $imagedir = ROOT_PATH.$dir;
+        if (!empty($index->picture) && is_file($imagedir.$index->picture)) {
+          $size = @getimagesize($imagedir.$index->picture);
+          if ($size) {
+            $index->picture = WEB_URL.$dir.$index->picture;
+            $index->pictureWidth = $size[0];
+            $index->pictureHeight = $size[1];
+          } else {
+            $index->picture = '';
+          }
+        } else {
+          $index->picture = '';
+        }
+        // URL ของหน้า
+        $index->canonical = \Document\Index\Controller::url($index->module, $index->alias, $index->id, false);
+        // แสดงความคิดเห็นได้ จากการตั้งค่าโมดูล
+        $canReply = !empty($index->can_reply);
         if ($canReply) {
+          // query รายการแสดงความคิดเห็น
+          $index->comment_items = \Index\Comment\Model::get($index);
           // /document/printcommentitem.html
           $listitem = Grid::create('document', $index->module, 'printcommentitem');
           // รายการแสดงความคิดเห็น
-          foreach (\Index\Comment\Model::get($index) as $no => $item) {
+          foreach ($index->comment_items as $no => $item) {
+            $item->detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true);
             $listitem->add(array(
-              '/{DETAIL}/' => Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true),
-              '/{DISPLAYNAME}/' => $item->name,
+              '/{DETAIL}/' => $item->detail,
+              '/{DISPLAYNAME}/' => $item->displayname,
               '/{DATE}/' => Date::format($item->last_update),
               '/{IP}/' => Gcms::showip($item->ip),
               '/{NO}/' => $no + 1
@@ -65,16 +80,16 @@ class View extends \Gcms\View
           }
         }
         // เนื้อหา
-        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $index->detail), $canView, true, true);
+        $index->detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), $index->detail), $canView, true, true);
         $replace = array(
           '/{COMMENTLIST}/' => isset($listitem) ? $listitem->render() : '',
           '/{TOPIC}/' => $index->topic,
-          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($index->image_src) ? '' : '$1',
-          '/{IMG}/' => empty($index->image_src) ? '' : $index->image_src,
-          '/{DETAIL}/' => $detail,
+          '/{DETAIL}/' => $index->detail,
           '/{DATE}/' => Date::format($index->create_date),
-          '/{URL}/' => \Document\Index\Controller::url($index->module, $index->alias, $index->id, false),
-          '/{DISPLAYNAME}/' => empty($index->displayname) ? $index->email : $index->displayname
+          '/<IMAGE>(.*)<\/IMAGE>/s' => empty($index->picture) ? '' : '$1',
+          '/{IMG}/' => $index->picture,
+          '/{DISPLAYNAME}/' => $index->displayname,
+          '/{URL}/' => $index->canonical,
         );
         // /document/print.html
         return Template::create('document', $index->module, 'print')->add($replace)->render();

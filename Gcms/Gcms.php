@@ -44,6 +44,12 @@ class Gcms extends \Kotchasan\KBase
    */
   public static $view;
   /**
+   * ข้อมูลเว็บไซต์ สำหรับใส่ลงใน JSON-LD
+   *
+   * @var array
+   */
+  public static $site;
+  /**
    * รูปแบบของ URL สัมพันธ์กันกับ router_rules
    *
    * @var array

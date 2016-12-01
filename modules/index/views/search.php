@@ -12,6 +12,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Template;
 use \Kotchasan\Grid;
 use \Kotchasan\Language;
+use \Kotchasan\Text;
 
 /**
  * หน้าเพจจากโมดูล index
@@ -36,16 +37,16 @@ class View extends \Gcms\View
     foreach ($index->items as $item) {
       if ($item->index == 1) {
         // หน้าหลักโมดูล
-        $uri = WEB_URL.'index.php?module='.$item->module;
+        $item->url = WEB_URL.'index.php?module='.$item->module;
       } else {
         // รายการ
-        $uri = WEB_URL.'index.php?module='.$item->module.'&amp;id='.$item->id;
+        $item->url = WEB_URL.'index.php?module='.$item->module.'&amp;id='.$item->id;
       }
       $listitem->add(array(
-        '/{URL}/' => $uri,
+        '/{URL}/' => $item->url,
         '/{TOPIC}/' => $item->topic,
-        '/{LINK}/' => $uri,
-        '/{DETAIL}/' => $item->description
+        '/{LINK}/' => $item->url,
+        '/{DETAIL}/' => Text::cut(preg_replace('/[\s\r\n\t]+/isu', ' ', strip_tags($item->description)), 149)
       ));
     }
     // /search/search.html
@@ -73,7 +74,8 @@ class View extends \Gcms\View
     $index->topic = ($index->q == '' ? '' : $index->q.' - ').$search;
     $index->description = $index->topic;
     $index->keywords = $index->topic;
-    $index->menu = 'search';
+    // JSON-LD สำหรับหน้าค้นหา
+    Gcms::$view->setJsonLd(\Index\Jsonld\View::search($index));
     // breadcrumb ของหน้า
     Gcms::$view->addBreadcrumb($index->canonical, $search, $search);
     return $index;

@@ -19,12 +19,12 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * อ่านกระทู้ที่ $id
+   * อ่านกระทู้ที่เลือก
    *
-   * @param int $id
+   * @param object $index ข้อมูลที่ส่งมา
    * @return object ข้อมูล object ไม่พบคืนค่า null
    */
-  public static function get($id)
+  public static function get($index)
   {
     // model
     $model = new static;
@@ -42,18 +42,35 @@ class Model extends \Kotchasan\Model
       ->from('board_q I')
       ->join('user U', 'LEFT', array('U.id', 'I.member_id'))
       ->join('category C', 'LEFT', array(array('C.category_id', 'I.category_id'), array('C.module_id', 'I.module_id')))
-      ->where(array('I.id', $id))
+      ->where(array('I.id', $index->id))
       ->toArray();
     if (self::$request->get('visited')->toInt() == 0) {
       $query->cacheOn(false);
     }
     $result = $query->first($fields);
     if ($result) {
+      // อัปเดทการเยี่ยมชม
       $result['visited'] ++;
       $model->db()->update($model->getFullTableName('board_q'), $result['id'], array('visited' => $result['visited']));
       $model->db()->cacheSave(array($result));
-      $result['config'] = @unserialize($result['config']);
-      return (object)$result;
+      // อัปเดทตัวแปร
+      foreach ($result as $key => $value) {
+        switch ($key) {
+          case 'config':
+            $config = @unserialize($value);
+            if (is_array($config)) {
+              foreach ($config as $k => $v) {
+                $index->$k = $v;
+              }
+            }
+            break;
+          default:
+            $index->$key = $value;
+            break;
+        }
+      }
+      // คืนค่าข้อมูลบทความ
+      return $index;
     }
     return null;
   }

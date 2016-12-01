@@ -31,7 +31,7 @@ class Controller extends \Kotchasan\Controller
   {
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     $index = \Index\Module\Model::getDetails($index);
-    if ($index) {
+    if ($index && MAIN_INIT === 'indexhtml') {
       if ($request->request('id')->exists()) {
         // แสดงรายการที่เลือก
         $page = createClass('Event\View\View')->index($request, $index);

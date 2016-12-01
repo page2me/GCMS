@@ -45,7 +45,7 @@ class View extends \Gcms\Adminview
     ));
     $groups = $fieldset->add('groups', array(
       'label' => '{LNG_Size of the icons}',
-      'comment' => '{LNG_Size of the image thumbnail at pixels}'
+      'comment' => '{LNG_Size of the image at pixels (Images should be at least 696 pixels wide)}'
     ));
     // icon_width
     $groups->add('text', array(

@@ -114,7 +114,7 @@ class View extends \Gcms\View
           'height' => 300,
           'language' => Language::name(),
           'toolbar' => 'Document',
-          'upload' => false,
+          'upload' => true,
           'label' => '{LNG_Detail}',
           'value' => $details->detail
         ));

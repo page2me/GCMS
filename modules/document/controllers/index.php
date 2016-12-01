@@ -37,7 +37,7 @@ class Controller extends \Kotchasan\Controller
       } else {
         $page = createClass('Document\View\View')->index($request, $index);
       }
-    } else {
+    } elseif (MAIN_INIT === 'indexhtml') {
       // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
       $module = \Document\Module\Model::get($request, $index);
       if ($module) {

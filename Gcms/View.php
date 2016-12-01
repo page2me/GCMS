@@ -15,7 +15,7 @@ namespace Gcms;
  *
  * @since 1.0
  */
-class View extends \Kotchasan\View
+class View extends \Gcms\Baseview
 {
   /**
    * ลิสต์รายการ breadcrumb.
@@ -24,17 +24,11 @@ class View extends \Kotchasan\View
    */
   private $breadcrumbs = array();
   /**
-   * ลิสต์รายการ breadcrumb สำหรับ JSON-LD
+   * ลิสต์คำสั่ง Javascript ที่จะใส่ไว้ท้ายเพจ
    *
    * @var array
    */
-  private $breadcrumbs_jsonld = array();
-  /**
-   * ลิสต์รายการ JSON-LD
-   *
-   * @var array
-   */
-  private $jsonld = array();
+  private $script = array();
 
   /**
    * เพิ่ม breadcrumb.
@@ -58,13 +52,13 @@ class View extends \Kotchasan\View
   }
 
   /**
-   * กำหนดค่า JSON-LD
+   * เพิ่มคำสั่ง Javascript ที่จะใส่ตรงท้ายเพจ
    *
-   * @param array $datas
+   * @param string $script
    */
-  public function setJsonLd($datas)
+  public function addScript($script)
   {
-    $this->jsonld[] = $datas;
+    $this->script[] = $script;
   }
 
   /**
@@ -94,24 +88,10 @@ class View extends \Kotchasan\View
       /* ภาษา */
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
       /* ภาษา ที่ใช้งานอยู่ */
-      '/{LANGUAGE}/' => \Kotchasan\Language::name()
+      '/{LANGUAGE}/' => \Kotchasan\Language::name(),
+      /* Javascript ท้ายเพจ */
+      '/(<body.*)(<\/body>)/isu' => '$1<script>'.implode("\n", $this->script).'</script>$2',
     ));
-    // BreadcrumbList
-    if (sizeof($this->breadcrumbs_jsonld) > 1) {
-      $elements = array();
-      foreach ($this->breadcrumbs_jsonld as $i => $items) {
-        $elements[] = array(
-          '@type' => 'ListItem',
-          'position' => $i + 1,
-          'item' => $items
-        );
-      }
-      $this->jsonld[] = array(
-        '@context' => 'http://schema.org',
-        '@type' => 'BreadcrumbList',
-        'itemListElement' => $elements
-      );
-    }
     // JSON-LD
     if (!empty($this->jsonld)) {
       $this->metas['JsonLd'] = '<script type="application/ld+json">'.json_encode($this->jsonld).'</script>';

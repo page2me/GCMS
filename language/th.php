@@ -510,7 +510,7 @@ return array(
   'Upload :type files no larger than :size' => 'ไฟล์อัปโหลด ชนิด :type ขนาดไฟล์ไม่เกิน :size',
   'Browse image uploaded, type :type size :width*:height pixel (automatic resize)' => 'เลือกรูปภาพอัปโหลด ชนิด :type ขนาด :width*:height พิกเซล (ปรับขนาดอัตโนมัติ)',
   'Size of the icons' => 'ขนาดของรูปภาพสัญลักษณ์',
-  'Size of the image thumbnail at pixels' => 'ขนาดของรูปภาพสัญลักษณ์ หน่วยเป็นพิกเซล',
+  'Size of the image at pixels (Images should be at least 696 pixels wide)' => 'ขนาดของรูปภาพ หน่วยเป็นพิกเซล (ความกว้างของรูปภาพไม่น้อยกว่า 696 พิกเซล)',
   'Type of files allowed to upload it, if not select any item can not be uploaded.' => 'ชนิดของไฟล์ที่ยอมให้อัปโหลด ถ้าไม่เลือกรายการใดเลยจะหมายถึงไม่สามารถอัปโหลดได้',
   'Upload icons (default) as defined above. Can be used as thumbnail if no thumbnail of story. (Resized automatically, if you want to use animated images or images transparent Please be prepared to fit the image size set.)' => 'อัปโหลดไอคอน (default) ตามที่กำหนดด้านบน ซึ่งสามารถใช้แทน Thumbnail ของเรื่องได้หากเรื่องไม่มี Thumbnail หรือไม่มีหมวดหมู่ (ปรับขนาดอัตโนมัติ, ถ้าต้องการใช้รูปภาพเคลื่อนไหวหรือรูปภาพโปร่งใส กรุณาเตรียมรูปภาพให้พอดีกับขนาดที่กำหนด)',
   'Type of files (pictures) that can be used as icon of categories such as jpg, jpeg, gif and png (must choose at least one type)' => 'ชนิดของไฟล์รูปภาพที่ต้องการให้อัปโหลดได้ เช่น jpg, jpeg, gif และ png (ต้องเลือกอย่างน้อย 1 ชนิด)',

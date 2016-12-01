@@ -48,21 +48,57 @@ class Controller extends \Kotchasan\Controller
     } elseif (!empty(self::$cfg->show_intro) && str_replace(array(BASE_PATH, '/'), '', $request->getUri()->getPath()) == '') {
       Gcms::$view = new \Index\Intro\View;
     } else {
-      // counter และ useronline
-      $new_day = \Index\Counter\Model::init();
       // View
       Gcms::$view = new \Gcms\View;
       // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
       Gcms::$menu = \Index\Menu\Controller::create();
-      // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
-      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, $new_day);
-      // หน้า home มาจากเมนูรายการแรก
+      // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้ และ โหลด Counter
+      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, \Index\Counter\Model::init());
+      // ข้อมูลเว็บไซต์
+      Gcms::$site = array(
+        '@type' => 'Organization',
+        'name' => self::$cfg->web_title,
+        'description' => self::$cfg->web_description,
+        'url' => WEB_URL.'index.php',
+      );
+      // logo
+      if (!empty(self::$cfg->logo) && is_file(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo)) {
+        $info = @getImageSize(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo);
+        if ($info && $info[0] > 0 && $info[1] > 0) {
+          $exts = explode('.', self::$cfg->logo);
+          $ext = strtolower(end($exts));
+          $logo = WEB_URL.DATA_FOLDER.'image/'.self::$cfg->logo;
+          Gcms::$view->addScript('if ($E("logo")) {new GMedia("logo_'.$ext.'", "'.$logo.'", '.$info[0].', '.$info[1].').write("logo");}');
+          if ($ext !== 'swf') {
+            $image_logo = '<img src="'.$logo.'" alt="{WEBTITLE}">';
+            // site logo
+            Gcms::$site['logo'] = array(
+              '@type' => 'ImageObject',
+              'url' => $logo,
+              'width' => $info[0],
+            );
+          }
+        }
+      }
+      if (!isset(Gcms::$site['logo']) && is_file(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg')) {
+        $info = @getImageSize(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg');
+        if ($info && $info[0] > 0 && $info[1] > 0) {
+          Gcms::$site['logo'] = array(
+            '@type' => 'ImageObject',
+            'url' => WEB_URL.DATA_FOLDER.'image/facebook_photo.jpg',
+            'width' => $info[0],
+          );
+        }
+      }
+      // หน้า home (เมนูรายการแรกสุด)
       $home = Gcms::$menu->homeMenu();
       if ($home) {
         $home->canonical = WEB_URL.'index.php';
         // breadcrumb หน้า home
         Gcms::$view->addBreadcrumb($home->canonical, $home->menu_text, $home->menu_tooltip, 'icon-home');
       }
+      // โมดูลแรกสุด ใส่ลงใน Javascript
+      Gcms::$view->addScript('var FIRST_MODULE = "'.Gcms::$module->getFirst().'";');
       // ตรวจสอบโมดูลที่เรียก
       $modules = Gcms::$module->checkModuleCalled($request->getQueryParams());
       if (!empty($modules)) {
@@ -84,32 +120,8 @@ class Controller extends \Kotchasan\Controller
         'og:site_name' => '<meta property="og:site_name" content="'.$web_title.'">',
         'og:type' => '<meta property="og:type" content="article">'
       );
-      // โมดูลแรกสุด ใส่ลงใน Javascript
-      $script = array('var FIRST_MODULE = "'.Gcms::$module->getFirst().'";');
-      // logo
-      $image_logo = '';
-      if (!empty(self::$cfg->logo) && is_file(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo)) {
-        $image_src = WEB_URL.DATA_FOLDER.'image/'.self::$cfg->logo;
-        $info = getImageSize(ROOT_PATH.DATA_FOLDER.'image/'.self::$cfg->logo);
-        if ($info[0] > 0 || $info[1] > 0) {
-          $exts = explode('.', self::$cfg->logo);
-          $ext = strtolower(end($exts));
-          $script[] = '$G(window).Ready(function(){';
-          $script[] = 'if ($E("logo")) {';
-          $script[] = "new GMedia('logo_$ext', '".$image_src."', $info[0], $info[1]).write('logo');";
-          $script[] = '}';
-          $script[] = '});';
-          if ($ext != 'swf') {
-            $image_logo = '<img src="'.$image_src.'" alt="{WEBTITLE}">';
-          }
-        }
-      }
-      if (empty($page->image_src)) {
-        if (is_file(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg')) {
-          $page->image_src = WEB_URL.DATA_FOLDER.'image/facebook_photo.jpg';
-        }
-      } elseif (!empty($image_src)) {
-        $page->image_src = $image_src;
+      if (empty($page->image_src) && isset(Gcms::$site['logo'])) {
+        $page->image_src = Gcms::$site['logo']['url'];
       }
       if (!empty($page->image_src)) {
         $meta['image_src'] = '<link rel=image_src href="'.$page->image_src.'">';
@@ -122,7 +134,6 @@ class Controller extends \Kotchasan\Controller
         $meta['canonical'] = '<meta name=canonical content="'.$page->canonical.'">';
         $meta['og:url'] = '<meta property="og:url" content="'.$page->canonical.'">';
       }
-      $meta['script'] = "<script>\n".implode("\n", $script)."\n</script>";
       Gcms::$view->setMetas($meta);
       // ภาษาที่ติดตั้ง
       $languages = Template::create('', '', 'language');
@@ -142,7 +153,7 @@ class Controller extends \Kotchasan\Controller
         // ภาษาที่ติดตั้ง
         '/{LANGUAGES}/' => $languages->render(),
         // โลโก
-        '/{LOGO}/' => $image_logo
+        '/{LOGO}/' => isset($image_logo) ? $image_logo : ''
       ));
     }
     // ส่งออก เป็น HTML

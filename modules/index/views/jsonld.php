@@ -21,23 +21,55 @@ class View extends \Kotchasan\KBase
 {
 
   /**
+   * สร้างโค้ดสำหรับ JSON-LD สำหรับ WebSite
+   *
+   * @param object $page
+   * @return array
+   */
+  public static function webpage($page)
+  {
+    return array(
+      '@context' => 'http://schema.org',
+      '@type' => 'WebPage',
+      'url' => $page->canonical,
+      'name' => $page->topic,
+      'description' => $page->description,
+      'image' => isset($page->image) ? $page->image : array(),
+      'breadcrumb' => Gcms::$view->getBreadcrumbJsonld(),
+      'publisher' => Gcms::$site,
+    );
+  }
+
+  /**
    * สร้างโค้ดสำหรับ JSON-LD
    *
    * @param object $index
    * @return array
    */
-  public static function generate($index)
+  public static function search($index)
   {
+    // หน้าค้นหา
+    $items = array();
+    foreach ($index->items as $n => $item) {
+      $items[] = array(
+        '@type' => 'ListItem',
+        'position' => $n + 1,
+        'item' => array(
+          '@type' => 'TechArticle',
+          'headline' => $item->topic,
+          'url' => $item->url,
+        )
+      );
+    }
     return array(
       '@context' => 'http://schema.org',
-      '@type' => 'WebSite',
-      'name' => $index->topic,
-      'url' => $index->canonical,
-      'description' => $index->description,
-      'publisher' => array(
-        '@type' => 'Organization',
-        'name' => strip_tags(self::$cfg->web_title),
-      ),
+      '@type' => 'SearchResultsPage',
+      'mainEntity' => array(
+        '@type' => 'ItemList',
+        'name' => $index->topic,
+        'itemListOrder' => 'http://schema.org/ItemListOrderAscending',
+        'itemListElement' => $items
+      )
     );
   }
 }

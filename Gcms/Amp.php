@@ -15,18 +15,8 @@ namespace Gcms;
  *
  * @since 1.0
  */
-class Amp extends \Kotchasan\View
+class Amp extends \Gcms\Baseview
 {
-
-  /**
-   * กำหนดค่า JSON-LD
-   *
-   * @param array $datas
-   */
-  public function setJsonLd($datas)
-  {
-    $this->metas['JsonLd'] = '<script type="application/ld+json">'.json_encode($datas).'</script>';
-  }
 
   /**
    * ouput เป็น HTML.
@@ -34,7 +24,7 @@ class Amp extends \Kotchasan\View
    * @param string|null $template HTML Template ถ้าไม่กำหนด (null) จะใช้ index.html
    * @return string
    */
-  public function renderHTML($template = null)
+  public function renderHTML($template = NULL)
   {
     // เนื้อหา
     parent::setContents(array(
@@ -47,6 +37,17 @@ class Amp extends \Kotchasan\View
       /* ภาษาที่ใช้งานอยู่ */
       '/{LANGUAGE}/' => \Kotchasan\Language::name()
     ));
-    return parent::renderHTML($template);
+    // JSON-LD
+    if (!empty($this->jsonld)) {
+      $this->metas['JsonLd'] = '<script type="application/ld+json">'.json_encode($this->jsonld).'</script>';
+    }
+    return preg_replace_callback('/<img[^>]+src=["\']([^"\']+)[^>]+/is', function($matchs) {
+      $size = @getimagesize($matchs[1]);
+      if ($size) {
+        return '<amp-img src="'.$matchs[1].'" '.$size[3].'></amp-img';
+      } else {
+        return $matchs[0];
+      }
+    }, parent::renderHTML(\Kotchasan\Template::load('', '', 'amp')));
   }
 }

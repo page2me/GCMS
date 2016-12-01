@@ -33,9 +33,11 @@ class View extends \Gcms\View
    */
   public function printer(Request $request, $index)
   {
+    // ค่าที่ส่งมา
+    $index->id = $request->get('id', $request->get('id')->toInt())->toInt();
     // อ่านรายการที่เลือก
-    $story = \Board\View\Model::get($request->get('id')->toInt());
-    if ($story) {
+    $index = \Board\View\Model::get($index);
+    if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
       // แสดงความคิดเห็นได้
@@ -46,20 +48,20 @@ class View extends \Gcms\View
       $imagedir = ROOT_PATH.DATA_FOLDER.'board/';
       $imageurl = WEB_URL.DATA_FOLDER.'board/';
       // รูปภาพ
-      if (!empty($story->picture) && is_file($imagedir.$story->picture)) {
-        $story->image_src = $imageurl.$story->picture;
+      if (!empty($index->picture) && is_file($imagedir.$index->picture)) {
+        $index->image_src = $imageurl.$index->picture;
       }
       if ($canView || $index->viewing == 1) {
         if ($canReply) {
           // /board/printcommentitem.html
           $listitem = Grid::create('board', $index->module, 'printcommentitem');
           // รายการแสดงความคิดเห็น
-          foreach (\Index\Comment\Model::get($story, 'board_r') as $no => $item) {
+          foreach (\Index\Comment\Model::get($index, 'board_r') as $no => $item) {
             // รูปภาพของความคิดเห็น
-            $picture = $item->picture != '' && is_file($imagedir.$item->picture) ? '<figure><img src="'.$imageurl.$item->picture.'" alt="'.$story->topic.'"></figure>' : '';
+            $picture = $item->picture != '' && is_file($imagedir.$item->picture) ? '<figure><img src="'.$imageurl.$item->picture.'" alt="'.$index->topic.'"></figure>' : '';
             $listitem->add(array(
               '/{DETAIL}/' => $picture.Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true),
-              '/{DISPLAYNAME}/' => $item->name,
+              '/{DISPLAYNAME}/' => $item->displayname,
               '/{DATE}/' => Date::format($item->last_update),
               '/{IP}/' => Gcms::showip($item->ip),
               '/{NO}/' => $no + 1
@@ -67,16 +69,16 @@ class View extends \Gcms\View
           }
         }
         // รูปภาพในกระทู้
-        $picture = empty($story->image_src) ? '' : '<figure><img src="'.$story->image_src.'" alt="'.$story->topic.'"></figure>';
+        $picture = empty($index->image_src) ? '' : '<figure><img src="'.$index->image_src.'" alt="'.$index->topic.'"></figure>';
         // เนื้อหา
-        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($story->detail)), $canView, true, true);
+        $detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($index->detail)), $canView, true, true);
         $replace = array(
           '/{COMMENTLIST}/' => isset($listitem) ? $listitem->render() : '',
-          '/{TOPIC}/' => $story->topic,
+          '/{TOPIC}/' => $index->topic,
           '/{DETAIL}/' => $picture.$detail,
-          '/{DATE}/' => Date::format($story->create_date),
-          '/{URL}/' => \Board\Index\Controller::url($index->module, $story->id),
-          '/{DISPLAYNAME}/' => $story->name
+          '/{DATE}/' => Date::format($index->create_date),
+          '/{URL}/' => \Board\Index\Controller::url($index->module, $index->id),
+          '/{DISPLAYNAME}/' => $index->name
         );
         // /board/print.html
         return Template::create('board', $index->module, 'print')->add($replace)->render();

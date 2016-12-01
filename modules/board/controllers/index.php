@@ -32,7 +32,7 @@ class Controller extends \Kotchasan\Controller
   {
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     $module = \Board\Module\Model::get($request, $index);
-    if ($module) {
+    if ($module && MAIN_INIT === 'indexhtml') {
       if ($request->get('wbid')->exists() || $request->get('id')->exists()) {
         // หน้าแสดงกระทู้
         $page = createClass('Board\View\View')->index($request, $module);

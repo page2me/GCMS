@@ -29,18 +29,20 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $index)
   {
-    // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
-    $index = \Index\Module\Model::getDetails($index);
-    if ($index) {
-      if ($request->request('id')->exists()) {
-        // ดูอัลบัม
-        $page = createClass('Gallery\View\View')->index($request, $index);
-      } else {
-        // หน้าแสดงรายการอัลบัม
-        $page = createClass('Gallery\Album\View')->index($request, $index);
-      }
-      if ($page) {
-        return $page;
+    if (MAIN_INIT === 'indexhtml') {
+      // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
+      $index = \Index\Module\Model::getDetails($index);
+      if ($index) {
+        if ($request->request('id')->exists()) {
+          // ดูอัลบัม
+          $page = createClass('Gallery\View\View')->index($request, $index);
+        } else {
+          // หน้าแสดงรายการอัลบัม
+          $page = createClass('Gallery\Album\View')->index($request, $index);
+        }
+        if ($page) {
+          return $page;
+        }
       }
     }
     // 404

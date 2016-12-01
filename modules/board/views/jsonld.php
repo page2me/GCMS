@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource document/views/amp.php
+ * @filesource board/views/amp.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Document\Jsonld;
+namespace Board\Jsonld;
 
 use \Gcms\Gcms;
 
@@ -28,14 +28,14 @@ class View extends \Kotchasan\KBase
    */
   public static function generate($index)
   {
-    $comment = array();
+    $suggestedAnswer = array();
     if (!empty($index->comment_items)) {
       foreach ($index->comment_items as $item) {
-        $comment[] = array(
-          '@type' => 'Comment',
+        $suggestedAnswer[] = array(
+          '@type' => 'Answer',
           'text' => strip_tags($item->detail),
           'dateCreated' => date(DATE_ISO8601, $item->last_update),
-          'creator' => array(
+          'author' => array(
             '@type' => 'Person',
             'name' => $item->displayname
           )
@@ -45,24 +45,22 @@ class View extends \Kotchasan\KBase
     // คืนค่าข้อมูล JSON-LD
     return array(
       '@context' => 'http://schema.org',
-      '@type' => empty($index->image) ? 'TechArticle' : 'Article',
+      '@type' => 'Question',
       'mainEntityOfPage' => array(
         '@type' => 'WebPage',
-        '@id' => Gcms::createUrl($index->module),
-        'breadcrumb' => Gcms::$view->getBreadcrumbJsonld(),
+        '@id' => Gcms::createUrl($index->module)
       ),
-      'headline' => $index->topic,
-      'datePublished' => date(DATE_ISO8601, $index->create_date),
-      'dateModified' => date(DATE_ISO8601, $index->last_update),
+      'url' => $index->canonical,
+      'name' => $index->topic,
+      'text' => strip_tags($index->detail),
+      'dateCreated' => date(DATE_ISO8601, $index->create_date),
+      'answerCount' => $index->comments,
+      'upvoteCount' => $index->visited,
       'author' => array(
         '@type' => 'Person',
-        'name' => $index->displayname
+        'name' => $index->name
       ),
-      'image' => isset($index->image) ? $index->image : '',
-      'publisher' => Gcms::$site,
-      'description' => $index->description,
-      'url' => $index->canonical,
-      'comment' => $comment,
+      'suggestedAnswer' => $suggestedAnswer,
     );
   }
 }

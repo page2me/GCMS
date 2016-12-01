@@ -49,8 +49,8 @@ class View extends \Gcms\View
     ));
     // detail
     $index->detail = $template->render();
-    // JSON-LD
-    Gcms::$view->setJsonLd(\Index\Jsonld\View::generate($index));
+    // JSON-LD (Index)
+    Gcms::$view->setJsonLd(\Index\Jsonld\View::webpage($index));
     // คืนค่า
     return $index;
   }

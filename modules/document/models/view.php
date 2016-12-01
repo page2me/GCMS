@@ -52,7 +52,6 @@ class Model extends \Kotchasan\Model
       'D.relate',
       'I.can_reply canReply',
       'I.published',
-      'I.published_date',
       '0 vote',
       '0 vote_count',
       'C.topic category',
@@ -60,8 +59,7 @@ class Model extends \Kotchasan\Model
       'C.config',
       'U.status',
       'U.id member_id',
-      'U.displayname',
-      'U.email'
+      '(CASE WHEN U.`displayname`="" THEN U.`email` ELSE U.`displayname` END) displayname',
     );
     // where
     $where = array();

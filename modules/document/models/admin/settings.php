@@ -32,8 +32,8 @@ class Model extends \Kotchasan\Model
   public static function defaultSettings()
   {
     return array(
-      'icon_width' => 600,
-      'icon_height' => 400,
+      'icon_width' => 696,
+      'icon_height' => 464,
       'img_typies' => array('jpg', 'jpeg'),
       'default_icon' => 'modules/document/img/default_icon.png',
       'published' => 1,

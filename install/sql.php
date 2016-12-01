@@ -519,7 +519,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Size of file allowed to upload up (Kb.)','text','index','0','ขนาดของไฟล์ที่ยอมให้อัปโหลดได้ (Kb.)','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Size of the file upload','text','index','0','ขนาดของไฟล์อัปโหลด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Size of the icons','text','index','0','ขนาดของรูปภาพสัญลักษณ์','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Size of the image thumbnail at pixels','text','index','0','ขนาดของรูปภาพสัญลักษณ์ หน่วยเป็นพิกเซล','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Size of the image at pixels (Images should be at least 696 pixels wide)','text','index','0','ขนาดของรูปภาพ หน่วยเป็นพิกเซล (ความกว้างของรูปภาพไม่น้อยกว่า 696 พิกเซล)','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('skip to content','text','index','0','ข้ามไปยังเนื้อหา','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Small Header','text','index','0','ใช้ส่วนหัวขนาดเล็ก','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('SMTPSECURIES','array','index','0','a:2:{s:0:"";s:57:"การเชื่อมต่อแบบปกติ";s:3:"ssl";s:72:"การเชื่อมต่อที่ปลอดภัย (SSL)";}','a:2:{s:0:"";s:10:"Clear Text";s:3:"ssl";s:38:"Server using a secure connection (SSL)";}');

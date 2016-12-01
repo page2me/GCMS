@@ -61,8 +61,10 @@ class Model extends \Index\Upgrade\Model
     $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `comment_id` `comment_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
     $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `commentator_id` `commentator_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
     $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_index</b> complete...</li>';
-    $db->query("ALTER TABLE `$_SESSION[prefix]_eventcalendar` CHANGE `color` `color` VARCHAR( 11 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-    $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_eventcalendar</b> complete...</li>';
+    if (\Index\Upgrade\Model::tableExists($db, $_SESSION['prefix'].'_eventcalendar')) {
+      $db->query("ALTER TABLE `$_SESSION[prefix]_eventcalendar` CHANGE `color` `color` VARCHAR( 11 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+      $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_eventcalendar</b> complete...</li>';
+    }
     // update database.php
     $f = \Index\Upgrade\Model::updateTables(array('language' => 'language'));
     $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update file <b>database.php</b> ...</li>';

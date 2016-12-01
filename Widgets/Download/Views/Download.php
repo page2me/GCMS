@@ -36,7 +36,9 @@ class Download extends \Gcms\View
     $content .= Language::get('Download').' '.$file['name'].'.'.$file['ext'].' '.Language::get('File size').' '.Text::formatFileSize($file['size']).' ('.Date::format($file['last_update']).')';
     $content .= '">'.$file['name'].'.'.$file['ext'].'&nbsp;<img class="nozoom" src="'.$icon.'" alt="'.$file['ext'].'">';
     $content .= '&nbsp;(<span id=downloads_'.$file['id'].'>'.number_format($file['downloads']).'</span>)</a>';
-    $content .= '<script>initDownloadList("download_'.$file['id'].'");</script>';
+    if (MAIN_INIT === 'indexhtml') {
+      $content .= '<script>initDownloadList("download_'.$file['id'].'");</script>';
+    }
     return $content;
   }
 }

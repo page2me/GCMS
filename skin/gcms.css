@@ -50,7 +50,6 @@ header p, footer p {
 .subcontent header {
   margin-bottom: 0;
 }
-.comment,
 .create,
 .date,
 time,
@@ -83,7 +82,6 @@ time {
 .icon-upload:before {
   color: rgb(108, 61, 3);
 }
-.comment,
 .comments,
 .payment6,
 .icon-edit:before {
@@ -127,7 +125,6 @@ time {
 .icon-lock:before {
   color: rgb(71, 87, 173);
 }
-em,
 .payment5,
 .icon-delete:before,
 .access:before {
@@ -145,6 +142,41 @@ span.icon-sex-m:before {
 }
 .icon-print:before {
   color: #4488BB;
+}
+.new:after,
+.update:after,
+.hot:after,
+.recommend:after {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 10px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: inherit;
+  padding: 0 2px;
+  margin: 0 0 0 5px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+.new:after {
+  content: 'new';
+  background-color: #FF8400;
+  color: #FFF;
+}
+.update:after {
+  content: 'update';
+  background-color: #FFFF00;
+  color: #000;
+}
+.hot:after {
+  content: 'hot!';
+  background-color: #F00;
+  color: #FFF;
+}
+.recommend:after {
+  content: 'cool';
+  background-color: #259B24;
+  color: #FFF;
 }
 /* header */
 #logo {

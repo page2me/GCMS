@@ -28,7 +28,7 @@ class Model extends \Kotchasan\KBase
   public static function tableExists($db, $table_name)
   {
     try {
-      $result = $db->connection()->query("SELECT 1 FROM `$table_name` LIMIT 1");
+      $db->connection()->query("SELECT 1 FROM `$table_name` LIMIT 1");
     } catch (\PDOException $e) {
       return false;
     }
