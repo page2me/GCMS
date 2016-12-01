@@ -49,6 +49,7 @@ class View extends \Kotchasan\KBase
       'mainEntityOfPage' => array(
         '@type' => 'WebPage',
         '@id' => Gcms::createUrl($index->module),
+        'publisher' => Gcms::$site,
         'breadcrumb' => Gcms::$view->getBreadcrumbJsonld(),
       ),
       'headline' => $index->topic,
@@ -59,7 +60,6 @@ class View extends \Kotchasan\KBase
         'name' => $index->displayname
       ),
       'image' => isset($index->image) ? $index->image : '',
-      'publisher' => Gcms::$site,
       'description' => $index->description,
       'url' => $index->canonical,
       'comment' => $comment,
