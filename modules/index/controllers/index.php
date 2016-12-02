@@ -80,12 +80,12 @@ class Controller extends \Kotchasan\Controller
           }
         }
       }
-      if (!isset(Gcms::$site['logo']) && is_file(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg')) {
-        $info = @getImageSize(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg');
+      if (!isset(Gcms::$site['logo']) && is_file(ROOT_PATH.DATA_FOLDER.'image/site_logo.jpg')) {
+        $info = @getImageSize(ROOT_PATH.DATA_FOLDER.'image/site_logo.jpg');
         if ($info && $info[0] > 0 && $info[1] > 0) {
           Gcms::$site['logo'] = array(
             '@type' => 'ImageObject',
-            'url' => WEB_URL.DATA_FOLDER.'image/facebook_photo.jpg',
+            'url' => WEB_URL.DATA_FOLDER.'image/site_logo.jpg',
             'width' => $info[0],
           );
         }

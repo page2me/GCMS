@@ -48,7 +48,8 @@ class View extends \Kotchasan\KBase
       '@type' => 'Question',
       'mainEntityOfPage' => array(
         '@type' => 'WebPage',
-        '@id' => Gcms::createUrl($index->module)
+        '@id' => Gcms::createUrl($index->module),
+        'publisher' => Gcms::$site,
       ),
       'url' => $index->canonical,
       'name' => $index->topic,

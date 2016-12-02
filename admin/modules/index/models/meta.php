@@ -8,6 +8,7 @@
 
 namespace Index\Meta;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\Config;
@@ -25,30 +26,32 @@ class Model extends \Kotchasan\KBase
 
   /**
    * form submit
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // โหลด config
         $config = Config::load(ROOT_PATH.'settings/config.php');
         // อัปโหลดไฟล์
-        foreach (self::$request->getUploadedFiles() as $item => $file) {
-          if (self::$request->post('delete_'.$item)->toBoolean() == 1) {
+        foreach ($request->getUploadedFiles() as $item => $file) {
+          if ($request->post('delete_'.$item)->toBoolean() == 1) {
             // ลบรูปภาพ
-            if (is_file(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg')) {
-              @unlink(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg');
+            if (is_file(ROOT_PATH.DATA_FOLDER.'image/'.$item.'.jpg')) {
+              @unlink(ROOT_PATH.DATA_FOLDER.'image/'.$item.'.jpg');
             }
           } elseif (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'image/')) {
             // ไดเรคทอรี่ไม่สามารถสร้างได้
             $ret['ret_'.$item] = sprintf(Language::get('Directory %s cannot be created or is read-only.'), DATA_FOLDER.'image/');
           } elseif ($file->hasUploadFile()) {
             // ตรวจสอบไฟล์อัปโหลด
-            if (!$file->validFileExt(array('jpg'))) {
+            if (!$file->validFileExt(array('jpg', 'jpeg'))) {
               $ret['ret_'.$item] = Language::get('The type of file is invalid');
             } else {
               try {
@@ -62,13 +65,14 @@ class Model extends \Kotchasan\KBase
         }
         // other
         foreach (array('google_site_verification', 'google_profile', 'msvalidate', 'facebook_appId') as $item) {
-          $value = self::$request->post($item)->text();
+          $value = $request->post($item)->text();
           if (empty($value)) {
             unset($config->$item);
           } else {
             $config->$item = $value;
           }
         }
+        $config->amp = $request->post('amp')->toBoolean();
         if (empty($ret)) {
           // save config
           if (Config::save($config, ROOT_PATH.'settings/config.php')) {

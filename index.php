@@ -18,6 +18,3 @@ if (is_file('settings/config.php') && is_file('settings/database.php')) {
   // ติดตั้ง
   header('Location: ./install/index.php');
 }
-if (isset($_GET['skin']) && $_GET['skin'] == 'benchmark') {
-  require $_SERVER['DOCUMENT_ROOT'].'/php-framework-benchmark/libs/output_data.php';
-}

@@ -49,7 +49,6 @@ class View extends \Kotchasan\KBase
       'mainEntityOfPage' => array(
         '@type' => 'WebPage',
         '@id' => Gcms::createUrl($index->module),
-        'publisher' => Gcms::$site,
         'breadcrumb' => Gcms::$view->getBreadcrumbJsonld(),
       ),
       'headline' => $index->topic,
@@ -63,6 +62,7 @@ class View extends \Kotchasan\KBase
       'description' => $index->description,
       'url' => $index->canonical,
       'comment' => $comment,
+      'publisher' => Gcms::$site,
     );
   }
 }

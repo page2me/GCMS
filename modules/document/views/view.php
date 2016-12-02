@@ -43,15 +43,17 @@ class View extends \Gcms\View
     // อ่านรายการที่เลือก
     $index = \Document\View\Model::get($index);
     if ($index && ($index->published || Login::isAdmin())) {
+      // URL ของหน้า
+      $index->canonical = Controller::url($index->module, $index->alias, $index->id, false);
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
-      // สมาชิก true
-      $isMember = $login['status'] > -1;
-      // ผู้ดูแล
-      $moderator = Gcms::canConfig($login, $index, 'moderator');
       // สถานะสมาชิกที่สามารถเปิดดูกระทู้ได้
       $canView = Gcms::canConfig($login, $index, 'can_view');
       if ($canView || $index->viewing == 1) {
+        // สมาชิก true
+        $isMember = $login['status'] > -1;
+        // ผู้ดูแล
+        $moderator = Gcms::canConfig($login, $index, 'moderator');
         // รูปภาพ
         $dir = DATA_FOLDER.'document/';
         $imagedir = ROOT_PATH.$dir;
@@ -77,12 +79,12 @@ class View extends \Gcms\View
         if (!empty($index->category)) {
           Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), Gcms::ser2Str($index->category), Gcms::ser2Str($index->cat_tooltip));
         }
-        // URL ของหน้า
-        $index->canonical = Controller::url($index->module, $index->alias, $index->id, false);
         // breadcrumb ของหน้า
         Gcms::$view->addBreadcrumb($index->canonical, $index->topic, $index->description);
         // AMP
-        Gcms::$view->metas['amphtml'] = '<link rel="amphtml" href="'.WEB_URL.'amp.php?module='.$index->module.'&amp;id='.$index->id.'">';
+        if (!empty(self::$cfg->amp)) {
+          Gcms::$view->metas['amphtml'] = '<link rel="amphtml" href="'.WEB_URL.'amp.php?module='.$index->module.'&amp;id='.$index->id.'">';
+        }
         // แสดงความคิดเห็นได้ จากการตั้งค่าโมดูล
         $canReply = !empty($index->can_reply);
         if ($canReply) {

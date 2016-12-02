@@ -9,6 +9,7 @@
 namespace Index\Menus;
 
 use \Kotchasan\Login;
+use \Kotchasan\Language;
 
 /**
  * โมเดลสำหรับแสดงรายการเมนู (menus.php)

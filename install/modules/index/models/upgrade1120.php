@@ -36,8 +36,10 @@ class Model extends \Index\Upgrade\Model
       foreach (Language::installed($lng) as $item) {
         if (!empty($item['array'])) {
           $item['type'] = 'array';
-          $item['th'] = serialize($item['th']);
-          if (isset($item['en'])) {
+          if (isset($item['th']) && is_array($item['th'])) {
+            $item['th'] = serialize($item['th']);
+          }
+          if (isset($item['en']) && is_array($item['en'])) {
             $item['en'] = serialize($item['en']);
           }
         } elseif (is_int($item['th'])) {

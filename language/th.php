@@ -1,6 +1,10 @@
 <?php
 /* language/th.php */
 return array(
+  'BOOLEANS' => array(
+    0 => 'ปิดใช้งาน',
+    1 => 'เปิดใช้งาน'
+  ),
   'DATE_FORMAT' => 'd M Y เวลา H:i น.',
   'DATE_LONG' => array(
     0 => 'อาทิตย์',
@@ -20,7 +24,54 @@ return array(
     5 => 'ศ.',
     6 => 'ส.'
   ),
-  'YEAR_OFFSET' => 543,
+  'FROM_TIME' => 'ตั้งแต่เวลา H:i น.',
+  'IMG_LAW' => array(
+    0 => 'อัปโหลดรูปภาพหรือไม่ก็ได้',
+    1 => 'บังคับอัปโหลดรูปภาพเสมอ (สำหรับคำถาม)'
+  ),
+  'LOGIN_ACTIONS' => array(
+    0 => 'ไม่ต้องทำอะไร (Ajax Login)',
+    1 => 'โหลดหน้าเว็บใหม่',
+    2 => 'กลับไปหน้าก่อนหน้า'
+  ),
+  'LOGIN_FIELDS' => array(
+    'email' => 'อีเมล์',
+    'phone1' => 'โทรศัพท์'
+  ),
+  'MAIL_PROGRAMS' => array(
+    0 => 'ส่งจดหมายด้วย PHP',
+    1 => 'ส่งจดหมายด้วย PHPMailer (แนะนำ)'
+  ),
+  'MEMBER_ONLY_LIST' => array(
+    0 => 'ระบบจะแสดงข้อความเตือน (ค่าเริ่มต้น)',
+    1 => 'แสดงเนื้อหาบางส่วนยกเว้นภายในกรอบโค้ด ([code]..[/code])'
+  ),
+  'MENU_ACTIONS' => array(
+    0 => 'ไม่ต้องดำเนินการใดๆเลย (เช่นเมนูที่มีเมนูย่อย)',
+    1 => 'เปิดโมดูลที่ติดตั้งแล้วบนเว็บไซต์',
+    2 => 'เปิด URL ที่กำหนดเอง'
+  ),
+  'MENU_PARENTS' => array(
+    'MAINMENU' => 'เมนูหลัก',
+    'SIDEMENU' => 'เมนูข้าง',
+    'BOTTOMMENU' => 'เมนูล่าง'
+  ),
+  'MENU_PUBLISHEDS' => array(
+    0 => 'ไม่แสดงผล',
+    1 => 'แสดงผล',
+    2 => 'แสดงเมื่อเข้าระบบแล้ว',
+    3 => 'แสดงเมื่อยังไม่ได้เข้าระบบ'
+  ),
+  'MENU_TARGET' => array(
+    '' => 'เปิดลิงค์ในหน้าเดิม (ปกติ)',
+    '_blank' => 'เปิดลิงค์ในหน้าใหม่ (_blank)'
+  ),
+  'MENU_TYPES' => array(
+    0 => 'เป็นเมนูหลัก (รายการแรกสุด เช่น หน้าหลัก)',
+    1 => 'เป็นเมนูลำดับแรกสุด',
+    2 => 'เป็นเมนูย่อยลำดับที่ 1',
+    3 => 'เป็นเมนูย่อยลำดับที่ 2'
+  ),
   'MONTH_LONG' => array(
     1 => 'มกราคม',
     2 => 'กุมภาพันธ์',
@@ -49,86 +100,27 @@ return array(
     11 => 'พ.ย.',
     12 => 'ธ.ค.'
   ),
+  'NEWTOPIC_INTRODUCTION' => '<ul><li>กรุณาใช้ข้อความที่สุภาพ ละเว้นการให้ร้ายผู้อื่น หยาบคาย ก้าวร้าว ลามกอนาจาร หรือโพสต์ข้อมูลส่วนตัวของผู้อื่นอันจะทำให้ผู้อื่นได้รับความเดือดร้อน</li><li>ขอความร่วมมือไม่โพสต์ข้อความลูกโซ่ โฆษณา หรือข้อความที่ไม่เกี่ยวกับเนื้อหาในหน้านี้</li><li>ห้ามเสนอข้อความพาดพิงสถาบันพระมหากษัตริย์ และราชวงศ์ เป็นอันขาด</li><li>ทุกความคิดเห็นไม่เกี่ยวข้องกับผู้ดำเนินการเว็บไซต์ ผู้โพสต์ความคิดเห็นจะต้องรับผิดชอบต่อข้อความของท่าน ทีมงานขอสงวนสิทธ์ในการถอดข้อความคิดเห็นโดยไม่ต้องชี้แจงหรือแจ้งล่วงหน้า</li></ul>',
+  'PUBLISHEDS' => array(
+    0 => 'ระงับการเผยแพร่',
+    1 => 'เผยแพร่'
+  ),
+  'REGISTER_CONFIRM' => '<dt>ข้อตกลงการสมัครสมาชิก</dt><dd>1. การสมัครสมาชิกเพื่อสามารถร่วมกิจกรรมกับเว็บไซต์ได้อย่างสมบูรณ์</dd><dd>2. การสมัครสมาชิกต้องใช้อีเมล์จริงที่ติดต่อได้ เนื่องจากจะมีการส่งการยืนยันการสมัครไปกับอีเมล์ที่ลงทะเบียนไว้ หรือใช้สำหรับการขอรหัสผ่านใหม่</dd><dd>3. ทางเว็บไซต์ ยึดถือนโยบายส่วนบุคคล ข้อมูลส่วนตัวจะไม่ถูกเปิดเผยนอกจากข้อมูลที่จำเป็นสำหรับการยืนยันตัวตนเป็นกรณีไป</dd><dd>4. เมื่อได้อ่านและยอมรับข้อตกลงนี้กรุณา เลือก <strong>ยอมรับ</strong> ด้านล่าง</dd>',
+  'REPLIES' => array(
+    0 => 'ปิดการแสดงความคิดเห็น',
+    1 => 'สามารถแสดงความคิดเห็นได้'
+  ),
   'SEXES' => array(
     'f' => 'หญิง',
     'm' => 'ชาย'
   ),
-  'BOOLEANS' => array(
-    0 => 'ปิดใช้งาน',
-    1 => 'เปิดใช้งาน'
-  ),
-  'LOGIN_FIELDS' => array(
-    'email' => 'อีเมล์',
-    'phone1' => 'โทรศัพท์'
-  ),
-  'MAIL_PROGRAMS' => array(
-    0 => 'ส่งจดหมายด้วย PHP',
-    1 => 'ส่งจดหมายด้วย PHPMailer (แนะนำ)'
+  'SHOW_NEWS' => array(
+    'news' => 'ตัวเลือก news'
   ),
   'SMTPSECURIES' => array(
     '' => 'การเชื่อมต่อแบบปกติ',
     'ssl' => 'การเชื่อมต่อที่ปลอดภัย (SSL)'
   ),
-  'PUBLISHEDS' => array(
-    0 => 'ระงับการเผยแพร่',
-    1 => 'เผยแพร่'
-  ),
-  'MENU_PUBLISHEDS' => array(
-    0 => 'ไม่แสดงผล',
-    1 => 'แสดงผล',
-    2 => 'แสดงเมื่อเข้าระบบแล้ว',
-    3 => 'แสดงเมื่อยังไม่ได้เข้าระบบ'
-  ),
-  'MENU_TARGET' => array(
-    '' => 'เปิดลิงค์ในหน้าเดิม (ปกติ)',
-    '_blank' => 'เปิดลิงค์ในหน้าใหม่ (_blank)'
-  ),
-  'MENU_ACTIONS' => array(
-    0 => 'ไม่ต้องดำเนินการใดๆเลย (เช่นเมนูที่มีเมนูย่อย)',
-    1 => 'เปิดโมดูลที่ติดตั้งแล้วบนเว็บไซต์',
-    2 => 'เปิด URL ที่กำหนดเอง'
-  ),
-  'MENU_TYPES' => array(
-    0 => 'เป็นเมนูหลัก (รายการแรกสุด เช่น หน้าหลัก)',
-    1 => 'เป็นเมนูลำดับแรกสุด',
-    2 => 'เป็นเมนูย่อยลำดับที่ 1',
-    3 => 'เป็นเมนูย่อยลำดับที่ 2'
-  ),
-  'MENU_PARENTS' => array(
-    'MAINMENU' => 'เมนูหลัก',
-    'SIDEMENU' => 'เมนูข้าง',
-    'BOTTOMMENU' => 'เมนูล่าง'
-  ),
-  'MEMBER_ONLY_LIST' => array(
-    0 => 'ระบบจะแสดงข้อความเตือน (ค่าเริ่มต้น)',
-    1 => 'แสดงเนื้อหาบางส่วนยกเว้นภายในกรอบโค้ด ([code]..[/code])'
-  ),
-  'REPLIES' => array(
-    0 => 'ปิดการแสดงความคิดเห็น',
-    1 => 'สามารถแสดงความคิดเห็นได้'
-  ),
-  'THUMBNAILS' => array(
-    0 => 'ไม่มีรูปภาพ',
-    1 => 'รูปภาพ'
-  ),
-  'SHOW_NEWS' => array(
-    'news' => 'ตัวเลือก news'
-  ),
-  'LOGIN_ACTIONS' => array(
-    0 => 'ไม่ต้องทำอะไร (Ajax Login)',
-    1 => 'โหลดหน้าเว็บใหม่',
-    2 => 'กลับไปหน้าก่อนหน้า'
-  ),
-  'REGISTER_CONFIRM' => '<dt>ข้อตกลงการสมัครสมาชิก</dt><dd>1. การสมัครสมาชิกเพื่อสามารถร่วมกิจกรรมกับเว็บไซต์ได้อย่างสมบูรณ์</dd><dd>2. การสมัครสมาชิกต้องใช้อีเมล์จริงที่ติดต่อได้ เนื่องจากจะมีการส่งการยืนยันการสมัครไปกับอีเมล์ที่ลงทะเบียนไว้ หรือใช้สำหรับการขอรหัสผ่านใหม่</dd><dd>3. ทางเว็บไซต์ ยึดถือนโยบายส่วนบุคคล ข้อมูลส่วนตัวจะไม่ถูกเปิดเผยนอกจากข้อมูลที่จำเป็นสำหรับการยืนยันตัวตนเป็นกรณีไป</dd><dd>4. เมื่อได้อ่านและยอมรับข้อตกลงนี้กรุณา เลือก <strong>ยอมรับ</strong> ด้านล่าง</dd>',
-  'USE_AJAX_LIST' => array(
-    0 => 'เปิดการใช้งาน Ajax บางส่วนกับเว็บไซต์ (แสดงผลเว็บไซต์เหมือนเว็บทั่วไป)',
-    1 => 'เปิดการใช้งาน Ajax เต็มรูปแบบกับเว็บไซต์'
-  ),
-  'IMG_LAW' => array(
-    0 => 'อัปโหลดรูปภาพหรือไม่ก็ได้',
-    1 => 'บังคับอัปโหลดรูปภาพเสมอ (สำหรับคำถาม)'
-  ),
-  'NEWTOPIC_INTRODUCTION' => '<ul><li>กรุณาใช้ข้อความที่สุภาพ ละเว้นการให้ร้ายผู้อื่น หยาบคาย ก้าวร้าว ลามกอนาจาร หรือโพสต์ข้อมูลส่วนตัวของผู้อื่นอันจะทำให้ผู้อื่นได้รับความเดือดร้อน</li><li>ขอความร่วมมือไม่โพสต์ข้อความลูกโซ่ โฆษณา หรือข้อความที่ไม่เกี่ยวกับเนื้อหาในหน้านี้</li><li>ห้ามเสนอข้อความพาดพิงสถาบันพระมหากษัตริย์ และราชวงศ์ เป็นอันขาด</li><li>ทุกความคิดเห็นไม่เกี่ยวข้องกับผู้ดำเนินการเว็บไซต์ ผู้โพสต์ความคิดเห็นจะต้องรับผิดชอบต่อข้อความของท่าน ทีมงานขอสงวนสิทธ์ในการถอดข้อความคิดเห็นโดยไม่ต้องชี้แจงหรือแจ้งล่วงหน้า</li></ul>',
   'TEXTLINK_TYPIES' => array(
     'custom' => 'กำหนดเองเช่น Adsense',
     'text' => 'ลิงค์ข้อความอย่างเดียว',
@@ -137,10 +129,24 @@ return array(
     'banner' => 'แบนเนอร์รูปภาพ แสดงทีละรูปวนไปเรื่อยๆ',
     'slideshow' => 'แบนเนอร์ไสลด์โชว์'
   ),
+  'THUMBNAILS' => array(
+    0 => 'ไม่มีรูปภาพ',
+    1 => 'รูปภาพ'
+  ),
+  'TO_TIME' => 'ถึง H:i น.',
+  'USE_AJAX_LIST' => array(
+    0 => 'เปิดการใช้งาน Ajax บางส่วนกับเว็บไซต์ (แสดงผลเว็บไซต์เหมือนเว็บทั่วไป)',
+    1 => 'เปิดการใช้งาน Ajax เต็มรูปแบบกับเว็บไซต์'
+  ),
+  'WIDGET_DATE_FORMAT' => 'วันLที่ d F พ.ศ. Y',
+  'YEAR_OFFSET' => 543,
+  'CURRENCY_UNITS' => array(
+    'THB' => 'บาท',
+    'USD' => 'ดอลล่าร์'
+  ),
   'click to' => 'คลิกเพื่อ',
   'click to edit' => 'คลิกเพื่อแก้ไข',
   'List of bad words (one per line)' => 'รายการคำหยาบ (หนึ่งบรรทัดต่อหนึ่งชื่อ)',
-  'This :name is already registered' => 'มี :name นี้ลงทะเบียนอยู่ก่อนแล้ว',
   'Logout successful' => 'ออกจากระบบเรียบร้อย',
   'Please fill in' => 'กรุณากรอก',
   'Incorrect :name' => ':name ไม่ถูกต้อง',
@@ -357,7 +363,7 @@ return array(
   'Other preferences about SEO and Social Network' => 'การตั้งค่าเกี่ยวกับ SEO และโซเชี่ยลเน็ตเวอร์ค',
   'Posting' => 'การตั้งกระทู้',
   'Browse file' => 'เลือกไฟล์',
-  'Select an image file size 200x200 pixel types jpg only, for posting to your Facebook wall. On a shared or a subscription through Facebook.' => 'เลือกรูปภาพขนาด 200x200 พิกเซล ชนิด jpg เท่านั้น สำหรับโพสต์ไปยังเฟซบุคเมื่อมีการแชร์',
+  'Select Image size 696 * 464 pixel jpg types only, used as the logo of the site. When sharing' => 'เลือกรูปภาพ ขนาด 696 * 464 พิกเซล ชนิด jpg เท่านั้น, ใช้เป็นตราสัญลักษณ์ของเว็บไซต์ เมื่อมีการแชร์',
   'Site verification code' => 'รหัสยืนยันไซต์',
   'Email send' => 'ส่งจดหมาย',
   'Details of' => 'รายละเอียดของ',
@@ -401,10 +407,9 @@ return array(
   'Can not be performed this request. Because they do not find the information you need or you are not allowed' => 'ไม่สามารถดำเนินการตามที่ร้องขอได้ เนื่องจากไม่พบข้อมูลที่ต้องการ หรือ คุณไม่มีสิทธิ์',
   'Sorry' => 'ขออภัย',
   'Invalid :name' => ':name ไม่ถูกต้อง',
-  'Identification number' => 'รหัสบัตรประชาชน',
+  'Identification number' => 'เลขประชาชน',
   'Create a new module from the module installed, according to usage' => 'สร้างโมดูลใหม่จากโมดูลที่ติดตั้งแล้วตามลักษณะการใช้งาน',
   'English lowercase and number only' => 'ภาษาอังกฤษตัวพิมพ์เล็กและตัวเลขเท่านั้น',
-  'This :name is already installed' => 'มี :name นี้ติดตั้งอยู่ก่อนแล้ว',
   'The type of file is invalid' => 'ชนิดของไฟล์ไม่ถูกต้อง',
   'Can not upload files' => 'ไม่สามารถอัปโหลดไฟล์ได้',
   'All template files are stored in <span>%s</span>' => 'ไฟล์แม่แบบนี้เก็บอยู่ใน <span>%s</span>',
@@ -417,7 +422,6 @@ return array(
   'remove this photo' => 'ลบรูปภาพนี้ออก',
   'Your message was sent successfully' => 'ส่งข้อความไปยังผู้รับเรียบร้อยแล้ว',
   'Write or edit Email Template' => 'เขียนหรือแก้ไขแม่แบบอีเมล์',
-  'This item already in the chosen language' => 'มีรายการนี้ ในภาษาที่เลือก อยู่ก่อนแล้ว',
   'The members status of the site' => 'สถานะสมาชิกของเว็บไซต์',
   'Copy' => 'สำเนา',
   'Copy language from the installation' => 'สำเนาภาษา จากภาษาที่ติดตั้งแล้ว',
@@ -536,7 +540,7 @@ return array(
   'Enabled and required' => 'เปิดใช้งานและบังคับต้องกรอกเสมอ',
   'Enabled but not required' => 'เปิดใช้งานแต่ไม่ต้องกรอกก็ได้',
   'Code of the person who invited you to become a member (not required)' => 'กรอกไอดีของผู้ที่แนะนำคุณมาเป็นสมาชิก (ไม่มีไม่ต้องกรอก)',
-  '13-digit identification number' => 'หมายเลขบัตรประชาชน 13 หลัก',
+  '13-digit identification number' => 'หมายเลขประจำตัวประชาชน 13 หลัก',
   'Send Comment' => 'ส่งความคิดเห็น',
   'Please fill out this form' => 'กรุณากรอกข้อมูลลงในฟอร์ม',
   'Send a message to the :name' => 'ส่งข้อความถึง :name',
@@ -656,9 +660,8 @@ return array(
   'Widgets for controlling and managing the Google Map' => 'กำหนดค่าการแสดงแผนที่กูเกิล',
   'Determine the size and position of the map' => 'กำหนดขนาดและพิกัดตำแหน่งของแผนที่',
   'Click Find me button to configure the map to the current location of the computer, or click the Search button to find the approximate location you need.' => 'คลิกที่ปุ่ม Find me เพื่อกำหนดค่าแผนที่ไปยังตำแหน่งที่ตั้งปัจจุบันของเครื่องคอมพิวเตอร์ หรือ คลิกปุ่ม ค้นหา เพื่อค้นหาตำแหน่งใกล้เคียงที่ตั้งที่คุณต้องการ',
-  'Latitude' => 'ละตืจูด',
+  'Latitude' => 'ละติจูด',
   'Longitude' => 'ลองติจูด',
-  'Settings the dialog box shown on the map' => 'กำหนดการแสดงผลของกรอบข้อความที่แสดงบนแผนที่',
   'Text (HTML) to be displayed at the location of the shop or company' => 'ข้อความ (HTML) ที่จะแสดง ณ. ตำแหน่งที่ตั้งของร้านหรือบริษัท ในรูปกรอบข้อความชี้ไปยังที่ตั้งของร้าน',
   'Location of the info' => 'พิกัดตำแหน่งของ Info',
   'Location of the map' => 'พิกัดตำแหน่งของแผนที่',
@@ -696,7 +699,7 @@ return array(
   'Select the group of recipients' => 'เลือกกลุ่มผู้รับ',
   'The recipient is listed in the selected group can be downloaded (You can select multiple groups)' => 'ผู้รับที่มีสถานะอยู่ในกลุ่มที่เลือก สามารถดาวน์โหลดได้ (สามารถเลือกได้หลายกลุ่ม)',
   'Document title' => 'ชื่อเอกสาร',
-  'Additional notes of explanation or documentation' => 'คำอธิบายหรือหมายเหตุเพิ่มเติมของเอกสาร',
+  'Notes or Additional Notes' => 'คำอธิบายหรือหมายเหตุเพิ่มเติม',
   'Send an email to members' => 'ส่งอีเมล์แจ้งไปยังสมาชิกด้วย',
   'Save and email completed' => 'บันทึก และส่งอีเมล์เรียบร้อย',
   'Uploaded' => 'อัปโหลดเมื่อ',
@@ -707,8 +710,6 @@ return array(
   'Count' => 'ครั้ง',
   'Prev Month' => 'เดือนก่อน',
   'Next Month' => 'เดือนถัดไป',
-  'FROM_TIME' => 'ตั้งแต่เวลา H:i น.',
-  'TO_TIME' => 'ถึง H:i น.',
   'Widgets for display news from RSS' => 'ส่วนเสริมสำหรับแสดงข่าวสารจาก RSS',
   'You can add the RSS URL and name of Tab to display Tab' => 'คุณสามารถเพิ่ม Tab ของ RSS ที่ต้องการแสดงผลโดยระบุ URL ของ RSS ที่ต้องการ และชื่อ Tab',
   'RSS URL for the desired results' => 'URL สำหรับ RSS ที่ต้องการแสดงผล',
@@ -737,5 +738,10 @@ return array(
   'Clicked' => 'คลิก',
   'Views' => 'เปิดดู',
   'Please select :name at least one item' => 'กรุณาเลือก :name อย่างน้อย 1 รายการ',
-  'WIDGET_DATE_FORMAT' => 'วันLที่ d F พ.ศ. Y'
+  'Post' => 'โพสต์',
+  '%s modules already installed' => 'ติดตั้งโมดูล %s เรียบร้อยแล้ว',
+  'Create a directory %s success' => 'สร้างไดเร็คทอรี่ %s เรียบร้อย',
+  'Update file %s Success' => 'อัปเดทไฟล์ %s เรียบร้อย',
+  'Enter at least one characters' => 'กรอกข้อความไม่น้อยกว่าหนึ่งตัวอักษร',
+  'Accelerated Mobile Pages' => 'หน้าบนอุปกรณ์เคลื่อนที่แบบเร่ง',
 );

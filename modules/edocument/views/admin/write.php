@@ -88,7 +88,7 @@ class View extends \Gcms\Adminview
       'labelClass' => 'g-input icon-file',
       'itemClass' => 'item',
       'label' => '{LNG_Description}',
-      'comment' => '{LNG_Additional notes of explanation or documentation}',
+      'comment' => '{LNG_Notes or Additional Notes}',
       'rows' => 5,
       'value' => isset($index->detail) ? $index->detail : ''
     ));

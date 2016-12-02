@@ -97,6 +97,7 @@ class View extends \Gcms\View
             'comments' => number_format($index->comments),
             'visited' => number_format($index->visited),
             'displayname' => $index->displayname,
+            'picture' => isset($index->image) ? $index->image['url'] : ''
         );
       }
     }

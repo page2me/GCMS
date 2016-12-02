@@ -59,6 +59,15 @@ class View extends \Gcms\Adminview
       'comment' => '{LNG_https://plus.google.com/<em>xxxxxxxxxx</em>/}',
       'value' => isset($config->google_profile) ? $config->google_profile : ''
     ));
+    // amp
+    $fieldset->add('select', array(
+      'id' => 'amp',
+      'labelClass' => 'g-input icon-amp',
+      'itemClass' => 'item',
+      'label' => '{LNG_Accelerated Mobile Pages}',
+      'options' => \Kotchasan\Language::get('BOOLEANS'),
+      'value' => isset($config->amp) ? $config->amp : 0
+    ));
     $fieldset = $form->add('fieldset', array(
       'titleClass' => 'icon-bing',
       'title' => '{LNG_Bing}'
@@ -84,20 +93,23 @@ class View extends \Gcms\Adminview
       'label' => '{LNG_App ID}',
       'value' => isset($config->facebook_appId) ? $config->facebook_appId : ''
     ));
-    // facebook_photo
-    $img = is_file(ROOT_PATH.DATA_FOLDER.'image/facebook_photo.jpg') ? WEB_URL.DATA_FOLDER.'image/facebook_photo.jpg' : WEB_URL.'skin/img/blank.gif';
+    $fieldset = $form->add('fieldset', array(
+      'titleClass' => 'icon-image',
+      'title' => '{LNG_Image}'
+    ));
+    // site_logo
     $fieldset->add('file', array(
-      'id' => 'facebook_photo',
+      'id' => 'site_logo',
       'labelClass' => 'g-input icon-upload',
       'itemClass' => 'item',
       'label' => '{LNG_Browse file}',
-      'comment' => '{LNG_Select an image file size 200x200 pixel types jpg only, for posting to your Facebook wall. On a shared or a subscription through Facebook.}',
-      'dataPreview' => 'fbImage',
-      'previewSrc' => $img
+      'comment' => '{LNG_Select Image size 696 * 464 pixel jpg types only, used as the logo of the site. When sharing}',
+      'dataPreview' => 'logoImage',
+      'previewSrc' => is_file(ROOT_PATH.DATA_FOLDER.'image/site_logo.jpg') ? WEB_URL.DATA_FOLDER.'image/site_logo.jpg' : WEB_URL.'skin/img/blank.gif'
     ));
-    // delete_facebook_photo
+    // delete_site_logo
     $fieldset->add('checkbox', array(
-      'id' => 'delete_facebook_photo',
+      'id' => 'delete_site_logo',
       'itemClass' => 'subitem',
       'label' => '{LNG_remove this photo}',
       'value' => 1

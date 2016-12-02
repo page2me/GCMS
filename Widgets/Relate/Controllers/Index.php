@@ -30,7 +30,6 @@ class Index extends \Kotchasan\Controller
    */
   public function get($query_string)
   {
-
     if (!empty($query_string['id']) && $index = Gcms::$module->findByModule($query_string['module'])) {
       $cols = isset($query_string['cols']) ? (int)$query_string['cols'] : 1;
       $rows = isset($query_string['rows']) ? (int)$query_string['rows'] : 1;
