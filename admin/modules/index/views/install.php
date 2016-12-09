@@ -35,7 +35,7 @@ class View extends \Gcms\Adminview
         'class' => 'setup_frm',
         'id' => 'install'
     ));
-    if (($type === 'module' && empty(Gcms::$install_modules[$module])) || $type === 'widget') {
+    if (($type === 'module' && Gcms::$module->findByModule($module) === null) || $type === 'widget') {
       if ($type === 'module') {
         $className = ucfirst($module).'\Admin\Install\Model';
       } elseif ($type === 'widget') {

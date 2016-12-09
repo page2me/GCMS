@@ -48,6 +48,7 @@ class Model extends \Kotchasan\Model
             'menu_target' => '',
             'alias' => '',
             'owner' => '',
+            'module' => '',
             'published' => 1
         );
       } else {

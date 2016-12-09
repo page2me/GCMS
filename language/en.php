@@ -154,17 +154,4 @@ return array(
     'THB' => 'Baht',
     'USD' => 'Dollar'
   ),
-  'OFFICE_PRINT_TYPIES' => array(
-    0 => 'รายละเอียดของบัญชี',
-    1 => 'สัญญาซื้อขาย',
-    2 => 'สัญญากู้ยืมเงิน',
-    3 => 'หนังสือมอบอำนาจ',
-    4 => 'อนุญาติไถ่คืน'
-  ),
-  'OFFICE_TYPIES' => array(
-    'in' => 'interest payment',
-    'del' => 'pay principal',
-    'out' => 'add principal',
-    'close' => 'closing'
-  )
 );

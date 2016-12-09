@@ -230,7 +230,7 @@ mark {
   background-color: #4A5DB9;
 }
 .term1 {
-  background-color: #4CAF50;
+  background-color: #9C27B0;
 }
 .term2 {
   background-color: #2196F3;
@@ -243,6 +243,9 @@ mark {
 }
 .term5 {
   background-color: #C768BE;
+}
+.term6 {
+  background-color: #4CAF50;
 }
 /* layout */
 .gcss-wrapper {
@@ -501,6 +504,10 @@ fieldset fieldset > legend {
   display: inline-block;
   vertical-align: middle;
   white-space: nowrap;
+}
+td > .wlabel {
+  border-collapse: separate;
+  display: table;
 }
 .wlabel .g-input,
 .wlabel .label {
@@ -1082,7 +1089,6 @@ form .comment {
   display: inline-block;
 }
 .usericon img {
-  width: 100%;
   max-height: 200px;
   max-width: 200px;
 }

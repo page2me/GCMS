@@ -9,7 +9,7 @@
 namespace Gallery\Sitemap;
 
 /**
- * บทความทั้งหมด
+ * Model สำหรับ Sitemap
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -19,25 +19,19 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * อัลบัมทั้งหมด
+   * query ข้อมูลทั้งหมดสำหรับสร้าง sitemap
    *
    * @param array $ids แอเรย์ของ module_id
-   * @param string $date วันที่วันนี้
    * @return array
    */
-  public static function getAlbums($ids, $date)
+  public static function getAll($ids)
   {
-    if (defined('MAIN_INIT')) {
-      $model = new static;
-      return $model->db()->createQuery()
-          ->select('id', 'module_id', 'last_update')
-          ->from('gallery_album')
-          ->where(array('module_id', $ids))
-          ->cacheOn()
-          ->execute();
-    } else {
-      // เรียก method โดยตรง
-      new \Kotchasan\Http\NotFound('Do not call method directly');
-    }
+    $model = new static;
+    return $model->db()->createQuery()
+        ->select('id', 'module_id', 'last_update')
+        ->from('gallery_album')
+        ->where(array('module_id', $ids))
+        ->cacheOn()
+        ->execute();
   }
 }

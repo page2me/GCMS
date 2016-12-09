@@ -86,4 +86,15 @@ class Controller extends \Kotchasan\Controller
   {
     return $this->widgets;
   }
+
+  /**
+   * อ่านข้อมูลโมดูลจากชื่อโมดูล
+   *
+   * @param string $module ชื่อโมดูล
+   * @return object|null ข้อมูลโมดูล (Object) ไม่พบคืนค่า null
+   */
+  public function findByModule($module)
+  {
+    return isset($this->module->by_module[$module]) ? $this->module->by_module[$module] : null;
+  }
 }

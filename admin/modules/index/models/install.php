@@ -98,4 +98,59 @@ class Model extends \Kotchasan\Model
     // save database
     return \Kotchasan\Config::save($database, ROOT_PATH.'settings/database.php');
   }
+
+  /**
+   * execute ไฟล์ sql.php
+   *
+   * @param string $sql_file ชื่อไฟล์รวม path
+   * @return string
+   */
+  public static function execute($sql_file)
+  {
+    // model
+    $model = new static;
+    $db = $model->db();
+    // ผลลัพท์
+    $content = array();
+    // query จากไฟล์
+    foreach (file($sql_file) as $value) {
+      $sql = str_replace(array('{prefix}', '{WEBMASTER}', '{WEBURL}', '\r', '\n'), array($model->getSetting('prefix'), self::$cfg->noreply_email, WEB_URL, "\r", "\n"), trim($value));
+      if ($sql != '') {
+        if (preg_match('/^<\?.*\?>$/', $sql)) {
+          // php code
+        } elseif (preg_match('/^define\([\'"]([A-Z_]+)[\'"](.*)\);$/', $sql, $match)) {
+          // define
+        } elseif (preg_match('/DROP[\s]+TABLE[\s]+(IF[\s]+EXISTS[\s]+)?`?([a-z0-9_]+)`?/iu', $sql, $match)) {
+          $ret = $db->query($sql);
+          $content[] = "<li class=\"".($ret === false ? 'incorrect' : 'correct')."\">DROP TABLE <b>$match[2]</b> ...</li>";
+        } elseif (preg_match('/CREATE[\s]+TABLE[\s]+(IF[\s]+NOT[\s]+EXISTS[\s]+)?`?([a-z0-9_]+)`?/iu', $sql, $match)) {
+          $ret = $db->query($sql);
+          $content[] = "<li class=\"".($ret === false ? 'incorrect' : 'correct')."\">CREATE TABLE <b>$match[2]</b> ...</li>";
+        } elseif (preg_match('/ALTER[\s]+TABLE[\s]+`?([a-z0-9_]+)`?[\s]+ADD[\s]+`?([a-z0-9_]+)`?(.*)/iu', $sql, $match)) {
+          // add column
+          $sql = "SELECT * FROM `information_schema`.`columns` WHERE `table_schema`='".$model->getSetting('dbname')."' AND `table_name`='$match[1]' AND `column_name`='$match[2]'";
+          $search = $db->customQuery($sql);
+          if (sizeof($search) == 1) {
+            $sql = "ALTER TABLE `$match[1]` DROP COLUMN `$match[2]`";
+            $db->query($sql);
+          }
+          $ret = $db->query($match[0]);
+          if (sizeof($search) == 1) {
+            $content[] = "<li class=\"".($ret === false ? 'incorrect' : 'correct')."\">REPLACE COLUMN <b>$match[2]</b> to TABLE <b>$match[1]</b></li>";
+          } else {
+            $content[] = "<li class=\"".($ret === false ? 'incorrect' : 'correct')."\">ADD COLUMN <b>$match[2]</b> to TABLE <b>$match[1]</b></li>";
+          }
+        } elseif (preg_match('/INSERT[\s]+INTO[\s]+`?([a-z0-9_]+)`?(.*)/iu', $sql, $match)) {
+          $ret = $db->query($sql);
+          if (isset($q) && $q != $match[1]) {
+            $q = $match[1];
+            $content[] = "<li class=\"".($ret === false ? 'incorrect' : 'correct')."\">INSERT INTO <b>$match[1]</b> ...</li>";
+          }
+        } else {
+          $db->query($sql);
+        }
+      }
+    }
+    return implode('', $content);
+  }
 }

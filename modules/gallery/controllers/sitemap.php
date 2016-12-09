@@ -8,8 +8,6 @@
 
 namespace Gallery\Sitemap;
 
-use \Gallery\Index\Controller AS Module;
-
 /**
  * sitemap.xml
  *
@@ -31,9 +29,9 @@ class Controller extends \Kotchasan\Controller
   public function init($ids, $modules, $date)
   {
     $result = array();
-    foreach (\Gallery\Sitemap\Model::getAlbums($ids, $date) as $item) {
+    foreach (\Gallery\Sitemap\Model::getAll($ids) as $item) {
       $result[] = (object)array(
-          'url' => Module::url($modules[$item->module_id], $item->id),
+          'url' => \Gallery\Index\Controller::url($modules[$item->module_id], $item->id),
           'date' => date('Y-m-d', $item->last_update)
       );
     }

@@ -21,14 +21,6 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * คำอธิบายเกี่ยวกับโมดูล ถ้าไม่มีฟังก์ชั่นนี้ โมดูลนี้จะไม่สามารถใช้ซ้ำได้
-   */
-  public static function description()
-  {
-    return '{LNG_Module} {LNG_Download file}';
-  }
-
-  /**
    * ฟังก์ชั่นเรียกโดย admin
    *
    * @param array $modules
@@ -42,5 +34,13 @@ class Controller extends \Kotchasan\Controller
         Gcms::$menu->menus['modules'][$item->module]['setup'] = '<a href="index.php?module=download-setup&amp;mid='.$item->id.'"><span>{LNG_List of} {LNG_Download file}</span></a>';
       }
     }
+  }
+
+  /**
+   * คำอธิบายเกี่ยวกับโมดูล ถ้าไม่มีฟังก์ชั่นนี้ โมดูลนี้จะไม่สามารถใช้ซ้ำได้
+   */
+  public static function description()
+  {
+    return '{LNG_Module} {LNG_Download file}';
   }
 }

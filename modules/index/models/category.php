@@ -18,8 +18,14 @@ use \Kotchasan\ArrayTool;
  *
  * @since 1.0
  */
-class Model extends \Kotchasan\Model
+class Model extends \Kotchasan\Orm\Field
 {
+  /**
+   * ชื่อตาราง
+   *
+   * @var string
+   */
+  protected $table = 'category G';
 
   /**
    * อ่านข้อมูลหมวดหมู่ที่เลือก และสามารถเผยแพร่ได้
@@ -30,7 +36,7 @@ class Model extends \Kotchasan\Model
    */
   public static function get($category_id, $module_id)
   {
-    $model = new static;
+    $model = new \Kotchasan\Model;
     $query = $model->db()->createQuery()
       ->select()
       ->from('category')
@@ -55,7 +61,7 @@ class Model extends \Kotchasan\Model
   public static function all($module_id)
   {
     $result = array();
-    $model = new static;
+    $model = new \Kotchasan\Model;
     $query = $model->db()->createQuery()
       ->select()
       ->from('category')
@@ -81,7 +87,7 @@ class Model extends \Kotchasan\Model
   public static function categories($module_id)
   {
     $result = array();
-    $model = new static;
+    $model = new \Kotchasan\Model;
     $query = $model->db()->createQuery()
       ->select('category_id', 'topic')
       ->from('category')

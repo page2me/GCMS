@@ -734,6 +734,9 @@ div#install li.invalid {
   background-color: #FFF;
   max-width: 600px;
 }
+.modaldiv form > header {
+  margin: 10px;
+}
 .postbox {
   margin: 0 10px;
 }
