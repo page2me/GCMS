@@ -19,7 +19,7 @@ use \Kotchasan\ArrayTool;
 use \Kotchasan\Template;
 
 /**
- * แสดงบทความ
+ * แสดงเรื่องที่เขียนโดยสมาชิก
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -163,11 +163,10 @@ class View extends \Gcms\View
         // ไม่เผยแพร่
         $detail = '<div class=error>{LNG_Can not be performed this request. Because they do not find the information you need or you are not allowed}</div>';
       }
-      // template
-      $template = Template::create('document', 'document', 'member');
+      // /document/member.html
+      $template = Template::create('document', $this->index->module, 'member');
       $template->add(array(
         '/{LIST}/' => $detail,
-        '/{TOPIC}/' => $this->index->topic
       ));
       $index->detail = $template->render();
       // คืนค่า

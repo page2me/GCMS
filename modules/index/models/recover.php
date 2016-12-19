@@ -34,7 +34,7 @@ class Model extends \Kotchasan\Model
       // ค่าที่ส่งมา
       $email = $request->post('forgot_email')->url();
       if ($email === '') {
-        $ret['ret_forgot_email'] = Language::get('Please fill out this form');
+        $ret['ret_forgot_email'] = 'Please fill in';
       } else {
         $search = $this->db()->createQuery()
           ->from('user')

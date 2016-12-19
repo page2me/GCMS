@@ -8,9 +8,9 @@
 
 namespace Board\Module;
 
-use \Gcms\Gcms;
-use \Kotchasan\Language;
 use \Kotchasan\Http\Request;
+use \Kotchasan\Language;
+use \Gcms\Gcms;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -36,7 +36,7 @@ class Model extends \Kotchasan\Model
     } else {
       // หมวดหมู่
       $categories = array();
-      $value = $request->request('cat')->filter('\d,');
+      $value = $request->get('cat')->filter('\d,');
       if (!empty($value)) {
         foreach (explode(',', $value) as $v) {
           $v = (int)$v;
@@ -58,7 +58,10 @@ class Model extends \Kotchasan\Model
       $query = $model->db()->createQuery()
         ->from('index_detail D')
         ->join('index I', 'INNER', array(array('I.index', 1), array('I.id', 'D.id'), array('I.module_id', 'D.module_id'), array('I.language', 'D.language')))
-        ->where(array(array('I.module_id', (int)$index->module_id), array('D.language', array(Language::name(), ''))))
+        ->where(array(
+          array('I.module_id', (int)$index->module_id),
+          array('D.language', array(Language::name(), ''))
+        ))
         ->cacheOn()
         ->toArray();
       if (sizeof($categories) == 1) {
@@ -81,9 +84,9 @@ class Model extends \Kotchasan\Model
               $index->$key = Gcms::ser2Str($value);
               break;
             case 'config':
-              $value = @unserialize($value);
-              if (is_array($value)) {
-                foreach ($value as $k => $v) {
+              $config = @unserialize($value);
+              if (is_array($config)) {
+                foreach ($config as $k => $v) {
                   $index->$k = $v;
                 }
               }

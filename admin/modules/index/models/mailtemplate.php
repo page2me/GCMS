@@ -60,12 +60,12 @@ class Model extends Field
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         if (self::$request->post('action')->toString() === 'delete') {
-          $id = self::$request->post('action')->toInt();
-          $rs = Recordset::create(get_called_class());
-          $index = $rs->find($id);
-          if ($index) {
-            $index->delete();
-          }
+          $id = self::$request->post('id')->toInt();
+          $model = new \Kotchasan\Model;
+          $model->db()->delete($model->getTableName('emailtemplate'), array(
+            array('id', $id),
+            array('email_id', 0)
+          ));
           // คืนค่า
           $ret['delete_id'] = self::$request->post('src')->toString().'_'.$id;
           $ret['alert'] = Language::get('Deleted successfully');

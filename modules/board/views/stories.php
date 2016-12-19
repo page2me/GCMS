@@ -62,7 +62,6 @@ class View extends \Gcms\View
         } else {
           $icon = '';
         }
-        $category_id = empty($index->category_id) ? 0 : $index->category_id;
         $listitem->add(array(
           '/{ID}/' => $item->id,
           '/{PICTURE}/' => $thumb,
@@ -92,6 +91,7 @@ class View extends \Gcms\View
           Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
         }
       }
+      $category_id = empty($index->category_id) || is_array($index->category_id) ? 0 : $index->category_id;
       // current URL
       $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
       // /board/list.html หรือ /board/empty.html หากไม่มีข้อมูล
@@ -102,7 +102,7 @@ class View extends \Gcms\View
         '/{LIST}/' => $listitem->render(),
         '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
         '/{NEWTOPIC}/' => empty($index->can_post) ? 'hidden' : '',
-        '/{CATEGORY}/' => empty($category_id) ? 0 : $category_id,
+        '/{CATEGORY}/' => $category_id,
         '/{MODULE}/' => $index->module
       ));
       // breadcrumb ของหมวดหมู่

@@ -34,7 +34,7 @@ class View extends \Gcms\View
   {
     $index = (object)array(
         'canonical' => WEB_URL.'index.php?module=dologin',
-        'topic' => Language::get('Visitors please login'),
+        'topic' => Language::get('Sign In'),
         'description' => self::$cfg->web_description,
         'menu' => 'dologin'
     );

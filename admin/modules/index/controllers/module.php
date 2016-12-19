@@ -39,10 +39,10 @@ class Controller extends \Kotchasan\Controller
   {
     // create Class
     $obj = new static;
-    // ไดเร็คทอรี่ที่ติดตั้ง
-    $module_dir = ROOT_PATH.'modules/';
+    // ไดเร็คทอรี่ที่ติดตั้งโมดูล
+    $dir = ROOT_PATH.'modules/';
     // อ่านรายชื่อโมดูลและไดเร็คทอรี่ของโมดูลทั้งหมดที่ติดตั้งไว้
-    $obj->module = new \Index\Module\Model($module_dir);
+    $obj->module = new \Index\Module\Model($dir);
     // ส่วนเสริมที่ติดตั้ง
     $f = @opendir(ROOT_PATH.'Widgets/');
     if ($f) {
@@ -58,7 +58,7 @@ class Controller extends \Kotchasan\Controller
   }
 
   /**
-   * อ่านข้อมูลโมดูลทั้งหมด ตามไดเร็คทอรี่
+   * อ่านข้อมูลโมดูลทั้งหมด จากชื่อไดเร็คทอรี่
    *
    * @return array
    */

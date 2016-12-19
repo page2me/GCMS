@@ -241,10 +241,20 @@ function changeLanguage(lang) {
   });
 }
 var doLoginSubmit = function (xhr) {
-  var ds = xhr.responseText.toJSON();
+  var el, t, ds = xhr.responseText.toJSON();
   if (ds) {
     if (ds.alert && ds.alert != '') {
-      alert(ds.alert);
+      if (ds.alert == 'Please fill in' && ds.input && $E(ds.input)) {
+        el = $E(ds.input);
+        if (el.placeholder) {
+          t = el.placeholder.strip_tags();
+        } else {
+          t = el.title.strip_tags();
+        }
+        alert(trans(ds.alert) + ' ' + t);
+      } else {
+        alert(ds.alert);
+      }
     }
     if (ds.action) {
       if (ds.action == 2) {
@@ -357,7 +367,7 @@ function initFacebook(appId, lng) {
       cookie: true,
       status: true,
       xfbml: true,
-      version: 'v2.6'
+      version: 'v2.8'
     });
   };
   (function (d, s, id) {

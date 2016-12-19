@@ -155,7 +155,7 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
     $email = $request->post('login_username')->url();
     if (empty($email)) {
       if ($request->post('action')->toString() === 'forgot') {
-        self::$login_message = Language::get('Please fill out this form');
+        self::$login_message = 'Please fill in';
       }
     } else {
       self::$text_username = $email;

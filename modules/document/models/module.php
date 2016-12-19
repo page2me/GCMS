@@ -36,7 +36,7 @@ class Model extends \Kotchasan\Model
     } else {
       // หมวดหมู่
       $categories = array();
-      $value = $request->request('cat')->filter('\d,');
+      $value = $request->get('cat')->filter('\d,');
       if (!empty($value)) {
         foreach (explode(',', $value) as $v) {
           $v = (int)$v;

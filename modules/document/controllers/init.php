@@ -38,7 +38,7 @@ class Controller extends \Kotchasan\Controller
         $rss[$module->module] = '<link rel=alternate type="application/rss+xml" title="'.$module->topic.'" href="'.WEB_URL.$module->module.'.rss">';
         // ตรวจสอบเมนูเขียนเรื่อง
         if (in_array($login['status'], $module->can_write)) {
-          Gcms::$member_tabs[$module->module] = array($module->topic, 'Document\Member\View');
+          Gcms::$member_tabs[$module->module] = array(ucfirst($module->module), 'Document\Member\View');
           $writing = true;
         }
       }

@@ -99,13 +99,15 @@ class Model extends \Kotchasan\Model
             fclose($f);
           }
         }
+        // clear
+        $request->removeToken();
         // login
         $facebook_data['password'] = $login_password;
         $_SESSION['login'] = $facebook_data;
-        // clear
-        $request->removeToken();
-        // reload
         $ret['isMember'] = 1;
+        // คืนค่า
+        $name = trim($facebook_data['fname'].' '.$facebook_data['lname']);
+        $ret['alert'] = Language::replace('Welcome %s, login complete', array('%s' => empty($name) ? $facebook_data['email'] : $name));
         $u = $request->post('u')->toString();
         if (preg_match('/module=(do)?login/', $u) || preg_match('/(do)?login\.html/', $u)) {
           $ret['location'] = 'back';

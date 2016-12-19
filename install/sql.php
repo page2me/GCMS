@@ -160,7 +160,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create','text','index','0','สร้าง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create a directory %s success','text','index','0','สร้างไดเร็คทอรี่ %s เรียบร้อย','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create a new module from the module installed, according to usage','text','index','0','สร้างโมดูลใหม่จากโมดูลที่ติดตั้งแล้วตามลักษณะการใช้งาน','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create new account','text','index','0','ลงทะเบียนสมาชิกใหม่','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create new account','text','index','0','สร้างบัญชีสำหรับผู้ใช้ใหม่','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create or Edit','text','index','0','สร้างหรือแก้ไข','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Create topic','text','index','0','ตั้งกระทู้','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Created','text','index','0','สร้างเมื่อ','');
@@ -509,7 +509,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Short description about your website','text','index','0','ข้อความสั้นๆอธิบายว่าเป็นเว็บไซต์เกี่ยวกับอะไร','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Show','text','index','0','แสดง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('SHOW_NEWS','array','index','0','a:1:{s:4:"news";s:29:"ตัวเลือก news";}','a:1:{s:4:"news";s:4:"news";}');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Sign In','text','index','0','เข้าระบบ','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Sign In','text','index','0','เข้าสู่ระบบ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Sign in with your Facebook account','text','index','0','เข้าระบบด้วยบัญชี ผู้ใช้ Facebook ของคุณ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Sign Out','text','index','0','ออกจากระบบ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Site Name (You can add tags to decorate)','text','index','0','ชื่อของเว็บไซต์ (สามารถใส่แท็กเพื่อตกแต่งได้)','');
@@ -657,7 +657,6 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Viewing','text','index','0','การเปิดดู','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Views','text','index','0','เปิดดู','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Visited','text','index','0','เยี่ยมชม','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Visitors please login','text','index','0','ผู้มาเยือน กรุณาเข้าระบบ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Visitors today','text','index','0','ผู้เยี่ยมชมวันนี้','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Visitors total','text','index','0','ผู้เยี่ยมชมทั้งหมด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Web page displayed prior to entering the home page of the website','text','index','0','หน้าเว็บแสดงก่อนที่จะเข้าสู่หน้าหลักของเว็บไซต์','');

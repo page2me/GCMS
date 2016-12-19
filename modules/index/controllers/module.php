@@ -82,7 +82,6 @@ class Controller extends \Kotchasan\Controller
   /**
    * อ่านข้อมูลโมดูลทั้งหมด จากชื่อไดเร็คทอรี่
    *
-   * @param string $owner
    * @return array
    */
   public function getInstalledOwners()

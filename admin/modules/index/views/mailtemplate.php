@@ -11,7 +11,7 @@ namespace Index\Mailtemplate;
 use \Kotchasan\DataTable;
 
 /**
- * module=mailtemplate
+ * ตารางแม่แบบอีเมล์
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -21,7 +21,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * ตารางแม่แบบอีเมล์
+   * module=mailtemplate
    *
    * @return string
    */
@@ -29,9 +29,17 @@ class View extends \Gcms\Adminview
   {
     // ตารางแม่แบบอีเมล์
     $table = new DataTable(array(
+      /* Model */
       'model' => 'Index\Mailtemplate\Model',
-      'hideColumns' => array('id', 'email_id', 'subject'),
+      /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
       'onRow' => array($this, 'onRow'),
+      /* คอลัมน์ที่ไม่ต้องแสดงผล */
+      'hideColumns' => array('id', 'email_id', 'subject'),
+      /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
+      'action' => 'index.php/index/model/mailtemplate/action',
+      'actionCallback' => 'indexActionCallback',
+      'actionConfirm' => 'confirmAction',
+      /* ฟังก์ชั่นตรวจสอบการแสดงผลปุ่มในแถว */
       'onCreateButton' => array($this, 'onCreateButton'),
       'headers' => array(
         'name' => array(
@@ -54,8 +62,6 @@ class View extends \Gcms\Adminview
           'class' => 'center'
         )
       ),
-      'action' => 'index.php/index/model/mailtemplate/action',
-      'actionConfirm' => 'confirmAction',
       'buttons' => array(
         'edit' => array(
           'class' => 'icon-edit button green',

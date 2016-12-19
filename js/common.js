@@ -108,11 +108,13 @@ function defaultSubmit(ds) {
       if (val == '') {
         el.valid();
       } else {
-        if (val == 'this') {
-          val = el.title.strip_tags();
-          if (val == '' && el.placeholder) {
-            val = el.placeholder.strip_tags();
+        if (val == 'this' || val == 'Please fill in') {
+          if (el.placeholder) {
+            t = el.placeholder.strip_tags();
+          } else {
+            t = el.title.strip_tags();
           }
+          val = val == 'this' ? t : trans(val) + ' ' + t;
         }
         if (_input != el) {
           el.invalid(val);

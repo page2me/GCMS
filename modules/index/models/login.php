@@ -37,7 +37,7 @@ class Model extends \Kotchasan\KBase
       if ($login) {
         $name = trim($login['fname'].' '.$login['lname']);
         $ret = array(
-          'alert' => str_replace('%s', (empty($name) ? $login['email'] : $name), Language::get('Welcome %s, login complete')),
+          'alert' => Language::replace('Welcome %s, login complete', array('%s' => empty($name) ? $login['email'] : $name)),
           'content' => rawurlencode(\Index\Login\Controller::init($login)),
           'action' => self::$request->post('login_action', self::$cfg->login_action)->toString()
         );
