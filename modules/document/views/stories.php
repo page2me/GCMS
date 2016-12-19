@@ -69,26 +69,7 @@ class View extends \Gcms\View
         '/{ICON}/' => $icon
       ));
     }
-    if (isset($index->index_id)) {
-      // breadcrumb ของโมดูล
-      if (Gcms::$menu->isHome($index->index_id)) {
-        $index->canonical = WEB_URL.'index.php';
-      } else {
-        if (empty($index->category_id)) {
-          $index->canonical = Gcms::createUrl($index->module);
-        } else {
-          if (is_array($index->category_id)) {
-            $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'cat='.implode(',', $index->category_id));
-          } else {
-            $index->canonical = Gcms::createUrl($index->module, '', $index->category_id);
-          }
-        }
-        $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
-        if ($menu) {
-          Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
-        }
-      }
-    } elseif (isset($index->tag)) {
+    if (isset($index->tag)) {
       // breadcrumb ของ tags
       $index->canonical = Gcms::createUrl('tag', $index->tag);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
@@ -96,6 +77,23 @@ class View extends \Gcms\View
       // breadcrumb ของ calendar
       $index->canonical = Gcms::createUrl('calendar', $index->alias);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
+    } else {
+      // breadcrumb ของโมดูล
+      if (Gcms::$menu->isHome($index->index_id)) {
+        $index->canonical = WEB_URL.'index.php';
+      } else {
+        if (empty($index->category_id)) {
+          $index->canonical = Gcms::createUrl($index->module);
+        } elseif (is_array($index->category_id)) {
+          $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'cat='.implode(',', $index->category_id));
+        } else {
+          $index->canonical = Gcms::createUrl($index->module, '', $index->category_id);
+        }
+        $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
+        if ($menu) {
+          Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
+        }
+      }
     }
     if (!empty($index->category_id) && is_int($index->category_id)) {
       // breadcrumb ของหมวดหมู่

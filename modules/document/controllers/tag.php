@@ -29,6 +29,8 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $module)
   {
+    // tag ที่เลือก
+    $module->tag = $request->request('tag', isset($module->alias) ? $module->alias : '')->topic();
     // ลิสต์รายการ tag
     $index = \Document\Stories\Model::tags($request, $module);
     if ($index) {
