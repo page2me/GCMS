@@ -9,7 +9,6 @@
 namespace Widgets\Contact\Models;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Antispam;
 use \Kotchasan\Validator;
 use \Kotchasan\Language;
 use \Kotchasan\Email;
@@ -31,82 +30,75 @@ class Index extends \Kotchasan\Model
    */
   public function send(Request $request)
   {
-    if ($request->initSession() && $request->isReferer()) {
+    $ret = array();
+    // session, token
+    if ($request->initSession() && $request->isSafe()) {
       // ค่าที่ส่งมา
       $reciever = $request->post('mail_reciever')->topic();
       $sender = $request->post('mail_sender')->topic();
       $subject = $request->post('mail_subject')->topic();
       $detail = nl2br($request->post('mail_detail')->textarea());
       // ตรวจสอบ ค่าที่ส่งมา
-      $ret = array();
-      $antispam = new Antispam($request->post('mail_antispamid')->toString());
-      if (!$antispam->valid($request->post('mail_antispam')->toString())) {
-        // Antispam ไม่ถูกต้อง
-        $ret['ret_mail_antispam'] = 'this';
-        $ret['input'] = 'mail_antispam';
+      $tmp = $reciever;
+      if (!empty($_SESSION['emails']) && !empty($tmp)) {
+        foreach ($_SESSION['emails'] as $name => $email) {
+          if ($tmp == $name) {
+            $reciever = $name;
+            break;
+          }
+        }
+      }
+      // ส่งหาแอดมิน
+      if ($reciever == 'admin') {
+        $query = $this->db()->createQuery()
+          ->select('email')
+          ->from('user')
+          ->where(array('status', 1))
+          ->toArray()
+          ->cacheOn();
+        $reciever = array();
+        foreach ($query->execute()as $item) {
+          $reciever[] = $item['email'];
+        }
+        $reciever = implode(',', $reciever);
+      }
+      // ตรวจสอบค่าที่ส่งมา
+      if ($sender == '') {
+        $ret['ret_mail_sender'] = 'this';
+        $ret['input'] = 'mail_sender';
+      } elseif (!Validator::email($sender)) {
+        $ret['ret_mail_sender'] = Language::get('Please fill in').' '.Language::get('Email');
+        $ret['input'] = 'mail_sender';
+      } elseif ($reciever == '') {
+        $ret['alert'] = Language::get('Unable to complete the transaction');
+        $ret['location'] = WEB_URL.'index.php';
+      } elseif ($sender == $reciever) {
+        $ret['ret_mail_sender'] = Language::get('Unable to send e-mail, Because you can not send e-mail to yourself or can not find the email address of the recipient.');
+        $ret['input'] = 'mail_sender';
+      } elseif ($subject == '') {
+        $ret['ret_mail_subject'] = 'this';
+        $ret['input'] = 'mail_subject';
+      } elseif ($detail == '') {
+        $ret['ret_mail_detail'] = 'this';
+        $ret['input'] = 'mail_detail';
       } else {
-        // ตรวจสอบผู้รับ
-        $tmp = $reciever;
-        if (!empty($_SESSION['emails']) && !empty($tmp)) {
-          foreach ($_SESSION['emails'] as $name => $email) {
-            if ($tmp == $name) {
-              $reciever = $name;
-              break;
-            }
-          }
-        }
-        // ส่งหาแอดมิน
-        if ($reciever == 'admin') {
-          $query = $this->db()->createQuery()
-            ->select('email')
-            ->from('user')
-            ->where(array('status', 1))
-            ->toArray()
-            ->cacheOn();
-          $reciever = array();
-          foreach ($query->execute()as $item) {
-            $reciever[] = $item['email'];
-          }
-          $reciever = implode(',', $reciever);
-        }
-        // ตรวจสอบค่าที่ส่งมา
-        if ($sender == '') {
-          $ret['ret_mail_sender'] = 'this';
-          $ret['input'] = 'mail_sender';
-        } elseif (!Validator::email($sender)) {
-          $ret['ret_mail_sender'] = Language::get('Please fill in').' '.Language::get('Email');
-          $ret['input'] = 'mail_sender';
-        } elseif ($reciever == '') {
-          $ret['alert'] = Language::get('Unable to complete the transaction');
+        // ส่งอีเมล์
+        $err = Email::send($reciever, $sender, $subject, $detail);
+        if (empty($err)) {
+          // เคลียร์
+          $request->removeToken();
+          // ส่งอีเมล์สำเร็จ
+          $ret['alert'] = Language::get('Your message was sent successfully');
           $ret['location'] = WEB_URL.'index.php';
-        } elseif ($sender == $reciever) {
-          $ret['ret_mail_sender'] = Language::get('Unable to send e-mail, Because you can not send e-mail to yourself or can not find the email address of the recipient.');
-          $ret['input'] = 'mail_sender';
-        } elseif ($subject == '') {
-          $ret['ret_mail_subject'] = 'this';
-          $ret['input'] = 'mail_subject';
-        } elseif ($detail == '') {
-          $ret['ret_mail_detail'] = 'this';
-          $ret['input'] = 'mail_detail';
         } else {
-          // ส่งอีเมล์
-          $err = Email::send($reciever, $sender, $subject, $detail);
-          if (empty($err)) {
-            // เคลียร์ Antispam
-            $antispam->delete();
-            // ส่งอีเมล์สำเร็จ
-            $ret['alert'] = Language::get('Your message was sent successfully');
-            $ret['location'] = WEB_URL.'index.php';
-          } else {
-            // ข้อผิดพลาดการส่งอีเมล์
-            echo $err;
-          }
+          // ข้อผิดพลาดการส่งอีเมล์
+          echo $err;
         }
       }
-      if (!empty($ret)) {
-        // คืนค่าเป็น JSON
-        echo json_encode($ret);
-      }
+    }
+    if (!empty($ret)) {
+      // คืนค่าเป็น JSON
+      echo json_encode($ret);
     }
   }
 }

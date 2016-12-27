@@ -162,7 +162,7 @@
   $G('register_birthday').addEvent('change', function () {
     if (this.calendar) {
       var age = new Date().compare(this.value);
-      this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_years}, ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
+      this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_year}, ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
     }
   });
   var _contryChanged = function () {

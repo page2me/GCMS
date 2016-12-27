@@ -11,8 +11,6 @@ namespace Board\Write;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
-use \Kotchasan\Login;
-use \Kotchasan\Antispam;
 use \Kotchasan\Language;
 
 /**
@@ -48,8 +46,6 @@ class View extends \Gcms\View
     if (empty($category_options)) {
       $category_options[] = '<option value=0>{LNG_Uncategorized}</option>';
     }
-    // antispam
-    $antispam = new Antispam();
     // /board/write.html
     $template = Template::create('board', $index->module, 'write');
     $template->add(array(
@@ -58,8 +54,7 @@ class View extends \Gcms\View
       '/<MEMBER>(.*)<\/MEMBER>/s' => $isMember ? '' : '$1',
       '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->img_upload_type) ? '' : '$1',
       '/{MODULEID}/' => $index->module_id,
-      '/{ANTISPAM}/' => $antispam->getId(),
-      '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
+      '/{TOKEN}/' => $request->createToken(),
       '/{LOGIN_PASSWORD}/' => $login['password'],
       '/{LOGIN_EMAIL}/' => $login['email']
     ));

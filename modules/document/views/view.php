@@ -12,7 +12,6 @@ use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
 use \Gcms\Gcms;
 use \Kotchasan\Login;
-use \Kotchasan\Antispam;
 use \Document\Index\Controller;
 use \Kotchasan\Date;
 use \Kotchasan\Grid;
@@ -90,8 +89,6 @@ class View extends \Gcms\View
         if ($canReply) {
           // query รายการแสดงความคิดเห็น
           $index->comment_items = \Index\Comment\Model::get($index);
-          // antispam
-          $antispam = new Antispam();
           // /document/commentitem.html
           $listitem = Grid::create('document', $index->module, 'commentitem');
           // รายการแสดงความคิดเห็น
@@ -143,8 +140,7 @@ class View extends \Gcms\View
           '/{URL}/' => $index->canonical,
           '/{MODULE}/' => $index->module,
           '/{MODULEID}/' => $index->module_id,
-          '/{ANTISPAM}/' => isset($antispam) ? $antispam->getId() : '',
-          '/{ANTISPAMVAL}/' => isset($antispam) && Login::isAdmin() ? $antispam->getValue() : '',
+          '/{TOKEN}/' => $request->createToken(),
           '/{DELETE}/' => $moderator ? '{LNG_Delete}' : '{LNG_Removal request}',
           '/{TAGS}/' => implode(', ', $tags),
           '/{CATID}/' => $index->category_id,

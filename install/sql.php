@@ -121,7 +121,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Cancel Upload','text','index','0','ยกเลิกการอัปโหลด','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Cancle','text','index','0','ยกเลิก','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Category','text','index','0','หมวดหมู่','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Change language','text','index','0','เปลี่ยนภาษา','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('change language','text','index','0','เปลี่ยนภาษา','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Change member status to','text','index','0','เปลี่ยนสถานะสมาชิกเป็น','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Change your password','text','index','0','แก้ไขรหัสผ่าน','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('CHANGE_COLOR','text','index','1','เปลี่ยนสี','change color');
@@ -683,7 +683,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Writer','text','index','0','ผู้เขียน','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Writing','text','index','0','การเขียน','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('YEAR_OFFSET','int','index','0','543','0');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('years','text','index','0','ปี','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('year','text','index','0','ปี','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('You are currently using GCMS version','text','index','0','ขณะนี้คุณกำลังใช้งาน GCMS เวอร์ชั่น','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('You can add the RSS URL and name of Tab to display Tab','text','index','0','คุณสามารถเพิ่ม Tab ของ RSS ที่ต้องการแสดงผลโดยระบุ URL ของ RSS ที่ต้องการ และชื่อ Tab','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('You can have only one login per user','text','index','0','คุณสามารถเข้าระบบได้เพียง 1 เครื่อง ต่อชื่อผู้ใช้','');

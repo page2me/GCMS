@@ -121,16 +121,10 @@ return array(
     '' => 'Clear Text',
     'ssl' => 'Server using a secure connection (SSL)'
   ),
-  'REGISTER_CONFIRM' => '<dt> Subscription Agreement</dt><dd>1. Membership to the site can participate fully</dd><dd>2. Membership requires a real e-mail contact. Due to be sent to the email confirmation that your registration. Or to request a new password</dd><dd>3. The site adheres Privacy Policy. Personal information will not be disclosed except the information required for identity verification is the case, the</dd><dd>4. When you read and accept this Agreement, please select <strong>accepted</strong> below</dd>',
   'USE_AJAX_LIST' => array(
     0 => 'Ajax enabled some of the site (displayed as a website generally)',
     1 => 'Ajax enabled website with a full'
   ),
-  'IMG_LAW' => array(
-    0 => 'Upload photos are optional.',
-    1 => 'Upload always (for question).'
-  ),
-  'NEWTOPIC_INTRODUCTION' => '<ul><li>Please use the polite message. Ignore the others wrong vulgar, obscene, offensive, or posting personal information to others which will make others suffered.</li><li>For cooperation not post chain messages or text ads that do not relate to the content of this page.</li><li>Do not offer text refer monarchy and feared.</li><li>All comments unrelated to the operator of the site. Comment posters are responsible for your message. Staff reserves the right message to remove comments without explanation or notice.</li></ul>',
   'TEXTLINK_TYPIES' => array(
     'custom' => 'Enter custom code, such as advertising.',
     'text' => 'Link text',
@@ -144,10 +138,6 @@ return array(
     1 => 'Thumbnail'
   ),
   'TO_TIME' => 'to H:i',
-  'USE_AJAX_LIST' => array(
-    0 => 'Ajax enabled some of the site (displayed as a website generally)',
-    1 => 'Ajax enabled website with a full'
-  ),
   'WIDGET_DATE_FORMAT' => 'L, d F Y',
   'YEAR_OFFSET' => 0,
   'CURRENCY_UNITS' => array(

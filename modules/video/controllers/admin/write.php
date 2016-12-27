@@ -11,11 +11,10 @@ namespace Video\Admin\Write;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Html;
 use \Kotchasan\Login;
-use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- * ฟอร์มสร้าง/แก้ไข ไฟล์ดาวน์โหลด
+ * ฟอร์มสร้าง/แก้ไข Video
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -46,7 +45,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><a href="{BACKURL?module=video-settings&mid='.$index->module_id.'}">'.ucfirst($index->module).'</a></li>');
       $ul->appendChild('<li><a href="{BACKURL?module=video-setup&mid='.$index->module_id.'}">{LNG_Video}</a></li>');
       $ul->appendChild('<li><span>{LNG_'.(empty($index->id) ? 'Create' : 'Edit').'}</span></li>');
-      $header = $section->add('header', array(
+      $section->add('header', array(
         'innerHTML' => '<h1 class="icon-write">'.$this->title().'</h1>'
       ));
       // แสดงฟอร์ม
@@ -62,6 +61,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return Language::get('Create or Edit').' '.Language::get('Video');
+    return '{LNG_Create or Edit} {LNG_Video}';
   }
 }

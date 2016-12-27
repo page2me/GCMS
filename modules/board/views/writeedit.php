@@ -12,7 +12,6 @@ use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Kotchasan\Login;
-use \Kotchasan\Antispam;
 use \Kotchasan\Language;
 
 /**
@@ -50,8 +49,6 @@ class View extends \Gcms\View
     if (empty($category_options)) {
       $category_options[] = '<option value=0>{LNG_Uncategorized}</option>';
     }
-    // antispam
-    $antispam = new Antispam();
     // /board/writeedit.html
     $template = Template::create('board', $index->module->module, 'writeedit');
     $template->add(array(
@@ -63,8 +60,7 @@ class View extends \Gcms\View
       '/{DATE}/' => date('Y-m-d', $index->create_date),
       '/{TIME}/' => date('H:i:s', $index->create_date),
       '/{MODULEID}/' => $index->module_id,
-      '/{ANTISPAM}/' => $antispam->getId(),
-      '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
+      '/{TOKEN}/' => $request->createToken(),
       '/{QID}/' => $index->id
     ));
     Gcms::$view->setContents(array(

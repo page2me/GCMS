@@ -98,7 +98,7 @@ class Model extends \Kotchasan\Model
         if ($array) {
           $save['type'] = 'array';
         }
-        if ($save['js'] == 1 && !preg_match('/[^A-Z_]+/', $save['key'])) {
+        if ($save['js']) {
           if (isset($save['en']) && $save['en'] == '') {
             $save['en'] = $save['key'];
           }

@@ -55,7 +55,7 @@
     $G('register_birthday').addEvent('change', function () {
       if (this.calendar) {
         var age = new Date().compare(this.value);
-        this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_years} ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
+        this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_year} ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
       }
     });
     new GValidator('register_displayname', 'keyup,change', checkDisplayname, '{WEBURL}index.php/index/model/checker/displayname', null, 'register_frm');

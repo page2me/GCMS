@@ -39,41 +39,43 @@ class Controller extends \Kotchasan\Controller
     $dir = ROOT_PATH.'modules/';
     // อ่านรายชื่อโมดูลและไดเร็คทอรี่ของโมดูลทั้งหมดที่ติดตั้งไว้
     $obj->module = new \Index\Module\Model($dir, $menu);
-    // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
-    foreach ($obj->module->by_owner as $owner => $modules) {
-      if (is_file($dir.$owner.'/controllers/init.php')) {
-        include $dir.$owner.'/controllers/init.php';
-        $class = ucfirst($owner).'\Init\Controller';
-        if (method_exists($class, 'init')) {
-          createClass($class)->init($modules);
+    if (MAIN_INIT == 'indexhtml') {
+      // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
+      foreach ($obj->module->by_owner as $owner => $modules) {
+        if (is_file($dir.$owner.'/controllers/init.php')) {
+          include $dir.$owner.'/controllers/init.php';
+          $class = ucfirst($owner).'\Init\Controller';
+          if (method_exists($class, 'init')) {
+            createClass($class)->init($modules);
+          }
+        }
+        if ($new_day && is_file($dir.$owner.'/controllers/cron.php')) {
+          include $dir.$owner.'/controllers/cron.php';
+          $class = ucfirst($owner).'\Cron\Controller';
+          if (method_exists($class, 'init')) {
+            createClass($class)->init($modules);
+          }
         }
       }
-      if ($new_day && is_file($dir.$owner.'/controllers/cron.php')) {
-        include $dir.$owner.'/controllers/cron.php';
-        $class = ucfirst($owner).'\Cron\Controller';
-        if (method_exists($class, 'init')) {
-          createClass($class)->init($modules);
-        }
-      }
-    }
-    // โหลด init ของส่วนเสริม
-    $dir = ROOT_PATH.'Widgets/';
-    $f = @opendir($dir);
-    if ($f) {
-      while (false !== ($text = readdir($f))) {
-        if ($text != "." && $text != "..") {
-          if (is_dir($dir.$text)) {
-            if (is_file($dir.$text.'/Controllers/Init.php')) {
-              include $dir.$text.'/Controllers/Init.php';
-              $class = 'Widgets\\'.ucfirst($text).'\Controllers\Init';
-              if (method_exists($class, 'init')) {
-                createClass($class)->init();
+      // โหลด init ของส่วนเสริม
+      $dir = ROOT_PATH.'Widgets/';
+      $f = @opendir($dir);
+      if ($f) {
+        while (false !== ($text = readdir($f))) {
+          if ($text != "." && $text != "..") {
+            if (is_dir($dir.$text)) {
+              if (is_file($dir.$text.'/Controllers/Init.php')) {
+                include $dir.$text.'/Controllers/Init.php';
+                $class = 'Widgets\\'.ucfirst($text).'\Controllers\Init';
+                if (method_exists($class, 'init')) {
+                  createClass($class)->init();
+                }
               }
             }
           }
         }
+        closedir($f);
       }
-      closedir($f);
     }
     // คืนค่า Class
     return $obj;

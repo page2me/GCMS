@@ -9,13 +9,13 @@
 namespace Video\Admin\Setup;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Login;
 use \Kotchasan\Html;
-use \Kotchasan\Language;
+use \Kotchasan\Login;
 use \Gcms\Gcms;
+use \Kotchasan\Language;
 
 /**
- * แสดงรายการอัลบัม
+ * แสดงรายการ Video
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

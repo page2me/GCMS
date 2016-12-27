@@ -13,7 +13,6 @@ use \Kotchasan\Template;
 use \Kotchasan\Language;
 use \Kotchasan\Login;
 use \Gcms\Gcms;
-use \Kotchasan\Antispam;
 
 /**
  * module=sendmail
@@ -51,8 +50,6 @@ class View extends \Gcms\View
         $to = '';
       }
       if ($to != '') {
-        // antispam
-        $antispam = new Antispam();
         // ข้อมูลส่งกลับ
         $index = (object)array(
             'topic' => Language::replace('Send a message to the :name', array(':name' => $to_msg)),
@@ -64,8 +61,7 @@ class View extends \Gcms\View
         $template = Template::create('member', 'member', 'sendmail');
         $template->add(array(
           '/{TOPIC}/' => $index->topic,
-          '/{ANTISPAM}/' => $antispam->getId(),
-          '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
+          '/{TOKEN}/' => $request->createToken(),
           '/{RECIEVER}/' => $to_msg,
           '/{SENDER}/' => $login['email'],
           '/{RECIEVERID}/' => $to

@@ -11,8 +11,6 @@ namespace Board\Replyedit;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
-use \Kotchasan\Login;
-use \Kotchasan\Antispam;
 use \Kotchasan\Language;
 
 /**
@@ -38,8 +36,6 @@ class View extends \Gcms\View
     $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
     // สมาชิก true
     $isMember = $login['status'] > -1;
-    // antispam
-    $antispam = new Antispam();
     // /board/replyedit.html
     $template = Template::create('board', $index->module->module, 'replyedit');
     $template->add(array(
@@ -47,8 +43,7 @@ class View extends \Gcms\View
       '/{DETAIL}/' => $index->detail,
       '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->module->img_upload_type) ? '' : '$1',
       '/{MODULEID}/' => $index->module_id,
-      '/{ANTISPAM}/' => $antispam->getId(),
-      '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
+      '/{TOKEN}/' => $request->createToken(),
       '/{QID}/' => $index->index_id,
       '/{RID}/' => $index->id
     ));

@@ -11,7 +11,6 @@ namespace Edocument\Write;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Kotchasan\Text;
-use \Kotchasan\Antispam;
 use \Kotchasan\Login;
 use \Kotchasan\Mime;
 use \Kotchasan\ArrayTool;
@@ -52,8 +51,6 @@ class View extends \Gcms\View
           $sel = $module_id == $index->module_id ? ' selected' : '';
           $modules[] = '<option value='.$module_id.$sel.'>'.$topic.'</option>';
         }
-        // antispam
-        $antispam = new Antispam();
         // title
         $title = $index->id == 0 ? '{LNG_Add New}' : '{LNG_Edit}';
         // /edocument/write.html
@@ -63,8 +60,7 @@ class View extends \Gcms\View
           '/{NO}/' => $index->document_no,
           '/{TOPIC}/' => isset($index->topic) ? $index->topic : '',
           '/{DETAIL}/' => isset($index->detail) ? $index->detail : '',
-          '/{ANTISPAM}/' => $antispam->getId(),
-          '/{ANTISPAMVAL}/' => Login::isAdmin() ? $antispam->getValue() : '',
+          '/{TOKEN}/' => $request->createToken(),
           '/{ACCEPT}/' => Mime::getEccept($index->module->file_typies),
           '/{GROUPS}/' => implode('', $reciever),
           '/{ID}/' => $index->id,

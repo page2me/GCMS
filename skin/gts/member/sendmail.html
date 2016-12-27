@@ -14,17 +14,11 @@
         <label class="g-input icon-edit"><input type=text name=mail_subject id=mail_subject placeholder="{LNG_Subject}" autofocus></label>
       </div>
       <div class=item><label class="g-input icon-file"><textarea id=mail_detail name=mail_detail rows=10 placeholder="{LNG_Detail}"></textarea></label></div>
-      <div class=item>
-        <label class="g-input antispam">
-          <span><img src="{WEBURL}index.php/index/view/antispam?id={ANTISPAM}" alt=Antispam></span>
-          <input type=text name=mail_antispam id=mail_antispam maxlength=4 value="{ANTISPAMVAL}" placeholder="{LNG_Please enter the characters you see in the box}">
-        </label>
-      </div>
     </fieldset>
     <fieldset class="submit">
       <input type=submit id=mail_submit class="button large send" value="{LNG_Send message}">
       <input type=hidden name=mail_reciever value="{RECIEVERID}">
-      <input type=hidden id=mail_antispamid name=mail_antispamid value="{ANTISPAM}">
+      <input type=hidden name=token value="{TOKEN}">
     </fieldset>
   </form>
 </div>

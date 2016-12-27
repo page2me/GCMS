@@ -9,12 +9,12 @@
 namespace Video\Admin\Settings;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Login;
 use \Kotchasan\Html;
+use \Kotchasan\Login;
 use \Gcms\Gcms;
 
 /**
- * Controller สำหรับจัดการการตั้งค่า
+ * จัดการการตั้งค่า
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -60,6 +60,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Module settings}';
+    return '{LNG_Module settings} {LNG_Video}';
   }
 }

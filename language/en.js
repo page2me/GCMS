@@ -1,8 +1,10 @@
-var CHANGE_COLOR = 'change color';
 var CHECK = 'check';
 var DRAG_THE_MARKER_TO_THE_LOCATION_YOU_WANT = 'Drag the marker to the location you want';
 var ENTER_A_PLACE_NAME_NEARBY_THE_LOCATION_TO_SEARCH = 'Enter a place name nearby the location to search';
 var PLEASE_FILL_IN = 'Please fill in';
+var CHANGE_COLOR = 'change color';
+var YOU_WANT_TO_DELETE = 'You want to delete ?';
+var YOU_WANT_TO_XXX_THE_SELECTED_ITEMS = 'You want to XXX the selected items ?';
 var PLEASE_SAVE_BEFORE_CONTINUING = 'Please save before continuing';
 var PLEASE_SELECT_AT_LEAST_ONE_ITEM = 'Please select at least one item';
 var SELECT_ALL = 'select all';
@@ -11,5 +13,3 @@ var SORRY_LOCATION_NOT_FOUND = 'Sorry Location not found';
 var SUCCESSFULLY_UPLOADED_XXX_FILES = 'Successfully uploaded XXX files';
 var THE_TYPE_OF_FILE_IS_INVALID = 'The type of file is invalid';
 var UNCHECK = 'uncheck';
-var YOU_WANT_TO_DELETE = 'You want to delete ?';
-var YOU_WANT_TO_XXX_THE_SELECTED_ITEMS = 'You want to XXX the selected items ?';

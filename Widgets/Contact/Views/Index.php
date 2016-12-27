@@ -35,7 +35,8 @@ class Index extends \Gcms\View
         'class' => 'setup_frm',
         'action' => 'xhr.php/Widgets/Contact/Models/Index/send',
         'onsubmit' => 'doFormSubmit',
-        'ajax' => true
+        'ajax' => true,
+        'token' => true
     ));
     $fieldset = $form->add('fieldset');
     // reciever
@@ -73,14 +74,6 @@ class Index extends \Gcms\View
       'label' => '{LNG_Detail}',
       'rows' => 10,
       'placeholder' => '{LNG_Please fill in} {LNG_Detail}'
-    ));
-    // antispam
-    $fieldset->add('antispam', array(
-      'id' => 'mail_antispam',
-      'itemClass' => 'item',
-      'labelClass' => 'g-input',
-      'placeholder' => '{LNG_Please enter the characters you see in the box}',
-      'maxlength' => 4
     ));
     $fieldset = $form->add('fieldset', array(
       'class' => 'submit'

@@ -58,7 +58,7 @@ class View extends \Kotchasan\KBase
         '@type' => 'Person',
         'name' => $index->displayname
       ),
-      'image' => isset($index->image) ? $index->image : '',
+      'image' => isset($index->image) ? $index->image : isset(Gcms::$site['logo']) ? Gcms::$site['logo'] : '',
       'description' => $index->description,
       'url' => $index->canonical,
       'comment' => $comment,

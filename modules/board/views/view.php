@@ -11,8 +11,6 @@ namespace Board\View;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
-use \Kotchasan\Login;
-use \Kotchasan\Antispam;
 use \Board\Index\Controller;
 use \Kotchasan\Date;
 use \Kotchasan\Grid;
@@ -79,8 +77,6 @@ class View extends \Gcms\View
         if ($canReply) {
           // query รายการแสดงความคิดเห็น
           $index->comment_items = \Index\Comment\Model::get($index, 'board_r');
-          // antispam
-          $antispam = new Antispam();
           // /board/commentitem.html
           $listitem = Grid::create('board', $index->module, 'commentitem');
           // รายการแสดงความคิดเห็น
@@ -139,8 +135,7 @@ class View extends \Gcms\View
           '/{URL}/' => $index->canonical,
           '/{MODULE}/' => $index->module,
           '/{MODULEID}/' => $index->module_id,
-          '/{ANTISPAM}/' => isset($antispam) ? $antispam->getId() : '',
-          '/{ANTISPAMVAL}/' => isset($antispam) && Login::isAdmin() ? $antispam->getValue() : '',
+          '/{TOKEN}/' => $request->createToken(),
           '/{DELETE}/' => $moderator ? '{LNG_Delete}' : '{LNG_Removal request}',
           '/{PIN}/' => $index->pin == 0 ? 'un' : '',
           '/{LOCK}/' => $index->locked == 0 ? 'un' : '',

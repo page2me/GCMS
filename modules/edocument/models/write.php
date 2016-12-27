@@ -14,7 +14,6 @@ use \Gcms\Gcms;
 use \Kotchasan\Login;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\File;
-use \Kotchasan\Antispam;
 use \Kotchasan\Text;
 use \Gcms\Email;
 
@@ -113,12 +112,14 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึก
+   *
+   * @param Request $request
    */
   public function save(Request $request)
   {
     $ret = array();
-    // referer, session, member
-    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
+    // session, token, member
+    if ($request->initSession() && $request->isSafe() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
@@ -132,12 +133,7 @@ class Model extends \Kotchasan\Model
         $id = $request->post('id')->toInt();
         // ตรวจสอบรายการที่เลือก
         $index = self::getForSave($request->post('module_id')->toInt(), $id);
-        // antispam
-        $antispam = new Antispam($request->post('antispamid')->toString());
-        if (!$antispam->valid($request->post('antispam')->toString())) {
-          // Antispam ไม่ถูกต้อง
-          $ret['ret_antispam'] = 'this';
-        } elseif (!$index || !Gcms::canConfig($login, $index, 'can_upload')) {
+        if (!$index || !Gcms::canConfig($login, $index, 'can_upload')) {
           // ไม่พบ หรือไม่สามารถอัปโหลดได้
           $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
         } elseif ($id > 0 && !($login['id'] == $index->sender_id || Gcms::canConfig($login, $index, 'moderator'))) {
@@ -239,8 +235,8 @@ class Model extends \Kotchasan\Model
               $ret['alert'] = Language::get('Saved successfully');
             }
             $ret['location'] = WEB_URL.'index.php?module=editprofile&tab=edocument';
-            // เคลียร์ antispam
-            $antispam->delete();
+            // เคลียร์
+            $request->removeToken();
           }
         }
       }

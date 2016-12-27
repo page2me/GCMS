@@ -12,7 +12,6 @@ use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
-use \Kotchasan\Antispam;
 
 /**
  * module=register
@@ -38,8 +37,6 @@ class View extends \Gcms\View
         'topic' => Language::get('Create new account'),
         'description' => self::$cfg->web_description
     );
-    // antispam
-    $antispam = new Antispam();
     // /member/registerfrm.html
     $template = Template::create('member', 'member', 'registerfrm');
     $template->add(array(
@@ -48,7 +45,7 @@ class View extends \Gcms\View
       '/<INVITE>(.*)<\/INVITE>/isu' => empty(self::$cfg->member_invitation) ? '' : '\\1',
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
       '/{TOPIC}/' => $index->topic,
-      '/{ANTISPAM}/' => $antispam->getId(),
+      '/{TOKEN}/' => self::$request->createToken(),
       '/{WEBURL}/' => WEB_URL,
       '/{NEXT}/' => $modal ? 'close' : WEB_URL.'index.php',
       '/{INVITE}/' => self::$request->cookie('invite')->topic()

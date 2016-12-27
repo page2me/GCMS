@@ -121,6 +121,10 @@ return array(
     '' => 'การเชื่อมต่อแบบปกติ',
     'ssl' => 'การเชื่อมต่อที่ปลอดภัย (SSL)'
   ),
+  'USE_AJAX_LIST' => array(
+    0 => 'เปิดการใช้งาน Ajax บางส่วนกับเว็บไซต์ (แสดงผลเว็บไซต์เหมือนเว็บทั่วไป)',
+    1 => 'เปิดการใช้งาน Ajax เต็มรูปแบบกับเว็บไซต์'
+  ),
   'TEXTLINK_TYPIES' => array(
     'custom' => 'กำหนดเองเช่น Adsense',
     'text' => 'ลิงค์ข้อความอย่างเดียว',
@@ -134,10 +138,6 @@ return array(
     1 => 'รูปภาพ'
   ),
   'TO_TIME' => 'ถึง H:i น.',
-  'USE_AJAX_LIST' => array(
-    0 => 'เปิดการใช้งาน Ajax บางส่วนกับเว็บไซต์ (แสดงผลเว็บไซต์เหมือนเว็บทั่วไป)',
-    1 => 'เปิดการใช้งาน Ajax เต็มรูปแบบกับเว็บไซต์'
-  ),
   'WIDGET_DATE_FORMAT' => 'วันLที่ d F พ.ศ. Y',
   'YEAR_OFFSET' => 543,
   'CURRENCY_UNITS' => array(
@@ -258,7 +258,6 @@ return array(
   'Zipcode' => 'รหัสไปรษณีย์',
   'Invite' => 'ผู้แนะนำ',
   'Subscribers' => 'บอกรับจดหมายข่าว',
-  'years' => 'ปี',
   'month' => 'เดือน',
   'The system will send the registration information to this e-mail. Please use real email address' => 'ระบบจะส่งข้อความไปยังอีเมล์นี้ กรุณาใช้ที่อยู่ที่ติดต่อได้',
   'Status of membership, the first item (0) means end users and 1 represents the administrator. (The first two items are the items necessary), you can modify the ability of each member of the modules again.' => 'สถานะของสมาชิก รายการแรก (0) หมายถึงสมาชิกทั่วไป รายการที่สอง (1) หมายถึงแอดมินสูงสุด (สองรายการแรกเป็นรายการที่จำเป็น) คุณสามารถกำหนดความสามารถของสมาชิกได้อีกครั้งตามโมดูลต่างๆ',
@@ -745,4 +744,5 @@ return array(
   'Already have an account? Sign In Here.' => 'มีบัญชีอยู่แล้ว ? เข้าสู่ระบบที่นี่ได้เลย',
   'Domain must contain numbers and English only between 2 to 57 characters' => 'ชื่อโดเมน ภาษาอังกฤษและตัวเลข 2 ถึง 57 ตัวอักษร',
   'No confirmation email, please check your e-mail' => 'ยังไม่ได้ยืนยันอีเมล์ กรุณาตรวจสอบอีเมล์',
+  'year' => 'ปี',
 );
