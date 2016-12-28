@@ -77,6 +77,14 @@ class Controller extends \Kotchasan\Controller
         closedir($f);
       }
     }
+    if ($new_day) {
+      // บันทึกเวลาที่ cron ทำงาน
+      $f = @fopen(ROOT_PATH.DATA_FOLDER.'index.php', 'wb');
+      if ($f) {
+        fwrite($f, date('d-m-Y H:i:s'));
+        fclose($f);
+      }
+    }
     // คืนค่า Class
     return $obj;
   }

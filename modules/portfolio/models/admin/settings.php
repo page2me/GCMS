@@ -31,13 +31,28 @@ class Model extends \Kotchasan\Model
   public static function defaultSettings()
   {
     return array(
-      'width' => 696,
-      'height' => 424,
+      'width' => 400,
+      'height' => 400,
       'rows' => 4,
       'cols' => 2,
       'can_write' => array(1),
       'can_config' => array(1)
     );
+  }
+
+  /**
+   * เมธอดสำหรับการติดตั้งโมดูลแบบใช้ซ้ำได้
+   *
+   * @param array $module ข้อมูลโมดูล
+   */
+  public static function install($module)
+  {
+    // อัปเดทชื่อตาราง
+    \Index\Install\Model::updateTables(array('portfolio' => 'portfolio'));
+    // อัปเดท database
+    \Index\Install\Model::execute(ROOT_PATH.'modules/portfolio/models/admin/sql.php');
+    // สร้างไดเร็คทอรี่เก็บข้อมูลโมดูล
+    \Kotchasan\File::makeDirectory(ROOT_PATH.DATA_FOLDER.'portfolio/');
   }
 
   /**

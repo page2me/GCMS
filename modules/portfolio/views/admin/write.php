@@ -113,7 +113,7 @@ class View extends \Gcms\Adminview
       $img = WEB_URL.'skin/img/blank.gif';
     }
     $fieldset->add('file', array(
-      'id' => 'picture',
+      'id' => 'image',
       'labelClass' => 'g-input icon-upload',
       'itemClass' => 'item',
       'label' => '{LNG_Image}',

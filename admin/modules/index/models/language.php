@@ -37,11 +37,11 @@ class Model extends \Kotchasan\Orm\Field
     if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
       if (empty($login['fb'])) {
         // ค่าที่ส่งมา
-        $id = self::$request->post('id')->toInt();
+        $id = self::$request->post('id')->filter('0-9,');
         $action = self::$request->post('action')->toString();
         if ($action == 'delete') {
           $model = new \Kotchasan\Model;
-          $model->db()->delete($model->getTableName('language'), $id);
+          $model->db()->delete($model->getTableName('language'), array('id', explode(',', $id)), 0);
           // อัปเดทไฟล์ ภาษา
           $error = self::updateLanguageFile();
           if (empty($error)) {

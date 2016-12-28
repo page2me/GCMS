@@ -180,7 +180,7 @@ class View extends \Gcms\View
    */
   public function onRow($item)
   {
-    $item['module_id'] = $this->modules[$item['module_id']];
+    $item['module_id'] = isset($this->modules[$item['module_id']]) ? $this->modules[$item['module_id']] : '';
     $item['topic'] = $item['topic'].'.'.$item['ext'];
     $item['last_update'] = Date::format($item['last_update'], 'd M Y');
     return $item;

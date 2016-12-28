@@ -79,7 +79,7 @@ class View extends \Gcms\View
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
     } else {
       // breadcrumb ของโมดูล
-      if (Gcms::$menu->isHome($index->index_id)) {
+      if (Gcms::$menu->isHome($index->index_id) && empty($index->category_id)) {
         $index->canonical = WEB_URL.'index.php';
       } else {
         if (empty($index->category_id)) {
@@ -95,12 +95,12 @@ class View extends \Gcms\View
         }
       }
     }
+    // current URL
+    $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
     if (!empty($index->category_id) && is_int($index->category_id)) {
       // breadcrumb ของหมวดหมู่
       Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', $index->category_id), $index->category, $index->category_description);
     }
-    // current URL
-    $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
     // /document/list.html หรือ /document/empty.html ถ้าไม่มีข้อมูล
     $template = Template::create('document', $index->module, $listitem->hasItem() ? 'list' : 'empty');
     $template->add(array(

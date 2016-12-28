@@ -1,22 +1,19 @@
-<div class="gcss-wrapper">
-  <div class=bdr_content>
-    <header>
-      <h2><a href="{URL}">{TOPIC}</a></h2>
-      <nav class="breadcrumbs cuttext">
-        <ul>{BREADCRUMBS}</ul>
-      </nav>
-    </header>
-    <div class="leftsidebar wide clear">
-      <div class="content documentation">
-        <div>{DETAIL}</div>
-        <div class="margin-top-bottom float-center">{WIDGET_SHARE_count}</div>
-      </div>
-      <aside class="sidebar">
-        {WIDGET_DOCCAT_{MODULE}}
-      </aside>
+<div class=bdr_content>
+  <header>
+    <h2>{TOPIC}</h2>
+    <nav class="breadcrumbs cuttext">
+      <ul>{BREADCRUMBS}</ul>
+    </nav>
+  </header>
+  <div class="leftsidebar clear">
+    <div class="content documentation">
+      <div>{DETAIL}</div>
     </div>
+    <aside class="sidebar">
+      {WIDGET_DOCCAT_{MODULE}}
+    </aside>
   </div>
-  <script>
-    initDocView({QID}, {CATID});
-  </script>
 </div>
+<script>
+  initDocView({QID}, {CATID});
+</script>

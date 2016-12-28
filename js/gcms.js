@@ -136,23 +136,6 @@ $G(window).Ready(function () {
       };
     }
   });
-  var _getCounter = function () {
-    return 'counter=' + counter_time;
-  };
-  if (COUNTER_REFRESH_TIME > 0) {
-    new GAjax().autoupdate(WEB_URL + 'xhr.php/index/model/useronline/index', COUNTER_REFRESH_TIME, _getCounter, function (xhr) {
-      var datas = xhr.responseText.toJSON();
-      if (datas) {
-        for (var d in datas) {
-          if (d == 'time') {
-            counter_time = floatval(datas['time']);
-          } else if ($E(d)) {
-            $E(d).innerHTML = datas[d];
-          }
-        }
-      }
-    });
-  }
 });
 var getURL = function (url) {
   var loader_patt0 = /.*?module=.*?/;

@@ -9,6 +9,7 @@
 namespace Index\Counter;
 
 use \Kotchasan\File;
+use \Kotchasan\Login;
 
 /**
  * ข้อมูล Counter และ Useronline
@@ -26,22 +27,17 @@ class Model extends \Kotchasan\Model
   public static function init()
   {
     if (defined('MAIN_INIT')) {
+      // Model
+      $model = new static;
+      $db = $model->db();
+      // ตาราง useronline
+      $useronline = $model->getFullTableName('useronline');
       // วันนี้
       $y = (int)date('Y');
       $m = (int)date('m');
       $d = (int)date('d');
-      // ตรวจสอบ ว่าเคยเยี่ยมชมหรือไม่
-      if (self::$request->cookie('counter_date')->toInt() != $d) {
-        // เข้ามาครั้งแรกในวันนี้, บันทึก counter 1 วัน
-        setCookie('counter_date', $d, time() + 3600 * 24, '/');
-        $new_visitor = true;
-      } else {
-        $new_visitor = false;
-      }
       // โฟลเดอร์ของ counter
       $counter_dir = ROOT_PATH.DATA_FOLDER.'counter';
-      // ตรวจสอบโฟลเดอร์
-      File::makeDirectory($counter_dir);
       // ตรวจสอบวันใหม่
       $c = (int)@file_get_contents($counter_dir.'/index.php');
       if ($d != $c) {
@@ -61,37 +57,24 @@ class Model extends \Kotchasan\Model
           }
           closedir($f);
         }
-      }
-      // ตรวจสอบ + สร้าง โฟลเดอร์
-      File::makeDirectory("$counter_dir/$y");
-      File::makeDirectory("$counter_dir/$y/$m");
-      // ip ปัจจุบัน
-      $counter_ip = self::$request->getClientIp();
-      // session ปัจจุบัน
-      $counter_ssid = session_id();
-      // วันนี้
-      $counter_day = date('Y-m-d');
-      // Model
-      $model = new static;
-      $db = $model->db();
-      // อ่าน counter รายการล่าสุด
-      $my_counter = $db->createQuery()->from('counter')->order('id DESC')->toArray()->first();
-      if (!$my_counter) {
-        $my_counter = array('date' => '', 'counter' => 0);
-      }
-      if ($my_counter['date'] != $counter_day) {
-        // วันใหม่
-        $my_counter['visited'] = 0;
-        $my_counter['pages_view'] = 0;
-        $my_counter['date'] = $counter_day;
-        $new_day = true;
+        // ตรวจสอบ + สร้าง โฟลเดอร์
+        File::makeDirectory("$counter_dir/$y");
+        File::makeDirectory("$counter_dir/$y/$m");
         // clear useronline
-        $db->emptyTable($model->getFullTableName('useronline'));
+        $db->emptyTable($useronline);
         // clear visited_today
         $db->updateAll($model->getFullTableName('index'), array('visited_today' => 0));
+        // วันใหม่
+        $new_day = true;
       } else {
         $new_day = false;
       }
+      // ip ปัจจุบัน
+      $counter_ip = self::$request->getClientIp();
+      // session ปัจจุบัน
+      $session_id = session_id();
+      // วันนี้
+      $counter_day = date('Y-m-d');
       // บันทึกลง log
       $counter_log = "$counter_dir/$y/$m/$d.dat";
       if (is_file($counter_log)) {
@@ -102,27 +85,57 @@ class Model extends \Kotchasan\Model
         $f = @fopen($counter_log, 'wb');
       }
       if ($f) {
-        $data = $counter_ssid.chr(1).$counter_ip.chr(1).self::$request->server('HTTP_REFERER', '').chr(1).self::$request->server('HTTP_USER_AGENT', '').chr(1).date('H:i:s')."\n";
+        $data = $session_id.chr(1).$counter_ip.chr(1).self::$request->server('HTTP_REFERER').chr(1).self::$request->server('HTTP_USER_AGENT').chr(1).date('H:i:s')."\n";
         fwrite($f, $data);
         fclose($f);
       }
-      if ($new_visitor) {
+      // อ่าน counter รายการล่าสุด
+      $my_counter = $db->createQuery()->from('counter')->order('id DESC')->toArray()->first();
+      if (empty($my_counter)) {
+        $my_counter = array(
+          'date' => $counter_day,
+          'counter' => 0,
+          'visited' => 0,
+          'pages_view' => 0,
+        );
+        // ข้อมูลใหม่
+        $new = true;
+      } else {
+        // ข้อมูลใหม่ ถ้าวันที่ไม่ตรงกัน
+        $new = $my_counter['date'] != $counter_day;
+      }
+      $my_counter['pages_view'] ++;
+      $my_counter['time'] = time();
+      // ตรวจสอบ ว่าเคยเยี่ยมชมหรือไม่
+      if ($new || self::$request->cookie('counter_date')->toInt() != $d) {
+        // เข้ามาครั้งแรกในวันนี้, บันทึก counter 1 วัน
+        setCookie('counter_date', $d, time() + 3600 * 24, '/');
         // ยังไม่เคยเยี่ยมชมในวันนี้
         $my_counter['visited'] ++;
         $my_counter['counter'] ++;
       }
-      $my_counter['pages_view'] ++;
-      $my_counter['time'] = time();
-      if ($new_day) {
+      // counter
+      if ($new) {
         unset($my_counter['id']);
         $db->insert($model->getFullTableName('counter'), $my_counter);
       } else {
         $db->update($model->getFullTableName('counter'), $my_counter['id'], $my_counter);
       }
+      // เวลาหมดอายุ useronline (2 นาที)
+      $validtime = $my_counter['time'] - 120;
+      // ลบคนที่หมดเวลาและตัวเอง
+      $db->delete($useronline, array(array('time', '<', $validtime), array('session', $session_id)), 0, 'OR');
+      // ตัวเอง
+      $login = Login::isMember();
+      // save useronline
+      $db->insert($useronline, array(
+        'time' => $my_counter['time'],
+        'session' => $session_id,
+        'ip' => $counter_ip,
+        'member_id' => $login ? $login['id'] : 0,
+        'displayname' => $login ? empty($login['displayname']) ? $login['emil'] : $login['displayname'] : '',
+      ));
       return $new_day;
-    } else {
-      // เรียก method โดยตรง
-      new \Kotchasan\Http\NotFound('Do not call method directly');
     }
   }
 }

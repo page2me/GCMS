@@ -13,3 +13,4 @@ var SORRY_LOCATION_NOT_FOUND = 'Sorry Location not found';
 var SUCCESSFULLY_UPLOADED_XXX_FILES = 'Successfully uploaded XXX files';
 var THE_TYPE_OF_FILE_IS_INVALID = 'The type of file is invalid';
 var UNCHECK = 'uncheck';
+var INVALID_DATA = 'Invalid data';

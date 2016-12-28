@@ -105,7 +105,7 @@ class Model extends \Kotchasan\Model
             $ret['ret_detail'] = 'this';
           } else {
             // อัปโหลดไฟล์
-            foreach (self::$request->getUploadedFiles() as $item => $file) {
+            foreach ($request->getUploadedFiles() as $item => $file) {
               /* @var $file UploadedFile */
               if ($file->hasUploadFile()) {
                 if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'portfolio/')) {
@@ -124,9 +124,9 @@ class Model extends \Kotchasan\Model
                   }
                 } else {
                   // อัปโหลด ขนาดจริง
-                  $save[$name] = $index->id.'.'.$file->getClientFileExt();
+                  $save[$item] = $index->id.'.'.$file->getClientFileExt();
                   try {
-                    $file->moveTo(ROOT_PATH.DATA_FOLDER.'portfolio/'.$save[$name]);
+                    $file->moveTo(ROOT_PATH.DATA_FOLDER.'portfolio/'.$save[$item]);
                   } catch (\Exception $exc) {
                     // ไม่สามารถอัปโหลดได้
                     $ret['ret_'.$item] = Language::get($exc->getMessage());
@@ -141,10 +141,10 @@ class Model extends \Kotchasan\Model
               $save['id'] = $index->id;
               $save['module_id'] = $index->module_id;
               $save['visited'] = 0;
-              $this->db()->insert($this->getFullTableName('portfolio'), $save);
+              $this->db()->insert($this->getTableName('portfolio'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('portfolio'), $id, $save);
+              $this->db()->update($this->getTableName('portfolio'), $id, $save);
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');

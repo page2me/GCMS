@@ -182,8 +182,15 @@ class Model extends \Kotchasan\Model
               if (empty($module_id)) {
                 // โมดูลใหม่
                 $class = ucfirst($module_save['owner']).'\Admin\Settings\Model';
-                if (class_exists($class) && method_exists($class, 'defaultSettings')) {
-                  $module_save['config'] = serialize($class::defaultSettings());
+                if (class_exists($class)) {
+                  // ค่าติดตั้งเริ่มต้น
+                  if (method_exists($class, 'defaultSettings')) {
+                    $module_save['config'] = serialize($class::defaultSettings());
+                  }
+                  // มี method install
+                  if (method_exists($class, 'install')) {
+                    $class::install($module_save);
+                  }
                 }
                 $module_id = $model->db()->insert($table_modules, $module_save);
               }

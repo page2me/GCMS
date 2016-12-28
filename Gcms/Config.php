@@ -132,20 +132,6 @@ class Config extends \Kotchasan\Config
    */
   public $use_ajax = 0;
   /**
-   * เวลาสำหรับการตรวจสอบคนออนไลน์ (วินาที)
-   * 0 หมายถึงไม่มีการตรวจสอบคนออนไลน์
-   *
-   * @var int
-   */
-  public $counter_refresh_time = 30;
-  /**
-   * ช่วงเวลาบอกว่าคนออนไลน์หมดอายุ (วินาที)
-   * ควรมากกว่า $counter_refresh_time อย่างน้อยเท่าตัว
-   *
-   * @var int
-   */
-  public $counter_gap = 60;
-  /**
    * ชื่อเว็บไซต์
    *
    * @var string

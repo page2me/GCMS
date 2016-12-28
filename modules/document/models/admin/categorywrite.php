@@ -8,6 +8,7 @@
 
 namespace Document\Admin\Categorywrite;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
@@ -15,7 +16,7 @@ use \Gcms\Gcms;
 use \Kotchasan\File;
 
 /**
- * อ่านข้อมูลโมดูล
+ * อ่านข้อมูลหมวดหมู่ (Backend)
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -82,25 +83,27 @@ class Model extends \Kotchasan\Model
 
   /**
    * บันทึกหมวดหมู่
+   *
+   * @param Request $request
    */
-  public function save()
+  public function save(Request $request)
   {
     $ret = array();
     // referer, session, member
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
         $save = array(
-          'published' => self::$request->post('published')->toBoolean(),
+          'published' => $request->post('published')->toBoolean(),
           'config' => serialize(array(
-            'can_reply' => self::$request->post('can_reply')->toBoolean()
+            'can_reply' => $request->post('can_reply')->toBoolean()
           ))
         );
-        $id = self::$request->post('id')->toInt();
-        $module_id = self::$request->post('module_id')->toInt();
-        $category_id = self::$request->post('category_id')->toInt();
+        $id = $request->post('id')->toInt();
+        $module_id = $request->post('module_id')->toInt();
+        $category_id = $request->post('category_id')->toInt();
         $q1 = $this->db()->createQuery()
           ->select('id')
           ->from('category')
@@ -143,13 +146,13 @@ class Model extends \Kotchasan\Model
           if (Gcms::canConfig($login, $index, 'can_config')) {
             unset($index['mconfig']);
             $topic = array();
-            foreach (self::$request->post('topic')->topic() as $key => $value) {
+            foreach ($request->post('topic')->topic() as $key => $value) {
               if ($value != '') {
                 $topic[$key] = $value;
               }
             }
             $detail = array();
-            foreach (self::$request->post('detail')->topic() as $key => $value) {
+            foreach ($request->post('detail')->topic() as $key => $value) {
               if ($value != '') {
                 $detail[$key] = $value;
               }
@@ -166,7 +169,7 @@ class Model extends \Kotchasan\Model
             } else {
               // อัปโหลดไฟล์
               $icon = ArrayTool::unserialize($index['icon']);
-              foreach (self::$request->getUploadedFiles() as $item => $file) {
+              foreach ($request->getUploadedFiles() as $item => $file) {
                 if ($file->hasUploadFile()) {
                   if (!File::makeDirectory(ROOT_PATH.DATA_FOLDER.'document/')) {
                     // ไดเรคทอรี่ไม่สามารถสร้างได้
@@ -208,7 +211,7 @@ class Model extends \Kotchasan\Model
               \Document\Admin\Write\Model::updateCategories((int)$index['module_id']);
               // ส่งค่ากลับ
               $ret['alert'] = Language::get('Saved successfully');
-              $ret['location'] = self::$request->getUri()->postBack('index.php', array('id' => $index['module_id'], 'module' => 'document-category'));
+              $ret['location'] = $request->getUri()->postBack('index.php', array('id' => $index['module_id'], 'module' => 'document-category'));
             }
           } else {
             $ret['alert'] = Language::get('Unable to complete the transaction');

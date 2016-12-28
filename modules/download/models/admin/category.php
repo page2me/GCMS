@@ -58,18 +58,19 @@ class Model extends \Kotchasan\Model
   }
 
   /**
-   * บันทึก
+   * บันทึกหมวดหมู่
    */
   public function save(Request $request)
   {
+    $ret = array();
     // referer, session, member
     if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
-      $ret = array();
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         // อ่านข้อมูลโมดูล
         $index = \Index\Adminmodule\Model::get('download', $request->post('module_id')->toInt());
+        // สามารถตั้งค่าได้
         if (Gcms::canConfig($login, $index, 'can_config')) {
           // ค่าที่ส่งมา
           $save = array();
@@ -93,7 +94,7 @@ class Model extends \Kotchasan\Model
           }
           if (empty($ret)) {
             // ชื่อตาราง
-            $table_name = $this->getFullTableName('category');
+            $table_name = $this->getTableName('category');
             // db
             $db = $this->db();
             // ลบข้อมูลเดิม

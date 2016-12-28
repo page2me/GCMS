@@ -55,6 +55,10 @@ class Model extends \Index\Upgrade\Model
       }
     }
     $content[] = '<li class="correct">Created and Imported database <b>'.$_SESSION['prefix'].'_language</b> complete...</li>';
+    // อัปเกรด useronline
+    $f = $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_useronline` DROP `id`');
+    $f = $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_useronline` DROP `icon`');
+    $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update database <b>'.$_SESSION['prefix'].'_useronline</b> complete...</li>';
     // update database index
     $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `language` `language` VARCHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '';");
     $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `visited` `visited` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
