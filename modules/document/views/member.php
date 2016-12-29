@@ -167,6 +167,7 @@ class View extends \Gcms\View
       $template = Template::create('document', $this->index->module, 'member');
       $template->add(array(
         '/{LIST}/' => $detail,
+        '/{TITLE}/' => ucfirst($this->index->module),
       ));
       $index->detail = $template->render();
       // คืนค่า

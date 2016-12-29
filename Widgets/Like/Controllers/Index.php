@@ -48,11 +48,11 @@ class Index extends \Kotchasan\Controller
     $widget .= 'var hs = patt.exec(url);';
     $widget .= 'url = encodeURIComponent(hs ? hs[1] : url);';
     $lng = Language::name();
-    $a = 'http://www.facebook.com/plugins/like.php?layout='.($module == 'tall' ? 'box_count' : 'button_count').'&node_type=link&show_faces=false&href=';
+    $a = 'https://www.facebook.com/plugins/like.php?layout='.($module == 'tall' ? 'box_count' : 'button_count').'&node_type=link&show_faces=false&href=';
     $widget .= 'setLikeURL("fb-likebox-iframe", "'.$a.'" + url);';
     $a = 'https://plusone.google.com/_/+1/fastbutton?bsv&size='.($module == 'tall' ? 'tall' : 'medium').'&count=true&hl='.$lng.'&url=';
     $widget .= 'setLikeURL("g-plusone-iframe", "'.$a.'" + url);';
-    $a = 'http://platform.twitter.com/widgets/tweet_button.1404859412.html#count='.($module == 'tall' ? 'vertical' : 'horizontal').'&lang='.$lng.'&url=';
+    $a = 'https://platform.twitter.com/widgets/tweet_button.1404859412.html#count='.($module == 'tall' ? 'vertical' : 'horizontal').'&lang='.$lng.'&url=';
     $widget .= 'setLikeURL("twitter-share-iframe", "'.$a.'" + url);';
     $widget .= '};';
     $widget .= '$G(window).Ready(function(){';

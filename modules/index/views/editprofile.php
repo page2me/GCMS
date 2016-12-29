@@ -47,7 +47,7 @@ class View extends \Gcms\View
         // load class
         $index = createClass(Gcms::$member_tabs[$tab][1])->render($request, $index);
         if ($index) {
-          // template
+          // /member/main.html
           $template = Template::create('member', 'member', 'main');
           // รายการ tabs
           $tabs = array();

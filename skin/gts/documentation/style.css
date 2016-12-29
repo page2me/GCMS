@@ -10,6 +10,7 @@
   background-color: #F5F5F5;
   border-width: 1px;
   border-bottom-style: solid;
+  font-size: 1.2em;
 }
 #doc_content h6, #doc_content .description {
   padding: 5px;
@@ -23,11 +24,10 @@
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   padding: 10px;
-  background-color: #008000;
-  color: #FFF;
+  background-color: rgba(0,0,0,0.1);
 }
 .tree_menu span.icon-collapse, .tree_menu span.icon-collapse ~ a, .tree_menu li.select > * {
-  color: #F8B334;
+  color: #000;
 }
 .tree_menu span:before {
   margin: 0 5px ;
@@ -45,7 +45,10 @@
   -o-transition: all .2s ease-in-out;
   transition: all .2s ease-in-out;
 }
-.tree_menu ul ul > li {
+.tree_menu li {
+  padding: 0.3em 0;
+}
+.tree_menu ul ul li {
   padding-left: 20px;
 }
 .tree_menu span.icon-collapse ~ ul {

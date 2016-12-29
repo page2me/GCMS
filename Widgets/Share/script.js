@@ -13,13 +13,13 @@ var doShare = function (e) {
   }
   var hs = share_patt.exec(this.className);
   if (hs[1] == 'fb') {
-    window.open('http://www.facebook.com/sharer.php?u=' + u + '&t=' + t, 'sharer', 'toolbar=0,status=0,width=626,height=436');
+    window.open('https://www.facebook.com/sharer.php?u=' + u + '&t=' + t, 'sharer', 'toolbar=0,status=0,width=626,height=436');
     last_get_share = '';
     getShareCount(u);
   } else if (hs[1] == 'gplus') {
     window.open('https://plus.google.com/share?url=' + u + '&t=' + t, 'sharer', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
   } else if (hs[1] == 'twitter') {
-    window.open('http://www.twitter.com/share?url=' + u + '&text=' + t, 'sharer', 'toolbar=0,status=0,width=626,height=436');
+    window.open('https://www.twitter.com/share?url=' + u + '&text=' + t, 'sharer', 'toolbar=0,status=0,width=626,height=436');
   } else if (hs[1] == 'line') {
     window.open('line://msg/text/' + t + '%0D%0A' + u, 'sharer');
   }

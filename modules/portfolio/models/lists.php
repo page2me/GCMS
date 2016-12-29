@@ -34,9 +34,9 @@ class Model extends \Kotchasan\Model
       array('published', '1')
     );
     // แสดงตาม tag
-    $tag = $request->get('tag')->topic();
+    $index->tag = $request->get('tag')->topic();
     if (mb_strlen($tag) > 1) {
-      $where[] = array('keywords', 'LIKE', "%$tag%");
+      $where[] = array('keywords', 'LIKE', '%'.$index->tag.'%');
     }
     $model = new static;
     // query

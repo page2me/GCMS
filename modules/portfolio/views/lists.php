@@ -69,6 +69,11 @@ class View extends \Gcms\View
         Gcms::$view->addBreadcrumb($index->canonical, $index->topic, $index->description);
       }
     }
+    // มีการเลือก tag
+    if (!empty($index->tag)) {
+      $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'tag='.$index->tag);
+      Gcms::$view->addBreadcrumb($index->canonical, $index->tag);
+    }
     // current URL
     $uri = \Kotchasan\Http\Uri::createFromUri($index->canonical);
     // /portfolio/list.html

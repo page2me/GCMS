@@ -33,7 +33,7 @@ class Settings extends \Kotchasan\KBase
     return array(
       'rows' => 2,
       'cols' => 2,
-      'url' => 'http://gallery.gcms.in.th/gallery.rss'
+      'url' => 'https://gallery.gcms.in.th/gallery.rss'
     );
   }
 

@@ -160,7 +160,7 @@ class View extends \Gcms\View
         // ไม่เผยแพร่
         $detail = '<div class=error>{LNG_Can not be performed this request. Because they do not find the information you need or you are not allowed}</div>';
       }
-      // template
+      // edocument/member.html
       $template = Template::create('edocument', 'edocument', 'member');
       $template->add(array(
         '/{LIST}/' => $detail
