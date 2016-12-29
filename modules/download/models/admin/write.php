@@ -161,7 +161,6 @@ class Model extends \Kotchasan\Model
             $save['reciever'] = serialize($save['reciever']);
             if ($id == 0) {
               // ใหม่
-              $save['create_date'] = $save['last_update'];
               $save['module_id'] = $index->module_id;
               $save['downloads'] = 0;
               $save['member_id'] = $login['id'];

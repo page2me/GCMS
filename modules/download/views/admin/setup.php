@@ -98,25 +98,30 @@ class View extends \Gcms\Adminview
       /* ส่วนหัวของตาราง และการเรียงลำดับ (thead) */
       'headers' => array(
         'name' => array(
-          'text' => '{LNG_File Name}'
+          'text' => '{LNG_File Name}',
+          'sort' => 'name',
         ),
         'id' => array(
-          'text' => '{LNG_Widget}'
+          'text' => '{LNG_Widget}',
+          'sort' => 'id',
         ),
         'category_id' => array(
           'text' => '{LNG_Category}',
-          'class' => 'center'
+          'class' => 'center',
+          'sort' => 'category_id',
         ),
         'detail' => array(
           'text' => '{LNG_Description}',
         ),
         'size' => array(
           'text' => '{LNG_File size}',
-          'class' => 'center'
+          'class' => 'center',
+          'sort' => 'size',
         ),
         'last_update' => array(
           'text' => '{LNG_Last updated}',
-          'class' => 'center'
+          'class' => 'center',
+          'sort' => 'last_update',
         ),
         'downloads' => array(
           'text' => '{LNG_Download}',
