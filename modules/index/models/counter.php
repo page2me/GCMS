@@ -106,6 +106,7 @@ class Model extends \Kotchasan\Model
       }
       $my_counter['pages_view'] ++;
       $my_counter['time'] = time();
+      $my_counter['date'] = $counter_day;
       // ตรวจสอบ ว่าเคยเยี่ยมชมหรือไม่
       if ($new || self::$request->cookie('counter_date')->toInt() != $d) {
         // เข้ามาครั้งแรกในวันนี้, บันทึก counter 1 วัน
