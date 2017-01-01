@@ -41,13 +41,56 @@ class Amp extends \Gcms\Baseview
     if (!empty($this->jsonld)) {
       $this->metas['JsonLd'] = '<script type="application/ld+json">'.json_encode($this->jsonld).'</script>';
     }
-    return preg_replace_callback('/<img[^>]+src=["\']([^"\']+)[^>]+/is', function($matchs) {
-      $size = @getimagesize($matchs[1]);
-      if ($size) {
-        return '<amp-img src="'.$matchs[1].'" '.$size[3].'></amp-img';
-      } else {
-        return $matchs[0];
+    $this->contents['/{DETAIL}/'] = preg_replace_callback('/<(iframe|img)([^>]+)>(<\/\\1>)?/is', function($matchs) {
+      // parse attribute
+      $attributes = array();
+      if (preg_match_all('/(\\w+)\s*=\\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/', $matchs[2], $props, PREG_SET_ORDER)) {
+        foreach ($props as $prop) {
+          if (($prop[2][0] == '"' || $prop[2][0] == "'") && $prop[2][0] == $prop[2][strlen($prop[2]) - 1]) {
+            $prop[2] = substr($prop[2], 1, -1);
+          }
+          $attributes[strtolower($prop[1])] = $prop[2];
+        }
+        $tag = strtolower($matchs[1]);
+        if (isset($attributes['style']) && preg_match_all('/(width|height)[:\s]+([0-9]+)(px|em|\%|)(;|)/', $attributes['style'], $props, PREG_SET_ORDER)) {
+          foreach ($props as $item) {
+            if ($item[3] == 'px' || $item[3] == '') {
+              $attributes[$item[1]] = $item[2];
+            }
+          }
+        }
+        if ($tag == 'img') {
+          if (!isset($attributes['width'])) {
+            $size = @getimagesize($attributes['src']);
+            if ($size) {
+              $attributes['width'] = $size[0];
+              $attributes['height'] = $size[1];
+            }
+          }
+        } elseif ($tag == 'iframe') {
+          $attributes['layout'] = 'responsive';
+          $attributes['sandbox'] = 'allow-scripts allow-same-origin';
+          $attributes['resizable'] = 'resizable';
+          $attributes['width'] = 300;
+          $attributes['height'] = empty($attributes['height']) ? 300 : (int)$attributes['height'];
+          unset($attributes['frameborder']);
+        } elseif ($tag == 'style') {
+          unset($attributes);
+          $tag = 'custom';
+        }
+        unset($attributes['style']);
+        $prop = array();
+        foreach ($attributes as $key => $value) {
+          if ($key == $value) {
+            $prop[$key] = $key;
+          } else {
+            $prop[$key] = $key.'="'.$value.'"';
+          }
+        }
+        $prop = empty($prop) ? '' : ' '.implode(' ', $prop);
+        return '<amp-'.$tag.$prop.'></amp-'.$tag.'>';
       }
-    }, parent::renderHTML(\Kotchasan\Template::load('', '', 'amp')));
+    }, $this->contents['/{DETAIL}/']);
+    return parent::renderHTML(\Kotchasan\Template::load('', '', 'amp'));
   }
 }

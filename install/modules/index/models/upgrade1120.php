@@ -71,6 +71,11 @@ class Model extends \Index\Upgrade\Model
       $db->query("ALTER TABLE `$_SESSION[prefix]_eventcalendar` CHANGE `color` `color` VARCHAR( 11 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
       $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_eventcalendar</b> complete...</li>';
     }
+    // update database download
+    if (\Index\Upgrade\Model::tableExists($db, $_SESSION['prefix'].'_download')) {
+      $db->query("ALTER TABLE `$_SESSION[prefix]_download` ADD `reciever` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+      $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_download</b> complete...</li>';
+    }
     // update database.php
     $f = \Index\Upgrade\Model::updateTables(array('language' => 'language'));
     $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update file <b>database.php</b> ...</li>';
