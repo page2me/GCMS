@@ -1,0 +1,183 @@
+/*
+ Name: ระกา
+ Description: Template เริ่มต้นสำหรับ GCMS 11.2.0 แบบ 1 คอลัมน์
+ Author: Goragod.com
+ Author URI: http://www.goragod.com
+ Responsive
+*/
+body {
+  font-size: 14px;
+  color: #272727;
+  line-height: 2em;
+  font-family: 'Kanit', Tahoma, Loma;
+}
+a {
+  color: #000;
+}
+a:hover {
+  color: #644405;
+}
+#logo h1 {
+  font-family: 'Bungee Outline', cursive;
+  font-size: 6em;
+  padding: 0.5em 0;
+}
+#logo .description {
+  color: rgba(0,0,0,0.4);
+  padding: 0;
+  margin-top: -1.5em;
+}
+.menu_bg {
+  border-bottom: 3px solid rgba(0,0,0,0.1);
+  border-top: 1px solid rgba(0,0,0,0.1);
+  padding: 10px;
+}
+.topmenu > ul > li > a {
+  text-transform: uppercase;
+  font-family: Kanit;
+  font-size: 1.3em;
+}
+.topmenu > ul > li.select > a,
+.topmenu > ul > li:hover {
+  text-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.top_header {
+  background-color: #252124;
+  color: #DDD;
+  padding: 5px 0;
+  font-size: 0.8em;
+}
+.widget-search-form,
+.top_header a {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+.top_header a:hover {
+  color: #FFF;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.widget-search-form {
+  max-width: 200px;
+}
+.widget_share a {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  margin: 0 5px;
+}
+.footer_bg {
+  background-color: #252124;
+  color: #666;
+  padding: 30px 0;
+  text-align: center;
+  font-size: 0.8em;
+}
+.footer_bg a {
+  color: #999;
+}
+.footer_bg a:hover {
+  color: #FFF;
+}
+.footer_grid {
+  margin-top: 10px;
+  background-color: #362F34;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 30px 0;
+  border-color: rgba(255, 255, 255, 0.2);
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1);
+  line-height: 1.4;
+}
+.top_header a,
+.footer_grid a,
+.footer_grid span {
+  color: inherit;
+}
+.footer_grid h3 {
+  margin-bottom: 10px;
+  display: inline-block;
+  border-width: 3px;
+  border-bottom-style: solid;
+  color: #FFF;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.7);
+  font-family: 'Bungee Outline', cursive;
+}
+.footer_grid ul {
+  padding: 0;
+  list-style-type: none;
+}
+.footer_grid li, .footer_grid p {
+  padding: 0.287em 0;
+}
+.footer_grid a:hover {
+  color: #FFF;
+}
+#GModal_modaldiv > .modaldiv form {
+  padding: 10px;
+  background-color: #FFF;
+}
+form dl.info {
+  background-color: #FFF;
+  border: 2px dotted #DDD;
+  padding: 10px;
+  margin: 10px 0 0 0;
+}
+.breadcrumbs {
+  text-align: center;
+  color: #AAA;
+  background-color: #F9F9F9;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  padding: 5px;
+  text-shadow: 1px 1px 0 #FFF;
+}
+.breadcrumbs li:before {
+  content: '/';
+}
+.content header {
+  margin: 30px 0;
+  text-align: center;
+}
+.content header > h2 {
+  padding: 0.5em 0;
+  font-size: 3em;
+}
+@media only screen and (max-width: 960px) {
+  .top_header {
+    padding-left: 50px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  #logo {
+    padding: 0 10px;
+  }
+  #logo h1 {
+    font-size: 4em;
+  }
+  .content header > h2 {
+    font-size: 2em;
+  }
+  .top_header .table,
+  .top_header .td {
+    display: inline-block;
+    width: auto;
+    text-align: center;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .top_header {
+    padding-left: 0;
+  }
+  .top_header .table,
+  .top_header .td {
+    display: block;
+    width: auto;
+    text-align: center !important;
+  }
+  .top_header .td {
+    margin: 5px auto;
+  }
+  .widget-search-form,
+  .widget_share {
+    margin: 0 auto;
+  }
+}

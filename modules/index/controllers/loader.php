@@ -42,13 +42,13 @@ class Controller extends \Kotchasan\Controller
       }
       Template::init(self::$cfg->skin);
       // counter และ useronline
-      $new_day = \Index\Counter\Model::init();
+      $counter = \Index\Counter\Model::init();
       // View
       Gcms::$view = new \Index\Loader\View;
       // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
       Gcms::$menu = \Index\Menu\Controller::create();
       // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้
-      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, $new_day);
+      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, $counter->new_day);
       // หน้า home มาจากเมนูรายการแรก
       $home = Gcms::$menu->homeMenu();
       if ($home) {
@@ -70,7 +70,11 @@ class Controller extends \Kotchasan\Controller
       // output เป็น HTML
       $ret = array(
         'db_elapsed' => round(microtime(true) - REQUEST_TIME, 4),
-        'db_quries' => \Kotchasan\Database\Driver::queryCount()
+        'db_quries' => \Kotchasan\Database\Driver::queryCount(),
+        'counter' => $counter->counter,
+        'counter_today' => $counter->counter_today,
+        'pages_view' => $counter->pages_view,
+        'useronline' => $counter->useronline,
       );
       foreach ($page as $key => $value) {
         $ret[$key] = $value;

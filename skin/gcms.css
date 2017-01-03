@@ -204,6 +204,8 @@ body.toTop .fixed_top {
 }
 #counter-box {
   display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
   width: 100%;
 }
 .counter-detail {
@@ -212,7 +214,7 @@ body.toTop .fixed_top {
 .counter-detail > span {
   display: table-cell;
   text-align: center;
-  padding: 5px;
+  padding: 0.3em;
 }
 .counter-detail > .col {
   text-align: left;

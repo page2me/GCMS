@@ -42,4 +42,22 @@ class Router extends \Kotchasan\Router
     // alias
     '/^(.*)$/' => array('alias')
   );
+
+  /**
+   * override Router
+   *
+   * @param string $className คลาสที่จะรับค่าจาก Router
+   */
+  public function init($className)
+  {
+    try {
+      parent::init($className);
+    } catch (\InvalidArgumentException $exc) {
+      // 404
+      $response = new \Kotchasan\Http\Response;
+      $response->withStatus(404)
+        ->withAddedHeader('Status', '404 Not Found')
+        ->send();
+    }
+  }
 }

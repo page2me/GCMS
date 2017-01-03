@@ -76,27 +76,28 @@ $G(window).Ready(function () {
   }
   if (typeof use_ajax != 'undefined' && use_ajax == 1) {
     loader = new GLoader(WEB_URL + 'loader.php/index/controller/loader/index', getURL, function (xhr) {
+      var scroll_to = 'scroll-to';
       var content = $G('content');
       var datas = xhr.responseText.toJSON();
       if (datas) {
-        editor = null;
-        document.title = datas.topic.unentityify();
-        if (datas.menu) {
-          selectMenu(datas.menu);
+        for (var prop in datas) {
+          var value = datas[prop];
+          if (prop == 'detail') {
+            content.setHTML(value);
+            loader.init(content);
+            value.evalScript();
+          } else if (prop == 'topic') {
+            document.title = value.unentityify();
+          } else if (prop == 'menu') {
+            selectMenu(value);
+          } else if (prop == 'to') {
+            scroll_to = value;
+          } else if ($E(prop)) {
+            $E(prop).innerHTML = value;
+          }
         }
-        content.setHTML(datas.detail);
-        loader.init(content);
-        datas.detail.evalScript();
-        if (datas.to && $E(datas.to)) {
-          window.scrollTo(0, $G(datas.to).getTop() - 10);
-        } else if ($E('scroll-to')) {
-          window.scrollTo(0, $G('scroll-to').getTop());
-        }
-        if ($E('db_elapsed') && datas.db_elapsed) {
-          $E('db_elapsed').innerHTML = datas.db_elapsed;
-        }
-        if ($E('db_quries') && datas.db_quries) {
-          $E('db_quries').innerHTML = datas.db_quries;
+        if ($E(scroll_to)) {
+          window.scrollTo(0, $G(scroll_to).getTop() - 10);
         }
         if (Object.isFunction(createLikeButton)) {
           createLikeButton();

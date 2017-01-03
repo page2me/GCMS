@@ -89,8 +89,10 @@ class Model extends \Kotchasan\Model
         fwrite($f, $data);
         fclose($f);
       }
+      // อ่าน useronline
+      $q2 = $db->createQuery()->selectCount()->from('useronline');
       // อ่าน counter รายการล่าสุด
-      $my_counter = $db->createQuery()->from('counter')->order('id DESC')->toArray()->first();
+      $my_counter = $db->createQuery()->from('counter C')->order('C.id DESC')->toArray()->first('C.*', array($q2, 'useronline'));
       if (empty($my_counter)) {
         $my_counter = array(
           'date' => $counter_day,
@@ -100,13 +102,16 @@ class Model extends \Kotchasan\Model
         );
         // ข้อมูลใหม่
         $new = true;
+        $user_online = 1;
       } else {
         // ข้อมูลใหม่ ถ้าวันที่ไม่ตรงกัน
         $new = $my_counter['date'] != $counter_day;
+        $user_online = $my_counter['useronline'];
       }
       $my_counter['pages_view'] ++;
       $my_counter['time'] = time();
       $my_counter['date'] = $counter_day;
+      unset($my_counter['useronline']);
       // ตรวจสอบ ว่าเคยเยี่ยมชมหรือไม่
       if ($new || self::$request->cookie('counter_date')->toInt() != $d) {
         // เข้ามาครั้งแรกในวันนี้, บันทึก counter 1 วัน
@@ -136,7 +141,14 @@ class Model extends \Kotchasan\Model
         'member_id' => $login ? $login['id'] : 0,
         'displayname' => $login ? empty($login['displayname']) ? $login['emil'] : $login['displayname'] : '',
       ));
-      return $new_day;
+      $fmt = '%0'.self::$cfg->counter_digit.'d';
+      return (object)array(
+          'new_day' => $new_day,
+          'counter' => sprintf($fmt, $my_counter['counter']),
+          'counter_today' => sprintf($fmt, $my_counter['visited']),
+          'pages_view' => sprintf($fmt, $my_counter['pages_view']),
+          'useronline' => sprintf($fmt, $user_online),
+      );
     }
   }
 }

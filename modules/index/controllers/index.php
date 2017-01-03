@@ -39,7 +39,7 @@ class Controller extends \Kotchasan\Controller
     Login::create();
     // กำหนด skin ให้กับ template
     self::$cfg->skin = $request->get('skin', $request->session('skin', self::$cfg->skin)->toString())->toString();
-    self::$cfg->skin = is_file(ROOT_PATH.'skin/'.self::$cfg->skin.'/index.html') ? self::$cfg->skin : 'bighead';
+    self::$cfg->skin = is_file(ROOT_PATH.'skin/'.self::$cfg->skin.'/style.css') ? self::$cfg->skin : 'rooster';
     $_SESSION['skin'] = self::$cfg->skin;
     Template::init(self::$cfg->skin);
     // ตรวจสอบหน้าที่จะแสดง
@@ -52,8 +52,10 @@ class Controller extends \Kotchasan\Controller
       Gcms::$view = new \Gcms\View;
       // โหลดเมนูทั้งหมดเรียงตามลำดับเมนู (รายการแรกคือหน้า Home)
       Gcms::$menu = \Index\Menu\Controller::create();
+      // counter
+      $counter = \Index\Counter\Model::init();
       // โหลดโมดูลที่ติดตั้งแล้ว และสามารถใช้งานได้ และ โหลด Counter
-      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, \Index\Counter\Model::init());
+      Gcms::$module = \Index\Module\Controller::create(Gcms::$menu, $counter->new_day);
       // ข้อมูลเว็บไซต์
       Gcms::$site = array(
         '@type' => 'Organization',

@@ -1,0 +1,53 @@
+<div class="gcss-wrapper bdr_content">
+  <header>
+    <h2 class=icon-profile>{TOPIC}</h2>
+    <nav class="breadcrumbs cuttext">
+      <ul>{BREADCRUMBS}</ul>
+    </nav>
+  </header>
+  <div>
+    <img class="uicon circle" src="{WEBURL}index.php/index/model/usericon/index?id={ID}" alt=usericon style="max-width:75px;max-height:75px;">
+    <ul id=member-view>
+      <li>
+        <span class=label>{LNG_Name} {LNG_Surname} : </span>
+        <span class="status{COLOR} {SOCIAL}">{FNAME} {LNAME}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_Email} : </span>
+        {EMAIL}
+      </li>
+      <li>
+        <span class=label>{LNG_Sex} : </span>
+        <span class="icon-sex-{SEX}"></span>
+      </li>
+      <li>
+        <span class=label>{LNG_Created} : </span>
+        <span>{DATE}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_Website} : </span>
+        <span>{WEBSITE}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_Visited} : </span>
+        <span>{VISITED}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_Last login} : </span>
+        <span>{LASTVISITED}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_Post} : </span>
+        <span>{POST}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_comments} : </span>
+        <span>{REPLY}</span>
+      </li>
+      <li>
+        <span class=label>{LNG_Member status} : </span>
+        <span>{STATUS}</span>
+      </li>
+    </ul>
+  </div>
+</div>
