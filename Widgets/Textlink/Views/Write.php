@@ -154,7 +154,7 @@ class Write extends \Gcms\Adminview
     // publish_end
     $groups = $fieldset->add('groups-table', array(
       'label' => '{LNG_Published close}',
-      'id' => 'publish_end',
+      'for' => 'publish_end',
       'comment' => '{LNG_The date of the start and end of the link. (Links are performed within a given time automatically.)}',
     ));
     $groups->add('date', array(

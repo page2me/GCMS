@@ -164,6 +164,9 @@ form dl.info {
   }
 }
 @media only screen and (max-width: 480px) {
+  #logo h1 {
+    font-size: 3em;
+  }
   .top_header {
     padding-left: 0;
   }

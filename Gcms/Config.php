@@ -148,7 +148,7 @@ class Config extends \Kotchasan\Config
    *
    * @var string
    */
-  public $skin = 'bighead';
+  public $skin = 'rooster';
   /**
    * กำหนดอายุของแคช (วินาที)
    * 0 หมายถึงไม่มีการใช้งานแคช

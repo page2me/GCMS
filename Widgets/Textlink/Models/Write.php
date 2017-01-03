@@ -44,7 +44,7 @@ class Write extends \Kotchasan\Model
           'publish_start' => Date::sqlDateTimeToMktime($request->post('publish_start')->date()),
           'publish_end' => Date::sqlDateTimeToMktime($request->post('publish_end')->date().' 23:59:59')
         );
-        if ($request->post('dateless')->toBoolean()) {
+        if ($request->post('dateless')->toInt() == 1) {
           $save['publish_end'] = 0;
         }
         $template = $request->post('template')->toString();
