@@ -64,10 +64,6 @@ class Model extends \Kotchasan\Model
         $db->emptyTable($useronline);
         // clear visited_today
         $db->updateAll($model->getFullTableName('index'), array('visited_today' => 0));
-        // วันใหม่
-        $new_day = true;
-      } else {
-        $new_day = false;
       }
       // ip ปัจจุบัน
       $counter_ip = self::$request->getClientIp();
@@ -103,9 +99,14 @@ class Model extends \Kotchasan\Model
         // ข้อมูลใหม่
         $new = true;
         $user_online = 1;
-      } else {
+      } elseif ($my_counter['date'] != $counter_day) {
         // ข้อมูลใหม่ ถ้าวันที่ไม่ตรงกัน
-        $new = $my_counter['date'] != $counter_day;
+        $new = true;
+        $user_online = $my_counter['useronline'];
+        $my_counter['pages_view'] = 0;
+        $my_counter['visited'] = 0;
+      } else {
+        $new = false;
         $user_online = $my_counter['useronline'];
       }
       $my_counter['pages_view'] ++;
@@ -143,7 +144,7 @@ class Model extends \Kotchasan\Model
       ));
       $fmt = '%0'.self::$cfg->counter_digit.'d';
       return (object)array(
-          'new_day' => $new_day,
+          'new_day' => $new,
           'counter' => sprintf($fmt, $my_counter['counter']),
           'counter_today' => sprintf($fmt, $my_counter['visited']),
           'pages_view' => sprintf($fmt, $my_counter['pages_view']),

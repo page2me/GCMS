@@ -420,6 +420,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Phone','text','index','0','โทรศัพท์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('phone number','text','index','0','หมายเลขโทรศัพท์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Pin','text','index','0','ปักหมุด','');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Pixel','text','index','0','พิกเซล','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Please choose','text','index','0','กรุณาเลือก','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Please enter the characters you see in the box','text','index','0','กรุณากรอกตัวอักษรที่เห็นลงในช่อง','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Please fill in','text','index','0','กรุณากรอก','');

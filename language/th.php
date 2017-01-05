@@ -757,4 +757,5 @@ return array(
   'change font small' => 'ลดขนาดตัวอักษร',
   'change font normal' => 'ขนาดตัวอักษรปกติ',
   'change font large' => 'ขนาดตัวอักษรใหญ่ขึ้น',
+  'Pixel' => 'พิกเซล',
 );

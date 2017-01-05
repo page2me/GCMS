@@ -230,6 +230,7 @@ class Model extends \Kotchasan\Model
    *
    * @param int $module_id ของโมดูล
    * @param int $id ID ของบทความ
+   * @param int $category_id ID ของหมวดหมู่
    * @return object|null คืนค่าข้อมูล object ไม่พบคืนค่า null
    */
   public static function get($module_id, $id, $category_id)
@@ -242,7 +243,6 @@ class Model extends \Kotchasan\Model
         // ใหม่ ตรวจสอบโมดูล
         $query->select('M.id module_id', 'M.owner', 'M.module', 'M.config mconfig', 'C.config', 'C.category_id')
           ->from('modules M')
-          ->join('index D', 'INNER', array(array('D.module_id', 'M.id'), array('D.index', 1), array('D.language', array('', Language::name()))))
           ->join('category C', 'LEFT', array(array('C.category_id', $category_id), array('C.module_id', 'M.id')))
           ->where(array(
             array('M.id', $module_id),

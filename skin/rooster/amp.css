@@ -60,6 +60,9 @@ footer p {
   color: #666;
   display: inline;
 }
+.hidden {
+  display: none;
+}
 .create, time {
   color: #666;
 }

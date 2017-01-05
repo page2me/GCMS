@@ -56,25 +56,32 @@ class Model extends \Index\Upgrade\Model
     }
     $content[] = '<li class="correct">Created and Imported database <b>'.$_SESSION['prefix'].'_language</b> complete...</li>';
     // อัปเกรด useronline
-    $f = $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_useronline` DROP `id`');
-    $f = $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_useronline` DROP `icon`');
-    $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update database <b>'.$_SESSION['prefix'].'_useronline</b> complete...</li>';
+    $table = $_SESSION['prefix'].'_useronline';
+    if (!self::fieldExists($db, $table, 'ban')) {
+      $f = $db->query("ALTER TABLE `$table` DROP `id`");
+    }
+    if (!self::fieldExists($db, $table, 'icon')) {
+      $f = $db->query("ALTER TABLE `$table` DROP `icon`");
+    }
+    $content[] = '<li class="correct">Update database <b>'.$table.'</b> complete...</li>';
     // update database index
-    $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `language` `language` VARCHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '';");
-    $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `visited` `visited` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
-    $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `visited_today` `visited_today` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
-    $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `comments` `comments` SMALLINT( 3 ) UNSIGNED NOT NULL DEFAULT 0;");
-    $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `comment_id` `comment_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
-    $db->query("ALTER TABLE `$_SESSION[prefix]_index` CHANGE `commentator_id` `commentator_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
-    $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_index</b> complete...</li>';
+    $table = $_SESSION['prefix'].'_index';
+    $db->query("ALTER TABLE `$table` CHANGE `language` `language` VARCHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '';");
+    $db->query("ALTER TABLE `$table` CHANGE `visited` `visited` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
+    $db->query("ALTER TABLE `$table` CHANGE `visited_today` `visited_today` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
+    $db->query("ALTER TABLE `$table` CHANGE `comments` `comments` SMALLINT( 3 ) UNSIGNED NOT NULL DEFAULT 0;");
+    $db->query("ALTER TABLE `$table` CHANGE `comment_id` `comment_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
+    $db->query("ALTER TABLE `$table` CHANGE `commentator_id` `commentator_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
+    $content[] = '<li class="correct">Updated database <b>'.$table.'</b> complete...</li>';
     if (\Index\Upgrade\Model::tableExists($db, $_SESSION['prefix'].'_eventcalendar')) {
       $db->query("ALTER TABLE `$_SESSION[prefix]_eventcalendar` CHANGE `color` `color` VARCHAR( 11 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
       $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_eventcalendar</b> complete...</li>';
     }
     // update database download
-    if (\Index\Upgrade\Model::tableExists($db, $_SESSION['prefix'].'_download')) {
-      $db->query("ALTER TABLE `$_SESSION[prefix]_download` ADD `reciever` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
-      $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_download</b> complete...</li>';
+    $table = $_SESSION['prefix'].'_download';
+    if (\Index\Upgrade\Model::tableExists($db, $table) && !self::fieldExists($db, $table, 'reciever')) {
+      $db->query("ALTER TABLE `$table` ADD `reciever` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
+      $content[] = '<li class="correct">Updated database <b>'.$table.'</b> complete...</li>';
     }
     // update database.php
     $f = \Index\Upgrade\Model::updateTables(array('language' => 'language'));

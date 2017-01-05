@@ -41,7 +41,7 @@ class Amp extends \Gcms\Baseview
     if (!empty($this->jsonld)) {
       $this->metas['JsonLd'] = '<script type="application/ld+json">'.json_encode($this->jsonld).'</script>';
     }
-    $this->contents['/{DETAIL}/'] = preg_replace_callback('/<(iframe|img)([^>]+)>(<\/\\1>)?/is', function($matchs) {
+    return preg_replace_callback('/<(iframe|img)([^>]+)>(<\/\\1>)?/is', function($matchs) {
       // parse attribute
       $attributes = array();
       if (preg_match_all('/(\\w+)\s*=\\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/', $matchs[2], $props, PREG_SET_ORDER)) {
@@ -90,7 +90,6 @@ class Amp extends \Gcms\Baseview
         $prop = empty($prop) ? '' : ' '.implode(' ', $prop);
         return '<amp-'.$tag.$prop.'></amp-'.$tag.'>';
       }
-    }, $this->contents['/{DETAIL}/']);
-    return parent::renderHTML(\Kotchasan\Template::load('', '', 'amp'));
+    }, parent::renderHTML(\Kotchasan\Template::load('', '', 'amp')));
   }
 }

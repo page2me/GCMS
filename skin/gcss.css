@@ -2782,7 +2782,7 @@ td.buttons .button:last-child {
   display: block;
 }
 .thumbview .description {
-  height: 4.8em;
+  height: 600%;
   overflow: hidden;
 }
 .document-list .figure {

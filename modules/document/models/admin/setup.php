@@ -95,11 +95,11 @@ class Model extends \Kotchasan\Orm\Field
           $model = new \Kotchasan\Model;
           if ($action === 'published') {
             // สถานะการเผยแพร่
-            $table_index = $model->getFullTableName('index');
-            $search = $model->db()->first($table_index, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
+            $table = $model->getFullTableName('index');
+            $search = $model->db()->first($table, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
             if ($search) {
               $published = $search->published == 1 ? 0 : 1;
-              $model->db()->update($table_index, $search->id, array('published' => $published));
+              $model->db()->update($table, $search->id, array('published' => $published));
               // คืนค่า
               $ret['elem'] = 'published_'.$search->id;
               $lng = Language::get('PUBLISHEDS');
@@ -129,11 +129,11 @@ class Model extends \Kotchasan\Orm\Field
             }
           } elseif ($action === 'can_reply') {
             // การแสดงความคิดเห็น
-            $table_index = $model->getFullTableName('index');
-            $search = $model->db()->first($table_index, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
+            $table = $model->getFullTableName('index');
+            $search = $model->db()->first($table, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
             if ($search) {
               $can_reply = $search->can_reply == 1 ? 0 : 1;
-              $model->db()->update($table_index, $search->id, array('can_reply' => $can_reply));
+              $model->db()->update($table, $search->id, array('can_reply' => $can_reply));
               // คืนค่า
               $ret['elem'] = 'can_reply_'.$search->id;
               $lng = Language::get('REPLIES');

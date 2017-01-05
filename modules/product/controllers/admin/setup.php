@@ -1,20 +1,21 @@
 <?php
 /*
- * @filesource gallery/controllers/admin/settings.php
+ * @filesource product/controllers/admin/setup.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Gallery\Admin\Settings;
+namespace Product\Admin\Setup;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
+use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- * Controller สำหรับจัดการการตั้งค่า
+ * แสดงรายการอัลบัม
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -29,11 +30,11 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Index\Adminmodule\Model::get('gallery', $request->get('mid')->toInt());
+    $index = \Index\Adminmodule\Model::get('product', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
-    if ($index && Gcms::canConfig($login, $index, 'can_config')) {
+    if ($index && Gcms::canConfig($login, $index, 'can_write')) {
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -41,14 +42,14 @@ class Controller extends \Kotchasan\Controller
         'class' => 'breadcrumbs'
       ));
       $ul = $breadcrumbs->add('ul');
-      $ul->appendChild('<li><span class="icon-gallery">{LNG_Module}</span></li>');
-      $ul->appendChild('<li><span>'.ucfirst($index->module).'</span></li>');
-      $ul->appendChild('<li><span>{LNG_Settings}</span></li>');
+      $ul->appendChild('<li><span class="icon-product">{LNG_Module}</span></li>');
+      $ul->appendChild('<li><a href="{BACKURL?module=product-settings&mid='.$index->module_id.'}">'.ucfirst($index->module).'</a></li>');
+      $ul->appendChild('<li><span>{LNG_List of} {LNG_Product}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-config">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-list">'.$this->title().'</h1>'
       ));
-      // แสดงฟอร์ม
-      $section->appendChild(createClass('Gallery\Admin\Settings\View')->render($index));
+      // แสดงตาราง
+      $section->appendChild(createClass('Product\Admin\Setup\View')->render($index));
       return $section->render();
     }
     // 404.html
@@ -60,6 +61,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Module settings} {LNG_Gallery}';
+    return '{LNG_List of} {LNG_Product}';
   }
 }

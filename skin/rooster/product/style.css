@@ -1,0 +1,52 @@
+#product_list h6 {
+  display: block;
+  padding: 0.5em;
+  color: #FFF;
+}
+#product_list h6 strong {
+  display: block;
+  font-weight: normal;
+}
+#product_list h6 span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+#product_list .figure {
+  display: block;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background-color: #2772A4;
+}
+#product_list article {
+  border-width: 5px;
+  border-style: solid;
+  border-color: #F5F5F5;
+  padding: 0;
+}
+#product_list article:hover {
+  border-color: #CCC;
+}
+#product_list article,
+#product_list article img {
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  -ms-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+#product_list article img {
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+#product_list article:hover img {
+  top: 5em;
+}
+#product_view .price {
+  color: #999;
+}
+#product_view .netprice {
+  font-size: 2em;
+}
