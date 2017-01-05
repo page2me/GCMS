@@ -2,6 +2,7 @@
   display: block;
   padding: 0.5em;
   color: #FFF;
+  background-color: #2772A4;
 }
 #product_list h6 strong {
   display: block;
@@ -14,22 +15,22 @@
 }
 #product_list .figure {
   display: block;
-  height: 200px;
   overflow: hidden;
   position: relative;
-  background-color: #2772A4;
-}
-#product_list article {
   border-width: 5px;
   border-style: solid;
   border-color: #F5F5F5;
-  padding: 0;
+  height: 200px;
 }
-#product_list article:hover {
+#product_list .figure:hover {
   border-color: #CCC;
 }
-#product_list article,
-#product_list article img {
+#product_list article {
+  border: none;
+  background-color: #F5F5F5;
+}
+#product_list .figure,
+#product_list .figure img {
   -webkit-transition: all .3s ease-in-out;
   -moz-transition: all .3s ease-in-out;
   -o-transition: all .3s ease-in-out;
