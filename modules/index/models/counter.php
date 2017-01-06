@@ -46,16 +46,20 @@ class Model extends \Kotchasan\Model
           fwrite($f, $d);
           fclose($f);
         }
-        $f = @opendir($counter_dir);
-        if ($f) {
-          while (false !== ($text = readdir($f))) {
-            if ($text != '.' && $text != '..') {
-              if ($text != $y) {
-                File::removeDirectory($counter_dir."/$text");
+        if ($d < $c) {
+          // วันที่ 1 หรือวันแรกของเดือน
+          $f = @opendir($counter_dir);
+          if ($f) {
+            while (false !== ($text = readdir($f))) {
+              if ($text != '.' && $text != '..') {
+                if ($text != $y) {
+                  // ลบไดเร็คทอรี่ของปีก่อน
+                  File::removeDirectory($counter_dir.'/'.$text.'/');
+                }
               }
             }
+            closedir($f);
           }
-          closedir($f);
         }
         // ตรวจสอบ + สร้าง โฟลเดอร์
         File::makeDirectory("$counter_dir/$y");
