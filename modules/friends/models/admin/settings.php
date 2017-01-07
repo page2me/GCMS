@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource product/models/admin/settings.php
+ * @filesource friends/models/admin/settings.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Product\Admin\Settings;
+namespace Friends\Admin\Settings;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
@@ -31,14 +31,13 @@ class Model extends \Kotchasan\Model
   public static function defaultSettings()
   {
     return array(
-      'product_no' => 'P%04d',
-      'thumb_width' => 696,
-      'image_width' => 800,
-      'img_typies' => array('jpg', 'jpeg'),
-      'rows' => 3,
-      'cols' => 4,
-      'sort' => 1,
-      'can_write' => array(1),
+      'per_day' => 3,
+      'pin_per_page' => 5,
+      'list_per_page' => 20,
+      'sex_color' => array('f' => '#FFB7FF', 'm' => '#C4C4FF'),
+      'moderator' => 1,
+      'can_post' => array(1),
+      'moderator' => array(1),
       'can_config' => array(1)
     );
   }
@@ -51,11 +50,11 @@ class Model extends \Kotchasan\Model
   public static function install($module)
   {
     // อัปเดทชื่อตาราง
-    \Index\Install\Model::updateTables(array('product' => 'product', 'product_detail' => 'product_detail', 'product_price' => 'product_price'));
+    \Index\Install\Model::updateTables(array('friends' => 'friends'));
     // อัปเดท database
-    \Index\Install\Model::execute(ROOT_PATH.'modules/product/models/admin/sql.php');
+    \Index\Install\Model::execute(ROOT_PATH.'modules/friends/models/admin/sql.php');
     // สร้างไดเร็คทอรี่เก็บข้อมูลโมดูล
-    \Kotchasan\File::makeDirectory(ROOT_PATH.DATA_FOLDER.'product/');
+    \Kotchasan\File::makeDirectory(ROOT_PATH.DATA_FOLDER.'friends/');
   }
 
   /**
@@ -73,32 +72,25 @@ class Model extends \Kotchasan\Model
       } else {
         // รับค่าจากการ POST
         $save = array(
-          'product_no' => $request->post('product_no')->topic(),
-          'currency_unit' => $request->post('currency_unit')->filter('A-Z'),
-          'thumb_width' => max(75, $request->post('thumb_width')->toInt()),
-          'image_width' => max(400, $request->post('image_width')->toInt()),
-          'img_typies' => $request->post('img_typies', array())->toString(),
-          'rows' => $request->post('rows')->toInt(),
-          'cols' => $request->post('cols')->toInt(),
-          'sort' => $request->post('sort')->toInt(),
-          'can_write' => $request->post('can_write', array())->toInt(),
+          'per_day' => $request->post('per_day')->toInt(),
+          'pin_per_page' => $request->post('pin_per_page')->toInt(),
+          'list_per_page' => $request->post('list_per_page')->toInt(),
+          'sex_color' => $request->post('sex_color')->color(),
+          'can_post' => $request->post('can_post', array())->toInt(),
+          'moderator' => $request->post('moderator', array())->toInt(),
           'can_config' => $request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
-        $index = \Index\Adminmodule\Model::get('product', $request->post('id')->toInt());
+        $index = \Index\Adminmodule\Model::get('friends', $request->post('id')->toInt());
         // สามารถตั้งค่าได้
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
-          if (empty($save['img_typies'])) {
-            // คืนค่า input ที่ error
-            $ret['input'] = 'img_typies_jpg';
-          } else {
-            $save['can_write'][] = 1;
-            $save['can_config'][] = 1;
-            $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
-            // คืนค่า
-            $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'product-settings', 'mid' => $index->module_id));
-          }
+          $save['can_post'][] = 1;
+          $save['moderator'][] = 1;
+          $save['can_config'][] = 1;
+          $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
+          // คืนค่า
+          $ret['alert'] = Language::get('Saved successfully');
+          $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'friends-settings', 'mid' => $index->module_id));
         } else {
           $ret['alert'] = Language::get('Unable to complete the transaction');
         }

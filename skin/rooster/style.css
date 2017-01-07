@@ -8,14 +8,16 @@
 body {
   font-size: 14px;
   color: #272727;
-  line-height: 2em;
   font-family: 'Kanit', Tahoma, Loma;
 }
+body, li {
+  line-height: 2em;
+}
 a {
-  color: #000;
+  color: #C30;
 }
 a:hover {
-  color: #644405;
+  color: #0066FF;
 }
 #logo h1 {
   font-family: 'Bungee Outline', cursive;
@@ -84,7 +86,6 @@ a:hover {
   padding: 30px 0;
   border-color: rgba(255, 255, 255, 0.2);
   text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1);
-  line-height: 1.4;
 }
 .top_header a,
 .footer_grid a,
@@ -100,12 +101,11 @@ a:hover {
   text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.7);
   font-family: 'Bungee Outline', cursive;
 }
-.footer_grid ul {
+body .footer_grid * {
   padding: 0;
-  list-style-type: none;
 }
-.footer_grid li, .footer_grid p {
-  padding: 0.287em 0;
+.footer_grid ul {
+  list-style-type: none;
 }
 .footer_grid a:hover {
   color: #FFF;
@@ -140,6 +140,9 @@ form dl.info {
 .content header > h2 {
   padding: 0.5em 0;
   font-size: 3em;
+}
+.reaction {
+  background-color: #F9F9F9;
 }
 @media only screen and (max-width: 960px) {
   .top_header {

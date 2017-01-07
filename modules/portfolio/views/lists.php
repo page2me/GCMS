@@ -8,15 +8,15 @@
 
 namespace Portfolio\Lists;
 
-use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
+use \Kotchasan\Template;
 use \Gcms\Gcms;
 use \Kotchasan\Grid;
 use \Portfolio\Index\Controller;
 use \Kotchasan\Date;
 
 /**
- * แสดงรายการสมาชิก
+ * แสดงรายการ Portfolio
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -26,7 +26,7 @@ class View extends \Gcms\View
 {
 
   /**
-   * แสดงรายการบทความ
+   * แสดงรายการ Portfolio
    *
    * @param Request $request
    * @param object $index ข้อมูลโมดูล

@@ -1,12 +1,12 @@
 <?php
 /*
- * @filesource product/controllers/admin/settings.php
+ * @filesource friends/controllers/admin/settings.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
  * @license http://www.kotchasan.com/license/
  */
 
-namespace Product\Admin\Settings;
+namespace Friends\Admin\Settings;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
@@ -32,7 +32,7 @@ class Controller extends \Kotchasan\Controller
   public function render(Request $request)
   {
     // อ่านข้อมูลโมดูล
-    $index = \Index\Adminmodule\Model::get('product', $request->get('mid')->toInt());
+    $index = \Index\Adminmodule\Model::get('friends', $request->get('mid')->toInt());
     // login
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
@@ -44,14 +44,14 @@ class Controller extends \Kotchasan\Controller
         'class' => 'breadcrumbs'
       ));
       $ul = $breadcrumbs->add('ul');
-      $ul->appendChild('<li><span class="icon-product">{LNG_Module}</span></li>');
+      $ul->appendChild('<li><span class="icon-friends">{LNG_Module}</span></li>');
       $ul->appendChild('<li><span>'.ucfirst($index->module).'</span></li>');
       $ul->appendChild('<li><span>{LNG_Settings}</span></li>');
       $section->add('header', array(
         'innerHTML' => '<h1 class="icon-config">'.$this->title().'</h1>'
       ));
       // แสดงฟอร์ม
-      $section->appendChild(createClass('Product\Admin\Settings\View')->render($index));
+      $section->appendChild(createClass('Friends\Admin\Settings\View')->render($index));
       return $section->render();
     }
     // 404.html
@@ -63,6 +63,6 @@ class Controller extends \Kotchasan\Controller
    */
   public function title()
   {
-    return '{LNG_Module settings} {LNG_Product}';
+    return '{LNG_Module settings} {LNG_Friends}';
   }
 }
