@@ -135,7 +135,7 @@ class Model extends \Kotchasan\Model
               $save['id'] = $index->id;
               $save['module_id'] = $index->module_id;
               $save['visited'] = 0;
-              $index['id'] = $this->db()->insert($this->getFullTableName('product'), $save);
+              $index->id = $this->db()->insert($this->getFullTableName('product'), $save);
             } else {
               // แก้ไข
               $this->db()->update($this->getFullTableName('product'), $index->id, $save);

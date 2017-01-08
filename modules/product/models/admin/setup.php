@@ -89,15 +89,16 @@ class Model extends \Kotchasan\Orm\Field
               $ret['class'] = 'icon-published'.$published;
             }
           } elseif ($action === 'delete' && preg_match('/^[0-9,]+$/', $id)) {
+            $id = explode(',', $id);
             // ตรวจสอบรายการ เพื่อลบรูปภาพ
-            $query = $model->db()->createQuery()->select('id', 'picture')->from('product')->where(array(array('id', $id), array('module_id', $module_id)))->toArray();
+            $query = $model->db()->createQuery()->select('id', 'picture')->from('product')->where(array(array('id', $id), array('module_id', (int)$index->module_id)))->toArray();
             foreach ($query->execute() as $item) {
               // ลบรูปภาพ
               @unlink(ROOT_PATH.DATA_FOLDER.'product/thumb_'.$item['picture']);
               @unlink(ROOT_PATH.DATA_FOLDER.'product/'.$item['picture']);
             }
             // ลบฐานข้อมูล
-            $model->db()->createQuery()->delete('product', array(array('id', $id), array('module_id', $module_id)))->execute();
+            $model->db()->createQuery()->delete('product', array(array('id', $id), array('module_id', (int)$index->module_id)))->execute();
             $model->db()->createQuery()->delete('product_detail', array('id', $id))->execute();
             $model->db()->createQuery()->delete('product_price', array('id', $id))->execute();
             // คืนค่า

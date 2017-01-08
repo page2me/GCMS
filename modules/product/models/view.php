@@ -89,12 +89,7 @@ class Model extends \Kotchasan\Model
               break;
             case 'price':
             case 'net':
-              $values = @unserialize($value);
-              if (is_array($values)) {
-                $index->$key = $values;
-              } else {
-                $index->$key = array($index->currency_unit => (double)$value);
-              }
+              $index->$key = self::getPrice($value, $index->currency_unit);
               break;
             default:
               $index->$key = $value;
@@ -106,5 +101,11 @@ class Model extends \Kotchasan\Model
       }
     }
     return null;
+  }
+
+  public static function getPrice($value, $currency_unit)
+  {
+    $values = @unserialize($value);
+    return is_array($values) ? $values : array($currency_unit => (double)$value);
   }
 }

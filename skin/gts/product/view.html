@@ -1,4 +1,4 @@
-<article id=portfolio_view class=bdr_content>
+<article id=product_view class=bdr_content>
   <header>
     <h2>{TOPIC}</h2>
     <nav class="breadcrumbs cuttext">
@@ -11,12 +11,8 @@
     </div>
     <div class="float-left block6">
       <div class=detail>{DETAIL}</div>
-      <nav>
-        <strong class=icon-world>{LNG_Tags} :</strong>
-        <ul>{TAGS}</ul>
-      </nav>
-      <p><strong class=icon-world>{LNG_URL} : </strong>{WEBSITE}</p>
-      <p><strong class=icon-calendar>{LNG_year} : </strong>{YEAR}</p>
+      <p class="{SHOWPRICE}"><strong>{LNG_Price} : </strong><del>{PRICE}</del> {CURRENCYUNIT}</p>
+      <p class="netprice"><strong>{LNG_Net Price} : </strong><em>{NET}</em> {CURRENCYUNIT}</p>
     </div>
   </div>
 </article>

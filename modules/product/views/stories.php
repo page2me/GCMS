@@ -8,12 +8,13 @@
 
 namespace Product\Stories;
 
-use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
+use \Kotchasan\Template;
 use \Gcms\Gcms;
 use \Product\Index\Controller;
-use \Kotchasan\Date;
+use \Kotchasan\Currency;
 use \Kotchasan\Grid;
+use \Kotchasan\Language;
 
 /**
  * แสดงรายการบทความ
@@ -53,7 +54,9 @@ class View extends \Gcms\View
         '/{PICTURE}/' => $picture,
         '/{URL}/' => Controller::url($index->module, $item->alias, $item->id),
         '/{TOPIC}/' => $item->topic,
-        '/{DATE}/' => Date::format($item->last_update),
+        '/{SHOWPRICE}/' => empty($item->price[$index->currency_unit]) ? 'hidden' : 'price',
+        '/{PRICE}/' => empty($item->price[$index->currency_unit]) ? '' : Currency::format($item->price[$index->currency_unit]),
+        '/{NET}/' => empty($item->net[$index->currency_unit]) ? '{LNG_Contact Information}' : Currency::format($item->net[$index->currency_unit]),
         '/{VISITED}/' => number_format($item->visited),
         '/{DESCRIPTION}/' => $item->description,
       ));
@@ -77,6 +80,7 @@ class View extends \Gcms\View
       '/{DETAIL}/' => $index->detail,
       '/{LIST}/' => $listitem->render(),
       '/{COLS}/' => $index->cols,
+      '/{CURRENCYUNIT}/' => Language::get('CURRENCY_UNITS')[$index->currency_unit],
       '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
       '/{MODULE}/' => $index->module,
     ));

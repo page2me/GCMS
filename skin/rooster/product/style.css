@@ -2,7 +2,11 @@
   display: block;
   padding: 0.5em;
   color: #FFF;
-  background-color: #2772A4;
+  background-color: rgba(39, 114, 164, 0.7);
+  margin-top: -100%;
+}
+#product_list article:hover h6 {
+  margin-top: 0;
 }
 #product_list h6 strong {
   display: block;
@@ -14,36 +18,32 @@
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 #product_list .figure {
-  display: block;
   overflow: hidden;
+  display: block;
   position: relative;
   border-width: 5px;
   border-style: solid;
   border-color: #F5F5F5;
   height: 200px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top left;
 }
-#product_list .figure:hover {
+#product_list article:hover .figure {
   border-color: #CCC;
 }
 #product_list article {
   border: none;
   background-color: #F5F5F5;
+  padding: 0;
 }
 #product_list .figure,
-#product_list .figure img {
+#product_list h6 {
   -webkit-transition: all .3s ease-in-out;
   -moz-transition: all .3s ease-in-out;
   -o-transition: all .3s ease-in-out;
   -ms-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
-}
-#product_list article img {
-  top: 0;
-  left: 0;
-  position: absolute;
-}
-#product_list article:hover img {
-  top: 5em;
 }
 #product_view .price {
   color: #999;

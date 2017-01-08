@@ -63,11 +63,20 @@ class Model extends \Kotchasan\Model
       if (empty($index->sort) || !isset($sorts[$index->sort])) {
         $index->sort = 0;
       }
-      $query->select('P.id', 'P.product_no', 'P.picture', 'P.alias', 'P.last_update', 'D.topic', 'D.description', 'P.visited')
+      $query->select('P.id', 'P.product_no', 'P.picture', 'P.alias', 'P.last_update', 'D.topic', 'D.description', 'P.visited', 'R.price', 'R.net')
         ->join('product_detail D', 'INNER', array(array('D.id', 'P.id'), array('D.language', array(Language::name(), ''))))
+        ->join('product_price R', 'INNER', array('R.id', 'P.id'))
         ->order(isset($sorts[$index->sort]) ? $sorts[$index->sort] : $sorts[0])
-        ->limit($list_per_page, $index->start);
-      $index->items = $query->cacheOn()->execute();
+        ->limit($list_per_page, $index->start)
+        ->toArray()
+        ->cacheOn();
+      $index->items = array();
+      foreach ($query->execute() as $item) {
+        $item['price'] = \Product\View\Model::getPrice($item['price'], $index->currency_unit);
+        $item['net'] = \Product\View\Model::getPrice($item['net'], $index->currency_unit);
+        $index->items[] = (object)$item;
+      }
+
       // คืนค่า
       return $index;
     }
