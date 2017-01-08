@@ -116,10 +116,10 @@ class View extends \Gcms\Adminview
       'id' => 'module_id',
       'value' => $index->module_id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => implode(', ', $index->file_typies),
       '/:size/' => Text::formatFileSize($index->upload_size)
-      ), false);
+    ));
     return $form->render();
   }
 }

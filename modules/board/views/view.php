@@ -98,10 +98,10 @@ class View extends \Gcms\View
               '/{RID}/' => $item->id
             ));
           }
-          Gcms::$view->setContents(array(
+          Gcms::$view->setContentsAfter(array(
             '/:size/' => $index->img_upload_size,
             '/:type/' => implode(', ', $index->img_upload_type)
-            ), false);
+          ));
         }
         // แก้ไขกระทู้ (mod หรือ ตัวเอง)
         $canEdit = $moderator || ($isMember && $login['id'] == $index->member_id);

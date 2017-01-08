@@ -86,10 +86,10 @@ class View extends \Gcms\Adminview
       'id' => 'module_id',
       'value' => $index->module_id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => implode(', ', $index->img_typies),
       '/:width/' => $index->image_width
-      ), false);
+    ));
     $form->add('fieldset', array(
       'id' => 'fsUploadProgress'
     ));

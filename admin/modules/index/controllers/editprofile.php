@@ -76,9 +76,9 @@ class Controller extends \Kotchasan\Controller
         $contents['/{HIDDEN}/'] = implode("\n", Form::get2Input());
         $contents['/{ACCEPT}/'] = Mime::getEccept(self::$cfg->user_icon_typies);
         $template->add($contents);
-        Gcms::$view->setContents(array(
+        Gcms::$view->setContentsAfter(array(
           '/:type/' => implode(', ', self::$cfg->user_icon_typies)
-          ), false);
+        ));
         return $template->render();
       }
     }

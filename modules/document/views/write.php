@@ -191,11 +191,11 @@ class View extends \Gcms\View
         'id' => 'module_id',
         'value' => $index->module_id
       ));
-      Gcms::$view->setContents(array(
+      Gcms::$view->setContentsAfter(array(
         '/:type/' => implode(', ', $index->img_typies),
         '/:width/' => $index->icon_width,
         '/:height/' => $index->icon_height
-        ), false);
+      ));
       $form->script('new GValidator("alias", "keyup,change", checkAlias, "index.php/index/model/checker/alias", null, "setup_frm");');
       // คืนค่า
       $index->detail = $form->render();

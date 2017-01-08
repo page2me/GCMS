@@ -58,10 +58,10 @@ class View extends \Gcms\View
       '/{LOGIN_PASSWORD}/' => $login['password'],
       '/{LOGIN_EMAIL}/' => $login['email']
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:size/' => $index->img_upload_size,
       '/:type/' => implode(', ', $index->img_upload_type)
-      ), false);
+    ));
     // breadcrumb ของโมดูล
     if (!Gcms::$menu->isHome($index->index_id)) {
       $menu = Gcms::$menu->findTopLevelMenu($index->index_id);

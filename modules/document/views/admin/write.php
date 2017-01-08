@@ -236,11 +236,11 @@ class View extends \Gcms\Adminview
       'id' => 'tab',
       'value' => $tab
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => implode(', ', $index->img_typies),
       '/:width/' => $index->icon_width,
       '/:height/' => $index->icon_height
-      ), false);
+    ));
     return $form->render();
   }
 }

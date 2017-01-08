@@ -148,11 +148,11 @@ class View extends \Gcms\Adminview
       'id' => 'module_id',
       'value' => $index->module_id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => 'jpg, jpeg, png, gif',
       '/:width/' => $index->image_width,
       '/:height/' => $index->image_height
-      ), false);
+    ));
     return $form->render();
   }
 }

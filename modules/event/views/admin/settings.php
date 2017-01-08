@@ -91,9 +91,9 @@ class View extends \Gcms\Adminview
       'name' => 'id',
       'value' => $index->module_id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:upload_max_filesize/' => ini_get('upload_max_filesize')
-      ), false);
+    ));
     return $form->render();
   }
 }

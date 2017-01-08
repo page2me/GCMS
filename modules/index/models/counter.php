@@ -90,9 +90,15 @@ class Model extends \Kotchasan\Model
         fclose($f);
       }
       // อ่าน useronline
-      $q2 = $db->createQuery()->selectCount()->from('useronline');
+      $q2 = $db->createQuery()
+        ->selectCount()
+        ->from('useronline');
       // อ่าน counter รายการล่าสุด
-      $my_counter = $db->createQuery()->from('counter C')->order('C.id DESC')->toArray()->first('C.*', array($q2, 'useronline'));
+      $my_counter = $db->createQuery()
+        ->from('counter C')
+        ->order('C.id DESC')
+        ->toArray()
+        ->first('C.*', array($q2, 'useronline'));
       if (empty($my_counter)) {
         $my_counter = array(
           'date' => $counter_day,

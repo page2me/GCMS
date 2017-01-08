@@ -63,10 +63,10 @@ class View extends \Gcms\View
       '/{TOKEN}/' => $request->createToken(),
       '/{QID}/' => $index->id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:size/' => $index->module->img_upload_size,
       '/:type/' => implode(', ', $index->module->img_upload_type)
-      ), false);
+    ));
     // breadcrumb ของโมดูล
     if (!Gcms::$menu->isHome($index->module->index_id)) {
       $menu = Gcms::$menu->findTopLevelMenu($index->module->index_id);

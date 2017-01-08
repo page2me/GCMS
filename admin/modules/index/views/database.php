@@ -94,10 +94,10 @@ class View extends \Gcms\Adminview
       'class' => 'button ok large',
       'value' => '{LNG_Export}'
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:dbname/' => $model->getSetting('dbname'),
       '/:size/' => ini_get('upload_max_filesize')
-      ), false);
+    ));
     return $form->render();
   }
 

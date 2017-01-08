@@ -67,10 +67,10 @@ class View extends \Gcms\View
           '/{MODULES}/' => implode('', $modules),
           '/{SENDMAIL}/' => $index->id == 0 && $index->module->send_mail ? 'checked' : ''
         ));
-        Gcms::$view->setContents(array(
+        Gcms::$view->setContentsAfter(array(
           '/:type/' => implode(', ', $index->module->file_typies),
           '/:size/' => Text::formatFileSize($index->module->upload_size)
-          ), false);
+        ));
         // คืนค่า
         $index->topic = $index->module->topic.' - '.$title;
         $index->detail = $template->render();

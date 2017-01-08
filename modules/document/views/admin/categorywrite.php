@@ -144,9 +144,9 @@ class View extends \Gcms\Adminview
       'id' => 'module_id',
       'value' => $index->module_id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => 'jpg, jpeg, gif, png'
-      ), false);
+    ));
     return $form->render();
   }
 }

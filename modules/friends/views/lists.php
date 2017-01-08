@@ -136,9 +136,9 @@ class View extends \Gcms\View
         '/{TOKEN}/' => $request->createToken(),
       ));
       // ข้อมูลใส่หลังจาก render แล้ว
-      Gcms::$view->setContents(array(
+      Gcms::$view->setContentsAfter(array(
         '/%COUNT%/' => $index->per_day,
-        ), false);
+      ));
       // breadcrumb ของโมดูล
       if (Gcms::$menu->isHome($index->index_id)) {
         $index->canonical = WEB_URL.'index.php';

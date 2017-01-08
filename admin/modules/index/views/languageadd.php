@@ -87,9 +87,9 @@ class View extends \Gcms\Adminview
       'id' => 'language',
       'value' => $id
     ));
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => 'gif'
-      ), false);
+    ));
     return $form->render();
   }
 }

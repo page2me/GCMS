@@ -70,9 +70,9 @@ class View extends \Gcms\View
     }
     $template->add($contents);
     // after render
-    Gcms::$view->setContents(array(
+    Gcms::$view->setContentsAfter(array(
       '/:type/' => empty(self::$cfg->user_icon_typies) ? 'jpg' : implode(', ', (self::$cfg->user_icon_typies))
-      ), false);
+    ));
     $index->detail = $template->render();
     // คืนค่า
     return $index;
