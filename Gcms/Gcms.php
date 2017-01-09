@@ -322,7 +322,7 @@ class Gcms extends \Kotchasan\KBase
     }
     if (!empty($datas)) {
       $datas = @unserialize($datas);
-      if ($datas !== false) {
+      if (is_array($datas)) {
         $lng = Language::name();
         $datas = isset($datas[$lng]) ? $datas[$lng] : (isset($datas['']) ? $datas[''] : '');
       }
