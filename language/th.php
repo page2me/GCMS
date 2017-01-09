@@ -468,7 +468,6 @@ return array(
   'Role of Members' => 'สิทธิของสมาชิก',
   'Default Settings' => 'ค่าเริ่มต้น',
   'If you choose to unpublish contributions will not be displayed on the page immediately. The Admin can review and published it later.' => 'ถ้าคุณเลือกระงับการเผยแพร่เรื่องที่เขียนจะไม่สามารถแสดงผลในหน้าเว็บได้โดยทันที ซึ่งแอดมินสามารถตรวจสอบและเผยแพร่ได้ในภายหลัง',
-  'Set the number of entries displayed per page' => 'ตั้งค่าจำนวนรายการแสดงต่อหนึ่งหน้า',
   'Comment' => 'ความคิดเห็น',
   'Moderator' => 'ผู้ดูแล',
   'Members of this group can edit, delete items created by others' => 'สมาชิกในกลุ่มนี้สามารถ เขียน ลบ แก้ไข รายการที่สร้างโดยผู้อื่นได้',
@@ -758,4 +757,5 @@ return array(
   'change font normal' => 'ขนาดตัวอักษรปกติ',
   'change font large' => 'ขนาดตัวอักษรใหญ่ขึ้น',
   'Pixel' => 'พิกเซล',
+  'For display by Date or Tag' => 'สำหรับการแสดงผลตามวันที่หรือตามป้ายกำกับ',
 );

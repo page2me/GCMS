@@ -103,13 +103,24 @@ class View extends \Gcms\Adminview
     $fieldset = $form->add('fieldset', array(
       'title' => '{LNG_Display}'
     ));
+    $groups = $fieldset->add('groups', array(
+      'comment' => '{LNG_The number of items displayed per page}'
+    ));
+    // cols
+    $groups->add('select', array(
+      'id' => 'cols',
+      'labelClass' => 'g-input icon-width',
+      'itemClass' => 'width50',
+      'label' => '{LNG_Cols}',
+      'options' => array(1 => 1, 2 => 2, 4 => 4, 6 => 6, 8 => 8),
+      'value' => $index->cols
+    ));
     // rows
-    $fieldset->add('number', array(
+    $groups->add('number', array(
       'id' => 'rows',
-      'labelClass' => 'g-input icon-published1',
-      'itemClass' => 'item',
-      'label' => '{LNG_Amount}',
-      'comment' => '{LNG_Set the number of entries displayed per page}',
+      'labelClass' => 'g-input icon-height',
+      'itemClass' => 'width50',
+      'label' => '{LNG_Rows}',
       'value' => $index->rows
     ));
     // sort
@@ -178,6 +189,29 @@ class View extends \Gcms\Adminview
       'comment' => '{LNG_Determine how to sort the items displayed in the list}',
       'options' => $sorts,
       'value' => $index->news_sort
+    ));
+    $fieldset = $form->add('fieldset', array(
+      'title' => '{LNG_Display} (Global)'
+    ));
+    $groups = $fieldset->add('groups', array(
+      'comment' => '{LNG_The number of items displayed per page} ({LNG_For display by Date or Tag})'
+    ));
+    // document_cols
+    $groups->add('select', array(
+      'id' => 'document_cols',
+      'labelClass' => 'g-input icon-width',
+      'itemClass' => 'width50',
+      'label' => '{LNG_Cols}',
+      'options' => array(1 => 1, 2 => 2, 4 => 4, 6 => 6, 8 => 8),
+      'value' => self::$cfg->document_cols
+    ));
+    // document_rows
+    $groups->add('number', array(
+      'id' => 'document_rows',
+      'labelClass' => 'g-input icon-height',
+      'itemClass' => 'width50',
+      'label' => '{LNG_Rows}',
+      'value' => self::$cfg->document_rows
     ));
     $fieldset = $form->add('fieldset', array(
       'title' => '{LNG_Role of Members}'

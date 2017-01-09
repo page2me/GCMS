@@ -56,7 +56,7 @@ class View extends \Kotchasan\View
       'title' => Language::get('Display')
     ));
     $groups = $fieldset->add('groups', array(
-      'comment' => Language::get('Set the number of entries displayed per page')
+      'comment' => Language::get('The number of items displayed per page')
     ));
     // pin_per_page
     $groups->add('number', array(

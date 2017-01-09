@@ -142,7 +142,7 @@ class View extends \Gcms\View
           '/{MODULEID}/' => $index->module_id,
           '/{TOKEN}/' => $request->createToken(),
           '/{DELETE}/' => $moderator ? '{LNG_Delete}' : '{LNG_Removal request}',
-          '/{TAGS}/' => implode(', ', $tags),
+          '/{TAGS}/' => implode('', $tags),
           '/{CATID}/' => $index->category_id,
           '/{XURL}/' => rawurlencode($index->canonical)
         );

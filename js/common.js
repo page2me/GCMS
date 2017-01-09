@@ -29,7 +29,9 @@ function send(target, query, callback, wait, c) {
   var req = new GAjax();
   req.initLoading(wait || 'wait', false, c);
   req.send(target, query, function (xhr) {
-    callback.call(this, xhr);
+    if (callback) {
+      callback.call(this, xhr);
+    }
   });
 }
 var hideModal = function () {

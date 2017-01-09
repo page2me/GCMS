@@ -35,8 +35,8 @@ class Controller extends \Kotchasan\Controller
     $index = \Document\Stories\Model::tags($request, $module);
     if ($index) {
       $index->module = 'document';
-      $index->rows = 20;
-      $index->cols = 1;
+      $index->rows = self::$cfg->document_rows;
+      $index->cols = self::$cfg->document_cols;
       $index->new_date = 0;
       $index->topic = Language::get('Tags').' '.$index->tag;
       $index->description = $index->topic;

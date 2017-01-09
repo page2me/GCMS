@@ -50,6 +50,11 @@ header p, footer p {
 .subcontent header {
   margin-bottom: 0;
 }
+.keywords > a {
+  background-color: rgba(0, 0, 0, 0.03);
+  margin: 0 2px 2px 0;
+  padding: 0 5px;
+}
 .create,
 .date,
 time,
@@ -66,24 +71,18 @@ time {
 .php {
   color: rgb(0, 0, 230);
 }
-.payment1 {
-  color: rgb(206, 103, 0);
-}
 .count,
 .no {
   color: #007FAE;
 }
-.ip,
-.payment2 {
+.ip {
   color: #7E57C2;
 }
 .asp,
-.payment3,
 .icon-upload:before {
   color: rgb(108, 61, 3);
 }
 .comments,
-.payment6,
 .icon-edit:before {
   color: #259B24;
 }
@@ -115,8 +114,6 @@ time {
 }
 .sql,
 .tags,
-.keywords,
-.payment7,
 .icon-subcategory:before {
   color: #03A9F4;
 }
@@ -125,7 +122,6 @@ time {
 .icon-lock:before {
   color: rgb(71, 87, 173);
 }
-.payment5,
 .icon-delete:before,
 .access:before {
   font-style: normal;
@@ -556,6 +552,28 @@ header.list h2 select {
   color: #333;
   font-family: arial, sans-serif;
   font-size: 1.4em;
+}
+.animation,
+.animation-fast {
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+.animation-medium {
+  -webkit-transition: all 0.5s ease-out;
+  -moz-transition: all 0.5s ease-out;
+  -o-transition: all 0.5s ease-out;
+  -ms-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+}
+.animation-slow {
+  -webkit-transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  -ms-transition: all 1s ease-out;
+  transition: all 1s ease-out;
 }
 /* phone, tablet */
 @media only screen and (max-width: 768px) {

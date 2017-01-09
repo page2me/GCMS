@@ -141,6 +141,17 @@ form dl.info {
   padding: 0.5em 0;
   font-size: 3em;
 }
+.sidebar header {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  border-bottom: 3px solid #F9F9F9;
+}
+.sidebar header > h3 {
+  background-color: #F9F9F9;
+  display: inline;
+  padding: 2px 5px;
+}
 .reaction {
   background-color: #F9F9F9;
 }

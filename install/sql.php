@@ -508,7 +508,6 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUE
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Set the application for send an email','text','index','0','เลือกโปรแกรมที่ใช้ในการส่งอีเมล์','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Set the Display category list. If you choose to disable. System will jump to display the list of articles.','text','index','0','ตั้งค่าการแสดงรายการหมวดหมู่ หากคุณเลือกที่จะปิดการใช้งาน ระบบจะข้ามไปแสดงรายการบทความ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Set the number of entries displayed (0 means not shown)','text','index','0','กำหนดจำนวนการแสดงผล (0 หมายถึงไม่แสดง)','');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Set the number of entries displayed per page','text','index','0','ตั้งค่าจำนวนรายการแสดงต่อหนึ่งหน้า','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Set to display the','text','index','0','ตั้งค่าการแสดงผล','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Set up or configure other details','text','index','0','ตั้งค่าหรือกำหนดค่ารายละเอียดอื่นๆ','');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`) VALUES ('Setting the number of days an item will show up as New (0 means not shown)','text','index','0','ตั้งค่าจำนวนวันที่รายการจะแสดงเป็นรายการใหม่ (0 หมายถึงไม่แสดง)','');

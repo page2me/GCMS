@@ -13,6 +13,7 @@ use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 use \Kotchasan\File;
+use \Gcms\Config;
 
 /**
  *  บันทึกการตั้งค่า
@@ -117,15 +118,24 @@ class Model extends \Kotchasan\Model
               }
             }
             if (empty($ret)) {
-              $save['new_date'] = $save['new_date'] * 86400;
-              $save['can_view'][] = 1;
-              $save['can_write'][] = 1;
-              $save['moderator'][] = 1;
-              $save['can_config'][] = 1;
-              $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
-              // คืนค่า
-              $ret['alert'] = Language::get('Saved successfully');
-              $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'document-settings', 'mid' => $index->module_id));
+              // โหลด config
+              $config = Config::load(ROOT_PATH.'settings/config.php');
+              $config->document_rows = max(1, $request->post('document_rows')->toInt());
+              $config->document_cols = max(1, $request->post('document_cols')->toInt());
+              if (Config::save($config, ROOT_PATH.'settings/config.php')) {
+                $save['new_date'] = $save['new_date'] * 86400;
+                $save['can_view'][] = 1;
+                $save['can_write'][] = 1;
+                $save['moderator'][] = 1;
+                $save['can_config'][] = 1;
+                $this->db()->createQuery()->update('modules')->set(array('config' => serialize($save)))->where($index->module_id)->execute();
+                // คืนค่า
+                $ret['alert'] = Language::get('Saved successfully');
+                $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'document-settings', 'mid' => $index->module_id));
+              } else {
+                // ไม่สามารถบันทึก config ได้
+                $ret['alert'] = sprintf(Language::get('File %s cannot be created or is read-only.'), 'settings/config.php');
+              }
             }
           }
         } else {

@@ -235,4 +235,11 @@ class Config extends \Kotchasan\Config
    * @var string
    */
   public $wordrude_replace = 'xxx';
+  /**
+   * การแสดงผลบทความสำหรับหน้า แสดงรายการตามวันที่ และ Tags
+   *
+   * @var int
+   */
+  public $document_cols = 1;
+  public $document_rows = 20;
 }
