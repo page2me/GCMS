@@ -150,7 +150,6 @@ class Model extends \Kotchasan\Model
         'session' => $session_id,
         'ip' => $counter_ip,
         'member_id' => $login ? $login['id'] : 0,
-        'displayname' => $login ? empty($login['displayname']) ? $login['emil'] : $login['displayname'] : '',
       ));
       $fmt = '%0'.self::$cfg->counter_digit.'d';
       return (object)array(
