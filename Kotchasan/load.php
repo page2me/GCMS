@@ -127,7 +127,7 @@ if (!defined('BASE_PATH')) {
  * URL ของเว็บไซต์รวม path เช่น http://domain.tld/folder
  */
 if (!defined('WEB_URL')) {
-  define('WEB_URL', $scheme.$host.$contextPrefix.'/');
+  define('WEB_URL', $scheme.$host.$contextPrefix.str_replace($docRoot, '', ROOT_PATH));
 }
 /**
  * โฟลเดอร์เก็บข้อมูล
