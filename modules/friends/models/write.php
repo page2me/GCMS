@@ -40,7 +40,7 @@ class Model extends \Kotchasan\Model
       $index = \Friends\Admin\Index\Model::module($request->post('module_id')->toInt());
       // ตรวจสอบค่าที่ส่งมา
       $ret = array();
-      if (!$index || !in_array($login['status'], $index->can_post)) {
+      if (!$index || empty($login['id']) || !in_array($login['status'], $index->can_post)) {
         // ไม่พบรายการที่ต้องการ หรือไม่สามารถโพสต์ได้
         $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
       } elseif ($post['topic'] == '') {
