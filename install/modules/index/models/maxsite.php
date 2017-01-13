@@ -29,6 +29,7 @@ class Model extends \Kotchasan\Model
     // ใช้สำหรับการนำเข้าไฟล์จาก maxsite ต้องมี '/' ปิดท้ายด้วย
     // เช่น http://maxsite.com/ หรือใช้ค่าที่กำหนดนี้ หากติดตั้ง GCMS ลงในไดเร็คทอรี่เดิมของ maxsite
     $maxsite_url = WEB_URL;
+    $maxsite_url = 'http://localhost/maxsite/';
     // database prefix ของ maxsite
     $prefix = 'web';
     // เนื้อหาส่งกลับ
@@ -203,13 +204,15 @@ class Model extends \Kotchasan\Model
       $sql = "SELECT Q.*,M.`id` AS `member_id`,M.`nic_name`,M.`email` FROM `{$prefix}_webboard` AS Q";
       $sql .= " LEFT JOIN `{$prefix}_member` AS M ON M.`user`=Q.`post_name`";
       foreach ($db->customQuery($sql) as $item) {
-        if ($item->picture != '' && Installer::copy($maxsite_url.'webboard_upload/'.$item->picture, DATA_FOLDER.'board/'.$item->id.'.jpg')) {
+        if ($item->picture != '' && Installer::copy($maxsite_url.'webboard_upload/'.rawurlencode($item->picture), DATA_FOLDER.'board/'.$item->id.'.jpg')) {
           if (@getimagesize(ROOT_PATH.DATA_FOLDER.'board/'.$item->id.'.jpg') === false) {
             unlink(ROOT_PATH.DATA_FOLDER.'board/'.$item->id.'.jpg');
             $item->picture = '';
           } else {
             $item->picture = $item->id.'.jpg';
           }
+        } else {
+          $item->picture = '';
         }
         $db->insert($_SESSION['prefix'].'_board_q', array(
           'id' => $item->id,
@@ -233,6 +236,16 @@ class Model extends \Kotchasan\Model
       $sql .= " LEFT JOIN `{$prefix}_member` AS M ON M.`user`=Q.`post_name`";
       $sql .= " ORDER BY Q.`topic_id`,Q.`post_date` DESC";
       foreach ($db->customQuery($sql) as $item) {
+        if ($item->picture != '' && Installer::copy($maxsite_url.'webboard_upload/'.rawurlencode($item->picture), DATA_FOLDER.'board/'.$item->post_date.'.jpg')) {
+          if (@getimagesize(ROOT_PATH.DATA_FOLDER.'board/'.$item->post_date.'.jpg') === false) {
+            unlink(ROOT_PATH.DATA_FOLDER.'board/'.$item->post_date.'.jpg');
+            $item->picture = '';
+          } else {
+            $item->picture = $item->post_date.'.jpg';
+          }
+        } else {
+          $item->picture = '';
+        }
         $comment_id = $db->insert($_SESSION['prefix'].'_board_r', array(
           'module_id' => $module_id,
           'index_id' => $item->topic_id,
@@ -300,7 +313,7 @@ class Model extends \Kotchasan\Model
           'picture' => $id.'.jpg',
           'order' => $order,
         ));
-        if (Installer::copy($maxsite_url.'images/personnel/'.$item->p_pic, DATA_FOLDER.'personnel/'.$id.'.jpg')) {
+        if (Installer::copy($maxsite_url.'images/personnel/'.rawurlencode($item->p_pic), DATA_FOLDER.'personnel/'.$id.'.jpg')) {
           if (@getimagesize(ROOT_PATH.DATA_FOLDER.'personnel/'.$id.'.jpg') === false) {
             unlink(ROOT_PATH.DATA_FOLDER.'personnel/'.$id.'.jpg');
           }
