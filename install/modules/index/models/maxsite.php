@@ -25,9 +25,13 @@ class Model extends \Kotchasan\Model
 
   public static function import($db)
   {
-    // default prefix for maxsite
+    // แก้ไข URL ให้เป็น URL ของ maxsite
+    // ใช้สำหรับการนำเข้าไฟล์จาก maxsite ต้องมี '/' ปิดท้ายด้วย
+    // เช่น http://maxsite.com/ หรือใช้ค่าที่กำหนดนี้ หากติดตั้ง GCMS ลงในไดเร็คทอรี่เดิมของ maxsite
+    $maxsite_url = WEB_URL;
+    // database prefix ของ maxsite
     $prefix = 'web';
-    $source_url = 'http://localhost/maxsite/';
+    // เนื้อหาส่งกลับ
     $content = array();
     // import users
     $displayname = array();
@@ -145,7 +149,7 @@ class Model extends \Kotchasan\Model
         $sql = "SELECT `id` FROM `{$prefix}_member` AS M WHERE M.`user`=Q.`posted` LIMIT 1";
         foreach ($db->customQuery("SELECT Q.*,($sql) AS `member_id` FROM `{$prefix}_{$module}` AS Q ORDER BY Q.`id`") as $item) {
           if (!empty($item->pic)) {
-            $picture = $source_url.'icon/'.$module.'_'.$item->post_date.'_'.$item->posted.'.jpg';
+            $picture = $maxsite_url.'icon/'.$module.'_'.$item->post_date.'_'.$item->posted.'.jpg';
           } else {
             $picture = '';
           }
@@ -199,7 +203,7 @@ class Model extends \Kotchasan\Model
       $sql = "SELECT Q.*,M.`id` AS `member_id`,M.`nic_name`,M.`email` FROM `{$prefix}_webboard` AS Q";
       $sql .= " LEFT JOIN `{$prefix}_member` AS M ON M.`user`=Q.`post_name`";
       foreach ($db->customQuery($sql) as $item) {
-        if ($item->picture != '' && Installer::copy($source_url.'webboard_upload/'.$item->picture, DATA_FOLDER.'board/'.$item->id.'.jpg')) {
+        if ($item->picture != '' && Installer::copy($maxsite_url.'webboard_upload/'.$item->picture, DATA_FOLDER.'board/'.$item->id.'.jpg')) {
           if (@getimagesize(ROOT_PATH.DATA_FOLDER.'board/'.$item->id.'.jpg') === false) {
             unlink(ROOT_PATH.DATA_FOLDER.'board/'.$item->id.'.jpg');
             $item->picture = '';
@@ -296,7 +300,7 @@ class Model extends \Kotchasan\Model
           'picture' => $id.'.jpg',
           'order' => $order,
         ));
-        if (Installer::copy($source_url.'images/personnel/'.$item->p_pic, DATA_FOLDER.'personnel/'.$id.'.jpg')) {
+        if (Installer::copy($maxsite_url.'images/personnel/'.$item->p_pic, DATA_FOLDER.'personnel/'.$id.'.jpg')) {
           if (@getimagesize(ROOT_PATH.DATA_FOLDER.'personnel/'.$id.'.jpg') === false) {
             unlink(ROOT_PATH.DATA_FOLDER.'personnel/'.$id.'.jpg');
           }
@@ -355,12 +359,12 @@ class Model extends \Kotchasan\Model
           'count' => 0,
         ));
         $dir = DATA_FOLDER.'gallery/'.(int)$item->category.'/';
-        if (Installer::copy($source_url.'images/gallery/gal_'.$item->src.'/'.$item->pic, $dir.$item->id.'.jpg')) {
+        if (Installer::copy($maxsite_url.'images/gallery/gal_'.$item->src.'/'.$item->pic, $dir.$item->id.'.jpg')) {
           if (@getimagesize(ROOT_PATH.$dir.$item->id.'.jpg') === false) {
             unlink(ROOT_PATH.$dir.$item->id.'.jpg');
           }
         }
-        if (Installer::copy($source_url.'images/gallery/gal_'.$item->src.'/thb_'.$item->pic, $dir.'thumb_'.$item->id.'.jpg')) {
+        if (Installer::copy($maxsite_url.'images/gallery/gal_'.$item->src.'/thb_'.$item->pic, $dir.'thumb_'.$item->id.'.jpg')) {
           if (@getimagesize(ROOT_PATH.$dir.'thumb_'.$item->id.'.jpg') === false) {
             unlink(ROOT_PATH.$dir.'thumb_'.$item->id.'.jpg');
           }
@@ -385,7 +389,7 @@ class Model extends \Kotchasan\Model
       foreach ($db->customQuery("SELECT * FROM `{$prefix}_download` ORDER BY `id`") as $item) {
         if (preg_match('/(.*)\.([a-z0-9]{2,5})$/', $item->full_text, $match)) {
           $ext = strtolower($match[2]);
-          if (Installer::copy($source_url.'data/download_'.$item->full_text, DATA_FOLDER.'download/'.$item->id.'.'.$ext)) {
+          if (Installer::copy($maxsite_url.'data/download_'.$item->full_text, DATA_FOLDER.'download/'.$item->id.'.'.$ext)) {
             $item->full_text = DATA_FOLDER.'download/'.$item->id.'.'.$ext;
             $item->size = filesize(ROOT_PATH.$item->full_text);
           } else {
