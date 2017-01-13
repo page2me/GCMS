@@ -94,7 +94,7 @@ class Model extends \Kotchasan\Model
             } else {
               $ret['ret_write_youtube'] = '';
               // get youtube data
-              $url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id='.$save['youtube'].'&key='.$index->google_api_key;
+              $url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id='.$save['youtube'].(empty($index->google_api_key) ? '' : '&key='.$index->google_api_key);
               if (function_exists('curl_init') && $ch = @curl_init()) {
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

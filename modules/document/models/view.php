@@ -76,7 +76,7 @@ class Model extends \Kotchasan\Model
       ->from('index I')
       ->join('modules M', 'INNER', array('M.id', 'I.module_id'))
       ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'I.module_id'), array('D.language', array('', Language::name()))))
-      ->join('user U', 'INNER', array('U.id', 'I.member_id'))
+      ->join('user U', 'LEFT', array('U.id', 'I.member_id'))
       ->join('category C', 'LEFT', array(array('C.category_id', 'I.category_id'), array('C.module_id', 'I.module_id')))
       ->where($where)
       ->toArray();

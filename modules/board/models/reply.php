@@ -33,9 +33,9 @@ class Model extends \Kotchasan\Model
    */
   public function save(Request $request)
   {
+    $ret = array();
     // session, token
     if ($request->initSession() && $request->isSafe()) {
-      $ret = array();
       // login
       $login = Login::isMember();
       if ($login && $login['email'] == 'demo') {
@@ -227,6 +227,8 @@ class Model extends \Kotchasan\Model
           $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');
         }
       }
+    }
+    if ($ret) {
       // คืนค่าเป็น JSON
       echo json_encode($ret);
     }

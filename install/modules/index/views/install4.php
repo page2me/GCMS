@@ -35,7 +35,7 @@ class View extends \Gcms\View
       $_SESSION['db_server'] = $request->post('db_server')->url();
       $_SESSION['db_name'] = $request->post('db_name')->filter('a-z0-9_');
       $_SESSION['prefix'] = $request->post('prefix')->filter('a-z0-9');
-      $_SESSION['typ'] = $request->post('typ')->topic();
+      $_SESSION['typ'] = $request->post('typ')->filter('a-z');
       $_SESSION['newdb'] = $request->post('newdb')->toInt();
       if ($_SESSION['newdb'] == 1) {
         $db = \Kotchasan\Database::create(array(
@@ -115,14 +115,23 @@ class View extends \Gcms\View
       // install Admin
       $sql = "INSERT INTO `$_SESSION[prefix]_user` (`id`, `password`, `email`, `displayname`,`country`, `status`, `fb`, `admin_access`, `create_date`) VALUES (1,'".md5($_SESSION['password'].$_SESSION['email'])."','$_SESSION[email]','Admin','TH',1,'0','1',".time().");";
       $db->query($sql);
-      if (!empty($_SESSION['typ']) && is_dir(ROOT_PATH.'install/'.$_SESSION['typ'].'/datas/')) {
-        File::copyDirectory(ROOT_PATH.'install/'.$_SESSION['typ'].'/datas/', ROOT_PATH.DATA_FOLDER);
+      if (!empty($_SESSION['typ'])) {
+        if (is_dir(ROOT_PATH.'install/'.$_SESSION['typ'].'/datas/')) {
+          File::copyDirectory(ROOT_PATH.'install/'.$_SESSION['typ'].'/datas/', ROOT_PATH.DATA_FOLDER);
+        }
+      }
+      if (!empty($_SESSION['typ'])) {
+        $className = 'Index\\'.ucfirst($_SESSION['typ']).'\\Model';
+        if (class_exists($className) && method_exists($className, 'import')) {
+          // นำเข้าข้อมูล
+          $content[] = $className::import($db);
+        }
       }
       // config
       self::$cfg->password_key = \Kotchasan\Text::rndname(10, '1234567890');
       self::$cfg->version = self::$cfg->new_version;
       unset(self::$cfg->new_version);
-      self::$cfg->skin = $_SESSION['typ'] == 'gcmss' ? 'gts' : 'bighead';
+      self::$cfg->skin = (empty($_SESSION['typ']) || $_SESSION['typ'] == 'gcms') ? 'rooser' : 'gts';
       $f = \Gcms\Config::save(self::$cfg, ROOT_PATH.'settings/config.php');
       $content[] = '<li class="'.($f ? 'correct' : 'incorrect').'">Update file <b>config.php</b> ...</li>';
       // บันทึก settings/database.php

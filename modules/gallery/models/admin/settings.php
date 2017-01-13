@@ -38,6 +38,7 @@ class Model extends \Kotchasan\Model
       'rows' => 3,
       'cols' => 4,
       'sort' => 1,
+      'can_view' => array(-1, 0, 1),
       'can_write' => array(1),
       'can_config' => array(1)
     );

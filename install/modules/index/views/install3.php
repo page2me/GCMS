@@ -65,14 +65,16 @@ class View extends \Gcms\View
         $database_typies = array(
           '' => 'ติดตั้ง GCMS โดยไม่มีข้อมูลเริ่มต้นใด ๆ',
           'gcms' => 'เว็บไซต์ทั่วไป',
-          'gcmss' => 'เว็บไซต์โรงเรียนหรือ อบต.'
+          'gcmss' => 'เว็บไซต์โรงเรียนหรือ อบต.',
+          'maxsite' => 'นำเข้าข้อมูลจาก ATOMYMAXSITE 2.5 (web)',
         );
-        $typ = $request->session('typ')->toString();
+        $typ = $request->session('typ')->filter('a-z');
         foreach ($database_typies AS $k => $v) {
           $content[] = '<option value="'.$k.'"'.($typ == $k ? ' selected' : '').'>'.$v.'</option>';
         }
         $content[] = '</select></span></p>';
-        $content[] = '<p class=comment>ติดตั้ง GCMS พร้อมกับข้อมูลตัวอย่าง เว็บไซต์โรงเรียนจะมีการติดตั้งโมดูลและข้อมูลตัวอย่างเพิ่มเติมจากเว็บไซต์ปกติ ซึ่งคุณสามารถติดตั้งเพิ่มหรือแก้ไขได้เองในภายหลัง</p>';
+        $content[] = '<p class=comment>ติดตั้ง GCMS พร้อมกับข้อมูลตัวอย่าง เว็บไซต์โรงเรียนจะมีการติดตั้งโมดูลและข้อมูลตัวอย่างเพิ่มเติมจากเว็บไซต์ปกติ ซึ่งคุณสามารถติดตั้งเพิ่มหรือแก้ไขได้เองในภายหลัง';
+        $content[] = '</p>';
         $content[] = '<input type=hidden name=step value=4>';
         $content[] = '<p><input class="button large save" type=submit value=ติดตั้ง.></p>';
         $content[] = '</form>';

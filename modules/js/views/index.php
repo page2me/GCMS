@@ -87,7 +87,6 @@ class View extends \Kotchasan\KBase
     if (self::$cfg->use_ajax == 1) {
       $js[] = 'var use_ajax = 1;';
     }
-    $js[] = 'var COUNTER_REFRESH_TIME = '.(int)self::$cfg->counter_refresh_time.';';
     if (!empty(self::$cfg->facebook_appId)) {
       $js[] = 'initFacebook("'.self::$cfg->facebook_appId.'", "'.Language::name().'");';
     }

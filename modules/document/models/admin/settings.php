@@ -32,6 +32,7 @@ class Model extends \Kotchasan\Model
    */
   public static function defaultSettings()
   {
+    $members = array_keys(self::$cfg->member_status);
     return array(
       'icon_width' => 696,
       'icon_height' => 464,
@@ -46,8 +47,8 @@ class Model extends \Kotchasan\Model
       'category_display' => 1,
       'news_count' => 10,
       'news_sort' => 1,
-      'can_reply' => array(1),
-      'can_view' => array(1),
+      'can_reply' => $members,
+      'can_view' => array_merge(array(-1), $members),
       'can_write' => array(1),
       'moderator' => array(1),
       'can_config' => array(1)

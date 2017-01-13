@@ -214,8 +214,20 @@ class Model extends \Kotchasan\Model
       // config จากโมดูล
       $index = ArrayTool::unserialize($index['mconfig'], $index);
       // config จากหมวด แทนที่ config จากโมดูล
-      if (!empty($index['category_id'])) {
-        $index = ArrayTool::unserialize($index['config'], $index);
+      if (!empty($index['config'])) {
+        $datas = @unserialize($index['config']);
+        if (is_array($datas)) {
+          foreach ($datas as $key => $value) {
+            if ($key == 'can_reply') {
+              // ไม่แสดงความคิดเห็นถ้าหมวดไม่สมารถแสดงได้
+              if ($value == 0) {
+                $index['can_reply'] = array();
+              }
+            } else {
+              $index[$key] = $value;
+            }
+          }
+        }
       }
       unset($index['mconfig']);
       unset($index['config']);
