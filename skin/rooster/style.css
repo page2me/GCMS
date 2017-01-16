@@ -155,6 +155,20 @@ form dl.info {
 .reaction {
   background-color: #F9F9F9;
 }
+.post-detail .no {
+  color: #cee7ec;
+  font-size: 300%;
+  font-family: Courier;
+  font-stretch: condensed;
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  z-index: 0;
+  -moz-opacity: .40;
+  filter: alpha(opacity=40);
+  opacity: .40;
+  line-height: 1;
+}
 @media only screen and (max-width: 960px) {
   .top_header {
     padding-left: 50px;

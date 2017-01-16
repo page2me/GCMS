@@ -30,7 +30,7 @@ class Model extends \Index\Upgrade\Model
     $content = array();
     // install database language
     $db->query("DROP TABLE IF EXISTS `$_SESSION[prefix]_language`;");
-    $db->query("CREATE TABLE `$_SESSION[prefix]_language` (`id` int(11) unsigned NOT NULL auto_increment,`key` text collate utf8_unicode_ci NOT NULL,`th` text collate utf8_unicode_ci NOT NULL,`en` text collate utf8_unicode_ci NOT NULL,`owner` varchar(20) collate utf8_unicode_ci NOT NULL,`type` varchar(5) collate utf8_unicode_ci NOT NULL,`js` tinyint(1) NOT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+    $db->query("CREATE TABLE `$_SESSION[prefix]_language` (`id` int(11) unsigned NOT NULL auto_increment,`key` text collate utf8_unicode_ci NOT NULL,`th` text collate utf8_unicode_ci NULL DEFAULT NULL,`en` text collate utf8_unicode_ci NULL DEFAULT NULL,`owner` varchar(20) collate utf8_unicode_ci NOT NULL,`type` varchar(5) collate utf8_unicode_ci NOT NULL,`js` tinyint(1) NOT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
     // import language
     foreach (array('php', 'js') as $lng) {
       foreach (Language::installed($lng) as $item) {

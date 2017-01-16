@@ -54,7 +54,7 @@ class Model extends \Kotchasan\Model
           'zipcode' => $request->post('register_zipcode')->number(),
           'country' => $request->post('register_country')->topic(),
           'status' => $request->post('register_status')->toInt(),
-          'birthday' => $request->post('register_birthday')->date(),
+          'birthday' => $request->post('register_birthday', date('Y-m-d'))->date(),
           'admin_access' => $request->post('register_admin_access')->toBoolean()
         );
         // ชื่อตาราง user
@@ -190,6 +190,7 @@ class Model extends \Kotchasan\Model
             // บันทึก
             if ($id == 0) {
               // ใหม่
+              $save['create_date'] = time();
               $id = $db->insert($user_table, $save);
               // ไปหน้ารายการสมาชิก
               $ret['location'] = $request->getUri()->postBack('index.php', array('module' => 'member', 'id' => null, 'page' => null));
