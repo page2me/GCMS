@@ -125,7 +125,7 @@ class View extends \Gcms\Adminview
       }
       $item[$lng] = $item[$lng] == '' ? '' : '<span title="'.htmlspecialchars($item[$lng]).'">'.self::toText($item[$lng]).'</span>';
     }
-    $item['key'] = '<a class=icon-copy title="'.htmlspecialchars($item['key']).'">'.self::toText($item['key']).'</a>';
+    $item['key'] = '<a class="icon-copy" title="'.htmlspecialchars($item['key']).'">'.self::toText($item['key']).'</a>';
     return $item;
   }
 

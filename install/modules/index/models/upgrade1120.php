@@ -57,10 +57,10 @@ class Model extends \Index\Upgrade\Model
     $content[] = '<li class="correct">Created and Imported database <b>'.$_SESSION['prefix'].'_language</b> complete...</li>';
     // อัปเกรด useronline
     $table = $_SESSION['prefix'].'_useronline';
-    if (!self::fieldExists($db, $table, 'ban')) {
+    if (self::fieldExists($db, $table, 'id')) {
       $f = $db->query("ALTER TABLE `$table` DROP `id`");
     }
-    if (!self::fieldExists($db, $table, 'icon')) {
+    if (self::fieldExists($db, $table, 'icon')) {
       $f = $db->query("ALTER TABLE `$table` DROP `icon`");
     }
     $content[] = '<li class="correct">Update database <b>'.$table.'</b> complete...</li>';
@@ -73,6 +73,14 @@ class Model extends \Index\Upgrade\Model
     $db->query("ALTER TABLE `$table` CHANGE `comment_id` `comment_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
     $db->query("ALTER TABLE `$table` CHANGE `commentator_id` `commentator_id` INT( 11 ) UNSIGNED NOT NULL DEFAULT 0;");
     $content[] = '<li class="correct">Updated database <b>'.$table.'</b> complete...</li>';
+    // add FULLTEXT
+    $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_index_detail` ADD FULLTEXT (`topic`);');
+    $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_index_detail` ADD FULLTEXT (`detail`);');
+    $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_comment` ADD FULLTEXT (`detail`);');
+    $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_board_q` ADD FULLTEXT (`topic`);');
+    $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_board_q` ADD FULLTEXT (`detail`);');
+    $db->query('ALTER TABLE `'.$_SESSION['prefix'].'_board_r` ADD FULLTEXT (`detail`);');
+    $content[] = '<li class="correct">Updated database for <b>FULLTEXT SEARCH</b> complete...</li>';
     if (\Index\Upgrade\Model::tableExists($db, $_SESSION['prefix'].'_eventcalendar')) {
       $db->query("ALTER TABLE `$_SESSION[prefix]_eventcalendar` CHANGE `color` `color` VARCHAR( 11 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;");
       $content[] = '<li class="correct">Updated database <b>'.$_SESSION['prefix'].'_eventcalendar</b> complete...</li>';

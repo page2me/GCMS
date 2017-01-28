@@ -548,8 +548,8 @@ header.list h2 select {
 .search-item > p.link {
   color: #008000;
 }
-.search-item h6 {
-  color: #333;
+.search-item h6 a {
+  color: inherit;
   font-family: arial, sans-serif;
   font-size: 1.4em;
 }

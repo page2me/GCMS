@@ -42,9 +42,11 @@ class Model extends \Kotchasan\Model
       'rows' => 20,
       'cols' => 1,
       'sort' => 1,
+      'style' => 'iconview',
       'new_date' => 604800,
       'viewing' => 0,
-      'category_display' => 1,
+      'category_display' => 'iconview',
+      'category_cols' => 1,
       'news_count' => 10,
       'news_sort' => 1,
       'can_reply' => $members,
@@ -77,9 +79,11 @@ class Model extends \Kotchasan\Model
           'rows' => max(1, $request->post('rows')->toInt()),
           'cols' => max(1, $request->post('cols')->toInt()),
           'sort' => $request->post('sort')->toInt(),
+          'style' => $request->post('style', 'iconview')->filter('a-z'),
           'new_date' => $request->post('new_date')->toInt(),
           'viewing' => $request->post('viewing')->toInt(),
-          'category_display' => $request->post('category_display')->toBoolean(),
+          'category_display' => $request->post('category_display')->filter('a-z0-9'),
+          'category_cols' => max(1, $request->post('category_cols')->toInt()),
           'news_count' => $request->post('news_count')->toInt(),
           'news_sort' => $request->post('news_sort')->toInt(),
           'can_reply' => $request->post('can_reply', array())->toInt(),
@@ -121,6 +125,7 @@ class Model extends \Kotchasan\Model
             if (empty($ret)) {
               // โหลด config
               $config = Config::load(ROOT_PATH.'settings/config.php');
+              $config->document_style = $request->post('document_style', 'iconview')->filter('a-z');
               $config->document_rows = max(1, $request->post('document_rows')->toInt());
               $config->document_cols = max(1, $request->post('document_cols')->toInt());
               if (Config::save($config, ROOT_PATH.'settings/config.php')) {

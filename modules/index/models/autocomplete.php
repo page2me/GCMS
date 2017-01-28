@@ -12,7 +12,7 @@ use \Kotchasan\Http\Request;
 use \Gcms\Login;
 
 /**
- * Description
+ * ค้นหาสมาชิก สำหรับ autocomplete
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -32,24 +32,51 @@ class Model extends \Kotchasan\Model
     if ($request->initSession() && $request->isReferer() && Login::isMember()) {
       $search = $request->post('name')->topic();
       if ($search != '') {
-        $query = $this->db()->createQuery()
-          ->select('id', 'CONCAT_WS(" ", `pname`, `fname`, `lname`) AS `name`', 'email')
-          ->from('user')
-          ->where(array(
-            array('fname', 'LIKE', "%$search%"),
-            array('lname', 'LIKE', "%$search%"),
-            array('email', 'LIKE', "%$search%")
-            ), 'OR')
-          ->order('name', 'email')
-          ->limit(10)
-          ->toArray();
+        $where = array();
+        $select = array('id', 'CONCAT_WS(" ", `pname`, `fname`, `lname`) AS `name`', 'email');
+        $order = array();
+        foreach (explode(',', $request->post('from', 'name,email')->filter('a-z,')) as $item) {
+          if ($item == 'name') {
+            $where[] = array('fname', 'LIKE', "%$search%");
+            $where[] = array('lname', 'LIKE', "%$search%");
+            $order[] = 'name';
+          }
+          if ($item == 'email') {
+            $where[] = array('email', 'LIKE', "%$search%");
+            $order[] = 'email';
+          }
+          if ($item == 'phone') {
+            $where[] = array('phone1', 'LIKE', "$search%");
+            $select[] = 'phone1';
+            $order[] = 'phone1';
+          }
+        }
         $result = array();
-        foreach ($query->execute() as $item) {
-          $name = trim($item['name']);
-          $result[$item['id']] = array(
-            'id' => $item['id'],
-            'name' => $name == '' ? $item['email'] : $name
-          );
+        if (!empty($where)) {
+          $query = $this->db()->createQuery()
+            ->select($select)
+            ->from('user')
+            ->where($where, 'OR')
+            ->order($order)
+            ->limit($request->post('count', 10)->toInt())
+            ->toArray();
+          foreach ($query->execute() as $item) {
+            $datas = array();
+            foreach ($item as $key => $value) {
+              if ($key != 'id') {
+                $value = trim($value);
+                if ($value != '') {
+                  $datas[] = $value;
+                }
+              }
+            }
+            if (!empty($datas)) {
+              $result[$item['id']] = array(
+                'id' => $item['id'],
+                'name' => implode(', ', $datas),
+              );
+            }
+          }
         }
         // คืนค่า JSON
         echo json_encode($result);

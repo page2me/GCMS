@@ -176,7 +176,7 @@ class View extends \Gcms\Adminview
       'id' => 'news_count',
       'labelClass' => 'g-input icon-published1',
       'itemClass' => 'item',
-      'label' => '{LNG_Amount}',
+      'label' => '{LNG_Number}',
       'comment' => '{LNG_Set the number of entries displayed (0 means not shown)}',
       'value' => $index->news_count
     ));
@@ -191,10 +191,10 @@ class View extends \Gcms\Adminview
       'value' => $index->news_sort
     ));
     $fieldset = $form->add('fieldset', array(
-      'title' => '{LNG_Display} (Global)'
+      'title' => '{LNG_Setting the display by date or by tags}'
     ));
     $groups = $fieldset->add('groups', array(
-      'comment' => '{LNG_The number of items displayed per page} ({LNG_For display by Date or Tag})'
+      'comment' => '{LNG_The number of items displayed per page}'
     ));
     // document_cols
     $groups->add('select', array(

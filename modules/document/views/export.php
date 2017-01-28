@@ -34,7 +34,7 @@ class View extends \Gcms\View
   public function printer(Request $request, $index)
   {
     // อ่านรายการที่เลือก
-    $index = \Document\View\Model::get((object)array('id' => $request->get('id')->toInt()));
+    $index = \Document\View\Model::get($request, (object)array('id' => $request->get('id')->toInt()));
     if ($index && $index->published) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
@@ -108,7 +108,7 @@ class View extends \Gcms\View
   public function pdf(Request $request, $index)
   {
     // อ่านรายการที่เลือก
-    $index = \Document\View\Model::get((int)$index->module_id, $request->get('id')->toInt(), '');
+    $index = \Document\View\Model::get($request, (object)array('id' => $request->get('id')->toInt()));
     if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();

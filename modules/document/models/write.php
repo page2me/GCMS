@@ -18,7 +18,7 @@ use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
 
 /**
- * อ่านข้อมูลโมดูล.
+ * บันทึกบทความ
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -28,7 +28,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * บันทึก
+   * บันทึกบทความ
    *
    * @param Request $request
    */

@@ -61,8 +61,7 @@ class View extends \Gcms\View
         '/{PICTURE}/' => $thumb,
         '/{URL}/' => Controller::url($item->module, $item->alias, $item->id),
         '/{TOPIC}/' => $item->topic,
-        '/{DATE}/' => Date::format($item->create_date),
-        '/{DATEISO}/' => date(DATE_ISO8601, $item->create_date),
+        '/{DATE}/' => Date::format($item->create_date, 'd M Y'),
         '/{COMMENTS}/' => number_format($item->comments),
         '/{VISITED}/' => number_format($item->visited),
         '/{DETAIL}/' => $item->description,
@@ -108,6 +107,7 @@ class View extends \Gcms\View
       '/{DETAIL}/' => $index->detail,
       '/{LIST}/' => $listitem->render(),
       '/{COLS}/' => $index->cols,
+      '/{STYLE}/' => empty($index->style) ? 'iconview' : $index->style,
       '/{SPLITPAGE}/' => $uri->pagination($index->totalpage, $index->page),
       '/{MODULE}/' => $index->module
     ));

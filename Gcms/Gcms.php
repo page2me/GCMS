@@ -123,32 +123,28 @@ class Gcms extends \Kotchasan\KBase
   {
     $patt[] = '/\[(\/)?(i|dfn|b|strong|u|em|ins|del|sub|sup|small|big|ul|ol|li)\]/isu';
     $replace[] = '<\\1\\2>';
-    $patt[] = '/\[color=([#a-z0-9]+)\]/isu';
+    $patt[] = '/\[color=([#a-z0-9]+)\]/i';
     $replace[] = '<span style="color:\\1">';
-    $patt[] = '/\[size=([0-9]+)(px|pt|em|\%)\]/isu';
+    $patt[] = '/\[size=([0-9]+)(px|pt|em|\%)\]/i';
     $replace[] = '<span style="font-size:\\1\\2">';
-    $patt[] = '/\[\/(color|size)\]/isu';
+    $patt[] = '/\[\/(color|size)\]/i';
     $replace[] = '</span>';
-    $patt[] = '/\[img\](.*)\[\/img\]/U';
+    $patt[] = '/\[img\](.*)\[\/img\]/i';
     $replace[] = '<figure><img src="\\1" alt=""></figure>';
-    $patt[] = '/\[url\](.*)\[\/url\]/U';
+    $patt[] = '/\[url\](.*)\[\/url\]/i';
     $replace[] = '<a href="\\1" target="_blank" rel="nofollow">\\1</a>';
-    $patt[] = '/\[url=(ftp|http)(s)?:\/\/(.*)\](.*)\[\/url\]/U';
-    $replace[] = '<a href="\\1\\2://\\3" target="_blank" rel="nofollow">\\4</a>';
-    $patt[] = '/\[url=(\/)?(.*)\](.*)\[\/url\]/U';
+    $patt[] = '/\[url=(ftp|https?):\/\/(.*)\](.*)\[\/url\]/i';
+    $replace[] = '<a href="\\1://\\2" target="_blank" rel="nofollow">\\3</a>';
+    $patt[] = '/\[url=(\/)?(.*)\](.*)\[\/url\]/i';
     $replace[] = '<a href="'.WEB_URL.'\\2" target="_blank" rel="nofollow">\\3</a>';
-    $patt[] = '/(\[code=([a-z]{1,})\](.*?)\[\/code\])/uis';
-    $replace[] = $canview ? '<code class="content-code \\2">\\3[/code]' : '<code class="content-code">'.Language::get('Can not view this content').'[/code]';
-    $patt[] = '/(\[code\](.*?)\[\/code\])/uis';
-    $replace[] = $canview ? '<code class="content-code">\\2[/code]' : '<code class="content-code">'.Language::get('Can not view this content').'[/code]';
-    $patt[] = '/\[quote(\s+q=[0-9]+)?\]/ui';
+    $patt[] = '/\[quote(\s+q=[0-9]+)?\]/i';
     $replace[] = '<blockquote><b>'.Language::replace('Quotations by :name', array(':name' => Language::get('Topic'))).'</b>';
-    $patt[] = '/\[quote\s+r=([0-9]+)\]/ui';
+    $patt[] = '/\[quote\s+r=([0-9]+)\]/i';
     $replace[] = '<blockquote><b>'.Language::replace('Quotations by :name', array(':name' => Language::get('Comment'))).' <em>#\\1</em></b>';
-    $patt[] = '/\[\/code\]/i';
-    $replace[] = '</code>';
     $patt[] = '/\[\/quote\]/i';
     $replace[] = '</blockquote>';
+    $patt[] = '/\[code(=([a-z]{1,}))?\](.*?)\[\/code\]/is';
+    $replace[] = $canview ? '<code class="content-code \\2">\\3<a class="copytoclipboard notext" title="'.Language::get('copy to clipboard').'"><span class="icon-copy"></span></a></code>' : '<code class="content-code">'.Language::get('Can not view this content').'</code>';
     $patt[] = '/(&lt;\?(.*?)\?&gt;)/uism';
     $replace[] = '<span class=php>\\1</span>';
     $patt[] = '/(&lt;%(.*?)%&gt;)/uism';
@@ -163,10 +159,14 @@ class Gcms extends \Kotchasan\KBase
     $replace[] = '<span class=comment>\\1</span>';
     $patt[] = '/(&lt;!--(.*?)--&gt;)/uis';
     $replace[] = '<span class=comment>\\1</span>';
-    $patt[] = '/\[google\](.*?)\[\/google\]/usi';
+    $patt[] = '/\[search\](.*)\[\/search\]/i';
+    $replace[] = '<a href="'.WEB_URL.'index.php?module=search&amp;q=\\1" rel="nofollow">\\1</a>';
+    $patt[] = '/\[google\](.*?)\[\/google\]/i';
     $replace[] = '<a class="googlesearch" href="http://www.google.co.th/search?q=\\1&amp;&meta=lr%3Dlang_th" target="_blank" rel="nofollow">\\1</a>';
-    $patt[] = '/([^["]]|\r|\n|\s|\t|^)(https?:\/\/([^\s<>\"\']+))/';
+    $patt[] = '/([^["]]|\r|\n|\s|\t|^)((ftp|https?):\/\/([^\s<>\"\']+))/i';
     $replace[] = '\\1<a href="\\2" target="_blank" rel="nofollow">\\2</a>';
+    $patt[] = '/(<a[^>]+>)(https?:\/\/[^\%<]+)([\%][^\.\&<]+)([^<]{5,})(<\/a>)/i';
+    $replace[] = '\\1\\2...\\4\\5';
     $patt[] = '/\[youtube\]([a-z0-9-_]+)\[\/youtube\]/i';
     $replace[] = '<div class="youtube"><iframe src="//www.youtube.com/embed/\\1?wmode=transparent"></iframe></div>';
     return preg_replace($patt, $replace, $detail);
@@ -420,7 +420,7 @@ class Gcms extends \Kotchasan\KBase
   {
     $text = preg_replace('/<br(\s\/)?>/isu', '', $text);
     if ($u) {
-      $text = str_replace(array('&lt;', '&gt;', '&#92;', '&nbsp;'), array('<', '>', '\\', ' '), $text);
+      $text = str_replace(array('&lt;', '&gt;', '&#92;', '&nbsp;', '&#x007B;', '&#x007D;'), array('<', '>', '\\', ' ', '{', '}'), $text);
     }
     return $text;
   }

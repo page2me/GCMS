@@ -8,8 +8,8 @@
 
 namespace Board\View;
 
-use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
+use \Kotchasan\Template;
 use \Gcms\Gcms;
 use \Board\Index\Controller;
 use \Kotchasan\Date;
@@ -35,10 +35,10 @@ class View extends \Gcms\View
   public function index(Request $request, $index)
   {
     // ค่าที่ส่งมา
-    $index->id = $request->get('wbid', $request->get('id')->toInt())->toInt();
-    $index->q = preg_replace('/[+\s]+/u', ' ', $request->get('q')->text());
+    $index->id = $request->request('wbid', $request->request('id')->toInt())->toInt();
+    $index->q = preg_replace('/[+\s]+/u', ' ', $request->request('q')->text());
     // อ่านรายการที่เลือก
-    $index = \Board\View\Model::get($index);
+    $index = \Board\View\Model::get($request, $index);
     if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();
@@ -88,7 +88,7 @@ class View extends \Gcms\View
             $listitem->add(array(
               '/(edit-{QID}-{RID}-{NO}-{MODULE})/' => $canEdit ? '\\1' : 'hidden',
               '/(delete-{QID}-{RID}-{NO}-{MODULE})/' => $moderator ? '\\1' : 'hidden',
-              '/{DETAIL}/' => $picture.Gcms::highlightSearch(Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true), $index->q),
+              '/{DETAIL}/' => $picture.Gcms::highlightSearch(Gcms::showDetail(nl2br($item->detail), $canView, true, true), $index->q),
               '/{UID}/' => $item->member_id,
               '/{DISPLAYNAME}/' => $item->displayname,
               '/{STATUS}/' => $item->status,
@@ -108,7 +108,7 @@ class View extends \Gcms\View
         // รูปภาพในกระทู้
         $picture = empty($index->picture) ? '' : '<div><figure><img src="'.WEB_URL.$index->picture.'" alt="'.$index->topic.'"></figure></div>';
         // เนื้อหา
-        $index->detail = Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($index->detail)), $canView, true, true);
+        $index->detail = Gcms::showDetail(nl2br($index->detail), $canView, true, true);
         // description
         $index->description = Gcms::html2txt($index->detail);
         $replace = array(

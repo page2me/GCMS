@@ -30,11 +30,6 @@ a {
     background-color: transparent !important;
   }
 }
-.scroller {
-  right: 10px;
-  bottom: 10px;
-  left: auto;
-}
 .login {
   background-color: #F9F9F9;
   border: 1px solid #DDD;
@@ -731,6 +726,7 @@ div#install li.invalid {
 }
 #GModal_modaldiv > .modaldiv form {
   padding: 10px;
+  margin: 0;
   background-color: #FFF;
   max-width: 600px;
 }
@@ -780,6 +776,9 @@ div#install li.invalid {
     display: block;
     margin: 0;
     border-bottom: 1px solid #DBDBDB;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: auto;
   }
   .writetab > ul > li > .select {
     background-color: #FFF;

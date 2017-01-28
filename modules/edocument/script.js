@@ -3,7 +3,7 @@ function initEDocumentMain(id) {
   var doDownloadClick = function () {
     var hs = patt.exec(this.className);
     if (hs) {
-      if (hs[2] == 'delete' && !confirm(trans('You want to delete ?'))) {
+      if (hs[2] == 'delete' && !confirm(trans('You want to XXX ?').replace(/XXX/, trans('delete')))) {
         return false;
       }
       var req = new GAjax({

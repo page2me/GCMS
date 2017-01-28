@@ -47,7 +47,7 @@ class View extends \Gcms\Adminview
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
       'hideColumns' => array('visited', 'status', 'activatecode', 'website', 'fb'),
       /* คอลัมน์ที่สามารถค้นหาได้ */
-      'searchColumns' => array('fname', 'lname', 'displayname', 'email'),
+      'searchColumns' => array('fname', 'lname', 'displayname', 'email', 'phone1'),
       /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
       'action' => 'index.php/index/model/member/action',
       'actions' => array(

@@ -14,7 +14,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Language;
 
 /**
- *  Model สำหรับอ่านข้อมูลโมดูล
+ * หน้าแสดงบทความจากวันที่
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -35,10 +35,10 @@ class Controller extends \Kotchasan\Controller
     // ลิสต์รายการ tag
     $index = \Document\Stories\Model::calendar($request, $module);
     if ($index) {
-      // ลิสต์รายการ tag
       $index->module = 'document';
       $index->rows = self::$cfg->document_rows;
       $index->cols = self::$cfg->document_cols;
+      $index->style = self::$cfg->document_style;
       $index->new_date = 0;
       $index->topic = Language::get('Articles written at').' '.Date::format($index->d, 'd M Y');
       $index->description = $index->topic;
@@ -72,7 +72,7 @@ class Controller extends \Kotchasan\Controller
    */
   public function tooltip(Request $request, $settings)
   {
-    if (preg_match('/^calendar\-([0-9]+){0,2}\-([0-9]+){0,2}\-([0-9]+){0,4}\-([0-9_]+)$/', $request->get('id')->toString(), $match)) {
+    if (preg_match('/^calendar\-([0-9]+){0,2}\-([0-9]+){0,2}\-([0-9]+){0,4}\-([0-9_]+)$/', $request->request('id')->toString(), $match)) {
       $ids = array();
       foreach (explode('_', $match[4]) as $id) {
         $ids[] = (int)$id;

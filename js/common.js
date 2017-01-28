@@ -378,6 +378,21 @@ function selectChanged(src, action, callback) {
 var doCustomConfirm = function (value) {
   return confirm(value);
 };
+function contryChanged(prefix) {
+  var _contryChanged = function () {
+    if (this.value != 'TH') {
+      $G($E(prefix + '_provinceID').parentNode.parentNode).addClass('hidden');
+      $G($E(prefix + '_province').parentNode.parentNode).removeClass('hidden');
+    } else {
+      $G($E(prefix + '_provinceID').parentNode.parentNode).removeClass('hidden');
+      $G($E(prefix + '_province').parentNode.parentNode).addClass('hidden');
+    }
+  };
+  if ($E(prefix + '_country')) {
+    $G(prefix + '_country').addEvent('change', _contryChanged);
+    _contryChanged.call($E(prefix + '_country'));
+  }
+}
 $G(window).Ready(function () {
   var fontSize = floatval(Cookie.get('fontSize')),
     patt = /font_size(.*?)\s(small|normal|large)/;

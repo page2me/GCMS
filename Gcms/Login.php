@@ -53,7 +53,7 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
     if ($login_result === null) {
       // user หรือ password ไม่ถูกต้อง
       self::$login_input = isset($item) ? 'password' : 'username';
-      return isset($item) ? str_replace(':name', Language::get('Password'), Language::get('Incorrect :name')) : Language::get('not a registered user');
+      return isset($item) ? Language::replace('Incorrect :name', array(':name', Language::get('Password'))) : Language::get('not a registered user');
     } elseif (!empty($login_result['activatecode'])) {
       // ยังไม่ได้ activate
       self::$login_input = 'username';

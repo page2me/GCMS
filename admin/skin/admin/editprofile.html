@@ -165,17 +165,5 @@
       this.calendar.setText(this.calendar.getDateFormat('d M Y') + ' ({LNG_age} ' + age.year + ' {LNG_year}, ' + age.month + ' {LNG_month} ' + age.day + ' {LNG_days})');
     }
   });
-  var _contryChanged = function () {
-    if (this.value != 'TH') {
-      $G($E('register_provinceID').parentNode.parentNode).addClass('hidden');
-      $G($E('register_province').parentNode.parentNode).removeClass('hidden');
-    } else {
-      $G($E('register_provinceID').parentNode.parentNode).removeClass('hidden');
-      $G($E('register_province').parentNode.parentNode).addClass('hidden');
-    }
-  };
-  if ($E('register_country')) {
-    $G('register_country').addEvent('change', _contryChanged);
-    _contryChanged.call($E('register_country'));
-  }
+  contryChanged('register');
 </script>

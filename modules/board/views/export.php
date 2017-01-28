@@ -36,7 +36,7 @@ class View extends \Gcms\View
     // ค่าที่ส่งมา
     $index->id = $request->get('id', $request->get('id')->toInt())->toInt();
     // อ่านรายการที่เลือก
-    $index = \Board\View\Model::get($index);
+    $index = \Board\View\Model::get($request, $index);
     if ($index) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();

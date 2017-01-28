@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
    */
   public function init(Request $request, $index)
   {
-    if ($request->get('alias')->exists() || $request->get('id')->exists()) {
+    if ($request->request('alias')->exists() || $request->request('id')->exists()) {
       // หน้าแสดงบทความ
       if (MAIN_INIT === 'amphtml') {
         $page = createClass('Document\Amp\View')->index($request, $index);

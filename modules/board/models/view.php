@@ -8,6 +8,8 @@
 
 namespace Board\View;
 
+use \Kotchasan\Http\Request;
+
 /**
  * อ่านข้อมูลโมดูล
  *
@@ -24,7 +26,7 @@ class Model extends \Kotchasan\Model
    * @param object $index ข้อมูลที่ส่งมา
    * @return object ข้อมูล object ไม่พบคืนค่า null
    */
-  public static function get($index)
+  public static function get(Request $request, $index)
   {
     // model
     $model = new static;
@@ -44,7 +46,7 @@ class Model extends \Kotchasan\Model
       ->join('category C', 'LEFT', array(array('C.category_id', 'I.category_id'), array('C.module_id', 'I.module_id')))
       ->where(array('I.id', $index->id))
       ->toArray();
-    if (self::$request->get('visited')->toInt() == 0) {
+    if (!$request->request('visited')->exists()) {
       $query->cacheOn(false);
     }
     $result = $query->first($fields);

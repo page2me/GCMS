@@ -36,7 +36,7 @@ class View extends \Gcms\View
     // สมาชิก
     if ($login = Login::isMember()) {
       // ค่าที่ส่งมา
-      $to = strtolower($request->get('to')->filter('0-9a-zA-Z'));
+      $to = strtolower($request->request('to')->filter('0-9a-zA-Z'));
       if (preg_match('/^[0-9]+$/', $to)) {
         $reciever = \Index\Sendmail\Model::getUser($to);
         $to = '';

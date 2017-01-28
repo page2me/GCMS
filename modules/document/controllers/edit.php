@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
   public function init(Request $request, $module)
   {
     // รายการที่แก้ไข
-    $rid = $request->get('rid')->toInt();
+    $rid = $request->request('rid')->toInt();
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     if ($rid > 0) {
       $index = \Document\Module\Model::getCommentById($rid, $module);

@@ -98,7 +98,7 @@ class View extends \Gcms\Adminview
       'id' => 'list_per_page',
       'labelClass' => 'g-input icon-published1',
       'itemClass' => 'item',
-      'label' => '{LNG_Amount}',
+      'label' => '{LNG_Number}',
       'comment' => '{LNG_The number of items displayed per page}',
       'options' => array(10 => 10, 20 => 20, 30 => 30, 40 => 40, 50 => 50),
       'value' => isset($index->list_per_page) ? $index->list_per_page : 10

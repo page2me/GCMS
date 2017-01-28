@@ -30,7 +30,7 @@ class Controller extends \Kotchasan\Controller
   public function init(Request $request, $module)
   {
     // รายการที่แก้ไข
-    $qid = $request->get('id')->toInt();
+    $qid = $request->request('id')->toInt();
     // ตรวจสอบโมดูลและอ่านข้อมูลโมดูล
     if ($qid > 0) {
       // แก้ไข

@@ -36,11 +36,11 @@ class View extends \Gcms\View
   public function index(Request $request, $index)
   {
     // ค่าที่ส่งมา
-    $index->id = $request->get('id')->toInt();
-    $index->alias = $request->get('alias')->text();
-    $index->q = preg_replace('/[+\s]+/u', ' ', $request->get('q')->text());
+    $index->id = $request->request('id')->toInt();
+    $index->alias = $request->request('alias')->text();
+    $index->q = preg_replace('/[+\s]+/u', ' ', $request->request('q')->text());
     // อ่านรายการที่เลือก
-    $index = \Document\View\Model::get($index);
+    $index = \Document\View\Model::get($request, $index);
     if ($index && ($index->published || Login::isAdmin())) {
       // URL ของหน้า
       $index->canonical = Controller::url($index->module, $index->alias, $index->id, false);
@@ -95,11 +95,10 @@ class View extends \Gcms\View
           foreach ($index->comment_items as $no => $item) {
             // moderator และ เจ้าของ สามารถแก้ไขความคิดเห็นได้
             $canEdit = $moderator || ($isMember && $login['id'] == $item->member_id);
-            $item->detail = Gcms::highlightSearch(Gcms::showDetail(str_replace(array('{', '}'), array('&#x007B;', '&#x007D;'), nl2br($item->detail)), $canView, true, true), $index->q);
             $listitem->add(array(
               '/(edit-{QID}-{RID}-{NO}-{MODULE})/' => $canEdit ? '\\1' : 'hidden',
               '/(delete-{QID}-{RID}-{NO}-{MODULE})/' => $moderator ? '\\1' : 'hidden',
-              '/{DETAIL}/' => $item->detail,
+              '/{DETAIL}/' => Gcms::highlightSearch(Gcms::showDetail(nl2br($item->detail), $canView, true, true), $index->q),
               '/{UID}/' => $item->member_id,
               '/{DISPLAYNAME}/' => $item->displayname,
               '/{STATUS}/' => $item->status,

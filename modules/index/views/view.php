@@ -35,7 +35,7 @@ class View extends \Gcms\View
   {
     $topic = Language::get('Personal information').' '.self::$cfg->web_title;
     if (Login::isMember()) {
-      $user = \Index\User\Model::getUserById($request->get('id')->toInt());
+      $user = \Index\User\Model::getUserById($request->request('id')->toInt());
       if ($user) {
         // /member/view.html
         $template = Template::create('member', 'member', 'view');

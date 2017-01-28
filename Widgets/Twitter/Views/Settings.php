@@ -92,7 +92,7 @@ class Settings extends \Gcms\Adminview
       'id' => 'twitter_amount',
       'labelClass' => 'g-input icon-edit',
       'itemClass' => 'item',
-      'label' => '{LNG_Amount}',
+      'label' => '{LNG_Number}',
       'comment' => '{LNG_Determine the maximum number of messages to be displayed (set to 0 to display the Scrollbar)}',
       'value' => self::$cfg->twitter['amount']
     ));

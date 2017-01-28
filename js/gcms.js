@@ -203,7 +203,8 @@ function initIndex(id) {
     } else {
       G_Lightbox.clear();
     }
-    forEach($G(id || 'content').elems('img'), function (item, index) {
+    var content = $G(id || 'content');
+    forEach(content.elems('img'), function (item) {
       if (!$G(item).hasClass('nozoom')) {
         new preload(item, function () {
           if (floatval(this.width) > floatval(item.width)) {
@@ -211,6 +212,23 @@ function initIndex(id) {
           }
         });
       }
+    });
+    forEach(content.getElementsByClassName('copytoclipboard'), function () {
+      callClick(this, function () {
+        var element = this.parentNode;
+        if (document.selection) {
+          var range = document.body.createTextRange();
+          range.moveToElementText(element);
+          range.select();
+        } else if (window.getSelection) {
+          var range = document.createRange();
+          range.selectNode(element);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(range);
+        }
+        document.execCommand('copy');
+        document.body.msgBox(trans('successfully copied to clipboard'));
+      });
     });
   });
 }

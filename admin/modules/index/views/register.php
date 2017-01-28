@@ -21,11 +21,10 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * แสดงผล
+   * Register Form
    */
   public function render()
   {
-
     // register form
     $form = Html::create('form', array(
         'id' => 'setup_frm',

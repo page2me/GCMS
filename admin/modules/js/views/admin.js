@@ -6,7 +6,7 @@ function initEditInplace(id, className) {
     if (this.id == id + '_add') {
       q = 'action=' + this.id;
     } else if (hs = patt.exec(this.id)) {
-      if (hs[1] == 'delete' && confirm(trans('You want to delete ?'))) {
+      if (hs[1] == 'delete' && confirm(trans('You want to XXX ?').replace(/XXX/, trans('delete')))) {
         q = 'action=' + this.id;
       } else if (hs[1] == 'color') {
         q = 'action=' + this.id + '&value=' + encodeURIComponent(c);
@@ -122,7 +122,7 @@ function initLanguages(id) {
       } else {
         q = 'action=changed&data=' + chs.join(',');
       }
-    } else if (hs[1] == 'delete' && confirm(trans('You want to delete ?'))) {
+    } else if (hs[1] == 'delete' && confirm(trans('You want to XXX ?').replace(/XXX/, trans('delete')))) {
       q = 'action=droplang&data=' + hs[2];
     }
     if (q != '') {
@@ -339,6 +339,7 @@ function initLanguageTable(id) {
     if ($G(this).hasClass('icon-copy')) {
       callClick(this, function () {
         copyToClipboard(this.title);
+        document.body.msgBox(trans('successfully copied to clipboard'));
         return false;
       });
     }
@@ -368,7 +369,7 @@ function showDebug() {
     });
   });
   $G('debug_clear').addEvent('click', function () {
-    if (confirm(trans('You want to delete ?'))) {
+    if (confirm(trans('You want to XXX ?').replace(/XXX/, trans('delete')))) {
       send('index.php/index/model/debug/action', 'action=clear', function (xhr) {
         $E('debug_layer').innerHTML = xhr.responseText;
       });
@@ -427,11 +428,14 @@ function callInstall(c) {
     });
   });
 }
-function findUser(name, id) {
+function findUser(name, id, from, count) {
   var SearchGet = function () {
     var value = $E(name).value;
     if (value != '') {
-      return  'name=' + encodeURIComponent(value);
+      q = 'name=' + encodeURIComponent(value);
+      q += '&from=' + (from || 'name,email');
+      q += '&count=' + (count || 10);
+      return q;
     }
     return null;
   };
@@ -444,7 +448,7 @@ function findUser(name, id) {
     return '<p><span class="icon-user">' + this.name.unentityify() + '</span></p>';
   }
   function SearchRequest(datas) {
-    $G(name).replaceClass('valid', 'invalid');
+    $G(name).reset();
     $E(id).value = 0;
   }
   new GAutoComplete(name, {

@@ -30,7 +30,7 @@ function findLocation() {
         my_marker.setPosition(myLatlng);
         mapChanged();
       } else {
-        alert(trans('Sorry Location not found'));
+        alert(trans('Sorry XXX not found').replace(/XXX/, trans('Location')));
       }
     });
   }

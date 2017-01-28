@@ -9,16 +9,16 @@
 namespace Board\Write;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\ArrayTool;
-use \Gcms\Login;
-use \Gcms\Gcms;
 use \Kotchasan\Language;
-use \Kotchasan\Validator;
-use \Kotchasan\File;
+use \Gcms\Gcms;
+use \Gcms\Login;
+use \Kotchasan\ArrayTool;
 use \Kotchasan\Date;
+use \Kotchasan\File;
+use \Kotchasan\Validator;
 
 /**
- *  Model สำหรับบันทึกกระทู้
+ * บันทึกกระทู้
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

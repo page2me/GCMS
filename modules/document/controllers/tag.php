@@ -12,7 +12,7 @@ use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
 
 /**
- * Controller หลัก สำหรับแสดง frontend ของ GCMS
+ * หน้าแสดงบทความจาก Tag
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,8 +22,9 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * หน้าแสดงบทความจาก Tags
+   * หน้าแสดงบทความจาก Tag
    *
+   * @param Request $request
    * @param Object $module ข้อมูลโมดูลจาก database
    * @return Object
    */
@@ -37,6 +38,7 @@ class Controller extends \Kotchasan\Controller
       $index->module = 'document';
       $index->rows = self::$cfg->document_rows;
       $index->cols = self::$cfg->document_cols;
+      $index->style = self::$cfg->document_style;
       $index->new_date = 0;
       $index->topic = Language::get('Tags').' '.$index->tag;
       $index->description = $index->topic;

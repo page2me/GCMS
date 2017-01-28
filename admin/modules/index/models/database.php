@@ -60,16 +60,23 @@ class Model extends \Kotchasan\Model
           if (preg_match('/^'.$prefix.'(.*?)$/', $table['Name']) && isset($datas[$table['Name']])) {
             $fields = $model->db()->customQuery('SHOW FULL FIELDS FROM '.$table['Name'], true);
             $primarykey = array();
+            $fulltext = array();
             $rows = array();
             foreach ($fields AS $field) {
               if ($field['Key'] == 'PRI') {
                 $primarykey[] = '`'.$field['Field'].'`';
               }
+              if ($field['Key'] == 'MUL') {
+                $fulltext[] = 'FULLTEXT KEY `'.$field['Field'].'` (`'.$field['Field'].'`)';
+              }
               $database[$table['Name']]['Field'][] = $field['Field'];
               $rows[] = '`'.$field['Field'].'` '.$field['Type'].($field['Collation'] != '' ? ' collate '.$field['Collation'] : '').($field['Null'] == 'NO' ? ' NOT NULL' : '').($field['Default'] != '' ? " DEFAULT '".$field['Default']."'" : '').($field['Extra'] != '' ? ' '.$field['Extra'] : '');
             }
-            if (sizeof($primarykey) > 0) {
+            if (!empty($primarykey)) {
               $rows[] = 'PRIMARY KEY ('.implode(',', $primarykey).')';
+            }
+            if (!empty($fulltext)) {
+              $rows[] = implode(',', $fulltext);
             }
             if (isset($datas[$table['Name']]['sturcture'])) {
               $table_name = $prefix == '' ? $table['Name'] : preg_replace('/^'.$prefix.'/', '{prefix}', $table['Name']);

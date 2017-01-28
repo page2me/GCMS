@@ -29,8 +29,6 @@ class Router extends \Kotchasan\Router
     '/^[a-z0-9]+\.php\/([a-z]+)\/(model)(\/([\/a-z0-9_]+)\/([a-z]+))?$/i' => array('module', '_mvc', '', '_dir', '_method'),
     // css, js
     '/(css|js)\/(view)\/(index)/i' => array('module', '_mvc', '_dir'),
-    // antispam image
-    '/(index)\/(view)\/(antispam)/i' => array('module', '_mvc', '_dir'),
     // install
     '/index\.php\/(index)\/(controller)\/(installing)/i' => array('module', '_mvc', '_dir'),
     // module/cat/id

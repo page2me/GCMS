@@ -57,6 +57,8 @@ class View extends \Gcms\View
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
       '/{LIST}/' => $listitem->render(),
+      '/{STYLE}/' => $index->category_display,
+      '/{COLS}/' => empty($index->category_cols) ? 1 : $index->category_cols,
       '/{MODULE}/' => $index->module
     ));
     // breadcrumb ของโมดูล

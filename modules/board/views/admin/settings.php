@@ -96,7 +96,7 @@ class View extends \Gcms\Adminview
       'id' => 'list_per_page',
       'labelClass' => 'g-input icon-published1',
       'itemClass' => 'item',
-      'label' => '{LNG_Amount}',
+      'label' => '{LNG_Number}',
       'comment' => '{LNG_Set the number of entries displayed per page}',
       'value' => $index->list_per_page
     ));
@@ -142,7 +142,7 @@ class View extends \Gcms\Adminview
       'id' => 'news_count',
       'labelClass' => 'g-input icon-published1',
       'itemClass' => 'item',
-      'label' => '{LNG_Amount}',
+      'label' => '{LNG_Number}',
       'comment' => '{LNG_Set the number of entries displayed (0 means not shown)}',
       'value' => $index->news_count
     ));

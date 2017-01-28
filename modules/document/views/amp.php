@@ -37,7 +37,7 @@ class View extends \Gcms\View
     $index->id = $request->get('id')->toInt();
     $index->alias = $request->get('alias')->text();
     // อ่านรายการที่เลือก
-    $index = \Document\View\Model::get($index);
+    $index = \Document\View\Model::get($request, $index);
     if ($index && $index->published) {
       // login
       $login = $request->session('login', array('id' => 0, 'status' => -1, 'email' => '', 'password' => ''))->all();

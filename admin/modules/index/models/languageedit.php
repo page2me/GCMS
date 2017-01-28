@@ -119,7 +119,10 @@ class Model extends \Kotchasan\Model
           $ret['ret_write_key'] = Language::get('Please fill in');
         } else {
           // ตรวจสอบข้อมูลซ้ำ
-          $search = $model->db()->first($table_language, array('key', $save['key']));
+          $search = $model->db()->first($table_language, array(
+            array('key', $save['key']),
+            array('js', $save['js'])
+          ));
           if ($search && ($id == 0 || $id != $search->id)) {
             $ret['ret_write_key'] = Language::replace('This :name already exist', array(':name' => Language::get('Key')));
           } else {

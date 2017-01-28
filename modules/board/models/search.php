@@ -31,20 +31,24 @@ class Model extends \Kotchasan\Model
   {
     $where1 = array();
     $where2 = array();
+    $score1 = array();
+    $score2 = array();
     // ค้นหาข้อมูล
     foreach ($index->words as $item) {
       $where1[] = array('Q.topic', 'LIKE', '%'.$item.'%');
       $where1[] = array('Q.detail', 'LIKE', '%'.$item.'%');
       $where2[] = array('R.detail', 'LIKE', '%'.$item.'%');
+      $score1[] = "MATCH (Q.`topic`) AGAINST('$item') + MATCH (Q.`detail`) AGAINST('$item')";
+      $score2[] = "MATCH (R.`detail`) AGAINST('$item')";
     }
     $db = $this->db();
     $q1 = $db->createQuery()
-      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'Q.detail description', 'Q.visited', '0 index')
+      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'Q.detail description', 'Q.visited', '0 index', '('.implode(' + ', $score1).') score')
       ->from('board_q Q')
       ->join('modules M', 'INNER', array(array('M.id', 'Q.module_id'), array('M.owner', 'board')))
       ->where($where1);
     $q2 = $db->createQuery()
-      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'R.detail description', 'Q.visited', '0 index')
+      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'R.detail description', 'Q.visited', '0 index', '('.implode(' + ', $score2).') score')
       ->from('board_r R')
       ->join('board_q Q', 'INNER', array(array('Q.id', 'R.index_id'), array('Q.module_id', 'R.module_id')))
       ->join('modules M', 'INNER', array(array('M.id', 'Q.module_id'), array('M.owner', 'board')))

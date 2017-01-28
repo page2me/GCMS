@@ -236,10 +236,9 @@ class Config extends \Kotchasan\Config
    */
   public $wordrude_replace = 'xxx';
   /**
-   * การแสดงผลบทความสำหรับหน้า แสดงรายการตามวันที่ และ Tags
-   *
-   * @var int
+   * การแสดงผลบทความสำหรับหน้าแสดงรายการตามวันที่ และ Tags
    */
+  public $document_style = 'iconview';
   public $document_cols = 1;
   public $document_rows = 20;
 }
