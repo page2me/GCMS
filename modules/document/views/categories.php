@@ -35,12 +35,20 @@ class View extends \Gcms\View
     $categories = \Index\Category\Model::all((int)$index->module_id);
     // /document/categoryitem.html
     $listitem = Template::create('document', $index->module, 'categoryitem');
+    // รูปภาพ defalt
+    if (is_file(ROOT_PATH.DATA_FOLDER.'document/default_icon.png')) {
+      $default_icon = WEB_URL.DATA_FOLDER.'document/default_icon.png';
+    } elseif (isset($index->default_icon) && is_file(ROOT_PATH.$index->default_icon)) {
+      $default_icon = WEB_URL.$index->default_icon;
+    } else {
+      $default_icon = WEB_URL.'modules/document/img/default_icon.png';
+    }
     // รายการ
     foreach ($categories as $item) {
       if (!empty($item->icon) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$item->icon)) {
         $icon = WEB_URL.DATA_FOLDER.'document/'.$item->icon;
       } else {
-        $icon = WEB_URL.(isset($index->default_icon) ? $index->default_icon : 'modules/document/img/default_icon.png');
+        $icon = $default_icon;
       }
       $listitem->add(array(
         '/{TOPIC}/' => $item->topic,

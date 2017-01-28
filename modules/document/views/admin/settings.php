@@ -213,6 +213,17 @@ class View extends \Gcms\Adminview
       'label' => '{LNG_Rows}',
       'value' => self::$cfg->document_rows
     ));
+    // Thumbnail สำหรับบทความตามวันที่หรือตามเรื่อง
+    $document_icon = is_file(ROOT_PATH.DATA_FOLDER.'document/default_icon.png') ? WEB_URL.DATA_FOLDER.'document/default_icon.png' : WEB_URL.$index->default_icon;
+    $fieldset->add('file', array(
+      'id' => 'document_icon',
+      'labelClass' => 'g-input icon-upload',
+      'itemClass' => 'item',
+      'label' => '{LNG_Browse file}',
+      'comment' => '{LNG_Upload icons (default) as defined above. Can be used as thumbnail if no thumbnail of story. (Resized automatically, if you want to use animated images or images transparent Please be prepared to fit the image size set.)}',
+      'dataPreview' => 'documentIcon',
+      'previewSrc' => $document_icon,
+    ));
     $fieldset = $form->add('fieldset', array(
       'title' => '{LNG_Role of Members}'
     ));

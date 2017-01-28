@@ -112,9 +112,14 @@ class Model extends \Kotchasan\Model
                   $ret['ret_'.$item] = Language::get('The type of file is invalid');
                 } else {
                   // อัปโหลด
-                  $save['default_icon'] = DATA_FOLDER.'document/default-'.$index->module_id.'.'.$file->getClientFileExt();
+                  if ($item == 'document_icon') {
+                    $icon = DATA_FOLDER.'document/default_icon.png';
+                  } else {
+                    $save['default_icon'] = DATA_FOLDER.'document/default-'.$index->module_id.'.'.$file->getClientFileExt();
+                    $icon = $save['default_icon'];
+                  }
                   try {
-                    $file->moveTo(ROOT_PATH.$save['default_icon']);
+                    $file->moveTo(ROOT_PATH.$icon);
                   } catch (\Exception $exc) {
                     // ไม่สามารถอัปโหลดได้
                     $ret['ret_'.$item] = Language::get($exc->getMessage());

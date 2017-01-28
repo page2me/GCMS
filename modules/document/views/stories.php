@@ -40,6 +40,14 @@ class View extends \Gcms\View
     $listitem = Grid::create('document', $index->module, 'listitem');
     // คอลัมน์
     $listitem->setCols($index->cols);
+    // รูปภาพ defalt
+    if (is_file(ROOT_PATH.DATA_FOLDER.'document/default_icon.png')) {
+      $default_icon = WEB_URL.DATA_FOLDER.'document/default_icon.png';
+    } elseif (isset($index->default_icon) && is_file(ROOT_PATH.$index->default_icon)) {
+      $default_icon = WEB_URL.$index->default_icon;
+    } else {
+      $default_icon = WEB_URL.'modules/document/img/default_icon.png';
+    }
     // ลิสต์รายการ
     foreach ($index->items as $item) {
       if (!empty($item->picture) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$item->picture)) {
@@ -47,7 +55,7 @@ class View extends \Gcms\View
       } elseif (!empty($index->icon) && is_file(ROOT_PATH.DATA_FOLDER.'document/'.$index->icon)) {
         $thumb = WEB_URL.DATA_FOLDER.'document/'.$index->icon;
       } else {
-        $thumb = WEB_URL.(isset($index->default_icon) ? $index->default_icon : 'modules/document/img/default_icon.png');
+        $thumb = $default_icon;
       }
       if ((int)$item->create_date > $valid_date && empty($item->comment_date)) {
         $icon = ' new';
