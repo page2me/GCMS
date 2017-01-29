@@ -1,3 +1,6 @@
+body, li {
+  line-height: 1.8;
+}
 /* font button, language button */
 .font_size, a[id^='lang_'] {
   color: inherit;
