@@ -759,5 +759,5 @@ return array(
   'change font large' => 'ขนาดตัวอักษรใหญ่ขึ้น',
   'Pixel' => 'พิกเซล',
   'by' => 'โดย',
-  'Setting the display by date or by tags' => 'ตั้งค่าการแสดงผลตามวันที่หรือตามแท็ก'
+  'Setting the display by date or by tags' => 'ตั้งค่าการแสดงผลตามวันที่หรือตามแท็ก',
 );
