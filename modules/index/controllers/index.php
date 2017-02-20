@@ -8,14 +8,14 @@
 
 namespace Index\Index;
 
-use \Gcms\Gcms;
+use \Kotchasan\Http\Request;
 use \Gcms\Login;
 use \Kotchasan\Template;
-use \Kotchasan\Http\Request;
 use \Kotchasan\Http\Response;
+use \Gcms\Gcms;
 
 /**
- * Controller หลัก สำหรับแสดง frontend ของ GCMS
+ * Controller หลัก สำหรับแสดงหน้าเว็บไซต์
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *

@@ -163,13 +163,13 @@ class Model extends \Kotchasan\Model
               $save['module_id'] = $index->module_id;
               $save['count'] = 1;
               $save['visited'] = 0;
-              $this->db()->insert($this->getFullTableName('gallery_album'), $save);
+              $this->db()->insert($this->getTableName('gallery_album'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('gallery_album'), $index->id, $save);
+              $this->db()->update($this->getTableName('gallery_album'), $index->id, $save);
             }
             if (isset($image)) {
-              $this->db()->delete($this->getFullTableName('gallery'), array(array('album_id', $index->id), array('module_id', $index->module_id), array('count', 0)), 0);
+              $this->db()->delete($this->getTableName('gallery'), array(array('album_id', $index->id), array('module_id', $index->module_id), array('count', 0)), 0);
               $save2 = array(
                 'album_id' => $index->id,
                 'module_id' => $index->module_id,
@@ -177,7 +177,7 @@ class Model extends \Kotchasan\Model
                 'last_update' => $mktime,
                 'count' => 0
               );
-              $this->db()->insert($this->getFullTableName('gallery'), $save2);
+              $this->db()->insert($this->getTableName('gallery'), $save2);
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');

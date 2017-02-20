@@ -12,7 +12,7 @@ use \Kotchasan\Language;
 use \Kotchasan\DataTable;
 
 /**
- * แสดงรายการหมวดหมู่
+ * module=document-category
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,14 +22,12 @@ class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล
-   *
-   * @var object
    */
   private $publisheds;
   private $replies;
 
   /**
-   * module=document-category
+   * แสดงรายการหมวดหมู่
    *
    * @param object $index
    * @return string

@@ -15,7 +15,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Text;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=edocument-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -25,7 +25,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=edocument-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

@@ -14,7 +14,7 @@ use \Kotchasan\Form;
 use \Gcms\Gcms;
 
 /**
- * แสดงรายการหมวดหมู่
+ * module=download-category
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -24,13 +24,11 @@ class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล
-   *
-   * @var object
    */
   private $languages;
 
   /**
-   * module=download-category
+   * แสดงรายการหมวดหมู่
    *
    * @param object $index
    * @return string

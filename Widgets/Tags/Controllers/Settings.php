@@ -10,7 +10,6 @@ namespace Widgets\Tags\Controllers;
 
 use \Kotchasan\Login;
 use \Kotchasan\Html;
-use \Kotchasan\Language;
 
 /**
  * Controller สำหรับจัดการการตั้งค่าเริ่มต้น
@@ -19,7 +18,7 @@ use \Kotchasan\Language;
  *
  * @since 1.0
  */
-class Settings extends \Kotchasan\Controller
+class Settings extends \Gcms\Controller
 {
 
   /**
@@ -29,6 +28,10 @@ class Settings extends \Kotchasan\Controller
   {
     // สมาชิกและสามารถตั้งค่าได้
     if (defined('MAIN_INIT') && Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_List of} {LNG_Tags}';
+      // เมนู
+      $this->menu = 'widget';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -47,13 +50,5 @@ class Settings extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return Language::replace('list of all :name', array(':name' => Language::get('Tags')));
   }
 }

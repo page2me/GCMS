@@ -8,26 +8,35 @@
 
 namespace Index\Sendmail;
 
+use \Kotchasan\Http\Request;
 use \Gcms\Login;
 use \Kotchasan\Html;
 
 /**
- * ฟอร์มส่งอีเมล์จากแอดมิน
+ * module=sendmail
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มส่งอีเมล์จากแอดมิน
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if ($login = Login::adminAccess()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Send email by Admin}';
+      // เลือกเมนู
+      $this->menu = 'email';
+      // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
       $breadcrumbs = $section->add('div', array(
@@ -37,7 +46,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-email">{LNG_Mailbox}</span></li>');
       $ul->appendChild('<li><span>{LNG_Email send}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-email-sent">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-email-sent">'.$this->title.'</h1>'
       ));
       // แสดงฟอร์ม
       $section->appendChild(createClass('Index\Sendmail\View')->render($login));
@@ -45,13 +54,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Send email by Admin}';
   }
 }

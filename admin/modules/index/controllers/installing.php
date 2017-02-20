@@ -14,7 +14,7 @@ use \Kotchasan\Language;
 use \Kotchasan\Html;
 
 /**
- * เพิ่มโมดูลแบบที่สามารถใช้ซ้ำได้
+ * module=installing
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,6 +23,12 @@ use \Kotchasan\Html;
 class Controller extends \Kotchasan\Controller
 {
 
+  /**
+   * เพิ่มโมดูลแบบที่สามารถใช้ซ้ำได้
+   *
+   * @param Request $request
+   * @return JSON
+   */
   public function index(Request $request)
   {
     // admin

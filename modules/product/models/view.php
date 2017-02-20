@@ -74,7 +74,7 @@ class Model extends \Kotchasan\Model
       if ($result) {
         // อัปเดทการเยี่ยมชม
         $result['visited'] ++;
-        $model->db()->update($model->getFullTableName('product'), $result['id'], array('visited' => $result['visited']));
+        $model->db()->update($model->getTableName('product'), $result['id'], array('visited' => $result['visited']));
         $model->db()->cacheSave(array($result));
         // อัปเดทตัวแปร
         foreach ($result as $key => $value) {

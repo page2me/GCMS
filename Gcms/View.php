@@ -87,6 +87,8 @@ class View extends \Gcms\Baseview
       '/{QURIES}/' => \Kotchasan\Database\Driver::queryCount(),
       /* ภาษา */
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
+      /* วันที่ */
+      '/{DATE\s([0-9\-]+(\s[0-9:]+)?)?(\s([^}]+))?}/e' => '\Gcms\View::formatDate(array(1=>"$1",4=>"$4"))',
       /* ภาษา ที่ใช้งานอยู่ */
       '/{LANGUAGE}/' => \Kotchasan\Language::name(),
       /* Javascript ท้ายเพจ */
@@ -103,6 +105,7 @@ class View extends \Gcms\Baseview
    * แสดงผล Widget.
    *
    * @param array $matches
+   * @return string
    */
   public static function getWidgets($matches)
   {
@@ -124,5 +127,23 @@ class View extends \Gcms\Baseview
     if (method_exists($className, 'get')) {
       return createClass($className)->get($request);
     }
+    return '';
+  }
+
+  /**
+   * แปลงวันที่ {DATE 0123456789 d M Y} หรือ {DATE 2016-01-01 12:00:00 d M Y H:i:s}
+   * วันที่รูปแบบ mktime ตัวเลขเท่านั้น
+   * วันที่รูปแบบ YYYY-mm-dd H:i:s จาก MySQL (จะมีเวลาหรือไม่ก็ได้)
+   * ถ้าไม่ได้ระบุรูปแบบ จะใช้ตามรูปแบบของภาษา
+   *
+   * @param array $matches
+   * @return string
+   */
+  public static function formatDate($matches)
+  {
+    if (!empty($matches[1])) {
+      return \Kotchasan\Date::format($matches[1], isset($matches[4]) ? $matches[4] : null);
+    }
+    return '';
   }
 }

@@ -13,7 +13,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Text;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข ไฟล์ดาวน์โหลด
+ * module=edocument-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=edocument-write
+   * ฟอร์มสร้าง/แก้ไข เอกสาร
    *
    * @param object $index
    * @return string

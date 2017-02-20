@@ -11,7 +11,7 @@ namespace Index\Register;
 use \Kotchasan\Html;
 
 /**
- * Register Form
+ * module=register
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -32,6 +32,7 @@ class View extends \Gcms\Adminview
         'autocomplete' => 'off',
         'action' => 'index.php/index/model/updateprofile/save',
         'onsubmit' => 'doFormSubmit',
+        'token' => true,
         'ajax' => true
     ));
     $fieldset = $form->add('fieldset', array(

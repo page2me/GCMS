@@ -9,28 +9,25 @@
 namespace Index\Forgot;
 
 /**
- * Forgot Form
+ * action=forgot
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * ประมวลผลหน้า Forgot
+   * Forgot Form
+   *
+   * @return string
    */
   public function execute()
   {
+    // ข้อความ title bar
+    $this->title = '{LNG_Request new password}';
+    // ฟอร์ม
     return createClass('Index\Forgot\View')->render();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Request new password}';
   }
 }

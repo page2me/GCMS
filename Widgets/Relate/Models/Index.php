@@ -53,9 +53,9 @@ class Index extends \Kotchasan\Model
         }
         $qs = implode(' OR ', $qs);
         // ชื่อตาราง
-        $table_index = $model->getFullTableName('index');
-        $table_index_detail = $model->getFullTableName('index_detail');
-        $table_user = $model->getFullTableName('user');
+        $table_index = $model->getTableName('index');
+        $table_index_detail = $model->getTableName('index_detail');
+        $table_user = $model->getTableName('user');
         $select = array('Q.id', 'D.topic', 'Q.alias', 'Q.picture', 'Q.comment_date', 'Q.last_update', 'Q.create_date', 'D.description', 'Q.comments', 'Q.visited', 'Q.member_id', 'D.language');
         $where = array(
           array('Q.module_id', (int)$index['module_id']),

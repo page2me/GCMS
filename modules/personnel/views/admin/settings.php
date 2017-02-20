@@ -13,7 +13,7 @@ use \Kotchasan\HtmlTable;
 use \Gcms\Gcms;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=personnel-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=personnel-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

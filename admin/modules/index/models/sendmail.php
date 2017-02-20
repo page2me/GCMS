@@ -31,7 +31,7 @@ class Model extends \Kotchasan\Model
   {
     $model = new static($request);
     $result = array();
-    foreach ($model->db()->select($model->getFullTableName('user'), array('status', 1), array('email')) as $item) {
+    foreach ($model->db()->select($model->getTableName('user'), array('status', 1), array('email')) as $item) {
       $result[] = $item['email'];
     }
     return $result;

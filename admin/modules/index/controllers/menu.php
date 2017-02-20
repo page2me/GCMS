@@ -44,7 +44,7 @@ class Controller
   {
     $menus = array();
     // menu section
-    $menus['sections']['home'] = array('h', '<a href="index.php?module=dashboard" accesskey=h title="{LNG_Home}"><span>{LNG_Home}</span></a>');
+    $menus['sections']['dashboard'] = array('h', '<a href="index.php?module=dashboard" accesskey=h title="{LNG_Home}"><span>{LNG_Home}</span></a>');
     $menus['sections']['settings'] = array('1', '{LNG_Site settings}');
     $menus['sections']['index'] = array('2', '{LNG_Menus} &amp; {LNG_Web pages}');
     $menus['sections']['modules'] = array('3', '{LNG_Modules}');
@@ -123,10 +123,11 @@ class Controller
   /**
    * แสดงผลเมนู
    *
+   * @param string $select
    * @return string
    */
-  public function render()
+  public function render($select)
   {
-    return \Index\Menu\View::render($this->menus);
+    return \Index\Menu\View::render($this->menus, $select);
   }
 }

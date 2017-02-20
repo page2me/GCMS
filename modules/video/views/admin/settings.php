@@ -12,7 +12,7 @@ use \Kotchasan\Html;
 use \Kotchasan\HtmlTable;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=video-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,7 +22,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=video-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

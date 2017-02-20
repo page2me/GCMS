@@ -96,7 +96,7 @@ class View extends \Gcms\Adminview
       'labelClass' => 'g-input icon-clock',
       'itemClass' => 'item',
       'label' => '{LNG_Time zone}&nbsp;({LNG_Server time}&nbsp;<em id=server_time>'.date('H:i:s').'</em>&nbsp;{LNG_Local time}&nbsp;<em id=local_time></em>)',
-      'comment' => '{LNG_Settings the timing of the server to match the local time (Hour)}',
+      'comment' => '{LNG_Settings the timing of the server to match the local time}',
       'options' => $datas,
       'value' => isset($config->timezone) ? $config->timezone : self::$cfg->timezone
     ));

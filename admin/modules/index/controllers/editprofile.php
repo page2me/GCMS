@@ -8,6 +8,7 @@
 
 namespace Index\Editprofile;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\Template;
@@ -18,24 +19,31 @@ use \Kotchasan\Mime;
 use \Gcms\Gcms;
 
 /**
- * แก้ไขข้อมูลส่วนตัวสมาชิก
+ * module=editprofile
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * แก้ไขข้อมูลส่วนตัวสมาชิก
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // สมาชิก
     if ($login = Login::isMember()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Editing your account}';
+      // เลือกเมนู
+      $this->menu = 'users';
       // id ที่ต้องการ ถ้าไม่มีใช้คนที่ login
-      $id = self::$request->get('id', $login['id'])->toInt();
+      $id = $request->get('id', $login['id'])->toInt();
       // อ่านข้อมูลสมาชิก
       $user = \Index\Member\Model::get($id);
       if ($user && ($login['status'] == 1 || $login['id'] == $user->id)) {
@@ -84,13 +92,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Editing your account}';
   }
 }

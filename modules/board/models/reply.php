@@ -186,7 +186,7 @@ class Model extends \Kotchasan\Model
             $post['last_update'] = $mktime;
             if ($id > 0) {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('board_r'), $id, $post);
+              $this->db()->update($this->getTableName('board_r'), $id, $post);
               // คืนค่า
               $ret['alert'] = Language::get('Edit comment successfully');
             } else {
@@ -194,7 +194,7 @@ class Model extends \Kotchasan\Model
               $post['ip'] = $request->getClientIp();
               $post['index_id'] = $index->id;
               $post['module_id'] = $index->module_id;
-              $id = $this->db()->insert($this->getFullTableName('board_r'), $post);
+              $id = $this->db()->insert($this->getTableName('board_r'), $post);
               // อัปเดทคำถาม
               $q['commentator'] = empty($post['sender']) ? $post['email'] : $post['sender'];
               $q['commentator_id'] = $post['member_id'];
@@ -214,7 +214,7 @@ class Model extends \Kotchasan\Model
             // อัปเดทคำถาม
             $q['comment_date'] = $mktime;
             $q['last_update'] = $mktime;
-            $this->db()->update($this->getFullTableName('board_q'), $index->id, $q);
+            $this->db()->update($this->getTableName('board_q'), $index->id, $q);
             // เคลียร์
             $request->removeToken();
             // reload

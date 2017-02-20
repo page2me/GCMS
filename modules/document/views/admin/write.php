@@ -14,7 +14,7 @@ use \Gcms\Gcms;
 use \Kotchasan\ArrayTool;
 
 /**
- * ฟอร์มสร้าง/แก้ไข เนื้อหา
+ * module=document-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -24,7 +24,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=document-write
+   * ฟอร์มสร้าง/แก้ไข เนื้อหา
    *
    * @param object $index
    * @return string

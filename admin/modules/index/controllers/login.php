@@ -11,17 +11,19 @@ namespace Index\Login;
 use \Kotchasan\Login;
 
 /**
- * Login Form
+ * action=login
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * ประมวลผลหน้า Login
+   * Login Form
+   *
+   * @return string
    */
   public function execute()
   {
@@ -30,14 +32,9 @@ class Controller extends \Kotchasan\Controller
       Login::$text_username = 'demo';
       Login::$text_password = 'demo';
     }
+    // ข้อความ title bar
+    $this->title = '{LNG_Administrator Area}';
+    // ฟอร์ม
     return createClass('Index\Login\View')->render();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return'{LNG_Administrator Area}';
   }
 }

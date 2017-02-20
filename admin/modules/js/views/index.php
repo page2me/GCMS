@@ -27,6 +27,7 @@ class View extends \Kotchasan\KBase
   {
     // default js
     $js = array();
+    $js[] = 'var WEB_URL = "'.WEB_URL.'";';
     $js[] = file_get_contents(ROOT_PATH.'js/gajax.js');
     $js[] = file_get_contents(ROOT_PATH.'js/ddpanel.js');
     $js[] = file_get_contents(ROOT_PATH.'js/ddmenu.js');
@@ -79,7 +80,6 @@ class View extends \Kotchasan\KBase
         'DATE_SHORT',
         'YEAR_OFFSET'
     ));
-    $js[] = 'var WEB_URL = "'.WEB_URL.'";';
     $js[] = 'Date.monthNames = ["'.implode('", "', $languages['MONTH_SHORT']).'"];';
     $js[] = 'Date.longMonthNames = ["'.implode('", "', $languages['MONTH_LONG']).'"];';
     $js[] = 'Date.longDayNames = ["'.implode('", "', $languages['DATE_LONG']).'"];';

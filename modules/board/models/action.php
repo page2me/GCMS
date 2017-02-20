@@ -86,11 +86,11 @@ class Model extends \Kotchasan\Model
         } elseif ($qid > 0 && in_array($action, array('pin', 'lock')) && $moderator) {
           if ($action == 'pin') {
             $ret['value'] = $index->pin == 0 ? 1 : 0;
-            $this->db()->update($this->getFullTableName('board_q'), $qid, array('pin' => $ret['value']));
+            $this->db()->update($this->getTableName('board_q'), $qid, array('pin' => $ret['value']));
             $ret['title'] = Language::get('click to').' '.Language::get($ret['value'] == 1 ? 'Unpin' : 'Pin');
           } elseif ($action == 'lock') {
             $ret['value'] = $index->locked == 0 ? 1 : 0;
-            $this->db()->update($this->getFullTableName('board_q'), $qid, array('locked' => $ret['value']));
+            $this->db()->update($this->getTableName('board_q'), $qid, array('locked' => $ret['value']));
             $ret['title'] = Language::get('click to').' '.Language::get($ret['value'] == 1 ? 'Unlock' : 'Lock');
           }
         } elseif ($action === 'delete' && $isMember) {
@@ -110,7 +110,7 @@ class Model extends \Kotchasan\Model
             // ลบรูปภาพในคำตอบ
             @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index->picture);
             // ลบความคิดเห็น
-            $this->db()->delete($this->getFullTableName('board_r'), $rid);
+            $this->db()->delete($this->getTableName('board_r'), $rid);
             // อ่านคำตอบล่าสุดของคำถามนี้
             $name = "CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN C.`sender`='' THEN C.`email` ELSE C.`sender` END) WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END";
             $r = $this->db()->createQuery()
@@ -154,8 +154,8 @@ class Model extends \Kotchasan\Model
             @unlink(ROOT_PATH.DATA_FOLDER.'board/'.$index->picture);
             @unlink(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$index->picture);
             // ลบ
-            $this->db()->delete($this->getFullTableName('board_q'), $qid);
-            $this->db()->delete($this->getFullTableName('board_r'), array(array('index_id', $qid), array('module_id', $index->module_id)));
+            $this->db()->delete($this->getTableName('board_q'), $qid);
+            $this->db()->delete($this->getTableName('board_r'), array(array('index_id', $qid), array('module_id', $index->module_id)));
             if ($action == 'deleting') {
               // กลับไปหน้าหลักของโมดูลที่เลือก
               $ret['location'] = WEB_URL."index.php?module=$module";

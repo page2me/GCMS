@@ -13,7 +13,6 @@ use \Kotchasan\Template;
 use \Gcms\Gcms;
 use \Kotchasan\Grid;
 use \Portfolio\Index\Controller;
-use \Kotchasan\Date;
 
 /**
  * แสดงรายการ Portfolio
@@ -53,8 +52,7 @@ class View extends \Gcms\View
         '/{URL}/' => Controller::url($index->module, $item->id),
         '/{TOPIC}/' => $item->title,
         '/{TAGS}/' => implode("\n", $tags),
-        '/{DATE}/' => Date::format($item->create_date, 'd M'),
-        '/{YEAR}/' => Date::format($item->create_date, 'Y'),
+        '/{DATE}/' => $item->create_date,
       ));
     }
     // breadcrumb ของโมดูล

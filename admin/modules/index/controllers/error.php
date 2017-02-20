@@ -22,7 +22,7 @@ class Controller extends \Kotchasan\Controller
 {
 
   /**
-   * Index
+   * Error Controller ของส่วนแอดมิน
    */
   public static function page404()
   {

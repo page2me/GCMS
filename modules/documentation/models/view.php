@@ -67,7 +67,7 @@ class Model extends \Kotchasan\Model
       ->first($fields);
     if ($result) {
       $result['visited'] ++;
-      $model->db()->update($model->getFullTableName('index'), (int)$result['id'], array('visited' => (int)$result['visited']));
+      $model->db()->update($model->getTableName('index'), (int)$result['id'], array('visited' => (int)$result['visited']));
       $model->db()->cacheSave(array($result));
       $result['category'] = Gcms::ser2Str($result, 'category');
       // อัปเดทตัวแปร

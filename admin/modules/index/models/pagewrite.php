@@ -119,9 +119,9 @@ class Model extends \Kotchasan\Model
         // model
         $model = new static;
         // ชื่อตาราง
-        $table_index = $model->getFullTableName('index');
-        $table_index_detail = $model->getFullTableName('index_detail');
-        $table_modules = $model->getFullTableName('modules');
+        $table_index = $model->getTableName('index');
+        $table_index_detail = $model->getTableName('index_detail');
+        $table_modules = $model->getTableName('modules');
         if (!empty($index_id)) {
           // หน้าที่แก้ไข
           $index = $model->db()->createQuery()
@@ -158,7 +158,7 @@ class Model extends \Kotchasan\Model
               empty($item['language']) ||
               $item['language'] == $detail_save['language']
             ) {
-              $ret['ret_module'] = Language::replace('This :name already exist', array(':name', Language::get('Module')));
+              $ret['ret_module'] = Language::replace('This :name already exist', array(':name' => Language::get('Module')));
             }
           }
           // topic
@@ -241,8 +241,8 @@ class Model extends \Kotchasan\Model
         // model
         $model = new static;
         // ชื่อตาราง
-        $table_index = $model->getFullTableName('index');
-        $table_index_detail = $model->getFullTableName('index_detail');
+        $table_index = $model->getTableName('index');
+        $table_index_detail = $model->getTableName('index_detail');
         // ตรวจสอบรายการที่เลือก
         $index = $model->db()->first($table_index, array(
           array('id', $id),

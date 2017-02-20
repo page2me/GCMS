@@ -60,7 +60,7 @@ class Model extends \Kotchasan\Model
         $moderator = Gcms::canConfig($login, $index, 'moderator');
         if ($action === 'pin' && $moderator) {
           $ret['value'] = $index['pin'] == 0 ? 1 : 0;
-          $this->db()->update($this->getFullTableName('friends'), $qid, array('pin' => $ret['value']));
+          $this->db()->update($this->getTableName('friends'), $qid, array('pin' => $ret['value']));
           $ret['title'] = Language::get($ret['value'] == 1 ? 'Unpin' : 'Pin');
         } elseif ($action === 'delete' && $moderator) {
           // สามารถลบได้
@@ -68,7 +68,7 @@ class Model extends \Kotchasan\Model
           $action = 'deleting';
         } elseif (in_array($action, array('deleting', 'mdelete')) && $moderator) {
           // ลบ
-          $this->db()->delete($this->getFullTableName('friends'), $qid);
+          $this->db()->delete($this->getTableName('friends'), $qid);
           // ลบรายการออก
           $ret['remove'] = "L_$qid";
         }

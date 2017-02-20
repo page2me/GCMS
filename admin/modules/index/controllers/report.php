@@ -14,26 +14,32 @@ use \Kotchasan\Html;
 use \Kotchasan\Date;
 
 /**
- * Report
+ * module=report
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
-  private $date;
-  private $ip;
 
   /**
-   * แสดงผล
+   * Report
+   *
+   * @param Request $request
+   * @return string
    */
   public function render(Request $request)
   {
     // แอดมิน
     if (Login::adminAccess()) {
-      $this->ip = $request->get('ip')->filter('0-9\.');
-      $this->date = $request->get('date', date('Y-m-d'))->date();
+      // ค่าที่ส่งมา
+      $ip = $request->get('ip')->filter('0-9\.');
+      $date = $request->get('date', date('Y-m-d'))->date();
+      // ข้อความ title bar
+      $this->title = '{LNG_Visitors report} '.Date::format($date, 'd M Y').(empty($ip) ? '' : ' IP '.$ip);
+      // เลือกเมนู
+      $this->menu = 'dashboard';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -44,21 +50,13 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-home">{LNG_Home}</span></li>');
       $ul->appendChild('<li><span>{LNG_Report}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-stats">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-stats">'.$this->title.'</h1>'
       ));
       // แสดงฟอร์ม
-      $section->appendChild(createClass('Index\Report\View')->render($this->ip, $this->date));
+      $section->appendChild(createClass('Index\Report\View')->render($ip, $date));
       return $section->render();
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Visitors report} '.Date::format($this->date, 'd M Y').(empty($this->ip) ? '' : ' IP '.$this->ip);
   }
 }

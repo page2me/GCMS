@@ -18,14 +18,8 @@ use \Kotchasan\Template;
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
-  /**
-   * Controller ที่กำลังทำงาน
-   *
-   * @var \Kotchasan\Controller
-   */
-  private $controller;
 
   /**
    * หน้าหลักแอดมิน
@@ -46,6 +40,7 @@ class Controller extends \Kotchasan\Controller
         $module = $match[3];
       }
     } else {
+      // หน้า default ถ้าไม่ระบุ module มา
       $owner = 'index';
       $module = 'dashboard';
     }
@@ -53,34 +48,30 @@ class Controller extends \Kotchasan\Controller
     if (is_file(APP_PATH.'modules/'.$owner.'/controllers/'.$module.'.php')) {
       // หน้าที่เรียก (Admin)
       include APP_PATH.'modules/'.$owner.'/controllers/'.$module.'.php';
-      $controller = ucfirst($owner).'\\'.ucfirst($module).'\Controller';
+      $className = ucfirst($owner).'\\'.ucfirst($module).'\Controller';
     } elseif (is_file(ROOT_PATH.'modules/'.$owner.'/controllers/admin/'.$module.'.php')) {
       // เรียกโมดูลที่ติดตั้ง
       include ROOT_PATH.'modules/'.$owner.'/controllers/admin/'.$module.'.php';
-      $controller = ucfirst($owner).'\Admin\\'.ucfirst($module).'\Controller';
+      $className = ucfirst($owner).'\Admin\\'.ucfirst($module).'\Controller';
     } elseif (is_file(ROOT_PATH.'Widgets/'.ucfirst($owner).'/Controllers/'.ucfirst($module).'.php')) {
       // เรียก Widgets ที่ติดตั้ง
       include ROOT_PATH.'Widgets/'.ucfirst($owner).'/Controllers/'.ucfirst($module).'.php';
-      $controller = 'Widgets\\'.ucfirst($owner).'\\Controllers\\'.ucfirst($module);
+      $className = 'Widgets\\'.ucfirst($owner).'\\Controllers\\'.ucfirst($module);
     } else {
-      // หน้า default ของ backend
+      // หน้า default ถ้าไม่พบหน้าที่เรียก
       include APP_PATH.'modules/index/controllers/dashboard.php';
-      $controller = 'Index\Dashboard\Controller';
+      $className = 'Index\Dashboard\Controller';
     }
-    $this->controller = new $controller;
+    $controller = new $className;
     // tempalate
     $template = Template::create('', '', 'main');
     $template->add(array(
-      '/{CONTENT}/' => $this->controller->render($request)
+      '/{CONTENT}/' => $controller->render($request)
     ));
+    // ข้อความ title bar
+    $this->title = $controller->title();
+    // เมนูที่เลือก
+    $this->menu = $controller->menu();
     return $template->render();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return $this->controller->title();
   }
 }

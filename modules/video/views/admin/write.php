@@ -11,7 +11,7 @@ namespace Video\Admin\Write;
 use \Kotchasan\Html;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข ไฟล์ดาวน์โหลด
+ * module=video-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -21,7 +21,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=video-write
+   * ฟอร์มสร้าง/แก้ไข Video
    *
    * @param object $index
    * @return string

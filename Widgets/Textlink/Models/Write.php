@@ -123,10 +123,10 @@ class Write extends \Kotchasan\Model
               // ใหม่
               $save['link_order'] = $textlink->link_order;
               $save['published'] = 1;
-              $id = $this->db()->insert($this->getFullTableName('textlink'), $save);
+              $id = $this->db()->insert($this->getTableName('textlink'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('textlink'), $textlink->id, $save);
+              $this->db()->update($this->getTableName('textlink'), $textlink->id, $save);
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');

@@ -8,27 +8,35 @@
 
 namespace Index\System;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 use \Kotchasan\Config;
 
 /**
- * ตั้งค่าเว็บไซต์
+ * module=system
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ตั้งค่าเว็บไซต์
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_General Site Settings}';
+      // เลือกเมนู
+      $this->menu = 'settings';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -39,7 +47,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-settings">{LNG_Site settings}</span></li>');
       $ul->appendChild('<li><span>{LNG_General}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-index">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-index">'.$this->title.'</h1>'
       ));
       // โหลด config
       $config = Config::load(ROOT_PATH.'settings/config.php');
@@ -49,13 +57,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_General Site Settings}';
   }
 }

@@ -24,8 +24,6 @@ class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล
-   *
-   * @var object
    */
   private $index;
   private $publisheds;
@@ -35,7 +33,7 @@ class View extends \Gcms\Adminview
   private $categories;
 
   /**
-   * ตารางรายการบทความ
+   * แสดงรายการบทความ
    *
    * @param object $index
    * @return string

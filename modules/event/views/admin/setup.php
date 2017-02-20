@@ -28,7 +28,7 @@ class View extends \Gcms\Adminview
   private $module;
 
   /**
-   * ตารางรายการ
+   * แสดงรายการอีเว้นต์
    *
    * @param object $index
    * @return string

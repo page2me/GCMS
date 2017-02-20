@@ -13,7 +13,7 @@ use \Kotchasan\Language;
 use \Kotchasan\Date;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข Event
+ * module=event-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=event-write
+   * ฟอร์มสร้าง/แก้ไข Event
    *
    * @param object $index
    * @return string

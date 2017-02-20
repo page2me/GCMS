@@ -9,11 +9,11 @@
 namespace Product\Admin\Settings;
 
 use \Kotchasan\Html;
-use \Kotchasan\HtmlTable;
 use \Kotchasan\Language;
+use \Kotchasan\HtmlTable;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=product-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=product-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

@@ -8,24 +8,28 @@
 
 namespace Gallery\Admin\Upload;
 
-use \Kotchasan\Login;
+use \Kotchasan\Http\Request;
 use \Kotchasan\Html;
+use \Kotchasan\Login;
 use \Gcms\Gcms;
 
 /**
- * ฟอร์มสร้าง/แก้ไข อัลบัม
+ * module=gallery-upload
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มอัปโหลด
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // ตรวจสอบรายการที่เลือก
     $index = \Gallery\Admin\Write\Model::get(self::$request->get('mid')->toInt(), self::$request->get('id')->toInt());
@@ -33,6 +37,10 @@ class Controller extends \Kotchasan\Controller
     $login = Login::isMember();
     // สมาชิกและสามารถตั้งค่าได้
     if ($index && Gcms::canConfig($login, $index, 'can_write')) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Upload your photos into albums}';
+      // เลือกเมนู
+      $this->menu = 'modules';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -46,7 +54,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><a href="{BACKURL?module=gallery-write&id='.$index->id.'}">'.$index->topic.'</a></li>');
       $ul->appendChild('<li><span>{LNG_Upload}</span></li>');
       $header = $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-write">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-write">'.$this->title.'</h1>'
       ));
       // แสดงฟอร์ม
       $section->appendChild(createClass('Gallery\Admin\Upload\View')->render($index));
@@ -54,13 +62,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Upload your photos into albums}';
   }
 }

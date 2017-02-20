@@ -11,7 +11,6 @@ namespace Portfolio\View;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
 use \Gcms\Gcms;
-use \Kotchasan\Date;
 
 /**
  * แสดงรายการที่เลือก
@@ -56,8 +55,7 @@ class View extends \Gcms\View
         '/{TOPIC}/' => $index->title,
         '/{DETAIL}/' => Gcms::showDetail($index->detail, true),
         '/{IMG}/' => WEB_URL.DATA_FOLDER.'portfolio/'.$index->image,
-        '/{DATE}/' => Date::format($index->create_date, 'd M'),
-        '/{YEAR}/' => Date::format($index->create_date, 'Y'),
+        '/{DATE}/' => $index->create_date,
         '/{VISITED}/' => number_format($index->visited),
         '/{TAGS}/' => implode("\n", $tags),
         '/{WEBSITE}/' => $index->url == '' ? '' : '<a href="'.$index->url.'" target=_blank>'.$index->url.'</a>'

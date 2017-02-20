@@ -13,7 +13,7 @@ use \Kotchasan\Language;
 use \Gcms\Gcms;
 
 /**
- * ฟอร์มสร้าง/แก้ไข เนื้อหา
+ * module=product-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=product-write
+   * ฟอร์มสร้าง/แก้ไข สินค้า
    *
    * @param object $index
    * @return string

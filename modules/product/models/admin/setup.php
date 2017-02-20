@@ -77,7 +77,7 @@ class Model extends \Kotchasan\Orm\Field
           $model = new \Kotchasan\Model;
           if ($action === 'published') {
             // สถานะการเผยแพร่
-            $table = $model->getFullTableName('product');
+            $table = $model->getTableName('product');
             $search = $model->db()->first($table, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
             if ($search) {
               $published = $search->published == 1 ? 0 : 1;

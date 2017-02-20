@@ -21,7 +21,7 @@ use \Kotchasan\Http\Response;
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
@@ -38,7 +38,7 @@ class Controller extends \Kotchasan\Controller
     // ตรวจสอบการ login
     Login::create();
     // กำหนด skin ให้กับ template
-    Template::init($request->get('skin', self::$cfg->skin)->toString());
+    Template::init(self::$cfg->skin);
     // backend
     Gcms::$view = new \Gcms\Adminview;
     if ($login = Login::adminAccess()) {
@@ -57,7 +57,7 @@ class Controller extends \Kotchasan\Controller
       $main = new \Index\Main\Controller;
     } else {
       // forgot or login
-      if ($request->request('action')->toString() === 'forgot') {
+      if (self::$request->get('action')->toString() === 'forgot') {
         $main = new \Index\Forgot\Controller;
       } else {
         $main = new \Index\Login\Controller;
@@ -71,7 +71,7 @@ class Controller extends \Kotchasan\Controller
     // เนื้อหา
     Gcms::$view->setContents(array(
       // main template
-      '/{MAIN}/' => $main->execute($request),
+      '/{MAIN}/' => $main->execute(self::$request),
       // GCMS Version
       '/{VERSION}/' => self::$cfg->version,
       // language menu
@@ -86,12 +86,12 @@ class Controller extends \Kotchasan\Controller
       Gcms::$view->setContents(array(
         // ID สมาชิก
         '/{LOGINID}/' => $login['id'],
-        // ชื่อ นามสกุล
+        // แสดงชื่อคน Login
         '/{LOGINNAME}/' => empty($name) ? $login['email'] : $name,
         // สถานะสมาชิก
         '/{STATUS}/' => $login['status'],
         // เมนู
-        '/{MENUS}/' => Gcms::$menu->render()
+        '/{MENUS}/' => Gcms::$menu->render($main->menu())
       ));
     }
     // ส่งออก เป็น HTML

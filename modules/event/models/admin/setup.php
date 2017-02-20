@@ -57,7 +57,7 @@ class Model extends \Kotchasan\Orm\Field
           } elseif ($action === 'published') {
             // สถานะการเผยแพร่
             $id = (int)$id;
-            $table_event = $model->getFullTableName('event');
+            $table_event = $model->getTableName('event');
             $search = $model->db()->first($table_event, array(array('id', $id), array('module_id', $module_id)));
             if ($search) {
               $published = $search->published == 1 ? 0 : 1;

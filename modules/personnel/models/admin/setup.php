@@ -61,7 +61,7 @@ class Model extends \Kotchasan\Orm\Field
             $ret['location'] = 'reload';
           } else if ($action === 'order') {
             // update order
-            $model->db()->update($model->getFullTableName('personnel'), array(
+            $model->db()->update($model->getTableName('personnel'), array(
               array('id', (int)$id),
               array('module_id', $module_id)
               ), array('order' => self::$request->post('value')->toInt()));

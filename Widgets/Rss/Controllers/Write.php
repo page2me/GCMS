@@ -18,7 +18,7 @@ use \Kotchasan\Html;
  *
  * @since 1.0
  */
-class Write extends \Kotchasan\Controller
+class Write extends \Gcms\Controller
 {
 
   /**
@@ -28,6 +28,10 @@ class Write extends \Kotchasan\Controller
   {
     // สมาชิกและสามารถตั้งค่าได้
     if (defined('MAIN_INIT') && Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Create or Edit} {LNG_RSS Tab}';
+      // เมนู
+      $this->menu = 'widget';
       // รายการที่ต้องการ
       $id = self::$request->get('id')->toInt();
       if ($id == 0) {
@@ -66,13 +70,5 @@ class Write extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Create or Edit} {LNG_RSS Tab}';
   }
 }

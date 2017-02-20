@@ -14,9 +14,9 @@
       <IMAGE><figure class="center"><img src="{IMG}" alt="{TOPIC}"></figure></IMAGE>
       {DETAIL}
       <footer class=reaction>
-        <p>{LNG_Writer} : <a class="icon-user status{STATUS}" href="{WEBURL}index.php?module=member&amp;id={UID}">{DISPLAYNAME}</a></p>
-        <p>{LNG_Posted} : <span class="icon-create create">{DATE}</span></p>
-        <p>{LNG_Tags} : <span class="icon-tags keywords">{TAGS}</span></p>
+        {LNG_Writer} : <a class="status{STATUS} icon-user" href="{WEBURL}index.php?module=member&amp;id={UID}">{DISPLAYNAME}</a><br>
+        {LNG_Posted} : <span class="icon-create create">{DATE {DATE} d M Y}</span><br>
+        {LNG_Tags} : <span class="icon-tags keywords">{TAGS}</span>
       </footer>
     </div>
     <section>

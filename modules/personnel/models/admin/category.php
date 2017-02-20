@@ -93,7 +93,7 @@ class Model extends \Kotchasan\Model
           }
           if (empty($ret)) {
             // ชื่อตาราง
-            $table_name = $this->getFullTableName('category');
+            $table_name = $this->getTableName('category');
             // db
             $db = $this->db();
             // ลบข้อมูลเดิม

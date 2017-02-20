@@ -14,24 +14,31 @@ use \Kotchasan\Html;
 use \Kotchasan\Date;
 
 /**
- * Pagesview
+ * module=pagesview
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
-  private $date;
 
   /**
-   * แสดงผล
+   * Pagesview
+   *
+   * @param Request $request
+   * @return string
    */
   public function render(Request $request)
   {
     // แอดมิน
     if (Login::adminAccess()) {
-      $this->date = $request->get('date', date('Y-m'))->date();
+      // ค่าที่ส่งมา
+      $date = $request->get('date', date('Y-m'))->date();
+      // ข้อความ title bar
+      $this->title = '{LNG_Visitors report} '.Date::format($date.'-1', 'M Y');
+      // เลือกเมนู
+      $this->menu = 'dashboard';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -42,21 +49,13 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-home">{LNG_Home}</span></li>');
       $ul->appendChild('<li><span>{LNG_Pagesview}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-stats">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-stats">'.$this->title.'</h1>'
       ));
       // แสดงฟอร์ม
-      $section->appendChild(createClass('Index\Pagesview\View')->render($this->date));
+      $section->appendChild(createClass('Index\Pagesview\View')->render($date));
       return $section->render();
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Visitors report} '.Date::format($this->date.'-1', 'M Y');
   }
 }

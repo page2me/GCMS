@@ -8,11 +8,12 @@
 
 namespace Index\Dashboard;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Date;
 use \Gcms\Gcms;
 
 /**
- * Dashboard
+ * module=dashboard
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,11 +23,12 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=dashboard
+   * หน้า Dashboard
    *
+   * @param Request $request
    * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     $dashboard = new \Index\Dashboard\Model;
     // colors
@@ -107,7 +109,7 @@ class View extends \Gcms\Adminview
     $l = sizeof($pageviews);
     foreach ($pageviews AS $i => $item) {
       $c = $i > $l - 8 ? $i > $l - 4 ? '' : 'mobile' : 'tablet';
-      $thead[] = '<td class="'.$c.'"><a href="'.WEB_URL.'admin/index.php?module=pagesview&amp;date='.$item['year'].'-'.$item['month'].'">'.Date::monthName($item['month']).'</a></td>';
+      $thead[] = '<th class="'.$c.'"><a href="'.WEB_URL.'admin/index.php?module=pagesview&amp;date='.$item['year'].'-'.$item['month'].'">'.Date::monthName($item['month']).'</a></th>';
       $pageview[] = '<td class="'.$c.'">'.number_format($item['pages_view']).'</td>';
       $visited[] = '<td class="'.$c.'">'.number_format($item['visited']).'</td>';
     }
@@ -128,7 +130,7 @@ class View extends \Gcms\Adminview
     $thead = array();
     $visited = array();
     foreach ($dashboard->popularpage() AS $item) {
-      $thead[] = '<td>'.$item['topic'].'</td>';
+      $thead[] = '<th>'.$item['topic'].'</th>';
       $visited[] = '<td>'.$item['visited_today'].'</td>';
     }
     $content[] = '<section class=section>';

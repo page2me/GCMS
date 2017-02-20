@@ -8,6 +8,7 @@
 
 namespace Index\Template;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\Html;
@@ -15,22 +16,29 @@ use \Kotchasan\Config;
 use \Kotchasan\File;
 
 /**
- * รายการ template
+ * module=template
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * รายการ template
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if ($login = Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Select a template of the site}';
+      // เลือกเมนู
+      $this->menu = 'settings';
       // โหลด config
       $config = Config::load(ROOT_PATH.'settings/config.php');
       // path ของ skin
@@ -72,7 +80,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-settings">{LNG_Site settings}</span></li>');
       $ul->appendChild('<li><span>{LNG_Template}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-template">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-template">'.$this->title.'</h1>'
       ));
       if (!empty($message)) {
         $section->appendChild($message);
@@ -94,13 +102,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Select a template of the site}';
   }
 }

@@ -13,18 +13,20 @@ use \Kotchasan\Login;
 use \Kotchasan\Html;
 
 /**
- * เพิ่มโมดูลแบบที่สามารถใช้ซ้ำได้
+ * module=install
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
-  private $module;
 
   /**
-   * แสดงผล
+   * เพิ่มโมดูลแบบที่สามารถใช้ซ้ำได้
+   *
+   * @param Request $request
+   * @return string
    */
   public function render(Request $request)
   {
@@ -33,7 +35,11 @@ class Controller extends \Kotchasan\Controller
       // โมดูลที่ต้องการติดตั้ง
       $module = $request->get('m')->filter('a-z');
       $widget = $request->get('w')->filter('a-z');
-      $this->module = $module !== '' ? $module : $widget;
+      $module = $module !== '' ? $module : $widget;
+      // ข้อความ title bar
+      $this->title = ucfirst($module).' - {LNG_First Install}';
+      // เลือกเมนู
+      $this->menu = 'tools';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -48,21 +54,13 @@ class Controller extends \Kotchasan\Controller
       }
       if (!empty($type)) {
         $ul->appendChild('<li><span>{LNG_Install}</span></li>');
-        $section->add('header', array('innerHTML' => '<h1 class="icon-inbox">'.$this->title().'</h1>'));
+        $section->add('header', array('innerHTML' => '<h1 class="icon-inbox">'.$this->title.'</h1>'));
         // แสดงฟอร์ม
-        $section->appendChild(createClass('Index\Install\View')->render($type, $this->module));
+        $section->appendChild(createClass('Index\Install\View')->render($type, $module));
         return $section->render();
       }
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return ucfirst($this->module).' - {LNG_First Install}';
   }
 }

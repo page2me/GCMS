@@ -83,7 +83,7 @@ class Model extends \Kotchasan\Model
         }
         if ($action === 'category') {
           // อ่านข้อมูลหมวดหมู่ตอนเขียนบทความ
-          $category = $this->db()->first($this->getFullTableName('category'), array(
+          $category = $this->db()->first($this->getTableName('category'), array(
             array('category_id', (int)$value),
             array('module_id', (int)$index->module_id)
           ));
@@ -125,7 +125,7 @@ class Model extends \Kotchasan\Model
             // คืนค่า
             $ret['location'] = 'reload';
           } else {
-            $category = $this->db()->first($this->getFullTableName('category'), array(
+            $category = $this->db()->first($this->getTableName('category'), array(
               array('id', (int)$id),
               array('module_id', (int)$index->module_id)
             ));
@@ -175,7 +175,7 @@ class Model extends \Kotchasan\Model
                   $ret['title'] = $lng[$save['published']];
                   $ret['class'] = 'icon-published'.$save['published'];
                 }
-                $this->db()->update($this->getFullTableName('category'), $category->id, $save);
+                $this->db()->update($this->getTableName('category'), $category->id, $save);
               }
             }
           }

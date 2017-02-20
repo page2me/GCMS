@@ -138,7 +138,7 @@ class Model extends \Kotchasan\Model
           }
         } elseif ($action === 'copy' && !empty($id)) {
           // สำเนาเมนู
-          $table_menus = $model->getFullTableName('menus');
+          $table_menus = $model->getTableName('menus');
           $menu = $model->db()->first($table_menus, $id);
           if ($menu->language == '') {
             $ret['alert'] = Language::get('This entry is displayed in all languages');
@@ -222,7 +222,7 @@ class Model extends \Kotchasan\Model
           }
         }
         $model = new static;
-        $table_menu = $model->getFullTableName('menus');
+        $table_menu = $model->getTableName('menus');
         if (!empty($id)) {
           $menu = $model->db()->first($table_menu, array('id', $id));
         } else {

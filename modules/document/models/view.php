@@ -90,7 +90,7 @@ class Model extends \Kotchasan\Model
       // อัปเดทการเยี่ยมชม
       $result['visited'] ++;
       $result['visited_today'] ++;
-      $model->db()->update($model->getFullTableName('index'), $result['id'], array('visited' => $result['visited'], 'visited_today' => $result['visited_today']));
+      $model->db()->update($model->getTableName('index'), $result['id'], array('visited' => $result['visited'], 'visited_today' => $result['visited_today']));
       $model->db()->cacheSave(array($result));
       // อัปเดทตัวแปร
       foreach ($result as $key => $value) {

@@ -211,7 +211,7 @@ class Model extends \Kotchasan\Model
           $post['can_reply'] = empty($index->can_reply) ? 0 : 1;
           if ($id > 0) {
             // แก้ไข
-            $this->db()->update($this->getFullTableName('board_q'), $id, $post);
+            $this->db()->update($this->getTableName('board_q'), $id, $post);
             // คืนค่า
             $ret['alert'] = Language::get('Edit post successfully');
           } else {
@@ -219,7 +219,7 @@ class Model extends \Kotchasan\Model
             $post['ip'] = $request->getClientIp();
             $post['create_date'] = $mktime;
             $post['module_id'] = $index->module_id;
-            $id = $this->db()->insert($this->getFullTableName('board_q'), $post);
+            $id = $this->db()->insert($this->getTableName('board_q'), $post);
             // อัปเดทสมาชิก
             if ($post['member_id'] > 0) {
               $this->db()->createQuery()->update('user')->set('`post`=`post`+1')->where($post['member_id'])->execute();

@@ -14,17 +14,20 @@ use \Kotchasan\Login;
 use \Gcms\Gcms;
 
 /**
- * ฟอร์มสร้าง/แก้ไข เนื้อหา
+ * module=document-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มสร้าง/แก้ไข เนื้อหา
+   *
+   * @param Request $request
+   * @return string
    */
   public function render(Request $request)
   {
@@ -41,6 +44,11 @@ class Controller extends \Kotchasan\Controller
       if (!empty($index->id)) {
         $index->details = \Document\Admin\Write\Model::details((int)$index->module_id, (int)$index->id, reset(self::$cfg->languages));
       }
+      $title = '{LNG_'.(empty($index->id) ? 'Create' : 'Edit').'}';
+      // ข้อความ title bar
+      $this->title = $title.' {LNG_Document}';
+      // เลือกเมนู
+      $this->menu = 'modules';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -51,9 +59,9 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-documents">{LNG_Module}</span></li>');
       $ul->appendChild('<li><a href="{BACKURL?module=document-settings&mid='.$index->module_id.'}">'.ucfirst($index->module).'</a></li>');
       $ul->appendChild('<li><a href="{BACKURL?module=document-setup&mid='.$index->module_id.'}">{LNG_Contents}</a></li>');
-      $ul->appendChild('<li><span>{LNG_'.(empty($index->id) ? 'Create' : 'Edit').'}</span></li>');
+      $ul->appendChild('<li><span>'.$title.'</span></li>');
       $header = $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-write">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-write">'.$this->title.'</h1>'
       ));
       $inline = $header->add('div', array(
         'class' => 'inline'
@@ -83,13 +91,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Create or Edit} {LNG_Document}';
   }
 }

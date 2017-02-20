@@ -13,7 +13,7 @@ use \Gcms\Gcms;
 use \Kotchasan\ArrayTool;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข บุคลากร
+ * module=document-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=personnel-write
+   * ฟอร์มสร้าง/แก้ไข บุคลากร
    *
    * @param object $index
    * @return string

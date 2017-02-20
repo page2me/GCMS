@@ -36,7 +36,7 @@ class Model extends \Kotchasan\Model
         echo Language::replace('Invalid :name', array(':name' => Language::get('Email')));
       } else {
         // ตรวจสอบอีเมล์ซ้ำ
-        $search = $this->db()->first($this->getFullTableName('user'), array('email', $value));
+        $search = $this->db()->first($this->getTableName('user'), array('email', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
           echo Language::replace('This :name already exist', array(':name' => Language::get('Email')));
         }
@@ -58,7 +58,7 @@ class Model extends \Kotchasan\Model
       } else {
         // ตรวจสอบโทรศัพท์
         $model = new static;
-        $search = $model->db()->first($model->getFullTableName('user'), array('phone1', $value));
+        $search = $model->db()->first($model->getTableName('user'), array('phone1', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
           echo Language::replace('This :name already exist', array(':name' => Language::get('phone number')));
         }
@@ -80,7 +80,7 @@ class Model extends \Kotchasan\Model
       } else {
         // ตรวจสอบ idcard
         $model = new static;
-        $search = $model->db()->first($model->getFullTableName('user'), array('idcard', $value));
+        $search = $model->db()->first($model->getTableName('user'), array('idcard', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
           echo Language::replace('This :name already exist', array(':name' => Language::get('idcard')));
         }
@@ -100,7 +100,7 @@ class Model extends \Kotchasan\Model
       if (!empty($value)) {
         // ตรวจสอบ ชื่อเรียก
         $model = new static;
-        $search = $model->db()->first($model->getFullTableName('user'), array('displayname', $value));
+        $search = $model->db()->first($model->getTableName('user'), array('displayname', $value));
         if ($search && ($id == 0 || $id != $search->id)) {
           echo Language::replace('This :name already exist', array(':name' => Language::get('Name')));
         }
@@ -188,7 +188,7 @@ class Model extends \Kotchasan\Model
       // Model
       $model = new static;
       // ค้นหาชื่อเรื่องซ้ำ
-      $search = $model->db()->first($model->getFullTableName('index'), array('alias', $value));
+      $search = $model->db()->first($model->getTableName('index'), array('alias', $value));
       if ($search && ($id == 0 || $id != $search->id)) {
         echo Language::replace('This :name already exist', array(':name' => Language::get('Alias')));
       }

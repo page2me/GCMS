@@ -13,7 +13,7 @@ use \Kotchasan\Language;
 use \Kotchasan\HtmlTable;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=document-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=document-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

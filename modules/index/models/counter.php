@@ -31,7 +31,7 @@ class Model extends \Kotchasan\Model
       $model = new static;
       $db = $model->db();
       // ตาราง useronline
-      $useronline = $model->getFullTableName('useronline');
+      $useronline = $model->getTableName('useronline');
       // วันนี้
       $y = (int)date('Y');
       $m = (int)date('m');
@@ -67,7 +67,7 @@ class Model extends \Kotchasan\Model
         // clear useronline
         $db->emptyTable($useronline);
         // clear visited_today
-        $db->updateAll($model->getFullTableName('index'), array('visited_today' => 0));
+        $db->updateAll($model->getTableName('index'), array('visited_today' => 0));
       }
       // ip ปัจจุบัน
       $counter_ip = self::$request->getClientIp();
@@ -134,9 +134,9 @@ class Model extends \Kotchasan\Model
       // counter
       if ($new) {
         unset($my_counter['id']);
-        $db->insert($model->getFullTableName('counter'), $my_counter);
+        $db->insert($model->getTableName('counter'), $my_counter);
       } else {
-        $db->update($model->getFullTableName('counter'), $my_counter['id'], $my_counter);
+        $db->update($model->getTableName('counter'), $my_counter['id'], $my_counter);
       }
       // เวลาหมดอายุ useronline (2 นาที)
       $validtime = $my_counter['time'] - 120;

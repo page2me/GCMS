@@ -481,4 +481,18 @@ class Gcms extends \Kotchasan\KBase
     }
     return array_keys($languages);
   }
+
+  /**
+   * คืนค่าลิงค์รูปแบบโทรศัพท์
+   *
+   * @param string $phone_number
+   * @return string
+   */
+  public static function showPhone($phone_number)
+  {
+    if (preg_match('/^([0-9\-\s]{9,})(.*)$/', $phone_number, $match)) {
+      return '<a href="tel:'.trim($match[1]).'">'.$phone_number.'</a>';
+    }
+    return $phone_number;
+  }
 }

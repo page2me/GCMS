@@ -161,9 +161,10 @@ a {
 .topmenu > ul > li > a {
   color: #FFF;
 }
-.topmenu ul > li.hover > a,
+.topmenu > ul > li.select,
+.topmenu ul > li.hover,
 #to-top a.gdpanel-arrow.hover {
-  background-color: #1E88E5;
+  background-color: rgba(0,0,0,0.1);
 }
 .topmenu > ul ul li > a {
   color: #333;
@@ -192,8 +193,7 @@ a {
   min-height: 100%;
 }
 fieldset.search input[type="submit"],
-.editinplace:hover:after,
-.facebook:after {
+.editinplace:hover:after {
   font-family: 'icomoon';
   speak: none;
   -webkit-font-smoothing: antialiased;
@@ -644,7 +644,6 @@ header .inline {
 .icon-customer:before,
 .icon-upload:before,
 .icon-subcategory:before,
-.facebook:after,
 .icon-ban:before,
 .icon-valid:before,
 .icon-thumbnail:before,
@@ -668,18 +667,15 @@ a.icon-delete:before,
   font-size: 1.5em;
   margin: 0;
 }
-.facebook:after {
+.icon-facebook:before {
   color: #798EB8;
-  content: '\e63d';
+  margin-left: 0;
 }
 .icon-ban {
   color: #DDD;
 }
 .ban {
   color: #F00;
-}
-.facebook:after {
-  margin-left: 5px;
 }
 .icon-plus:before {
   color: #259B24;

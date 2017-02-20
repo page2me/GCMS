@@ -64,7 +64,7 @@ class Model extends \Kotchasan\Orm\Field
       // อัปเดทการเยี่ยมชม
       $result['visited'] ++;
       $model->db()->cacheSave(array($result));
-      $model->db()->update($model->getFullTableName('index'), $result['index_id'], array('visited' => $result['visited']));
+      $model->db()->update($model->getTableName('index'), $result['index_id'], array('visited' => $result['visited']));
       // คืนค่า
       $index->keywords = $result['keywords'];
       $index->detail = $result['detail'];

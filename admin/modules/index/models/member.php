@@ -8,9 +8,8 @@
 
 namespace Index\Member;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
-use \Kotchasan\Text;
-use \Gcms\Email;
 use \Kotchasan\Language;
 
 /**
@@ -58,11 +57,11 @@ class Model extends \Kotchasan\Orm\Field
         'U.birthday',
         'U.zipcode',
         'U.country',
+        'U.provinceID',
+        'U.province',
         'U.status',
         'U.subscrib',
         'U.admin_access',
-        'U.provinceID',
-        'U.province',
         'U.icon',
         'U.fb',
         'V.email invite'
@@ -81,21 +80,23 @@ class Model extends \Kotchasan\Orm\Field
 
   /**
    * รับค่าจาก action
+   *
+   * @param Request $request
    */
-  public function action()
+  public function action(Request $request)
   {
-    if (self::$request->initSession() && self::$request->isReferer() && $login = Login::isAdmin()) {
+    if ($request->initSession() && $request->isReferer() && $login = Login::isAdmin()) {
       if ($login['email'] == 'demo' || !empty($login['fb'])) {
         echo Language::get('Unable to complete the transaction');
       } else {
         // รับค่าจากการ POST
-        $action = self::$request->post('action')->toString();
+        $action = $request->post('action')->toString();
         // id ที่ส่งมา
-        if (preg_match_all('/,?([0-9]+),?/', self::$request->post('id')->toString(), $match)) {
+        if (preg_match_all('/,?([0-9]+),?/', $request->post('id')->toString(), $match)) {
           // Model
           $model = new \Kotchasan\Model;
           // ตาราง user
-          $user_table = $model->getFullTableName('user');
+          $user_table = $model->getTableName('user');
           if ($action === 'delete') {
             // ลบไอคอนสมาชิก
             $query = $model->db()->createQuery()
@@ -144,7 +145,7 @@ class Model extends \Kotchasan\Orm\Field
             $msgs = array();
             foreach ($query->toArray()->execute() as $item) {
               // รหัสผ่านใหม่
-              $password = Text::rndname(6);
+              $password = \Kotchasan\Text::rndname(6);
               // ข้อมูลอีเมล์
               $replace = array(
                 '/%PASSWORD%/' => $password,
@@ -153,13 +154,13 @@ class Model extends \Kotchasan\Orm\Field
               $save = array('password' => md5($password.$item['email']));
               if ($action === 'activate' || !empty($item['activatecode'])) {
                 // activate หรือ ยังไม่ได้ activate
-                $save['activatecode'] = empty($item['activatecode']) ? Text::rndname(32) : $item['activatecode'];
+                $save['activatecode'] = empty($item['activatecode']) ? \Kotchasan\Text::rndname(32) : $item['activatecode'];
                 $replace['/%ID%/'] = $save['activatecode'];
                 // send mail
-                $err = Email::send(1, 'member', $replace, $item['email']);
+                $err = \Gcms\Email::send(1, 'member', $replace, $item['email']);
               } else {
                 // send mail
-                $err = Email::send(3, 'member', $replace, $item['email']);
+                $err = \Gcms\Email::send(3, 'member', $replace, $item['email']);
               }
               $msgs = array();
               if (empty($err)) {
@@ -176,7 +177,7 @@ class Model extends \Kotchasan\Orm\Field
                 echo implode("\n", $msgs);
               }
             }
-          } elseif (self::$request->post('module')->toString() === 'status') {
+          } elseif ($request->post('module')->toString() === 'status') {
             // เปลี่ยนสถานะสมาชิก
             $model->db()->update($user_table, array(
               array('id', $match[1]),

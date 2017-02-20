@@ -12,7 +12,7 @@ use \Kotchasan\Html;
 use \Gcms\Gcms;
 
 /**
- * ฟอร์มสร้าง/แก้ไข อัลบัม
+ * module=gallery-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,7 +22,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=gallery-write
+   * ฟอร์มสร้าง/แก้ไข อัลบัม
    *
    * @param object $index
    * @return string

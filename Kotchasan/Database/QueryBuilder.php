@@ -242,21 +242,83 @@ class QueryBuilder extends \Kotchasan\Database\Query
   }
 
   /**
+   * ฟังก์ชั่นสร้าง SQL EXISTS
+   *
+   * @param string $table ชื่อตาราง
+   * @param mixed $condition query WHERE
+   * @return \static
+   */
+  public function exists($table, $condition)
+  {
+    $ret = $this->buildWhere($condition);
+    if (is_array($ret)) {
+      $this->values = ArrayTool::replace($this->values, $ret[1]);
+      $ret = $ret[0];
+    }
+    $this->sqls['where'] .= (empty($this->sqls['where']) ? ' ' : ' AND ').'EXISTS (SELECT * FROM '.$this->getFullTableName($table).' WHERE '.$ret.')';
+    return $this;
+  }
+
+  /**
+   * ฟังก์ชั่นสร้าง SQL NOT EXISTS
+   *
+   * @param string $table ชื่อตาราง
+   * @param mixed $condition query WHERE
+   * @return \static
+   */
+  public function notExists($table, $condition)
+  {
+    $ret = $this->buildWhere($condition);
+    if (is_array($ret)) {
+      $this->values = ArrayTool::replace($this->values, $ret[1]);
+      $ret = $ret[0];
+    }
+    $this->sqls['where'] .= (empty($this->sqls['where']) ? ' ' : ' AND ').'NOT EXISTS (SELECT * FROM '.$this->getFullTableName($table).' WHERE '.$ret.')';
+    return $this;
+  }
+
+  /**
    * ฟังก์ชั่นสร้างคำสั่ง INSERT INTO
+   * สามารถกำหนดค่า value เป็น query string ได้
    *
    * @param string $table ชื่อตาราง
    * @param array $datas รูปแบบ array(key1=>value1, key2=>value2)
    * @return \static
    *
    * @assert insert('user', array('id' => 1, 'name' => 'test'))->text() [==] "INSERT INTO `user` (`id`, `name`) VALUES (:id, :name)"
+   * @assert insert('user', array('id' => $this->object->buildNext('id', 'user', null, null), 'name' => 'test'))->text() [==] "INSERT INTO `user` (`id`, `name`) VALUES ((1 + IFNULL((SELECT MAX(`id`) FROM `user` AS X), 0)), :name)"
    */
   public function insert($table, $datas)
   {
     $this->sqls['function'] = 'query';
     $this->sqls['insert'] = $this->getFullTableName($table);
-    $keys = array();
     foreach ($datas as $key => $value) {
-      $this->sqls['values'][$key] = $value;
+      if ($value[0] == '(' && $value[strlen($value) - 1] == ')') {
+        $this->sqls['keys'][$key] = $value;
+      } else {
+        $this->sqls['keys'][$key] = ':'.$key;
+        $this->sqls['values'][':'.$key] = $value;
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * ฟังก์ชั่นสร้างคำสั่ง INSERT INTO
+   * โดยทำการตรวจสอบ KEY ถ้ามีอยู่แล้วจะเป็นการ UPDATE ข้อมูล
+   *
+   * @param string $table ชื่อตาราง
+   * @param array $datas รูปแบบ array(key1=>value1, key2=>value2)
+   * @return \static
+   *
+   * @assert insertOrUpdate('user', array('id' => 1, 'name' => 'test'))->text() [==] "INSERT INTO `user` (`id`, `name`) VALUES (:id, :name) ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `name`=VALUES(`name`)"
+   */
+  public function insertOrUpdate($table, $datas)
+  {
+    $this->insert($table, $datas);
+    $this->sqls['orupdate'] = array();
+    foreach ($datas as $key => $value) {
+      $this->sqls['orupdate'][] = "`$key`=VALUES(`$key`)";
     }
     return $this;
   }
@@ -371,6 +433,37 @@ class QueryBuilder extends \Kotchasan\Database\Query
       $this->sqls['select'] = implode(',', $qs);
     }
     return $this;
+  }
+
+  /**
+   * ฟังก์ชั่นสร้างคำสั่ง IFNULL
+   *
+   * @param string|array|QueryBuilder $q1
+   * @param string|array|QueryBuilder $q2
+   * @param string|null $alias ถ้าระบุจะมีการเติม alias ให้กับคำสั่ง
+   * @return string
+   *
+   * @assert ('(SELECT x FROM a)', 0) [==] "IFNULL((SELECT x FROM a), 0)"
+   * @assert ('0', '(SELECT x FROM a)', 'test') [==] "IFNULL('0', (SELECT x FROM a)) AS `test`"
+   * @assert ($this->object->select('x')->from('a'), 0) [==] "IFNULL((SELECT `x` FROM `a`), 0)"
+   */
+  public function ifNull($q1, $q2, $alias = null)
+  {
+    if (is_string($q1)) {
+      if (strpos($q1, '(') === false) {
+        $q1 = "'".$q1."'";
+      }
+    } elseif (!is_int($q1)) {
+      $q1 = $this->buildSelect($q1);
+    }
+    if (is_string($q2)) {
+      if (strpos($q2, '(') === false) {
+        $q2 = "'".$q2."'";
+      }
+    } elseif (!is_int($q2)) {
+      $q2 = $this->buildSelect($q2);
+    }
+    return 'IFNULL('.$q1.', '.$q2.')'.($alias ? ' AS `'.$alias.'`' : '');
   }
 
   /**
@@ -525,6 +618,8 @@ class QueryBuilder extends \Kotchasan\Database\Query
    * @assert where(array(array('id', array(1, 'a')), array('id', array('G.id', 'G.`id2`'))))->text() [==] " WHERE `id` IN (1, 'a') AND `id` IN (G.`id`, G.`id2`)"
    * @assert where(array('ip', 'NOT IN', array('', '192.168.1.104')))->text() [==] " WHERE `ip` NOT IN ('', '192.168.1.104')"
    * @assert where(array('U.id', '(SELECT CASE END)'))->text() [==] " WHERE U.`id` = (SELECT CASE END)"
+   * @assert where(array(array('YEAR(`create_date`)', 'YEAR(S.`create_date`)')))->text() [==] " WHERE YEAR(`create_date`) = YEAR(S.`create_date`)"
+   * @assert where(array('YEAR(`create_date`)', 'YEAR(S.`create_date`)'))->text() [!=] " WHERE YEAR(`create_date`) = YEAR(S.`create_date`)"
    */
   public function where($condition, $oprator = 'AND', $id = 'id')
   {

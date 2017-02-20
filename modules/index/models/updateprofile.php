@@ -8,10 +8,10 @@
 
 namespace Index\Updateprofile;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\File;
-use \Kotchasan\Http\Request;
 
 /**
  * บันทึกข้อมูลสมาชิก
@@ -24,13 +24,13 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * บันทึก
+   * บันทึก ข้อมูลสมาชิก
    */
   public function save(Request $request)
   {
     $ret = array();
-    // referer, session, member
-    if ($request->initSession() && $request->isReferer() && $login = Login::isMember()) {
+    // session, token, member
+    if ($request->initSession() && $request->isSafe() && $login = Login::isMember()) {
       if ($login['email'] == 'demo') {
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
@@ -74,7 +74,7 @@ class Model extends \Kotchasan\Model
           }
         }
         // ชื่อตาราง user
-        $user_table = $this->getFullTableName('user');
+        $user_table = $this->getTableName('user');
         // database connection
         $db = $this->db();
         // ตรวจสอบค่าที่ส่งมา
@@ -152,18 +152,18 @@ class Model extends \Kotchasan\Model
               }
             }
           }
-          if (!empty($save)) {
-            if (empty($ret)) {
-              // save
-              $db->update($user_table, $user->id, $save);
-              // เปลี่ยน password ที่ login ใหม่
-              if (!empty($save['password'])) {
-                $_SESSION['login']['password'] = $password;
-              }
-              // คืนค่า
-              $ret['alert'] = Language::get('Saved successfully');
-              $ret['location'] = 'index.php?module=editprofile&tab='.$request->post('tab')->toString();
+          if (!empty($save) && empty($ret)) {
+            // save
+            $db->update($user_table, $user->id, $save);
+            // เปลี่ยน password ที่ login ใหม่
+            if (!empty($save['password'])) {
+              $_SESSION['login']['password'] = $password;
             }
+            // คืนค่า
+            $ret['alert'] = Language::get('Saved successfully');
+            $ret['location'] = 'index.php?module=editprofile&tab='.$request->post('tab')->toString();
+            // clear
+            $request->removeToken();
           }
         }
       }

@@ -97,7 +97,7 @@ class Model extends \Kotchasan\Model
             $save['alias'] = $alias_topic;
           }
           // ค้นหาชื่อเรื่องซ้ำ
-          $search = $this->db()->first($this->getFullTableName('product'), array('alias', $save['alias']));
+          $search = $this->db()->first($this->getTableName('product'), array('alias', $save['alias']));
           if ($search && ($id == 0 || $id != $search->id)) {
             $ret['ret_alias'] = Language::replace('This :name already exist', array(':name' => Language::get('Alias')));
             $tab = !$tab ? 'options' : $tab;
@@ -135,13 +135,13 @@ class Model extends \Kotchasan\Model
               $save['id'] = $index->id;
               $save['module_id'] = $index->module_id;
               $save['visited'] = 0;
-              $index->id = $this->db()->insert($this->getFullTableName('product'), $save);
+              $index->id = $this->db()->insert($this->getTableName('product'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('product'), $index->id, $save);
+              $this->db()->update($this->getTableName('product'), $index->id, $save);
             }
             // ตาราง product_detail
-            $table = $this->getFullTableName('product_detail');
+            $table = $this->getTableName('product_detail');
             // ลบรายละเอียดเดิมออก
             $this->db()->delete($table, array('id', $index->id), 0);
             // บันทึกรายละเอียดใหม่
@@ -150,7 +150,7 @@ class Model extends \Kotchasan\Model
               $this->db()->insert($table, $item);
             }
             // ตาราง product_price
-            $table = $this->getFullTableName('product_price');
+            $table = $this->getTableName('product_price');
             // ลบราคาเดิมออก
             $this->db()->delete($table, array('id', $index->id), 0);
             // บันทึกราคา

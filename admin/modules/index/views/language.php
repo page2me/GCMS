@@ -37,11 +37,15 @@ class View extends \Gcms\Adminview
     // ตารางภาษา
     $table = new DataTable(array(
       'id' => 'language_table',
+      /* Model */
       'model' => 'Index\Language\Model',
+      /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
       'hideColumns' => array('type', 'js'),
+      /* แบ่งหน้า */
       'perPage' => max(10, self::$request->cookie('language_perPage', 30)->toInt()),
+      /* เรียงลำดับ */
       'sort' => self::$request->cookie('language_sort', 'id DESC')->toString(),
       'searchColumns' => array_merge(array('key'), $this->languages),
       'headers' => array(

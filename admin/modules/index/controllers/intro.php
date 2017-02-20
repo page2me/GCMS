@@ -8,27 +8,35 @@
 
 namespace Index\Intro;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\Html;
 
 /**
- * ฟอร์มตั้งค่าหน้า intro
+ * module=intro
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มตั้งค่าหน้า intro
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Enable/Disable Intro Page}';
+      // เลือกเมนู
+      $this->menu = 'settings';
       // ภาษาที่ต้องการ
       $language = self::$request->get('language', Language::name())->toString();
       if (preg_match('/^[a-z]{2,2}$/', $language)) {
@@ -49,7 +57,7 @@ class Controller extends \Kotchasan\Controller
         $ul->appendChild('<li><span class="icon-settings">{LNG_Site settings}</span></li>');
         $ul->appendChild('<li><span>{LNG_Intro Page}</span></li>');
         $section->add('header', array(
-          'innerHTML' => '<h1 class="icon-write">'.$this->title().'</h1>'
+          'innerHTML' => '<h1 class="icon-write">'.$this->title.'</h1>'
         ));
         // แสดงฟอร์ม
         $section->appendChild(createClass('Index\Intro\View')->render($language, $template));
@@ -58,13 +66,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Enable/Disable Intro Page}';
   }
 }

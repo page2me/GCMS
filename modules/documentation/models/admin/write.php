@@ -243,7 +243,7 @@ class Model extends \Kotchasan\Model
               $tab = !$tab ? 'options' : $tab;
             } else {
               // ค้นหาชื่อเรื่องซ้ำ
-              $search = $this->db()->first($this->getFullTableName('index'), array(
+              $search = $this->db()->first($this->getTableName('index'), array(
                 array('alias', $save['alias']),
                 array('language', array('', Language::name())),
                 array('index', '0')
@@ -265,13 +265,13 @@ class Model extends \Kotchasan\Model
                 $save['module_id'] = $index['module_id'];
                 $save['member_id'] = $login['id'];
                 $save['create_date'] = $save['last_update'];
-                $index['id'] = $this->db()->insert($this->getFullTableName('index'), $save);
+                $index['id'] = $this->db()->insert($this->getTableName('index'), $save);
               } else {
                 // แก้ไข
-                $this->db()->update($this->getFullTableName('index'), $index['id'], $save);
+                $this->db()->update($this->getTableName('index'), $index['id'], $save);
               }
               // details
-              $index_detail = $this->getFullTableName('index_detail');
+              $index_detail = $this->getTableName('index_detail');
               $this->db()->delete($index_detail, array(array('id', $index['id']), array('module_id', $index['module_id'])), 0);
               foreach ($details AS $save1) {
                 $save1['module_id'] = $index['module_id'];

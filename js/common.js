@@ -146,7 +146,11 @@ function defaultSubmit(ds) {
   }
   if (_location) {
     if (_location == 'reload') {
-      reload();
+      if (loader) {
+        loader.reload();
+      } else {
+        reload();
+      }
     } else if (_location == _url) {
       window.location = decodeURIComponent(_location);
     } else if (_location == 'back') {
@@ -286,8 +290,35 @@ function checkAlias() {
     return 'val=' + encodeURIComponent(value) + '&id=' + $E('id').value;
   }
 }
+function replaceURL(key, value) {
+  var q,
+    prop,
+    urls = window.location.toString().replace('#', '&').replace('?', '&').split('&'),
+    new_url = new Object(),
+    qs = Array(),
+    l = urls.length;
+  if (l > 1) {
+    for (var n = 1; n < l; n++) {
+      if (urls[n] != 'action=login' && urls[n] != 'action=logout') {
+        q = urls[n].split('=');
+        if (q.length == 2) {
+          new_url[q[0]] = q[1];
+        }
+      }
+    }
+  }
+  new_url[key] = value;
+  for (prop in new_url) {
+    if (new_url[prop]) {
+      qs.push(prop + '=' + new_url[prop]);
+    } else {
+      qs.push(prop);
+    }
+  }
+  return urls[0] + '?' + qs.join('&');
+}
 function reload() {
-  window.location = replaceURL('timestamp', new String(new Date().getTime()), window.location.toString());
+  window.location = replaceURL(new Date().getTime());
 }
 function getWebUri() {
   var port = floatval(window.location.port);
@@ -298,44 +329,6 @@ function getWebUri() {
     port = port > 0 ? ':' + port : '';
   }
   return protocol + '//' + window.location.hostname + port + '/';
-}
-function replaceURL(keys, values, url) {
-  var patt = /^(.*)=(.*)$/;
-  var ks = keys.toLowerCase().split(',');
-  var vs = values.split(',');
-  var urls = new Object();
-  var u = url || window.location.href;
-  var us2 = u.split('#');
-  u = us2.length == 2 ? us2[0] : u;
-  var us1 = u.split('?');
-  u = us1.length == 2 ? us1[0] : u;
-  if (us1.length == 2) {
-    forEach(us1[1].split('&'), function () {
-      hs = patt.exec(this);
-      if (!hs || ks.indexOf(hs[1].toLowerCase()) == -1) {
-        urls[this] = this;
-      }
-    });
-  }
-  if (us2.length == 2) {
-    forEach(us2[1].split('&'), function () {
-      hs = patt.exec(this);
-      if (!hs || ks.indexOf(hs[1].toLowerCase()) == -1) {
-        urls[this] = this;
-      }
-    });
-  }
-  var us = new Array();
-  for (var p in urls) {
-    us.push(urls[p]);
-  }
-  forEach(ks, function (item, index) {
-    if (vs[index] && vs[index] != '') {
-      us.push(item + '=' + vs[index]);
-    }
-  });
-  u += '?' + us.join('&');
-  return u;
 }
 function _doCheckKey(input, e, patt) {
   var val = input.value;

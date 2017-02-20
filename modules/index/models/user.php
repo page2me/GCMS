@@ -56,6 +56,6 @@ class Model extends \Kotchasan\Orm\Field
   public static function activateUser($user)
   {
     $model = new \Kotchasan\Model;
-    $model->db()->update($model->getFullTableName('user'), $user->id, array('activatecode' => ''));
+    $model->db()->update($model->getTableName('user'), $user->id, array('activatecode' => ''));
   }
 }

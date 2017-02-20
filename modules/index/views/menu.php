@@ -42,7 +42,8 @@ class View
   /**
    * สร้างเมนู
    *
-   * @param array $items
+   * @param array $items แอเรย์ข้อมูลเมนู
+   * @param string $select (optional) เมนูที่ถูกเลือก
    * @return string
    */
   private function draw($items, $select)

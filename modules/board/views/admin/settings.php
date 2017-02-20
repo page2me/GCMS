@@ -14,7 +14,7 @@ use \Kotchasan\HtmlTable;
 use \Kotchasan\Http\UploadedFile;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=board-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -24,7 +24,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=board-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

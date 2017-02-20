@@ -1,6 +1,9 @@
 body, li {
   line-height: 1.8;
 }
+.thumbview .description {
+  height: 5.4em;
+}
 /* font button, language button */
 .font_size, a[id^='lang_'] {
   color: inherit;

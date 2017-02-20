@@ -8,26 +8,34 @@
 
 namespace Index\Database;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 
 /**
- * Database
+ * module=database
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * Database
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Backup and restore database}';
+      // เลือกเมนู
+      $this->menu = 'tools';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -38,7 +46,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span class="icon-tools">{LNG_Tools}</span></li>');
       $ul->appendChild('<li><span>{LNG_Database}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-database">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-database">'.$this->title.'</h1>'
       ));
       $div = $section->add('div', array(
         'class' => 'setup_frm'
@@ -51,13 +59,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Backup and restore database}';
   }
 }

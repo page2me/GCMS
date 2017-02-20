@@ -92,7 +92,7 @@ class Model extends \Kotchasan\Model
           // ลบ mod หรือ เจ้าของ
           if ($rid > 0) {
             // ลบความคิดเห็น
-            $this->db()->delete($this->getFullTableName('comment'), $rid);
+            $this->db()->delete($this->getTableName('comment'), $rid);
             // อัปเดทจำนวนคำตอบของคำถาม
             \Index\Comment\Model::update($qid, (int)$index->module_id);
             $ret['remove'] = "R_$rid";

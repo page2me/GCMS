@@ -145,7 +145,7 @@ class Model extends \Kotchasan\Model
             $ret['ret_document_no'] = 'this';
           } else {
             // ค้นหาเลขที่เอกสารซ้ำ
-            $search = $this->db()->first($this->getFullTableName('edocument'), array('document_no', $save['document_no']));
+            $search = $this->db()->first($this->getTableName('edocument'), array('document_no', $save['document_no']));
             if ($search && ($id == 0 || $id != $search->id)) {
               $ret['ret_document_no'] = Language::replace('This :name already exist', array(':name' => Language::get('Document number')));
             }
@@ -214,10 +214,10 @@ class Model extends \Kotchasan\Model
               // ใหม่
               $save['downloads'] = 0;
               $save['sender_id'] = $login['id'];
-              $this->db()->insert($this->getFullTableName('edocument'), $save);
+              $this->db()->insert($this->getTableName('edocument'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('edocument'), $id, $save);
+              $this->db()->update($this->getTableName('edocument'), $id, $save);
             }
             if ($request->post('send_mail')->toInt() == 1) {
               $query = $this->db()->createQuery()->select('fname', 'lname', 'email')->from('user')->where(array('status', $reciever));

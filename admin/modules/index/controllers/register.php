@@ -8,26 +8,34 @@
 
 namespace Index\Register;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 
 /**
- * Register Form
+ * module=register
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * Register Form
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Create new account}';
+      // เลือกเมนู
+      $this->menu = 'users';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -38,7 +46,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><a class="icon-user" href="index.php?module=member">{LNG_Users}</a></li>');
       $ul->appendChild('<li><span>{LNG_Register}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-register">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-register">'.$this->title.'</h1>'
       ));
       // แสดงฟอร์ม
       $section->appendChild(createClass('Index\Register\View')->render());
@@ -46,13 +54,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Create new account}';
   }
 }

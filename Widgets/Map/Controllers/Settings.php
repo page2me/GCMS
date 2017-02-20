@@ -8,7 +8,6 @@
 
 namespace Widgets\Map\Controllers;
 
-use \Kotchasan\Language;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 
@@ -19,7 +18,7 @@ use \Kotchasan\Html;
  *
  * @since 1.0
  */
-class Settings extends \Kotchasan\Controller
+class Settings extends \Gcms\Controller
 {
 
   /**
@@ -29,6 +28,10 @@ class Settings extends \Kotchasan\Controller
   {
     // สมาชิกและสามารถตั้งค่าได้
     if (defined('MAIN_INIT') && Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Widgets for controlling and managing the Google Map}';
+      // เมนู
+      $this->menu = 'widget';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -47,13 +50,5 @@ class Settings extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return Language::get('Widgets for controlling and managing the Google Map');
   }
 }

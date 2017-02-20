@@ -202,10 +202,10 @@ class Model extends \Kotchasan\Model
               if ($id == 0) {
                 // ใหม่
                 $save['module_id'] = $index['module_id'];
-                $this->db()->insert($this->getFullTableName('category'), $save);
+                $this->db()->insert($this->getTableName('category'), $save);
               } else {
                 // แก้ไข
-                $this->db()->update($this->getFullTableName('category'), $id, $save);
+                $this->db()->update($this->getTableName('category'), $id, $save);
               }
               // อัปเดทจำนวนเรื่อง และ ความคิดเห็น ในหมวด
               \Document\Admin\Write\Model::updateCategories((int)$index['module_id']);

@@ -91,7 +91,7 @@ class Model extends \Kotchasan\Orm\Field
           $model = new \Kotchasan\Model;
           if ($action === 'published') {
             // สถานะการเผยแพร่
-            $table_index = $model->getFullTableName('index');
+            $table_index = $model->getTableName('index');
             $search = $model->db()->first($table_index, array(array('id', (int)$id), array('module_id', (int)$index->id)));
             if ($search) {
               $published = $search->published == 1 ? 0 : 1;
@@ -114,7 +114,7 @@ class Model extends \Kotchasan\Orm\Field
               $data = explode(',', $data);
               $top = 0;
               $ids = array();
-              $table_index = $model->getFullTableName('index');
+              $table_index = $model->getTableName('index');
               foreach ($model->db()->find($table_index, array(array('id', $data), array('module_id', (int)$index->id))) as $item) {
                 $top = max($top, $item->create_date);
                 $ids[$item->id] = $item->create_date;

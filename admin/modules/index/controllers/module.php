@@ -15,7 +15,7 @@ namespace Index\Module;
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
   /**
    * ข้อมูลโมดูล

@@ -114,10 +114,10 @@ class Model extends \Kotchasan\Model
               $save['module_id'] = $index->module_id;
               $save['member_id'] = $login['id'];
               $save['create_date'] = date('Y-m-d H:i:s');
-              $this->db()->insert($this->getFullTableName('event'), $save);
+              $this->db()->insert($this->getTableName('event'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('event'), $id, $save);
+              $this->db()->update($this->getTableName('event'), $id, $save);
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');

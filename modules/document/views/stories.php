@@ -12,7 +12,6 @@ use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Document\Index\Controller;
-use \Kotchasan\Date;
 use \Kotchasan\Grid;
 
 /**
@@ -69,7 +68,7 @@ class View extends \Gcms\View
         '/{PICTURE}/' => $thumb,
         '/{URL}/' => Controller::url($item->module, $item->alias, $item->id),
         '/{TOPIC}/' => $item->topic,
-        '/{DATE}/' => Date::format($item->create_date, 'd M Y'),
+        '/{DATE}/' => $item->create_date,
         '/{COMMENTS}/' => number_format($item->comments),
         '/{VISITED}/' => number_format($item->visited),
         '/{DETAIL}/' => $item->description,

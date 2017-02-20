@@ -22,14 +22,12 @@ class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล
-   *
-   * @var object
    */
   private $categories;
   private $uri;
 
   /**
-   * ตารางรายการ
+   * แสดงรายการบุคลากร
    *
    * @param object $index
    * @return string

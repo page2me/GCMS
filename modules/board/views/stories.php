@@ -12,7 +12,6 @@ use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Board\Index\Controller;
-use \Kotchasan\Date;
 use \Kotchasan\Grid;
 
 /**
@@ -70,11 +69,10 @@ class View extends \Gcms\View
           '/{UID}/' => $item->member_id,
           '/{SENDER}/' => $item->sender,
           '/{STATUS}/' => $item->status,
-          '/{DATE}/' => Date::format($item->create_date),
-          '/{DATEISO}/' => date(DATE_ISO8601, $item->create_date),
+          '/{DATE}/' => $item->create_date,
           '/{VISITED}/' => number_format($item->visited),
           '/{REPLY}/' => number_format($item->comments),
-          '/{REPLYDATE}/' => $item->comment_date == 0 ? '&nbsp;' : Date::format($item->comment_date),
+          '/{REPLYDATE}/' => $item->comment_date == 0 ? '' : $item->comment_date,
           '/{REPLYER}/' => $item->comment_date == 0 ? '&nbsp;' : $item->commentator,
           '/{STATUS2}/' => $item->replyer_status,
           '/{RID}/' => $item->commentator_id,

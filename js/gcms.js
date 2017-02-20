@@ -71,9 +71,15 @@ function getCurrentURL() {
 var createLikeButton = $G.emptyFunction;
 var counter_time = 0;
 $G(window).Ready(function () {
-  if (navigator.userAgent.indexOf("MSIE") > -1) {
-    document.body.addClass("ie");
-  }
+  forEach(document.body.getElementsByTagName("a"), function () {
+    if (/^lang_([a-z]{2,2})$/.test(this.id)) {
+      callClick(this, function () {
+        var hs = /^lang_([a-z]{2,2})$/.exec(this.id);
+        window.location = replaceURL('lang', hs[1]);
+        return false;
+      });
+    }
+  });
   if (typeof use_ajax != 'undefined' && use_ajax == 1) {
     loader = new GLoader(WEB_URL + 'loader.php/index/controller/loader/index', getURL, function (xhr) {
       var scroll_to = 'scroll-to';
@@ -325,18 +331,22 @@ function fbLogin() {
     if (response.authResponse) {
       var accessToken = response.authResponse.accessToken;
       var uid = response.authResponse.userID;
-      FB.api('/' + uid, {access_token: accessToken, fields: 'id,first_name,last_name,birthday,email,gender,link'}, function (response) {
+      FB.api('/' + uid, {access_token: accessToken, fields: 'id,first_name,last_name,email,link'}, function (response) {
         if (!response.error) {
           var q = new Array();
-          for (var prop in response) {
-            q.push(prop + '=' + response[prop]);
+          if ($E('token')) {
+            q.push('token=' + encodeURIComponent($E('token').value));
           }
-          send(WEB_URL + 'xhr.php/index/model/fblogin/chklogin', 'u=' + encodeURIComponent(getCurrentURL()) + '&data=' + encodeURIComponent(q.join('&')) + '&token=' + encodeURIComponent($E('token').value), function (xhr) {
+          for (var prop in response) {
+            q.push(prop + '=' + encodeURIComponent(response[prop]));
+          }
+          send(WEB_URL + 'xhr.php/index/model/fblogin/chklogin', q.join('&'), function (xhr) {
             var ds = xhr.responseText.toJSON();
             if (ds) {
               if (ds.alert) {
                 alert(ds.alert);
-              } else if (ds.isMember == 1) {
+              }
+              if (ds.isMember == 1) {
                 var login_action;
                 if ($E('login_action')) {
                   login_action = $E('login_action').value;
@@ -360,7 +370,7 @@ function fbLogin() {
         }
       });
     }
-  }, {scope: 'email,user_birthday,public_profile'});
+  }, {scope: 'email,public_profile'});
 }
 function initFacebook(appId, lng) {
   window.fbAsyncInit = function () {

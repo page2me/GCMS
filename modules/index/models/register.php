@@ -57,7 +57,7 @@ class Model extends \Kotchasan\Model
       }
       if ($accept === '1') {
         // ชื่อตาราง user
-        $user_table = $this->getFullTableName('user');
+        $user_table = $this->getTableName('user');
         // database connection
         $db = $this->db();
         // อีเมล์

@@ -86,7 +86,7 @@ class Model extends \Kotchasan\Model
                     'last_update' => time(),
                     'count' => $index->count
                   );
-                  $this->db()->insert($this->getFullTableName('gallery'), $save);
+                  $this->db()->insert($this->getTableName('gallery'), $save);
                 } catch (\Exception $exc) {
                   // ไม่สามารถอัปโหลดได้
                   $ret['alert'] = Language::get($exc->getMessage());

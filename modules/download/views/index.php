@@ -11,7 +11,6 @@ namespace Download\Index;
 use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
-use \Kotchasan\Date;
 use \Kotchasan\Grid;
 use \Kotchasan\Text;
 use \Kotchasan\ArrayTool;
@@ -50,8 +49,7 @@ class View extends \Gcms\View
         '/{EXT}/' => $item->ext,
         '/{ICON}/' => WEB_URL.'skin/ext/'.(is_file(ROOT_PATH.'skin/ext/'.$item->ext.'.png') ? $item->ext : 'file').'.png',
         '/{DETAIL}/' => $item->detail,
-        '/{DATE}/' => Date::format($item->last_update),
-        '/{DATEISO}/' => date(DATE_ISO8601, $item->last_update),
+        '/{DATE}/' => $item->last_update,
         '/{DOWNLOADS}/' => number_format($item->downloads),
         '/{SIZE}/' => Text::formatFileSize($item->size),
         '/{CATEGORY}/' => empty($categories[$item->category_id]) ? '{LNG_Uncategorized}' : $categories[$item->category_id]

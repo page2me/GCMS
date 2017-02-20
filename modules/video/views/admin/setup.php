@@ -12,7 +12,7 @@ use \Kotchasan\DataTable;
 use \Kotchasan\Date;
 
 /**
- * ตารางรายการวีดีโอ
+ * module=video-setup
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -22,7 +22,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=video-setup
+   * แสดงรายการ Video
    *
    * @param object $index
    * @return string

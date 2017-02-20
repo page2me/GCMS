@@ -85,7 +85,7 @@ class Model extends \Kotchasan\Model
             $ret['ret_write_youtube'] = 'this';
           } else {
             // ตรวจสอบรายการซ้ำ
-            $search = $this->db()->first($this->getFullTableName('video'), array(
+            $search = $this->db()->first($this->getTableName('video'), array(
               array('youtube', $save['youtube']),
               array('module_id', (int)$index->module_id)
             ));
@@ -153,10 +153,10 @@ class Model extends \Kotchasan\Model
                       // ใหม่
                       $save['module_id'] = $index->module_id;
                       $save['views'] = 0;
-                      $id = $this->db()->insert($this->getFullTableName('video'), $save);
+                      $id = $this->db()->insert($this->getTableName('video'), $save);
                     } else {
                       // แก้ไข
-                      $this->db()->update($this->getFullTableName('video'), $id, $save);
+                      $this->db()->update($this->getTableName('video'), $id, $save);
                     }
                     // คืนค่า
                     $ret['alert'] = Language::get('Saved successfully');

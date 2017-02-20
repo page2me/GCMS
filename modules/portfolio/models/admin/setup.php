@@ -48,7 +48,7 @@ class Model extends \Kotchasan\Orm\Field
           $model = new \Kotchasan\Model;
           if ($action === 'published') {
             // สถานะการเผยแพร่
-            $table_index = $model->getFullTableName('index');
+            $table_index = $model->getTableName('index');
             $search = $model->db()->first($table_index, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
             if ($search) {
               $published = $search->published == 1 ? 0 : 1;
@@ -82,7 +82,7 @@ class Model extends \Kotchasan\Orm\Field
             }
           } elseif ($action === 'can_reply') {
             // การแสดงความคิดเห็น
-            $table_index = $model->getFullTableName('index');
+            $table_index = $model->getTableName('index');
             $search = $model->db()->first($table_index, array(array('id', (int)$id), array('module_id', (int)$index->module_id)));
             if ($search) {
               $can_reply = $search->can_reply == 1 ? 0 : 1;

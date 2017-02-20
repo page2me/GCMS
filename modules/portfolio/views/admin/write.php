@@ -13,7 +13,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Language;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข ไฟล์ดาวน์โหลด
+ * module=portfolio-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -23,7 +23,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=portfolio-write
+   * ฟอร์มสร้าง/แก้ไข เนื้อหา
    *
    * @param object $index
    * @return string

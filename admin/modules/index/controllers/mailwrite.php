@@ -8,31 +8,39 @@
 
 namespace Index\Mailwrite;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Kotchasan\Html;
 
 /**
- * ฟอร์มเขียน/แก้ไข แม่แบบอีเมล์
+ * module=mailwrite
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มเขียน/แก้ไข แม่แบบอีเมล์
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
+      // เลือกเมนู
+      $this->menu = 'settings';
       // รายการที่ต้องการ
       $index = \Index\Mailwrite\Model::getIndex(self::$request->get('id')->toInt());
-      // สร้างหรือแก้ไข
+      // ข้อความ title bar
       $title = Language::get(empty($index->id) ? 'Create' : 'Edit');
+      // ข้อความ title bar
+      $this->title = $title.' {LNG_Email template}';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -44,7 +52,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><a href="{BACKURL?module=mailtemplate&id=0}">{LNG_Email template}</a></li>');
       $ul->appendChild('<li><span>'.$title.'</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-write">'.$title.' '.$index->name.'</h1>'
+        'innerHTML' => '<h1 class="icon-write">'.$this->title.' '.$index->name.'</h1>'
       ));
       if ($index) {
         // แสดงฟอร์ม
@@ -54,13 +62,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Create or Edit} {LNG_Email Template}';
   }
 }

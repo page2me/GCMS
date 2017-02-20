@@ -69,7 +69,7 @@ class Model extends \Kotchasan\Model
         $post['module_id'] = $index->module_id;
         $post['member_id'] = $login['id'];
         $post['pin'] = 0;
-        $id = $this->db()->insert($this->getFullTableName('friends'), $post);
+        $id = $this->db()->insert($this->getTableName('friends'), $post);
         // คืนค่า
         $ret['alert'] = Language::get('Thank you for your post');
         $ret['location'] = 'reload';

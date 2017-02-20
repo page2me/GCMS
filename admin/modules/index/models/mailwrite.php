@@ -44,7 +44,7 @@ class Model extends \Kotchasan\Model
         );
       } else {
         $model = new static;
-        $index = $model->db()->first($model->getFullTableName('emailtemplate'), array('id', $id));
+        $index = $model->db()->first($model->getTableName('emailtemplate'), array('id', $id));
       }
       return $index;
     }
@@ -63,7 +63,7 @@ class Model extends \Kotchasan\Model
         $ret['alert'] = Language::get('Unable to complete the transaction');
       } else {
         $model = new static;
-        $table_email = $model->getFullTableName('emailtemplate');
+        $table_email = $model->getTableName('emailtemplate');
         // รับค่าจากการ POST
         $save = array(
           'from_email' => self::$request->post('from_email')->url(),

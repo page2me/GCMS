@@ -88,7 +88,7 @@ class Model extends \Kotchasan\Orm\Field
         $action = self::$request->post('action')->toString();
         // Model
         $model = new \Kotchasan\Model;
-        $table_menus = $model->getFullTableName('menus');
+        $table_menus = $model->getTableName('menus');
         if ($action === 'move') {
           // move menu
           $data = self::$request->post('data')->toString();

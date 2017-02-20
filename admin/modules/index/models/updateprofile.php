@@ -58,7 +58,7 @@ class Model extends \Kotchasan\Model
           'admin_access' => $request->post('register_admin_access')->toBoolean()
         );
         // ชื่อตาราง user
-        $user_table = $this->getFullTableName('user');
+        $user_table = $this->getTableName('user');
         // database connection
         $db = $this->db();
         // ตรวจสอบค่าที่ส่งมา
@@ -78,6 +78,7 @@ class Model extends \Kotchasan\Model
           // ไม่พบสมาชิกที่แก้ไข
           $ret['alert'] = Language::get('not a registered user');
         } else {
+          // แอดมิน
           $isAdmin = Login::isAdmin();
           // ไม่ใช่แอดมิน ใช้อีเมล์เดิมจากฐานข้อมูล
           if (!$isAdmin && $user->id > 0) {

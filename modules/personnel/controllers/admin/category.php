@@ -9,26 +9,32 @@
 namespace Personnel\Admin\Category;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Login;
 use \Kotchasan\Html;
-use \Kotchasan\Language;
+use \Kotchasan\Login;
 use \Gcms\Gcms;
 
 /**
- * แสดงรายการหมวดหมู่
+ * module=personnel-category
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * แสดงรายการหมวดหมู่
+   *
+   * @param Request $request
+   * @return string
    */
   public function render(Request $request)
   {
+    // ข้อความ title bar
+    $this->title = '{LNG_List of} {LNG_Personnel groups}';
+    // เลือกเมนู
+    $this->menu = 'modules';
     // อ่านข้อมูลโมดูล
     $index = \Index\Adminmodule\Model::get('personnel', $request->get('mid')->toInt());
     // login
@@ -46,7 +52,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><a href="{BACKURL?module=personnel-settings&mid='.$index->module_id.'}">'.ucfirst($index->module).'</a></li>');
       $ul->appendChild('<li><span>{LNG_Personnel groups}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-category">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-category">'.$this->title.'</h1>'
       ));
       // แสดงตาราง
       $section->appendChild(createClass('Personnel\Admin\Category\View')->render($index));
@@ -54,13 +60,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return str_replace(':name', Language::get('Personnel groups'), Language::get('list of all :name'));
   }
 }

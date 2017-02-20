@@ -13,17 +13,20 @@ use \Kotchasan\Login;
 use \Kotchasan\Html;
 
 /**
- * ฟอร์มสร้าง/แก้ไข หน้าเว็บไซต์
+ * module=menuwrite
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * ฟอร์มสร้าง/แก้ไข หน้าเว็บไซต์
+   *
+   * @param Request $request
+   * @return string
    */
   public function render(Request $request)
   {
@@ -32,7 +35,11 @@ class Controller extends \Kotchasan\Controller
       // รายการที่ต้องการ
       $index = \Index\Menuwrite\Model::getMenu(self::$request->get('id')->toInt());
       if ($index) {
-        // สร้างหรือแก้ไข
+        $title = '{LNG_'.(empty($index->id) ? 'Create' : 'Edit').'}';
+        // ข้อความ title bar
+        $this->title = $title.' {LNG_Menu}';
+        // เลือกเมนู
+        $this->menu = 'index';
         // แสดงผล
         $section = Html::create('section');
         // breadcrumbs
@@ -42,9 +49,9 @@ class Controller extends \Kotchasan\Controller
         $ul = $breadcrumbs->add('ul');
         $ul->appendChild('<li><span class="icon-modules">{LNG_Menus} &amp; {LNG_Web pages}</span></li>');
         $ul->appendChild('<li><a href="{BACKURL?module=pages&id=0}">{LNG_Menus}</a></li>');
-        $ul->appendChild('<li><span>{LNG_'.(empty($index->id) ? 'Create' : 'Edit').'}</span></li>');
+        $ul->appendChild('<li><span>'.$title.'</span></li>');
         $section->add('header', array(
-          'innerHTML' => '<h1 class="icon-write">'.$this->title().'</h1>'
+          'innerHTML' => '<h1 class="icon-write">'.$this->title.'</h1>'
         ));
         if ($index) {
           // แสดงฟอร์ม
@@ -55,13 +62,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Create or Edit} {LNG_Menu}';
   }
 }

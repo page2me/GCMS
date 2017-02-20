@@ -12,7 +12,6 @@ use \Kotchasan\Http\Request;
 use \Kotchasan\Template;
 use \Gcms\Gcms;
 use \Board\Index\Controller;
-use \Kotchasan\Date;
 use \Kotchasan\Grid;
 
 /**
@@ -92,7 +91,7 @@ class View extends \Gcms\View
               '/{UID}/' => $item->member_id,
               '/{DISPLAYNAME}/' => $item->displayname,
               '/{STATUS}/' => $item->status,
-              '/{DATE}/' => Date::format($item->last_update),
+              '/{DATE}/' => $item->last_update,
               '/{IP}/' => Gcms::showip($item->ip),
               '/{NO}/' => $no + 1,
               '/{RID}/' => $item->id
@@ -123,7 +122,7 @@ class View extends \Gcms\View
           '/<UPLOAD>(.*)<\/UPLOAD>/s' => empty($index->img_upload_type) ? '' : '$1',
           '/{TOPIC}/' => $index->topic,
           '/{DETAIL}/' => $picture.Gcms::HighlightSearch($index->detail, $index->q),
-          '/{DATE}/' => Date::format($index->create_date),
+          '/{DATE}/' => $index->create_date,
           '/{COMMENTS}/' => number_format($index->comments),
           '/{VISITED}/' => number_format($index->visited),
           '/{DISPLAYNAME}/' => $index->name,

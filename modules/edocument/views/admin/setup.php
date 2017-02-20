@@ -24,7 +24,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * ตารางรายการ
+   * แสดงรายการเอกสาร
    *
    * @param object $index
    * @param array $login

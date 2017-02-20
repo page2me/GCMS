@@ -32,7 +32,7 @@ class View extends \Gcms\Adminview
         $d = '<a href="index.php?module=report&amp;date='.$item['date'].'">'.$d.'</a>';
       }
       $c = $i > $l - 13 ? $i > $l - 7 ? '' : 'mobile' : 'tablet';
-      $thead[] = '<td class='.$c.'>'.$d.'</td>';
+      $thead[] = '<th class='.$c.'>'.$d.'</th>';
       $tbody[] = '<td class='.$c.'>'.number_format($item['pages_view']).'</td>';
       $total = $total + $item['pages_view'];
     }

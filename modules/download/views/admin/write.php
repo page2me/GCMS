@@ -14,7 +14,7 @@ use \Kotchasan\ArrayTool;
 use \Kotchasan\Text;
 
 /**
- * ฟอร์มเพิ่ม/แก้ไข ไฟล์ดาวน์โหลด
+ * module=download-write
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -24,7 +24,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=download-write
+   * ฟอร์มสร้าง/แก้ไข ไฟล์ดาวน์โหลด
    *
    * @param object $index
    * @return string

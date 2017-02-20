@@ -13,7 +13,7 @@ use \Kotchasan\Language;
 use \Kotchasan\Http\Request;
 
 /**
- * คลาสสำหรับตรวจสอบการ Login สำหรับ GCMS
+ * คลาสสำหรับตรวจสอบการ Login
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -53,7 +53,7 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
     if ($login_result === null) {
       // user หรือ password ไม่ถูกต้อง
       self::$login_input = isset($item) ? 'password' : 'username';
-      return isset($item) ? Language::replace('Incorrect :name', array(':name', Language::get('Password'))) : Language::get('not a registered user');
+      return isset($item) ? Language::replace('Incorrect :name', array(':name' => Language::get('Password'))) : Language::get('not a registered user');
     } elseif (!empty($login_result['activatecode'])) {
       // ยังไม่ได้ activate
       self::$login_input = 'username';
@@ -97,8 +97,9 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
       } else {
         // model
         $model = new Model;
-        // ตรวจสอบการ login มากกว่า 1 ip
+        // ip ที่ login
         $ip = self::$request->getClientIp();
+        // ตรวจสอบการ login มากกว่า 1 ip
         if (self::$cfg->member_only_ip && !empty($ip)) {
           $online = $model->db()->createQuery()
             ->from('useronline')
@@ -152,17 +153,19 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
   public function forgot(Request $request)
   {
     // ค่าที่ส่งมา
-    $email = $request->post('login_username')->url();
-    if (empty($email)) {
+    $username = $request->post('login_username')->url();
+    if (empty($username)) {
       if ($request->post('action')->toString() === 'forgot') {
-        self::$login_message = 'Please fill in';
+        self::$login_message = Language::get('Please fill in');
       }
     } else {
-      self::$text_username = $email;
-      // ค้นหาอีเมล์หรือโทรศัพท์
+      self::$text_username = $username;
+      // ชื่อฟิลด์สำหรับตรวจสอบอีเมล์
+      $field = reset(self::$cfg->login_fields);
+      // ค้นหาอีเมล์
       $model = new Model;
-      $user_table = $model->getFullTableName('user');
-      $search = $model->db()->first($user_table, array(array('email', $email), array('fb', '0')));
+      $table = $model->getTableName('user');
+      $search = $model->db()->first($table, array(array($field, $username), array('fb', '0')));
       if ($search === false) {
         self::$login_message = Language::get('not a registered user');
       } else {
@@ -171,16 +174,16 @@ class Login extends \Kotchasan\Login implements \Kotchasan\LoginInterface
         // ข้อมูลอีเมล์
         $replace = array(
           '/%PASSWORD%/' => $password,
-          '/%EMAIL%/' => $search->email
+          '/%EMAIL%/' => $search->$field
         );
         // send mail
-        $err = \Gcms\Email::send(3, 'member', $replace, $search->email);
+        $err = \Gcms\Email::send(3, 'member', $replace, $search->$field);
         if (empty($err)) {
           // อัปเดทรหัสผ่านใหม่
-          $model->db()->update($user_table, (int)$search->id, array('password' => md5($password.$search->email)));
+          $model->db()->update($table, (int)$search->id, array('password' => md5($password.$search->$field)));
           // คืนค่า
           self::$login_message = Language::get('Your message was sent successfully');
-          self::$request = $request->withParsedBody(array('action' => 'login'));
+          self::$request = $request->withQueryParams(array('action' => 'login'));
         } else {
           self::$login_message = $err;
         }

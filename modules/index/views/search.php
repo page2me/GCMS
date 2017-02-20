@@ -46,7 +46,7 @@ class View extends \Gcms\View
         '/{URL}/' => $item->url,
         '/{TOPIC}/' => $item->topic,
         '/{LINK}/' => $item->url,
-        '/{DETAIL}/' => Text::cut(preg_replace('/[\s\r\n\t]+/isu', ' ', strip_tags($item->description)), 149)
+        '/{DETAIL}/' => Gcms::html2txt($item->description, 149)
       ));
     }
     // /search/search.html

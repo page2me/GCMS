@@ -21,15 +21,17 @@ class View
   /**
    * สร้างเมนู
    *
+   * @param array $menus
+   * @param string $select
    * @return string
    */
-  public static function render($menus)
+  public static function render($menus, $select)
   {
     // แสดงผลเมนู
     $mymenu = '';
     foreach ($menus['sections'] AS $section => $name) {
       $link = preg_match('/<a.*>.*<\/a>/', $name[1]) ? $name[1] : '<a accesskey='.$name[0].' class=menu-arrow><span>'.$name[1].'</span></a>';
-      $mymenu .= '<li class="'.$section.'">'.$link;
+      $mymenu .= '<li class="'.$section.($section == $select ? ' select' : '').'">'.$link;
       if (isset($menus[$section]) && sizeof($menus[$section]) > 0) {
         $mymenu .= '<ul>';
         foreach ($menus[$section] AS $key => $value) {

@@ -8,26 +8,34 @@
 
 namespace Index\Debug;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\Login;
 use \Kotchasan\Html;
 
 /**
- * Debug
+ * module=debug
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * Debug
+   *
+   * @param Request $request
+   * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     // แอดมิน
     if (Login::isAdmin()) {
+      // ข้อความ title bar
+      $this->title = '{LNG_Debug tool}';
+      // เลือกเมนู
+      $this->menu = 'tools';
       // แสดงผล
       $section = Html::create('section');
       // breadcrumbs
@@ -36,9 +44,9 @@ class Controller extends \Kotchasan\Controller
       ));
       $ul = $breadcrumbs->add('ul');
       $ul->appendChild('<li><span class="icon-tools">{LNG_Tools}</span></li>');
-      $ul->appendChild('<li><span>'.$this->title().'</span></li>');
+      $ul->appendChild('<li><span>'.$this->title.'</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-world">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-world">'.$this->title.'</h1>'
       ));
       $div = $section->add('div', array(
         'class' => 'setup_frm'
@@ -53,13 +61,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Debug tool}';
   }
 }

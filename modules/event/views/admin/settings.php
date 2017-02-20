@@ -14,7 +14,7 @@ use \Gcms\Gcms;
 use \Kotchasan\Text;
 
 /**
- * โมดูลสำหรับจัดการการตั้งค่า
+ * module=event-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -24,7 +24,7 @@ class View extends \Gcms\Adminview
 {
 
   /**
-   * module=event-settings
+   * จัดการการตั้งค่า
    *
    * @param object $index
    * @return string

@@ -90,10 +90,10 @@ class Model extends \Kotchasan\Orm\Field
         $model = new \Kotchasan\Model;
         if ($action === 'published') {
           // เผยแพร่
-          $index = $model->db()->first($model->getFullTableName('index'), $id);
+          $index = $model->db()->first($model->getTableName('index'), $id);
           if ($index) {
             $published = $index->published == 1 ? 0 : 1;
-            $model->db()->update($model->getFullTableName('index'), $index->id, array('published' => $published));
+            $model->db()->update($model->getTableName('index'), $index->id, array('published' => $published));
             // คืนค่า
             $ret['elem'] = 'published_'.$index->id;
             $lng = Language::get('PUBLISHEDS');
@@ -113,13 +113,13 @@ class Model extends \Kotchasan\Orm\Field
           foreach ($query->execute() as $field) {
             $count++;
             if ($field->id == $id) {
-              $model->db()->delete($model->getFullTableName('index'), $id);
-              $model->db()->delete($model->getFullTableName('index_detail'), $id);
+              $model->db()->delete($model->getTableName('index'), $id);
+              $model->db()->delete($model->getTableName('index_detail'), $id);
             }
           }
           // ลบโมดูล ถ้าไม่มีรายการในภาษาอื่น
           if ($count < 2) {
-            $model->db()->delete($model->getFullTableName('modules'), $field->module_id);
+            $model->db()->delete($model->getTableName('modules'), $field->module_id);
           }
           // คืนค่า
           $ret['delete_id'] = self::$request->post('src')->toString().'_'.$id;

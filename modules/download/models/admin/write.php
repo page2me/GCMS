@@ -164,10 +164,10 @@ class Model extends \Kotchasan\Model
               $save['module_id'] = $index->module_id;
               $save['downloads'] = 0;
               $save['member_id'] = $login['id'];
-              $this->db()->insert($this->getFullTableName('download'), $save);
+              $this->db()->insert($this->getTableName('download'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($this->getFullTableName('download'), $id, $save);
+              $this->db()->update($this->getTableName('download'), $id, $save);
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');

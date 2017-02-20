@@ -23,14 +23,12 @@ class View extends \Gcms\Adminview
 {
   /**
    * ข้อมูลโมดูล
-   *
-   * @var object
    */
   private $thumbnails;
   private $module;
 
   /**
-   * ตารางรายการบทความ
+   * แสดงรายการอัลบัม
    *
    * @param object $index
    * @return string

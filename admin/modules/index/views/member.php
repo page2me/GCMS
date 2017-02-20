@@ -8,6 +8,7 @@
 
 namespace Index\Member;
 
+use \Kotchasan\Http\Request;
 use \Kotchasan\DataTable;
 use \Kotchasan\Language;
 use \Kotchasan\Date;
@@ -26,9 +27,10 @@ class View extends \Gcms\Adminview
   /**
    * ตารางรายชื่อสมาชิก
    *
+   * @param Request $request
    * @return string
    */
-  public function render()
+  public function render(Request $request)
   {
     $this->sexes = Language::get('SEXES');
     // สถานะสมาชิก
@@ -40,12 +42,16 @@ class View extends \Gcms\Adminview
     }
     // ตารางสมาชิก
     $table = new DataTable(array(
+      /* Model */
       'model' => 'Index\Member\Model',
-      'perPage' => self::$request->cookie('member_perPage', 30)->toInt(),
-      'sort' => self::$request->cookie('member_sort', 'id desc')->toString(),
+      /* แบ่งหน้า */
+      'perPage' => $request->cookie('member_perPage', 30)->toInt(),
+      /* เรียงลำดับ */
+      'sort' => $request->cookie('member_sort', 'id desc')->toString(),
+      /* ฟังก์ชั่นจัดรูปแบบการแสดงผลแถวของตาราง */
       'onRow' => array($this, 'onRow'),
       /* คอลัมน์ที่ไม่ต้องแสดงผล */
-      'hideColumns' => array('visited', 'status', 'activatecode', 'website', 'fb'),
+      'hideColumns' => array('visited', 'status', 'activatecode', 'website'),
       /* คอลัมน์ที่สามารถค้นหาได้ */
       'searchColumns' => array('fname', 'lname', 'displayname', 'email', 'phone1'),
       /* ตั้งค่าการกระทำของของตัวเลือกต่างๆ ด้านล่างตาราง ซึ่งจะใช้ร่วมกับการขีดถูกเลือกแถว */
@@ -78,7 +84,7 @@ class View extends \Gcms\Adminview
           'default' => -1,
           'text' => '{LNG_Member status}',
           'options' => $member_status,
-          'value' => self::$request->get('status', -1)->toInt()
+          'value' => $request->get('status', -1)->toInt()
         )
       ),
       /* รายชื่อฟิลด์ที่ query (ถ้าแตกต่างจาก Model) */
@@ -86,18 +92,18 @@ class View extends \Gcms\Adminview
         'id',
         'ban',
         'admin_access',
+        'fb',
         'email',
-        'displayname',
         'CONCAT_WS(" ", `pname`,`fname`,`lname`) name',
+        'displayname',
         'phone1',
         'sex',
+        'status',
         'website',
         'create_date',
         'lastvisited',
         'visited',
-        'status',
         'activatecode',
-        'fb'
       ),
       /* ส่วนหัวของตาราง และการเรียงลำดับ (thead) */
       'headers' => array(
@@ -106,22 +112,20 @@ class View extends \Gcms\Adminview
           'sort' => 'id',
         ),
         'ban' => array(
-          'text' => ''
-        ),
-        'admin_access' => array(
-          'text' => ''
+          'text' => '',
+          'colspan' => 3
         ),
         'email' => array(
           'text' => '{LNG_Email}',
           'sort' => 'email'
         ),
-        'displayname' => array(
-          'text' => '{LNG_Displayname}',
-          'sort' => 'displayname'
-        ),
         'name' => array(
           'text' => '{LNG_Name} {LNG_Surname}',
           'sort' => 'name'
+        ),
+        'displayname' => array(
+          'text' => '{LNG_Displayname}',
+          'sort' => 'displayname'
         ),
         'phone1' => array(
           'text' => '{LNG_Phone}'
@@ -139,18 +143,22 @@ class View extends \Gcms\Adminview
         ),
         'lastvisited' => array(
           'text' => '{LNG_Last login} ({LNG_times})',
-          'class' => 'center'
+          'class' => 'center',
+          'sort' => 'lastvisited'
         )
       ),
       /* รูปแบบการแสดงผลของคอลัมน์ (tbody) */
       'cols' => array(
-        'sex' => array(
-          'class' => 'center'
-        ),
         'ban' => array(
           'class' => 'center'
         ),
+        'fb' => array(
+          'class' => 'center'
+        ),
         'admin_access' => array(
+          'class' => 'center'
+        ),
+        'sex' => array(
           'class' => 'center'
         ),
         'create_date' => array(
@@ -164,7 +172,7 @@ class View extends \Gcms\Adminview
       'buttons' => array(
         array(
           'class' => 'icon-edit button green',
-          'href' => self::$request->getUri()->createBackUri(array('module' => 'editprofile', 'id' => ':id')),
+          'href' => $request->getUri()->createBackUri(array('module' => 'editprofile', 'id' => ':id')),
           'text' => '{LNG_Edit}'
         )
       )
@@ -181,17 +189,17 @@ class View extends \Gcms\Adminview
    * @param array $item
    * @return array
    */
-  public function onRow($item)
+  public function onRow($item, $o, $prop)
   {
     $item['email'] = '<a href="index.php?module=sendmail&to='.$item['email'].'" class="status'.$item['status'].'">'.$item['email'].'</a>';
     $item['create_date'] = Date::format($item['create_date'], 'd M Y');
     $item['lastvisited'] = Date::format($item['lastvisited'], 'd M Y H:i').' ('.number_format($item['visited']).')';
     $item['sex'] = '<span class=icon-sex'.(isset($this->sexes[$item['sex']]) ? '-'.$item['sex'] : '').'></span>';
     $item['ban'] = $item['ban'] == 1 ? '<span class="icon-ban ban" title="{LNG_Members were suspended}"></span>' : '<span class="icon-ban"></span>';
+    $item['fb'] = $item['fb'] == 1 ? '<span class="icon-facebook"></span>' : '';
     $item['admin_access'] = $item['admin_access'] == 1 ? '<span class="icon-valid access" title="{LNG_Access to the system administrator.}"></span>' : '<span class="icon-valid disabled"></span>';
     $item['phone1'] = empty($item['phone1']) ? '' : '<a href="tel:'.$item['phone1'].'">'.$item['phone1'].'</a>';
-    $class = $item['fb'] == 1 ? ' class=facebook' : '';
-    $item['displayname'] = empty($item['website']) ? '<span'.$class.'>'.$item['displayname'].'</span>' : '<a href="http://'.$item['website'].'" target="_blank"'.$class.'>'.$item['displayname'].'</a>';
+    $item['name'] = empty($item['website']) ? $item['name'] : '<a href="http://'.$item['website'].'" target="_blank">'.$item['name'].'</a>';
     return $item;
   }
 }
