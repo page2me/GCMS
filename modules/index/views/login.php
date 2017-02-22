@@ -41,6 +41,7 @@ class View extends \Gcms\View
       '/{ID}/' => (int)$login['id'],
       '/{STATUS}/' => $login['status'],
       '/{ADMIN}/' => Login::adminAccess() ? '' : 'hidden',
+      '/{TOKEN}/' => self::$request->createToken(),
       '/{WEBURL}/' => WEB_URL,
       '/:name/' => self::$cfg->member_status[1]
     ));

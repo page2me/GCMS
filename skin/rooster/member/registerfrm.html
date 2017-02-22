@@ -52,7 +52,7 @@
     <fieldset class="submit right">
       <label>{LNG_Accept this agreement}&nbsp;<input type=checkbox name=register_accept id=register_accept value=1></label>
       <input type=submit disabled id=register_submit class="button large save" value="{LNG_Register}">
-      <input type=hidden name=token value="{TOKEN}">
+      <input type=hidden name=token id=token value="{TOKEN}">
       <input type=hidden name=register_next value="{NEXT}">
       <input type=hidden name=register_id id=register_id value=0>
     </fieldset>
@@ -71,7 +71,7 @@
     new GValidator('register_password', 'keyup,change', checkPassword);
     new GValidator('register_repassword', 'keyup,change', checkPassword);
     new GValidator('antispam', 'keyup,change', checkAntispam, '{WEBURL}index.php/index/model/checker/antispam', null, 'register_frm');
-    $G('register_accept').addEvent('click', function () {
+    callClick('register_accept', function () {
       $E('register_submit').disabled = this.checked ? false : true;
     });
   });

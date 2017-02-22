@@ -59,7 +59,8 @@ class View extends \Gcms\View
           }
           $template->add(array(
             '/{TAB}/' => implode('', $tabs),
-            '/{DETAIL}/' => $index->detail
+            '/{DETAIL}/' => $index->detail,
+            '/{TOKEN}/' => $request->createToken(),
           ));
           $index->detail = $template->render();
           $index->keywords = $index->topic;

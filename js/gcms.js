@@ -115,34 +115,6 @@ $G(window).Ready(function () {
     loader.initLoading('wait', false);
     loader.init(document);
   }
-  var hs, q2, patt = /^lang_([a-z]{2,2})$/;
-  forEach(document.body.getElementsByTagName("a"), function (item) {
-    hs = patt.exec(item.id);
-    if (hs) {
-      item.onclick = function () {
-        var lang = this.id.replace('lang_', '');
-        var urls = document.location.toString().replace('#', '&').split('?');
-        if (urls[1]) {
-          var new_url = new Object();
-          forEach(urls[1].split('&'), function (q) {
-            q2 = q.split('=');
-            if (q2.length == 2) {
-              new_url[q2[0]] = q2[1];
-            }
-          });
-          new_url['lang'] = lang;
-          var qs = Array();
-          for (var property in new_url) {
-            qs.push(property + '=' + new_url[property]);
-          }
-          document.location = urls[0] + '?' + qs.join('&');
-          return false;
-        } else {
-          return true;
-        }
-      };
-    }
-  });
 });
 var getURL = function (url) {
   var loader_patt0 = /.*?module=.*?/;

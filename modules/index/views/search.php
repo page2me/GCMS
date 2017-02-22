@@ -12,7 +12,6 @@ use \Gcms\Gcms;
 use \Kotchasan\Template;
 use \Kotchasan\Grid;
 use \Kotchasan\Language;
-use \Kotchasan\Text;
 
 /**
  * หน้าเพจจากโมดูล index

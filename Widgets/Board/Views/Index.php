@@ -9,7 +9,6 @@
 namespace Widgets\Board\Views;
 
 use \Board\Index\Controller;
-use \Kotchasan\Date;
 
 /**
  * Controller หลัก สำหรับแสดงผล Widget
@@ -46,7 +45,7 @@ class Index extends \Gcms\View
     return array(
       '/{URL}/' => Controller::url($index->module, $item->id),
       '/{TOPIC}/' => $item->topic,
-      '/{DATE}/' => Date::format($item->create_date, 'd M Y'),
+      '/{DATE}/' => $item->create_date,
       '/{UID}/' => $item->member_id,
       '/{SENDER}/' => $item->displayname,
       '/{STATUS}/' => $item->status,

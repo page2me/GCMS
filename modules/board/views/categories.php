@@ -57,7 +57,8 @@ class View extends \Gcms\View
       '/{TOPIC}/' => $index->topic,
       '/{DETAIL}/' => $index->detail,
       '/{LIST}/' => $listitem->render(),
-      '/{MODULE}/' => $index->module
+      '/{MODULE}/' => $index->module,
+      '/{STYLE}/' => 'iconview',
     ));
     // breadcrumb ของโมดูล
     if (Gcms::$menu->isHome($index->index_id)) {

@@ -44,6 +44,7 @@ class View extends \Gcms\View
       '/{TOPIC}/' => $index->topic,
       '/{EMAIL}/' => Login::$text_username,
       '/{WEBURL}/' => WEB_URL,
+      '/{TOKEN}/' => $request->createToken(),
       '/{MODAL}/' => $modal ? 'true' : WEB_URL.'index.php'
     ));
     $index->detail = $template->render();

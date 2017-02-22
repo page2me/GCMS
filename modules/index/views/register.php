@@ -45,10 +45,10 @@ class View extends \Gcms\View
       '/<INVITE>(.*)<\/INVITE>/isu' => empty(self::$cfg->member_invitation) ? '' : '\\1',
       '/{LNG_([^}]+)}/e' => '\Kotchasan\Language::get(array(1=>"$1"))',
       '/{TOPIC}/' => $index->topic,
-      '/{TOKEN}/' => self::$request->createToken(),
+      '/{TOKEN}/' => $request->createToken(),
       '/{WEBURL}/' => WEB_URL,
       '/{NEXT}/' => $modal ? 'close' : WEB_URL.'index.php',
-      '/{INVITE}/' => self::$request->cookie('invite')->topic()
+      '/{INVITE}/' => $request->cookie('invite')->topic()
     ));
     $index->detail = $template->render();
     $index->keywords = $index->topic;
