@@ -49,7 +49,7 @@ function getCurrentURL() {
           if (hs[2] == FIRST_MODULE) {
             u = WEB_URL + 'index.php';
           } else {
-            u = WEB_URL + hs[2].replace('-', '/') + '.html';
+            u = WEB_URL + hs[2].replace(/\-/g, '/') + '.html';
           }
         } else if (hs[1] != 'visited') {
           urls[hs[1].toLowerCase()] = this;
@@ -116,64 +116,6 @@ $G(window).Ready(function () {
     loader.init(document);
   }
 });
-var getURL = function (url) {
-  var loader_patt0 = /.*?module=.*?/;
-  var loader_patt1 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/([0-9]+)/([0-9]+)/(.*).html$');
-  var loader_patt2 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/([0-9]+)/(.*).html$');
-  var loader_patt3 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/([0-9]+).html$');
-  var loader_patt4 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/(.*).html$');
-  var loader_patt5 = new RegExp('^' + WEB_URL + '(.*).html$');
-  var p1 = /module=(.*)?/;
-  var urls = url.split('?');
-  var new_q = new Array();
-  if (urls[1] && loader_patt0.exec(urls[1])) {
-    new_q.push(urls[1]);
-    return new_q;
-  } else if (hs = loader_patt1.exec(urls[0])) {
-    new_q.push('module=' + hs[1] + '&cat=' + hs[2] + '&id=' + hs[3]);
-  } else if (hs = loader_patt2.exec(urls[0])) {
-    new_q.push('module=' + hs[1] + '&cat=' + hs[2] + '&alias=' + hs[3]);
-  } else if (hs = loader_patt3.exec(urls[0])) {
-    new_q.push('module=' + hs[1] + '&cat=' + hs[2]);
-  } else if (hs = loader_patt4.exec(urls[0])) {
-    new_q.push('module=' + hs[1] + '&alias=' + hs[2]);
-  } else if (hs = loader_patt5.exec(urls[0])) {
-    new_q.push('module=' + hs[1]);
-  } else {
-    return null;
-  }
-  if (urls[1]) {
-    forEach(urls[1].split('&'), function (q) {
-      if (q != 'action=logout' && q != 'action=login' && !p1.test(q)) {
-        new_q.push(q);
-      }
-    });
-  }
-  return new_q;
-};
-function selectMenu(module) {
-  if ($E('topmenu')) {
-    var tmp = false;
-    forEach($E('topmenu').getElementsByTagName('li'), function (item, index) {
-      var cs = new Array();
-      if (index == 0) {
-        tmp = item;
-      }
-      forEach(this.className.split(' '), function (c) {
-        if (c == module) {
-          tmp = false;
-          cs.push(c + ' select');
-        } else if (c !== '' && c != 'select' && c != 'default') {
-          cs.push(c);
-        }
-      });
-      this.className = cs.join(' ');
-    });
-    if (tmp) {
-      $G(tmp).addClass('default');
-    }
-  }
-}
 function initIndex(id) {
   $G(window).Ready(function () {
     if (G_Lightbox === null) {
@@ -306,9 +248,7 @@ function fbLogin() {
       FB.api('/' + uid, {access_token: accessToken, fields: 'id,first_name,last_name,email,link'}, function (response) {
         if (!response.error) {
           var q = new Array();
-          if ($E('token')) {
-            q.push('token=' + encodeURIComponent($E('token').value));
-          }
+          q.push('token=' + encodeURIComponent($E('token').value));
           for (var prop in response) {
             q.push(prop + '=' + encodeURIComponent(response[prop]));
           }
@@ -364,6 +304,13 @@ function initFacebook(appId, lng) {
     js.src = "//connect.facebook.net/" + (lng == 'th' ? 'th_TH' : 'en_US') + "/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
+}
+function loaddoc(url) {
+  if (loader && url != WEB_URL) {
+    loader.location(url);
+  } else {
+    window.location = url;
+  }
 }
 function getWidgetNews(id, module, interval, callback) {
   var req = new GAjax();
@@ -495,11 +442,4 @@ function initDocumentView(id, module) {
     });
     initIndex(id);
   });
-}
-function loaddoc(url) {
-  if (loader && url != WEB_URL) {
-    loader.location(url);
-  } else {
-    window.location = url;
-  }
 }

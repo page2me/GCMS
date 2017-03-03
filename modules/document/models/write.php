@@ -207,7 +207,7 @@ class Model extends \Kotchasan\Model
               }
               // ส่งค่ากลับ
               $ret['alert'] = Language::get('Saved successfully');
-              $ret['location'] = WEB_URL.'index.php?module=editprofile&tab='.$index['module'];
+              $ret['location'] = 'back';
             }
           } else {
             $ret['alert'] = Language::get('Can not be performed this request. Because they do not find the information you need or you are not allowed');

@@ -104,7 +104,7 @@ function defaultSubmit(ds) {
         _input = el;
       }
     } else if ($E(prop)) {
-      $G(prop).setValue(decodeURIComponent(val).replace('%', '&#37;'));
+      $G(prop).setValue(decodeURIComponent(val).replace(/\%/g, '&#37;'));
     } else if ($E(prop.replace('ret_', ''))) {
       el = $G(prop.replace('ret_', ''));
       if (val == '') {
@@ -151,16 +151,20 @@ function defaultSubmit(ds) {
       } else {
         reload();
       }
-    } else if (_location == _url) {
-      window.location = decodeURIComponent(_location);
     } else if (_location == 'back') {
       if (loader) {
         loader.back();
       } else {
         window.history.go(-1);
       }
+    } else if (_location == _url) {
+      window.location = decodeURIComponent(_location);
     } else {
-      window.location = _location.replace(/&amp;/g, '&');
+      if (loader) {
+        loader.location(_location);
+      } else {
+        window.location = _location.replace(/&amp;/g, '&');
+      }
     }
   }
 }
@@ -293,7 +297,7 @@ function checkAlias() {
 function replaceURL(key, value) {
   var q,
     prop,
-    urls = window.location.toString().replace('#', '&').replace('?', '&').split('&'),
+    urls = window.location.toString().replace(/\#/g, '&').replace(/\?/g, '&').split('&'),
     new_url = new Object(),
     qs = Array(),
     l = urls.length;
@@ -384,6 +388,64 @@ function contryChanged(prefix) {
   if ($E(prefix + '_country')) {
     $G(prefix + '_country').addEvent('change', _contryChanged);
     _contryChanged.call($E(prefix + '_country'));
+  }
+}
+var getURL = function (url) {
+  var loader_patt0 = /.*?module=.*?/,
+    loader_patt1 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/([0-9]+)/([0-9]+)/(.*).html$'),
+    loader_patt2 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/([0-9]+)/(.*).html$'),
+    loader_patt3 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/([0-9]+).html$'),
+    loader_patt4 = new RegExp('^' + WEB_URL + '([a-z0-9]+)/(.*).html$'),
+    loader_patt5 = new RegExp('^' + WEB_URL + '(.*).html$'),
+    p1 = /module=(.*)?/,
+    urls = url.replace(/&amp;/g, '&').split('?'),
+    new_q = new Array();
+  if (urls[1] && loader_patt0.exec(urls[1])) {
+    new_q.push(urls[1]);
+    return new_q;
+  } else if (hs = loader_patt1.exec(urls[0])) {
+    new_q.push('module=' + hs[1] + '&cat=' + hs[2] + '&id=' + hs[3]);
+  } else if (hs = loader_patt2.exec(urls[0])) {
+    new_q.push('module=' + hs[1] + '&cat=' + hs[2] + '&alias=' + hs[3]);
+  } else if (hs = loader_patt3.exec(urls[0])) {
+    new_q.push('module=' + hs[1] + '&cat=' + hs[2]);
+  } else if (hs = loader_patt4.exec(urls[0])) {
+    new_q.push('module=' + hs[1] + '&alias=' + hs[2]);
+  } else if (hs = loader_patt5.exec(urls[0])) {
+    new_q.push('module=' + hs[1]);
+  } else {
+    return null;
+  }
+  if (urls[1]) {
+    forEach(urls[1].split('&'), function (q) {
+      if (q != 'action=logout' && q != 'action=login' && !p1.test(q)) {
+        new_q.push(q);
+      }
+    });
+  }
+  return new_q;
+};
+function selectMenu(module) {
+  if ($E('topmenu')) {
+    var tmp = false;
+    forEach($E('topmenu').getElementsByTagName('li'), function (item, index) {
+      var cs = new Array();
+      if (index == 0) {
+        tmp = item;
+      }
+      forEach(this.className.split(' '), function (c) {
+        if (c == module) {
+          tmp = false;
+          cs.push(c + ' select');
+        } else if (c !== '' && c != 'select' && c != 'default') {
+          cs.push(c);
+        }
+      });
+      this.className = cs.join(' ');
+    });
+    if (tmp) {
+      $G(tmp).addClass('default');
+    }
   }
 }
 $G(window).Ready(function () {

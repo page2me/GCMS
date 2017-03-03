@@ -214,7 +214,8 @@ class Model extends \Kotchasan\Model
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');
-            $ret['location'] = $request->getUri()->postBack('index.php', array('id' => $index_id, 'module' => 'pagewrite'));
+            // กลับไปหน้าก่อนหน้า
+            $ret['location'] = $request->getUri()->postBack('index.php');
           }
         }
       }

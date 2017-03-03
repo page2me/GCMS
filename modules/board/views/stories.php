@@ -12,7 +12,6 @@ use \Kotchasan\Template;
 use \Kotchasan\Http\Request;
 use \Gcms\Gcms;
 use \Board\Index\Controller;
-use \Kotchasan\Grid;
 
 /**
  * แสดงรายการกระทู้
@@ -41,7 +40,7 @@ class View extends \Gcms\View
       // วันที่สำหรับเครื่องหมาย new
       $valid_date = time() - $index->new_date;
       // /board/listitem.html
-      $listitem = Grid::create('board', $index->module, 'listitem');
+      $listitem = Template::create('board', $index->module, 'listitem');
       foreach ($index->items as $item) {
         if (!empty($item->picture) && is_file(ROOT_PATH.DATA_FOLDER.'board/thumb-'.$item->picture)) {
           $thumb = WEB_URL.DATA_FOLDER.'board/thumb-'.$item->picture;
