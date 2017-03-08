@@ -9,28 +9,32 @@
 namespace Friends\Admin\Settings;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Login;
 use \Kotchasan\Html;
+use \Kotchasan\Login;
 use \Gcms\Gcms;
 
 /**
- * Controller สำหรับจัดการการตั้งค่า
+ * module=friends-settings
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
  * @since 1.0
  */
-class Controller extends \Kotchasan\Controller
+class Controller extends \Gcms\Controller
 {
 
   /**
-   * แสดงผล
+   * จัดการการตั้งค่า
    *
    * @param Request $request
    * @return string
    */
   public function render(Request $request)
   {
+    // ข้อความ title bar
+    $this->title = '{LNG_Module settings} {LNG_Friends}';
+    // เลือกเมนู
+    $this->menu = 'modules';
     // อ่านข้อมูลโมดูล
     $index = \Index\Adminmodule\Model::get('friends', $request->get('mid')->toInt());
     // login
@@ -48,7 +52,7 @@ class Controller extends \Kotchasan\Controller
       $ul->appendChild('<li><span>'.ucfirst($index->module).'</span></li>');
       $ul->appendChild('<li><span>{LNG_Settings}</span></li>');
       $section->add('header', array(
-        'innerHTML' => '<h1 class="icon-config">'.$this->title().'</h1>'
+        'innerHTML' => '<h1 class="icon-config">'.$this->title.'</h1>'
       ));
       // แสดงฟอร์ม
       $section->appendChild(createClass('Friends\Admin\Settings\View')->render($index));
@@ -56,13 +60,5 @@ class Controller extends \Kotchasan\Controller
     }
     // 404.html
     return \Index\Error\Controller::page404();
-  }
-
-  /**
-   * title bar
-   */
-  public function title()
-  {
-    return '{LNG_Module settings} {LNG_Friends}';
   }
 }

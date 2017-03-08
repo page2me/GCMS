@@ -66,7 +66,7 @@ class Model extends \Kotchasan\Model
           'can_config' => $request->post('can_config', array())->toInt(),
         );
         // โมดูลที่เรียก
-        $index = \Index\Module\Model::get('documentation', $request->post('id')->toInt());
+        $index = \Index\Adminmodule\Model::get('documentation', $request->post('id')->toInt());
         // สามารถตั้งค่าได้
         if ($index && Gcms::canConfig($login, $index, 'can_config')) {
           $save['can_write'][] = 1;
