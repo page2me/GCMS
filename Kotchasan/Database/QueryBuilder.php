@@ -142,7 +142,7 @@ class QueryBuilder extends \Kotchasan\Database\Query
   }
 
   /**
-   * คืนค่าแอเร์ยเก็บพารามอเตอร์สำหรับการ bind รวมกับ $values
+   * คืนค่าแอเร์ยเก็บพารามิเตอร์สำหรับการ bind รวมกับ $values
    *
    * @param array $values
    * @return array
