@@ -10,7 +10,7 @@ namespace Widgets\Relate\Models;
 
 use \Kotchasan\Language;
 use \Kotchasan\Date;
-use \Kotchasan\ArrayTool;
+use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -51,7 +51,6 @@ class Index extends \Kotchasan\Model
         foreach (explode(',', $index['relate']) as $q) {
           $qs[] = "D.`relate` LIKE '%$q%'";
         }
-        $qs = implode(' OR ', $qs);
         // ชื่อตาราง
         $table_index = $model->getTableName('index');
         $table_index_detail = $model->getTableName('index_detail');
@@ -63,7 +62,7 @@ class Index extends \Kotchasan\Model
           array('Q.published_date', '<=', Date::mktimeToSqlDate()),
           array('Q.index', '0'),
           array('Q.id', '>', $id),
-          '('.$qs.')',
+          Sql::create(implode(' OR ', $qs)),
           array('D.language', array(Language::name(), ''))
         );
         // newest

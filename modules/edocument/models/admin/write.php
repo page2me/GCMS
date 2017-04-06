@@ -17,6 +17,7 @@ use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
 use \Kotchasan\Text;
 use \Gcms\Email;
+use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -44,7 +45,7 @@ class Model extends \Kotchasan\Model
     if (empty($id)) {
       // ใหม่ ตรวจสอบโมดูล
       if ($new) {
-        $query->select($model->buildNext('id', 'edocument'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
+        $query->select(Sql::NEXT('id', $model->getTableName('edocument'), null, 'id'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
       } else {
         $query->select('0 id', 'M.id module_id', 'M.owner', 'M.module', 'M.config');
       }

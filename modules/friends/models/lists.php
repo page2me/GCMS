@@ -9,6 +9,7 @@
 namespace Friends\Lists;
 
 use \Kotchasan\Http\Request;
+use \Kotchasan\Database\Sql;
 
 /**
  * ลิสต์รายการบทความ
@@ -56,7 +57,7 @@ class Model extends \Kotchasan\Model
         'Q.*',
         'U.status',
         'U.sex',
-        "(CASE WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) sender"
+        Sql::create("(CASE WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) AS `sender`")
       );
       $query->select($select)
         ->order('Q.id DESC')

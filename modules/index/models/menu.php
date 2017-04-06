@@ -9,6 +9,7 @@
 namespace Index\Menu;
 
 use \Kotchasan\Language;
+use \Kotchasan\Database\Sql;
 
 /**
  * คลาสสำหรับโหลดรายการเมนูจากฐานข้อมูลของ GCMS
@@ -51,7 +52,7 @@ class Model extends \Kotchasan\Model
       'U.menu_target',
       'U.alias',
       'U.published',
-      "(CASE U.`parent` WHEN 'MAINMENU' THEN 0 WHEN 'SIDEMENU' THEN 1 ELSE 2 END ) AS `pos`"
+      Sql::create("(CASE U.`parent` WHEN 'MAINMENU' THEN 0 WHEN 'SIDEMENU' THEN 1 ELSE 2 END ) AS `pos`")
     );
     $query = $this->db()->createQuery()
       ->select($select)

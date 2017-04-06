@@ -11,6 +11,7 @@ namespace Index\Search;
 use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
+use \Kotchasan\Database\Sql;
 
 /**
  * search model
@@ -56,13 +57,13 @@ class Model extends \Kotchasan\Model
       $index->sqls = array();
       $select = array('I.id', 'I.alias', 'M.module', 'M.owner', 'D.topic', 'D.description', 'I.visited', 'I.index');
       $q1 = $db->createQuery()
-        ->select($select, '('.implode(' + ', $score1).') score')
+        ->select($select, Sql::create('('.implode(' + ', $score1).') AS `score`'))
         ->from('modules M')
         ->join('index I', 'INNER', array(array('I.module_id', 'M.id'), array('I.published', 1), array('I.published_date', '<=', date('Y-m-d')), array('I.language', array(Language::name(), ''))))
         ->join('index_detail D', 'INNER', array(array('D.id', 'I.id'), array('D.module_id', 'M.id')))
         ->where($where1, 'OR');
       $q2 = $db->createQuery()
-        ->select($select, '('.implode(' + ', $score2).') score')
+        ->select($select, Sql::create('('.implode(' + ', $score2).') AS `score`'))
         ->from('comment C')
         ->join('modules M', 'INNER', array('M.id', 'C.module_id'))
         ->join('index I', 'INNER', array(array('I.module_id', 'M.id'), array('I.published', 1), array('I.published_date', '<=', date('Y-m-d')), array('I.language', array(Language::name(), ''))))

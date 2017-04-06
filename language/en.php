@@ -5,6 +5,10 @@ return array(
     0 => 'Disable',
     1 => 'Enamle'
   ),
+  'CURRENCY_UNITS' => array(
+    'THB' => 'Baht',
+    'USD' => 'Dollar'
+  ),
   'DATE_FORMAT' => 'd M Y, H:i',
   'DATE_LONG' => array(
     0 => 'Sunday',
@@ -121,10 +125,6 @@ return array(
     '' => 'Clear Text',
     'ssl' => 'Server using a secure connection (SSL)'
   ),
-  'USE_AJAX_LIST' => array(
-    0 => 'Ajax enabled some of the site (displayed as a website generally)',
-    1 => 'Ajax enabled website with a full'
-  ),
   'TEXTLINK_TYPIES' => array(
     'custom' => 'Enter custom code, such as advertising.',
     'text' => 'Link text',
@@ -138,10 +138,10 @@ return array(
     1 => 'Thumbnail'
   ),
   'TO_TIME' => 'to H:i',
-  'WIDGET_DATE_FORMAT' => 'L, d F Y',
-  'YEAR_OFFSET' => 0,
-  'CURRENCY_UNITS' => array(
-    'THB' => 'Baht',
-    'USD' => 'Dollar'
+  'USE_AJAX_LIST' => array(
+    0 => 'Ajax enabled some of the site (displayed as a website generally)',
+    1 => 'Ajax enabled website with a full'
   ),
+  'WIDGET_DATE_FORMAT' => 'L, d F Y',
+  'YEAR_OFFSET' => 0
 );

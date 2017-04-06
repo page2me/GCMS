@@ -14,6 +14,7 @@ use Kotchasan\Login;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
+use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล.
@@ -41,7 +42,7 @@ class Model extends \Kotchasan\Model
     if (empty($id) && !empty($module_id)) {
       // ใหม่ ตรวจสอบโมดูล
       if ($new) {
-        $query->select($model->buildNext('id', 'gallery_album'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
+        $query->select(Sql::NEXT('id', $model->getTableName('gallery_album'), null, 'id'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
       } else {
         $query->select('0 id', 'M.id module_id', 'M.owner', 'M.module', 'M.config');
       }

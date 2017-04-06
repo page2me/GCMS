@@ -9,6 +9,7 @@
 namespace Board\Feed;
 
 use \Kotchasan\Http\Request;
+use \Kotchasan\Database\Sql;
 
 /**
  * RSS Feed
@@ -45,7 +46,7 @@ class Model extends \Kotchasan\Model
       $where[] = array('picture', '!=', '');
     }
     return $model->db()->createQuery()
-        ->select('id', 'topic', 'detail', 'picture', '(CASE WHEN `comment_date`=0 THEN `last_update` ELSE `comment_date` END) last_update')
+        ->select('id', 'topic', 'detail', 'picture', Sql::create('(CASE WHEN `comment_date`=0 THEN `last_update` ELSE `comment_date` END) AS `last_update`'))
         ->from('board_q')
         ->where($where)
         ->limit($count)
