@@ -9,7 +9,6 @@
 namespace Board\Stories;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Database\Sql;
 
 /**
  * ลิสต์รายการบทความ
@@ -54,9 +53,9 @@ class Model extends \Kotchasan\Model
         'Q.*',
         'U1.status',
         'U2.status replyer_status',
-        Sql::create("(CASE WHEN Q.`comment_date` > 0 THEN Q.`comment_date` ELSE Q.`last_update` END) AS `d`"),
-        Sql::create("(CASE WHEN ISNULL(U1.`id`) THEN Q.`email` WHEN U1.`displayname`='' THEN U1.`email` ELSE U1.`displayname` END) AS `sender`"),
-        Sql::create("(CASE WHEN ISNULL(U2.`id`) THEN Q.`commentator` WHEN U2.`displayname`='' THEN U2.`email` ELSE U2.`displayname` END) AS `commentator`")
+        "(CASE WHEN Q.`comment_date` > 0 THEN Q.`comment_date` ELSE Q.`last_update` END) d",
+        "(CASE WHEN ISNULL(U1.`id`) THEN Q.`email` WHEN U1.`displayname`='' THEN U1.`email` ELSE U1.`displayname` END) sender",
+        "(CASE WHEN ISNULL(U2.`id`) THEN Q.`commentator` WHEN U2.`displayname`='' THEN U2.`email` ELSE U2.`displayname` END) commentator"
       );
       $query->select($select)
         ->join('user U1', 'LEFT', array('U1.id', 'Q.member_id'))

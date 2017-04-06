@@ -14,7 +14,6 @@ use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 use \Kotchasan\File;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลหมวดหมู่ (Backend)
@@ -48,7 +47,7 @@ class Model extends \Kotchasan\Model
           "'' detail",
           "'' icon",
           '1 published',
-          Sql::NEXT('category_id', $model->getTableName('category'), array('module_id', 'M.id'), 'category_id'),
+          $model->buildNext('category_id', 'category', array('module_id', 'M.id'))
         );
         $index = $model->db()->createQuery()
           ->from('modules M')
@@ -130,7 +129,7 @@ class Model extends \Kotchasan\Model
             'M.id module_id',
             '"" icon',
             'M.config mconfig',
-            Sql::NEXT('id', $this->getTableName('category'), null, 'id'),
+            $this->buildNext('id', 'category'),
             array($q1, 'cid')
           );
           $index = $this->db()->createQuery()
@@ -164,9 +163,9 @@ class Model extends \Kotchasan\Model
             } elseif ($index['cid'] > 0 && $index['cid'] != $index['id']) {
               $ret['ret_category_id'] = Language::replace('This :name already exist', array(':name' => Language::get('ID')));
             } elseif (empty($topic)) {
-              $ret['ret_topic_'.Language::name()] = 'Please fill in';
+              $ret['ret_topic_'.Language::name()] = Language::get('Please fill in');
             } elseif (empty($detail)) {
-              $ret['ret_detail_'.Language::name()] = 'Please fill in';
+              $ret['ret_detail_'.Language::name()] = Language::get('Please fill in');
             } else {
               // อัปโหลดไฟล์
               $icon = ArrayTool::unserialize($index['icon']);

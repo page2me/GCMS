@@ -128,7 +128,7 @@ class Currency
         $THB = $S.$THB;
       }
       $THB = ($match[1] == '-' ? 'ลบ' : '').$THB;
-      if ($ths == '' || $ths == '00') {
+      if ($ths == '') {
         $THS = 'ถ้วน';
       } else {
         $j = 0;

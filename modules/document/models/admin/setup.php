@@ -11,7 +11,6 @@ namespace Document\Admin\Setup;
 use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
-use \Kotchasan\Database\Sql;
 
 /**
  * โมเดลสำหรับแสดงรายการบทความ (setup.php)
@@ -45,7 +44,7 @@ class Model extends \Kotchasan\Orm\Field
         'P.published',
         'P.show_news',
         'P.category_id',
-        Sql::create('(CASE WHEN ISNULL(U.`id`) THEN P.`email` WHEN U.`displayname`=\'\' THEN U.`email` ELSE U.`displayname` END) AS `writer`'),
+        '(CASE WHEN ISNULL(U.`id`) THEN P.`email` WHEN U.`displayname`=\'\' THEN U.`email` ELSE U.`displayname` END) AS `writer`',
         'P.create_date',
         'P.last_update',
         'P.member_id',

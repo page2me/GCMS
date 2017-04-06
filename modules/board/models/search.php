@@ -9,7 +9,6 @@
 namespace Board\Search;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Database\Sql;
 
 /**
  * search model
@@ -44,12 +43,12 @@ class Model extends \Kotchasan\Model
     }
     $db = $this->db();
     $q1 = $db->createQuery()
-      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'Q.detail description', 'Q.visited', '0 index', Sql::create('('.implode(' + ', $score1).') AS `score`'))
+      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'Q.detail description', 'Q.visited', '0 index', '('.implode(' + ', $score1).') score')
       ->from('board_q Q')
       ->join('modules M', 'INNER', array(array('M.id', 'Q.module_id'), array('M.owner', 'board')))
       ->where($where1);
     $q2 = $db->createQuery()
-      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'R.detail description', 'Q.visited', '0 index', Sql::create('('.implode(' + ', $score2).') AS `score`'))
+      ->select('Q.id', 'Q.topic alias', 'M.module', 'M.owner', 'Q.topic', 'R.detail description', 'Q.visited', '0 index', '('.implode(' + ', $score2).') score')
       ->from('board_r R')
       ->join('board_q Q', 'INNER', array(array('Q.id', 'R.index_id'), array('Q.module_id', 'R.module_id')))
       ->join('modules M', 'INNER', array(array('M.id', 'Q.module_id'), array('M.owner', 'board')))

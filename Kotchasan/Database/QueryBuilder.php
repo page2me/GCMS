@@ -10,7 +10,6 @@ namespace Kotchasan\Database;
 
 use \Kotchasan\Database\Driver;
 use \Kotchasan\ArrayTool;
-use \Kotchasan\Database\Sql;
 
 /**
  * SQL Query builder
@@ -31,7 +30,7 @@ class QueryBuilder extends \Kotchasan\Database\Query
    */
   protected $toArray = false;
   /**
-   * ตัวแปรเก็บพารามิเตอร์สำหรับการ bind
+   * ตัวแปรเก็บ value สำหรับการ execute
    *
    * @var array
    */
@@ -142,20 +141,13 @@ class QueryBuilder extends \Kotchasan\Database\Query
   }
 
   /**
-   * คืนค่าแอเร์ยเก็บพารามอเตอร์สำหรับการ bind รวมกับ $values
+   * คืนค่า value สำหรับการ execute
    *
-   * @param array $values
    * @return array
    */
-  public function getValues($values = array())
+  public function getValues()
   {
-    if (empty($values)) {
-      return $this->values;
-    }
-    foreach ($this->values as $key => $value) {
-      $values[$key] = $value;
-    }
-    return $values;
+    return $this->values;
   }
 
   /**
@@ -218,9 +210,7 @@ class QueryBuilder extends \Kotchasan\Database\Query
     $args = is_array($fields) ? $fields : func_get_args();
     $sqls = array();
     foreach ($args as $item) {
-      if ($item instanceof Sql) {
-        $sqls[] = $item->text();
-      } elseif (strpos($item, '(') !== false) {
+      if (strpos($item, '(') !== false) {
         $sqls[] = $item;
       } elseif (preg_match('/^(([a-z0-9]+)\.)?([a-z0-9_]+)?$/i', $item, $match)) {
         $sqls[] = "$match[1]`$match[3]`";
@@ -296,6 +286,7 @@ class QueryBuilder extends \Kotchasan\Database\Query
    * @return \static
    *
    * @assert insert('user', array('id' => 1, 'name' => 'test'))->text() [==] "INSERT INTO `user` (`id`, `name`) VALUES (:id, :name)"
+   * @assert insert('user', array('id' => $this->object->buildNext('id', 'user', null, null), 'name' => 'test'))->text() [==] "INSERT INTO `user` (`id`, `name`) VALUES ((1 + IFNULL((SELECT MAX(`id`) FROM `user` AS X), 0)), :name)"
    */
   public function insert($table, $datas)
   {
@@ -409,8 +400,14 @@ class QueryBuilder extends \Kotchasan\Database\Query
    * @assert select('U.id', 'email name', 'module')->text() [==] "SELECT U.`id`,`email` AS `name`,`module`"
    * @assert select('"email" name', '0 id', '0 `ไอดี`')->text() [==] "SELECT 'email' AS `name`,0 AS `id`,0 AS `ไอดี`"
    * @assert select("'email' name", '0 AS id', '0 AS ไอดี')->text() [==] "SELECT 'email' AS `name`,0 AS `id`,0 AS `ไอดี`"
+   * @assert select("(SELECT FROM) q")->text() [==] "SELECT (SELECT FROM) AS `q`"
    * @assert select()->text()  [==] "SELECT *"
    * @assert select()->where(array('domain', 'kotchasan.com'))->text() [==] "SELECT * WHERE `domain` = 'kotchasan.com'"
+   * @assert select('YEAR(date) Y', 'MONTH(date) as D', 'DAY(`date`) as `today`')->text() [==] "SELECT YEAR(date) AS `Y`,MONTH(date) AS `D`,DAY(`date`) AS `today`"
+   * @assert select('GROUP_CONCAT(P2.`reciever_id`)')->text() [==] "SELECT GROUP_CONCAT(P2.`reciever_id`)"
+   * @assert select('GROUP_CONCAT(P2.`reciever_id`) reciever')->text() [==] "SELECT GROUP_CONCAT(P2.`reciever_id`) AS `reciever`"
+   * @assert select('GROUP_CONCAT(P2.`reciever_id`) AS `reciever`')->text() [==] "SELECT GROUP_CONCAT(P2.`reciever_id`) AS `reciever`"
+   * @assert select("(CASE WHEN ISNULL(U1.`id`) THEN Q.`email` WHEN U1.`displayname`='' THEN U1.`email` ELSE U1.`displayname` END) sender")->text() [==] "SELECT (CASE WHEN ISNULL(U1.`id`) THEN Q.`email` WHEN U1.`displayname`='' THEN U1.`email` ELSE U1.`displayname` END) AS `sender`"
    * @assert select('name `ชื่อ นามสกุล`', 'U.`idcard` AS `เลขประชาชน`')->text() [==] "SELECT `name` AS `ชื่อ นามสกุล`,U.`idcard` AS `เลขประชาชน`"
    * @assert select('table.field', '`table`.`field`')->text() [==] "SELECT `table`.`field`,`table`.`field`"
    * @assert select('table.field field', '`table`.`field` `field`')->text() [==] "SELECT `table`.`field` AS `field`,`table`.`field` AS `field`"
@@ -418,8 +415,6 @@ class QueryBuilder extends \Kotchasan\Database\Query
    * @assert select('U.field', 'U1.`field`')->text() [==] "SELECT U.`field`,U1.`field`"
    * @assert select('U.field field', 'U1.`field` `field`')->text() [==] "SELECT U.`field` AS `field`,U1.`field` AS `field`"
    * @assert select('U.field AS field', 'U1.`field` AS `field`')->text() [==] "SELECT U.`field` AS `field`,U1.`field` AS `field`"
-   * @assert select(Sql::YEAR('create_date', 'year'), Sql::MONTH('create_date', 'month'))->text() [==] "SELECT YEAR(`create_date`) AS `year`,MONTH(`create_date`) AS `month`"
-   * @assert select(array(Sql::YEAR('create_date', 'year'), Sql::MONTH('create_date', 'month')))->text() [==] "SELECT YEAR(`create_date`) AS `year`,MONTH(`create_date`) AS `month`"
    */
   public function select($fields = '*')
   {
@@ -579,7 +574,7 @@ class QueryBuilder extends \Kotchasan\Database\Query
       } elseif (is_string($item)) {
         $this->sqls['union'][] = $item;
       } else {
-        throw new \InvalidArgumentException('Invalid arguments in union');
+        throw new \InvalidArgumentException('Invalid arguments in '.__METHOD__);
       }
     }
     $this->sqls['function'] = 'customQuery';
@@ -614,21 +609,27 @@ class QueryBuilder extends \Kotchasan\Database\Query
    * @assert where(array('id', '1'))->text() [==] " WHERE `id` = '1'"
    * @assert where(array('date', '2016-1-1 30:30'))->text() [==] " WHERE `date` = '2016-1-1 30:30'"
    * @assert where(array('id', '=', 1))->text() [==] " WHERE `id` = 1"
-   * @assert where(Sql::create('`id`=1 OR (SELECT ....)'))->text() [==] " WHERE `id`=1 OR (SELECT ....)"
+   * @assert where('`id`=1 OR (SELECT ....)')->text() [==] " WHERE `id`=1 OR (SELECT ....)"
    * @assert where(array('id', '=', 1))->text() [==] " WHERE `id` = 1"
    * @assert where(array('id', 'IN', array(1, 2, '3')))->text() [==] " WHERE `id` IN (1, 2, '3')"
-   * @assert where(array(array('fb', '0'), Sql::create('(...)')))->text() [==] " WHERE `fb` = '0' AND (...)"
-   * @assert where(array(array(Sql::MONTH('create_date'), 1), array(Sql::YEAR('create_date'), 1)))->text() [==] " WHERE MONTH(`create_date`) = 1 AND YEAR(`create_date`) = 1"
-   * @assert where(array(array('id', array(1, 'a')), array('id', array('G.id', 'G.`id2`'))))->text() [==] " WHERE `id` IN (1, 'a') AND `id` IN ('G.id', G.`id2`)"
+   * @assert where(array('(...)', array('fb', '0')))->text() [==] " WHERE (...) AND `fb` = '0'"
+   * @assert where(array(array('fb', '0'), '(...)'))->text() [==] " WHERE `fb` = '0' AND (...)"
+   * @assert where(array(array('MONTH(create_date)', 1), array('YEAR(create_date)', 1)))->text() [==] " WHERE MONTH(create_date) = 1 AND YEAR(create_date) = 1"
+   * @assert where(array(array('id', array(1, 'a')), array('id', array('G.id', 'G.`id2`'))))->text() [==] " WHERE `id` IN (1, 'a') AND `id` IN (G.`id`, G.`id2`)"
    * @assert where(array('ip', 'NOT IN', array('', '192.168.1.104')))->text() [==] " WHERE `ip` NOT IN ('', '192.168.1.104')"
-   * @assert where(array('U.id', '(SELECT CASE END)'))->text() [==] " WHERE U.`id` = '(SELECT CASE END)'"
-   * @assert where(array(array(Sql::YEAR('create_date'), Sql::YEAR('S.`create_date`'))))->text() [==] " WHERE YEAR(`create_date`) = YEAR(S.`create_date`)"
+   * @assert where(array('U.id', '(SELECT CASE END)'))->text() [==] " WHERE U.`id` = (SELECT CASE END)"
+   * @assert where(array(array('YEAR(`create_date`)', 'YEAR(S.`create_date`)')))->text() [==] " WHERE YEAR(`create_date`) = YEAR(S.`create_date`)"
+   * @assert where(array('YEAR(`create_date`)', 'YEAR(S.`create_date`)'))->text() [!=] " WHERE YEAR(`create_date`) = YEAR(S.`create_date`)"
    */
   public function where($condition, $oprator = 'AND', $id = 'id')
   {
-    $sql = Sql::WHERE($condition, $oprator, $id);
-    $this->sqls['where'] = $sql->text();
-    $this->values = $sql->getValues($this->values);
+    $ret = $this->buildWhere($condition, $oprator, $id);
+    if (is_array($ret)) {
+      $this->sqls['where'] = $ret[0];
+      $this->values = ArrayTool::replace($this->values, $ret[1]);
+    } else {
+      $this->sqls['where'] = $ret;
+    }
     return $this;
   }
 

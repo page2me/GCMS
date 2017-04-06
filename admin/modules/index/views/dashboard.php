@@ -152,7 +152,7 @@ class View extends \Gcms\Adminview
     // สี สำหรับส่งให้ graphs
     $color = "['".implode("', '", $colors)."']";
     $content[] = 'new GGraphs("pageview_graph", {type:"line",colors:'.$color.'});';
-    $content[] = 'new GGraphs("visited_graph", {type:"donut",colors:'.$color.',centerX:30+Math.round($G("visited_graph").getHeight()/2),labelOffset:35,pieMargin:30,strokeColor:null});';
+    $content[] = 'new GGraphs("visited_graph", {type:"pie",colors:'.$color.',centerX:30+Math.round($G("visited_graph").getHeight()/2),labelOffset:35,pieMargin:30,strokeColor:null});';
     $content[] = "getNews('news_div');";
     $content[] = "getUpdate('".self::$cfg->version."');";
     $content[] = '});';

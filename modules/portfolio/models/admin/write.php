@@ -16,7 +16,6 @@ use \Kotchasan\ArrayTool;
 use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
 use \Kotchasan\Date;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -44,7 +43,7 @@ class Model extends \Kotchasan\Model
     if (empty($id)) {
       // ใหม่ ตรวจสอบโมดูล
       if ($next) {
-        $query->select(Sql::NEXT('id', $model->getTableName('portfolio'), null, 'id'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
+        $query->select($query->buildNext('id', 'portfolio'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
       } else {
         $query->select('0 id', 'M.id module_id', 'M.owner', 'M.module', 'M.config');
       }

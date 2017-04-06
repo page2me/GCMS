@@ -8,8 +8,6 @@
 
 namespace Widgets\Board\Models;
 
-use \Kotchasan\Database\Sql;
-
 /**
  * รายการกระทู้
  *
@@ -38,11 +36,11 @@ class Index extends \Kotchasan\Model
     if (!empty($categories)) {
       $where[] = "Q.`category_id` IN ($categories)";
     }
-    $sql = Sql::create("(CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN Q.`comment_date` > 0 THEN Q.`commentator` ELSE Q.`email` END) ELSE (CASE WHEN U.`displayname` = '' THEN U.`email` ELSE U.`displayname` END) END) AS `displayname`");
+    $sql = "(CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN Q.`comment_date` > 0 THEN Q.`commentator` ELSE Q.`email` END) ELSE (CASE WHEN U.`displayname` = '' THEN U.`email` ELSE U.`displayname` END) END) AS `displayname`";
     return $model->db()->createQuery()
         ->select('Q.id', 'Q.topic', 'Q.picture', 'Q.last_update', 'Q.comment_date', 'Q.create_date', 'Q.detail', 'U.status', 'U.id member_id', $sql)
         ->from('board_q Q')
-        ->join('user U', 'LEFT', array('U.id', Sql::create('(CASE WHEN Q.`commentator_id` > 0 THEN Q.`commentator_id` ELSE Q.`member_id` END)')))
+        ->join('user U', 'LEFT', array('U.id', '(CASE WHEN Q.`commentator_id` > 0 THEN Q.`commentator_id` ELSE Q.`member_id` END)'))
         ->where($where)
         ->order('Q.last_update DESC')
         ->limit((int)$limit)

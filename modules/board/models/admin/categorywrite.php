@@ -13,7 +13,6 @@ use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 use \Kotchasan\File;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -47,7 +46,7 @@ class Model extends \Kotchasan\Model
           "'' detail",
           "'' icon",
           '1 published',
-          Sql::NEXT('category_id', $model->getTableName('category'), array('module_id', 'M.id'), 'category_id')
+          $model->buildNext('category_id', 'category', array('module_id', 'M.id'))
         );
         $index = $model->db()->createQuery()
           ->from('modules M')
@@ -108,8 +107,6 @@ class Model extends \Kotchasan\Model
         $id = self::$request->post('id')->toInt();
         $module_id = self::$request->post('module_id')->toInt();
         $category_id = self::$request->post('category_id')->toInt();
-        // ตาราง category
-        $table_category = $this->getTableName('category');
         $q1 = $this->db()->createQuery()
           ->select('id')
           ->from('category')
@@ -135,7 +132,7 @@ class Model extends \Kotchasan\Model
             'M.id module_id',
             '"" icon',
             'M.config mconfig',
-            Sql::NEXT('id', $table_category, null, 'id'),
+            $this->buildNext('id', 'category'),
             array($q1, 'cid')
           );
           $index = $this->db()->createQuery()
@@ -169,9 +166,9 @@ class Model extends \Kotchasan\Model
             } elseif ($index['cid'] > 0 && $index['cid'] != $index['id']) {
               $ret['ret_category_id'] = Language::replace('This :name already exist', array(':name' => Language::get('ID')));
             } elseif (empty($topic)) {
-              $ret['ret_topic_'.Language::name()] = 'Please fill in';
+              $ret['ret_topic_'.Language::name()] = Language::get('Please fill in');
             } elseif (empty($detail)) {
-              $ret['ret_detail_'.Language::name()] = 'Please fill in';
+              $ret['ret_detail_'.Language::name()] = Language::get('Please fill in');
             } else {
               // อัปโหลดไฟล์
               $icon = ArrayTool::unserialize($index['icon']);
@@ -213,10 +210,10 @@ class Model extends \Kotchasan\Model
               if ($id == 0) {
                 // ใหม่
                 $save['module_id'] = $index['module_id'];
-                $this->db()->insert($table_category, $save);
+                $this->db()->insert($this->getTableName('category'), $save);
               } else {
                 // แก้ไข
-                $this->db()->update($table_category, $id, $save);
+                $this->db()->update($this->getTableName('category'), $id, $save);
               }
               // อัปเดทจำนวนเรื่อง และ ความคิดเห็น ในหมวด
               \Board\Admin\Write\Model::updateCategories((int)$index['module_id']);

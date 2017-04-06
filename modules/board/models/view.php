@@ -9,7 +9,6 @@
 namespace Board\View;
 
 use \Kotchasan\Http\Request;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -39,7 +38,7 @@ class Model extends \Kotchasan\Model
       'C.config',
       'C.topic category',
       'C.detail cat_tooltip',
-      Sql::create("(CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN I.`sender`='' THEN I.`email` ELSE I.`sender` END) WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) AS `name`"),
+      "(CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN I.`sender`='' THEN I.`email` ELSE I.`sender` END) WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) name",
     );
     $query = $model->db()->createQuery()
       ->from('board_q I')

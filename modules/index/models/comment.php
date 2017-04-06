@@ -8,8 +8,6 @@
 
 namespace Index\Comment;
 
-use \Kotchasan\Database\Sql;
-
 /**
  *  Model สำหรับแสดงรายการความคิดเห็น
  *
@@ -31,7 +29,7 @@ class Model extends \Kotchasan\Model
   {
     $model = new static;
     return $model->db()->createQuery()
-        ->select('C.*', 'U.status', Sql::create("(CASE WHEN ISNULL(U.`id`) THEN C.`email` WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) AS `displayname`"))
+        ->select('C.*', 'U.status', "(CASE WHEN ISNULL(U.`id`) THEN C.`email` WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) AS `displayname`")
         ->from($table.' C')
         ->join('user U', 'LEFT', array('U.id', 'C.member_id'))
         ->where(array(array('C.index_id', (int)$story->id), array('C.module_id', (int)$story->module_id)))

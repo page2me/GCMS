@@ -16,10 +16,9 @@ use \Kotchasan\ArrayTool;
 use \Kotchasan\Date;
 use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
-use \Kotchasan\Database\Sql;
 
 /**
- * บันทึกบทความ
+ * อ่านข้อมูลโมดูล.
  *
  * @author Goragod Wiriya <admin@goragod.com>
  *
@@ -29,7 +28,7 @@ class Model extends \Kotchasan\Model
 {
 
   /**
-   * บันทึกบทความ
+   * บันทึก
    *
    * @param Request $request
    */
@@ -76,13 +75,11 @@ class Model extends \Kotchasan\Model
         // id ที่แก้ไข
         $id = $request->post('id')->toInt();
         $module_id = $request->post('module_id')->toInt();
-        // ตาราง index
-        $table_index = $this->getTableName('index');
         // query builder
         $query = $this->db()->createQuery();
         if (empty($id)) {
           // ตรวจสอบโมดูล (ใหม่)
-          $query->select('M.id module_id', 'M.module', 'M.config', Sql::NEXT('id', $table_index, array('module_id', 'M.id'), 'id'))
+          $query->select('M.id module_id', 'M.module', 'M.config', $this->buildNext('id', 'index', array('module_id', 'M.id'), 'id'))
             ->from('modules M')
             ->where(array(
               array('M.id', $module_id),
@@ -143,7 +140,7 @@ class Model extends \Kotchasan\Model
               $tab = !$tab ? 'options' : $tab;
             } else {
               // ค้นหาชื่อเรื่องซ้ำ
-              $search = $this->db()->first($table_index, array(
+              $search = $this->db()->first($this->getTableName('index'), array(
                 array('alias', $save['alias']),
                 array('language', array('', Language::name())),
                 array('index', '0')
@@ -193,10 +190,10 @@ class Model extends \Kotchasan\Model
                 // ใหม่
                 $save['module_id'] = $index['module_id'];
                 $save['member_id'] = $login['id'];
-                $index['id'] = $this->db()->insert($table_index, $save);
+                $index['id'] = $this->db()->insert($this->getTableName('index'), $save);
               } else {
                 // แก้ไข
-                $this->db()->update($table_index, $index['id'], $save);
+                $this->db()->update($this->getTableName('index'), $index['id'], $save);
               }
               // details
               $index_detail = $this->getTableName('index_detail');
@@ -273,7 +270,7 @@ class Model extends \Kotchasan\Model
           $result['create_date'] = time();
           $result['show_news'] = '';
           $result['alias'] = '';
-          $result['published_date'] = date('Y-m-d');
+          $result['published_date'] = Date('Y-m-d H:i:s', $result['create_date']);
         }
         return (object)$result;
       }

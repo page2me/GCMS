@@ -12,7 +12,6 @@ use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 use \Kotchasan\ArrayTool;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -40,7 +39,7 @@ class Model extends \Kotchasan\Model
       $rid = (int)$match[3];
       $no = (int)$match[4];
       $module = $match[5];
-      $sql = Sql::create("(CASE WHEN ISNULL(G.`category_id`) THEN M.`config` ELSE G.`config` END) AS `config`");
+      $sql = "(CASE WHEN ISNULL(G.`category_id`) THEN M.`config` ELSE G.`config` END) config";
       if ($rid > 0) {
         // คำตอบ
         $index = $this->db()->createQuery()
@@ -113,14 +112,14 @@ class Model extends \Kotchasan\Model
             // ลบความคิดเห็น
             $this->db()->delete($this->getTableName('board_r'), $rid);
             // อ่านคำตอบล่าสุดของคำถามนี้
-            $sql = Sql::create("(CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN C.`sender`='' THEN C.`email` ELSE C.`sender` END) WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END) AS `name`");
+            $name = "CASE WHEN ISNULL(U.`id`) THEN (CASE WHEN C.`sender`='' THEN C.`email` ELSE C.`sender` END) WHEN U.`displayname`='' THEN U.`email` ELSE U.`displayname` END";
             $r = $this->db()->createQuery()
               ->from('board_r C')
               ->join('user U', 'LEFT', array('U.id', 'C.member_id'))
               ->where(array(array('C.index_id', $qid), array('C.module_id', $index->module_id)))
               ->order('C.id DESC')
               ->toArray()
-              ->first('C.id', 'C.module_id', 'C.last_update', 'U.id member_id', 'U.status', $sql);
+              ->first('C.id', 'C.module_id', 'C.last_update', 'U.id member_id', 'U.status', "($name) name");
             // อัปเดทคำถาม
             $this->db()->createQuery()
               ->update('board_q')

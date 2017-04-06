@@ -16,7 +16,6 @@ use \Kotchasan\ArrayTool;
 use \Kotchasan\File;
 use \Kotchasan\Text;
 use \Gcms\Email;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -42,7 +41,7 @@ class Model extends \Kotchasan\Model
     $query = $model->db()->createQuery();
     if (empty($id)) {
       // ใหม่ ตรวจสอบโมดูล
-      $query->select('M.id module_id', 'M.module', 'M.config', Sql::NEXT('id', $model->getTableName('edocument'), null, 'id'))
+      $query->select('M.id module_id', 'M.module', 'M.config', $model->buildNext('id', 'edocument'))
         ->from('modules M')
         ->where(array(array('M.id', $module_id), array('M.owner', 'edocument')));
     } else {
@@ -80,7 +79,7 @@ class Model extends \Kotchasan\Model
       $search = $query->from('edocument')->where($id)->toArray()->first();
     } else {
       // ใหม่
-      $search = $query->toArray()->first(Sql::NEXT('id', $model->getTableName('edocument'), null, 'id'));
+      $search = $query->toArray()->first($model->buildNext('id', 'edocument'));
     }
     if ($search) {
       $search['modules'] = array();

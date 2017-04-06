@@ -15,7 +15,6 @@ use \Kotchasan\Login;
 use \Kotchasan\ArrayTool;
 use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
-use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล.
@@ -190,7 +189,8 @@ class Model extends \Kotchasan\Model
     $query = $model->db()->createQuery();
     if (empty($id)) {
       // ใหม่ ตรวจสอบโมดูล
-      $query->select(Sql::NEXT('id', $model->getTableName('product'), null, 'id'), 'M.id module_id', 'M.owner', 'M.module', 'M.config')
+      $q2 = $model->db()->createQuery()->buildNext('id', 'product');
+      $query->select($q2, 'M.id module_id', 'M.owner', 'M.module', 'M.config')
         ->from('modules M')
         ->where(array(
           array('M.id', $module_id),

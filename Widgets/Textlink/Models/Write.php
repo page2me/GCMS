@@ -14,7 +14,6 @@ use \Kotchasan\Login;
 use \Kotchasan\File;
 use \Kotchasan\Language;
 use \Kotchasan\Image;
-use \Kotchasan\Database\Sql;
 
 /**
  * Controller สำหรับจัดการการตั้งค่าเริ่มต้น
@@ -53,8 +52,6 @@ class Write extends \Kotchasan\Model
           $save['template'] = preg_replace('/<\?(.*?)\?>/', '', trim($template));
         }
         $id = $request->post('id')->toInt();
-        // ตาราง textlink
-        $table_name = $this->getTableName('textlink');
         // ตรวจสอบรายการที่เลือก
         $query = $this->db()->createQuery()->from('textlink');
         if ($id > 0) {
@@ -63,8 +60,8 @@ class Write extends \Kotchasan\Model
         } else {
           // ใหม่
           $textlink = $query->first(array(
-            Sql::NEXT('link_order', $table_name, null, 'link_order'),
-            Sql::NEXT('id', $table_name, null, 'id')
+            $this->buildNext('link_order', 'textlink', null, 'link_order'),
+            $this->buildNext('id', 'textlink')
           ));
           if (!$textlink) {
             $textlink = (object)array(
@@ -126,10 +123,10 @@ class Write extends \Kotchasan\Model
               // ใหม่
               $save['link_order'] = $textlink->link_order;
               $save['published'] = 1;
-              $id = $this->db()->insert($table_name, $save);
+              $id = $this->db()->insert($this->getTableName('textlink'), $save);
             } else {
               // แก้ไข
-              $this->db()->update($table_name, $textlink->id, $save);
+              $this->db()->update($this->getTableName('textlink'), $textlink->id, $save);
             }
             // ส่งค่ากลับ
             $ret['alert'] = Language::get('Saved successfully');

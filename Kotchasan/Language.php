@@ -47,7 +47,7 @@ final class Language extends \Kotchasan\KBase
     // โฟลเดอร์ ภาษา
     $language_folder = self::languageFolder();
     // ภาษาที่เลือก
-    $lang = self::$request->get('lang', self::$request->cookie('my_lang', '')->toString())->filter('a-z');
+    $lang = self::$request->get('lang', self::$request->cookie('my_lang', '')->toString())->toString();
     if (empty($lang)) {
       if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) && defined('AUTO_LANGUAGE')) {
         // ภาษาจาก Browser

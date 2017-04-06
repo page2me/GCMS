@@ -12,7 +12,6 @@ use \Kotchasan\Http\Request;
 use \Kotchasan\DataTable;
 use \Kotchasan\Language;
 use \Kotchasan\Date;
-use \Kotchasan\Database\Sql;
 
 /**
  * module=member
@@ -95,7 +94,7 @@ class View extends \Gcms\Adminview
         'admin_access',
         'fb',
         'email',
-        Sql::CONCAT(array('pname', 'fname', 'lname'), 'name', ' '),
+        'CONCAT_WS(" ", `pname`,`fname`,`lname`) name',
         'displayname',
         'phone1',
         'sex',

@@ -33,7 +33,7 @@ class Model extends \Kotchasan\Model
       $search = $request->post('name')->topic();
       if ($search != '') {
         $where = array();
-        $select = array('id', Sql::CONCAT(array('pname', 'fname', 'lname'), 'name', ' '), 'email');
+        $select = array('id', 'CONCAT_WS(" ", `pname`, `fname`, `lname`) AS `name`', 'email');
         $order = array();
         foreach (explode(',', $request->post('from', 'name,email')->filter('a-z,')) as $item) {
           if ($item == 'name') {

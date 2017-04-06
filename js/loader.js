@@ -30,22 +30,13 @@
       var temp = this;
       window.setInterval(function () {
         locs = window.location.toString().split('#');
-        if (locs[1]) {
-          if (locs[1] != temp.lasturl && locs[1].indexOf('=') > -1) {
-            temp.lasturl = locs[1];
-            temp.myhistory.push(locs[1]);
-            if (temp.myhistory.length > 2) {
-              temp.myhistory.shift();
-            }
-            temp.req.send(reader, locs[1], callback);
+        if (locs[1] && locs[1] != temp.lasturl) {
+          temp.lasturl = locs[1];
+          temp.myhistory.push(locs[1]);
+          if (temp.myhistory.length > 2) {
+            temp.myhistory.shift();
           }
-        } else {
-          locs = locs[0].split('?');
-          locs = locs[1] ? locs[1] : 'module=' + FIRST_MODULE;
-          if (locs != temp.lasturl) {
-            temp.lasturl = locs;
-            temp.req.send(reader, temp.lasturl, callback);
-          }
+          temp.req.send(reader, locs[1], callback);
         }
       }, 100);
     },
@@ -99,12 +90,8 @@
           }
         });
       }
-      if (ret.length == 0) {
-        window.location.reload();
-      } else {
-        ret.push(new Date().getTime());
-        window.location = locs[0] + '#' + decodeURIComponent(ret.join('&'));
-      }
+      ret.push(new Date().getTime());
+      window.location = locs[0] + '#' + decodeURIComponent(ret.join('&'));
     }
   };
 }());

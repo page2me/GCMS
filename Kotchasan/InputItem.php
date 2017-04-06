@@ -380,18 +380,14 @@ class InputItem
 
   /**
    * วันที่และเวลา
-   * คืนค่า null ถ้าข้อมูลวันที่ว่างเปล่า
    *
    * @return string
    *
    * @assert create('2016-01-01 20:20:20')->date() [==] '2016-01-01 20:20:20'
-   * @assert create('')->date() [==] null
-   * @assert create(null)->date() [==] null
    */
   public function date()
   {
-    $ret = $this->filter('\d\s\-:');
-    return $ret == '' ? null : $ret;
+    return $this->filter('\d\s\-:');
   }
 
   /**
