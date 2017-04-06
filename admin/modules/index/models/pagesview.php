@@ -8,6 +8,8 @@
 
 namespace Index\Pagesview;
 
+use \Kotchasan\Database\Sql;
+
 /**
  * อ่านข้อมูลการเยี่ยมชมในเดือนที่เลือก
  *
@@ -32,9 +34,9 @@ class Model extends \Kotchasan\Model
       $m = (int)$match[2];
       $model = new static;
       $query = $model->db()->createQuery()
-        ->select('date', 'SUM(`pages_view`) AS `pages_view`')
+        ->select('date', Sql::SUM('pages_view', 'pages_view'))
         ->from('counter')
-        ->where(array(array('YEAR(`date`)', $y), array('MONTH(`date`)', $m)))
+        ->where(array(array(Sql::YEAR('date'), $y), array(Sql::MONTH('date'), $m)))
         ->groupBy('date')
         ->order('date ASC')
         ->toArray()
