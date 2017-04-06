@@ -16,6 +16,7 @@ use \Kotchasan\ArrayTool;
 use \Kotchasan\Date;
 use \Kotchasan\File;
 use \Kotchasan\Http\UploadedFile;
+use \Kotchasan\Database\Sql;
 
 /**
  * บันทึกบทความ
@@ -70,11 +71,13 @@ class Model extends \Kotchasan\Model
         // id ที่แก้ไข
         $id = $request->post('id')->toInt();
         $module_id = $request->post('module_id')->toInt();
+        // ตาราง index
+        $table_index = $this->getTableName('index');
         // query builder
         $query = $this->db()->createQuery();
         if (empty($id)) {
           // ตรวจสอบโมดูล (ใหม่)
-          $query->select('M.id module_id', 'M.module', 'M.config', '0 category_id', $this->buildNext('id', 'index', array('module_id', 'M.id'), 'id'))
+          $query->select('M.id module_id', 'M.module', 'M.config', '0 category_id', Sql::NEXT('id', $table_index, array('module_id', 'M.id'), 'id'))
             ->from('modules M')
             ->where(array(
               array('M.id', $module_id),
@@ -132,7 +135,7 @@ class Model extends \Kotchasan\Model
               $ret['ret_alias'] = 'this';
             } else {
               // ค้นหาชื่อเรื่องซ้ำ
-              $search = $this->db()->first($this->getTableName('index'), array(
+              $search = $this->db()->first($table_index, array(
                 array('alias', $save['alias']),
                 array('language', array('', Language::name())),
                 array('index', '0')
@@ -184,14 +187,14 @@ class Model extends \Kotchasan\Model
               $save['ip'] = $request->getClientIp();
               if (empty($id)) {
                 // ใหม่
+                $save['show_news'] = '';
                 $save['published_date'] = date('Y-m-d');
-                $save['can_reply'] = '';
                 $save['module_id'] = $index['module_id'];
                 $save['member_id'] = $login['id'];
-                $index['id'] = $this->db()->insert($this->getTableName('index'), $save);
+                $index['id'] = $this->db()->insert($table_index, $save);
               } else {
                 // แก้ไข
-                $this->db()->update($this->getTableName('index'), $index['id'], $save);
+                $this->db()->update($table_index, $index['id'], $save);
               }
               // details
               $index_detail = $this->getTableName('index_detail');

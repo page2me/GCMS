@@ -73,14 +73,12 @@ function defaultSubmit(ds) {
       _alert = eval(val);
     } else if (prop == 'alert') {
       _alert = val;
-    } else if (prop == 'location') {
-      if (val == 'close') {
-        if (modal) {
-          modal.hide();
-        }
-      } else {
-        _location = val;
+    } else if (prop == 'modal') {
+      if (modal && val == 'close') {
+        modal.hide();
       }
+    } else if (prop == 'location') {
+      _location = val;
     } else if (prop == 'url') {
       _url = val;
       _location = val;
@@ -107,10 +105,13 @@ function defaultSubmit(ds) {
       $G(prop).setValue(decodeURIComponent(val).replace(/\%/g, '&#37;'));
     } else if ($E(prop.replace('ret_', ''))) {
       el = $G(prop.replace('ret_', ''));
+      if (el.display) {
+        el = el.display;
+      }
       if (val == '') {
         el.valid();
       } else {
-        if (val == 'this' || val == 'Please fill in') {
+        if (val == 'this' || val == 'Please fill in' || val == 'Please browse file') {
           if (el.placeholder) {
             t = el.placeholder.strip_tags();
           } else {
@@ -157,14 +158,10 @@ function defaultSubmit(ds) {
       } else {
         window.history.go(-1);
       }
-    } else if (_location == _url) {
-      window.location = decodeURIComponent(_location);
+    } else if (loader && _location != _url) {
+      loader.location(_location);
     } else {
-      if (loader) {
-        loader.location(_location);
-      } else {
-        window.location = _location.replace(/&amp;/g, '&');
-      }
+      window.location = _location.replace(/&amp;/g, '&');
     }
   }
 }

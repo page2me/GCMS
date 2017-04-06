@@ -10,6 +10,7 @@ namespace Document\View;
 
 use \Kotchasan\Http\Request;
 use \Kotchasan\Language;
+use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -61,7 +62,7 @@ class Model extends \Kotchasan\Model
       'C.config',
       'U.status',
       'U.id member_id',
-      '(CASE WHEN U.`displayname`="" THEN U.`email` ELSE U.`displayname` END) displayname',
+      Sql::create('(CASE WHEN U.`displayname`="" THEN U.`email` ELSE U.`displayname` END) AS `displayname`'),
     );
     // where
     $where = array();

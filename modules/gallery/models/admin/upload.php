@@ -12,6 +12,7 @@ use \Kotchasan\Login;
 use \Kotchasan\Language;
 use \Gcms\Gcms;
 use \Kotchasan\ArrayTool;
+use \Kotchasan\Database\Sql;
 
 /**
  * อัปโหลดไฟล์.
@@ -41,7 +42,7 @@ class Model extends \Kotchasan\Model
       ->join('modules M', 'INNER', array(array('M.id', 'A.module_id'), array('M.owner', 'gallery')))
       ->where(array('A.id', $id))
       ->toArray()
-      ->first('A.id', $model->buildNext('count', 'gallery', array(array('module_id', 'A.module_id'), array('album_id', 'A.id'))), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
+      ->first('A.id', Sql::NEXT('count', $model->getTableName('gallery'), array(array('module_id', 'A.module_id'), array('album_id', 'A.id')), 'count'), 'M.id module_id', 'M.owner', 'M.module', 'M.config');
     if ($result) {
       $result = ArrayTool::unserialize($result['config'], $result);
       unset($result['config']);

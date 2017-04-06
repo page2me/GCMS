@@ -9,6 +9,7 @@
 namespace Index\Dashboard;
 
 use \Kotchasan\Language;
+use \Kotchasan\Database\Sql;
 
 /**
  * ตรวจสอบข้อมูลสมาชิกด้วย Ajax
@@ -44,16 +45,16 @@ class Model extends \Kotchasan\Model
     $db = $this->db();
     $select = array(
       'id',
-      'MONTH(`date`) AS `month`',
-      'YEAR(`date`) AS `year`',
-      'SUM(`pages_view`) AS `pages_view`',
-      'SUM(`visited`) AS `visited`',
+      Sql::MONTH('date', 'month'),
+      Sql::YEAR('date', 'year'),
+      Sql::SUM('pages_view', 'pages_view'),
+      Sql::SUM('visited', 'visited'),
       'date'
     );
     $sql1 = $db->createQuery()
       ->select($select)
       ->from('counter')
-      ->groupBy('MONTH(`date`)', 'YEAR(`date`)')
+      ->groupBy(Sql::YEAR('date'), Sql::MONTH('date'))
       ->order('date DESC')
       ->limit(12);
     return $db->createQuery()
