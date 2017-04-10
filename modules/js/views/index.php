@@ -95,13 +95,11 @@ class View extends \Kotchasan\KBase
     $replace = array('', '', '', ";\n", '', ' ');
     // Response
     $response = new \Kotchasan\Http\Response;
-    // cache 1 month
-    $expire = 2592000;
     $response->withHeaders(array(
         'Content-type' => 'application/javascript; charset=utf-8',
-        'Cache-Control' => 'max-age='.$expire.', must-revalidate, public',
-        'Expires' => gmdate('D, d M Y H:i:s', time() + $expire).' GMT',
-        'Last-Modified' => gmdate('D, d M Y H:i:s', time() - $expire).' GMT'
+        'Cache-Control' => 'public',
+        // cache 1 month
+        'Expires' => gmdate('D, d M Y H:i:s', strtotime('+1 month')).' GMT',
       ))
       ->withContent(preg_replace($patt, $replace, implode("\n", $js)))
       ->send();

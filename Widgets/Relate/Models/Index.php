@@ -72,11 +72,11 @@ class Index extends \Kotchasan\Model
           ->join('index_detail D', 'INNER', array(array('D.id', 'Q.id'), array('D.module_id', 'Q.module_id')))
           ->where($where)
           ->order('Q.create_date');
-        $sql1 = 'SELECT @n:=@n+1 AS `row`,Q.* FROM ('.$q1->text(true).') AS Q, (SELECT @n:=0) AS R';
+        $sql1 = 'SELECT @n:=@n+1 AS `row`,Q.* FROM ('.$q1->text().') AS Q, (SELECT @n:=0) AS R';
         // older
         $where[4][1] = '<';
         $q1->select($select)->where($where)->order('Q.create_date DESC');
-        $sql2 = 'SELECT @m:=@m+1 AS `row`,Q.* FROM ('.$q1->text(true).') AS Q, (SELECT @m:=0) AS L';
+        $sql2 = 'SELECT @m:=@m+1 AS `row`,Q.* FROM ('.$q1->text().') AS Q, (SELECT @m:=0) AS L';
         $sql3 = $model->db()->createQuery()
           ->select()
           ->from(array("($sql1) UNION ($sql2)", 'N'))

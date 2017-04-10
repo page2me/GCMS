@@ -80,14 +80,11 @@ class View extends \Kotchasan\KBase
     $data = self::compress($data.$data2);
     // Response
     $response = new \Kotchasan\Http\Response;
-    // cache 1 month
-    $expire = 2592000;
     $response->withHeaders(array(
         'Content-type' => 'text/css; charset=utf-8',
-        'Cache-Control' => 'max-age='.$expire.', public',
-        'Etag' => md5($data),
-        'Expires' => gmdate('D, d M Y H:i:s', time() + $expire).' GMT',
-        'Last-Modified' => gmdate('D, d M Y H:i:s', time() - $expire).' GMT'
+        'Cache-Control' => 'public',
+        // cache 1 month
+        'Expires' => gmdate('D, d M Y H:i:s', strtotime('+1 month')).' GMT',
       ))
       ->withContent($data)
       ->send();
