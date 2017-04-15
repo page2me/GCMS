@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource Kotchasan/Database/QueryBuilder.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -580,6 +580,29 @@ class QueryBuilder extends \Kotchasan\Database\Query
         $this->sqls['union'][] = $item;
       } else {
         throw new \InvalidArgumentException('Invalid arguments in union');
+      }
+    }
+    $this->sqls['function'] = 'customQuery';
+    return $this;
+  }
+
+  /**
+   * UNION ALL
+   *
+   * @param array $querys แอเรย์ของ QueryBuilder หรือ Query String ที่จะนำม่า UNION ALL
+   * @return \static
+   */
+  public function unionAll($querys)
+  {
+    $this->sqls['unionAll'] = array();
+    $querys = is_array($querys) ? $querys : func_get_args();
+    foreach ($querys as $item) {
+      if ($item instanceof QueryBuilder) {
+        $this->sqls['unionAll'][] = $item->text();
+      } elseif (is_string($item)) {
+        $this->sqls['unionAll'][] = $item;
+      } else {
+        throw new \InvalidArgumentException('Invalid arguments in unionAll');
       }
     }
     $this->sqls['function'] = 'customQuery';

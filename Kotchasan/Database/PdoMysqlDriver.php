@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource Kotchasan/Database/PdoMysqlDriver.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -269,6 +269,8 @@ class PdoMysqlDriver extends Driver
       }
     } elseif (isset($sqls['union'])) {
       $sql = '('.implode(') UNION (', $sqls['union']).')';
+    } elseif (isset($sqls['unionAll'])) {
+      $sql = '('.implode(') UNION ALL (', $sqls['unionAll']).')';
     } else {
       if (isset($sqls['select'])) {
         $sql = 'SELECT '.$sqls['select'];
