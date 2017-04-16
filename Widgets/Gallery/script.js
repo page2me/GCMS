@@ -1,4 +1,4 @@
-/*
+/**
  RSSGal
  display RSS Gallery from http://gallery.gcms.in.th
  for GCMS 4.0.0

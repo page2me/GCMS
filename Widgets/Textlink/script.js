@@ -1,4 +1,4 @@
-/*
+/**
  gBanner class
  design by http://www.goragod.com (goragod wiriya)
  08-05-56

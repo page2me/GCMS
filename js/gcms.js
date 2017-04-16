@@ -1,4 +1,4 @@
-/*
+/**
  * Javascript Libraly for GCMS (front-end)
  *
  * @filesource js/gcms.js
