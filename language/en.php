@@ -3,7 +3,7 @@
 return array(
   'BOOLEANS' => array(
     0 => 'Disable',
-    1 => 'Enamle'
+    1 => 'Enable'
   ),
   'CURRENCY_UNITS' => array(
     'THB' => 'Baht',
@@ -30,8 +30,8 @@ return array(
   ),
   'FROM_TIME' => 'from H:i',
   'IMG_LAW' => array(
-    0 => 'Upload photos are optional.',
-    1 => 'Upload always (for question).'
+    0 => 'Photo uploads are optional.',
+    1 => 'Always upload (for question).'
   ),
   'LOGIN_ACTIONS' => array(
     0 => 'Do not take any action (Ajax Login)',
@@ -61,10 +61,10 @@ return array(
     'BOTTOMMENU' => 'Bottom Menu'
   ),
   'MENU_PUBLISHEDS' => array(
-    0 => 'Not show',
-    1 => 'Showing',
-    2 => 'Display when logging',
-    3 => 'Display when not logging'
+    0 => 'Do not show',
+    1 => 'Show',
+    2 => 'Display when logged in',
+    3 => 'Display when not logged in'
   ),
   'MENU_TARGET' => array(
     '' => 'Open link in same page (default)',
@@ -109,7 +109,7 @@ return array(
     0 => 'Unpublished',
     1 => 'Published'
   ),
-  'REGISTER_CONFIRM' => '<dt> Subscription Agreement</dt><dd>1. Membership to the site can participate fully</dd><dd>2. Membership requires a real e-mail contact. Due to be sent to the email confirmation that your registration. Or to request a new password</dd><dd>3. The site adheres Privacy Policy. Personal information will not be disclosed except the information required for identity verification is the case, the</dd><dd>4. When you read and accept this Agreement, please select <strong>accepted</strong> below</dd>',
+  'REGISTER_CONFIRM' => '<dt>Subscription Agreement</dt><dd>1. Membership to the site can participate fully</dd><dd>2. Membership requires a real e-mail contact in order to be able to send your registration confirmation to you and and in order to be able to request a new password when required.</dd><dd>3. The site adheres Privacy Policy. Personal information will not be disclosed except for when identity verification is required.</dd><dd>4. When you read and accept this Agreement, please select <strong>accepted</strong> below.</dd>',
   'REPLIES' => array(
     0 => 'Closing comments',
     1 => 'Can comments'
@@ -139,8 +139,8 @@ return array(
   ),
   'TO_TIME' => 'to H:i',
   'USE_AJAX_LIST' => array(
-    0 => 'Ajax enabled some of the site (displayed as a website generally)',
-    1 => 'Ajax enabled website with a full'
+    0 => 'Enables Ajax for some of the site (displayed as a website generally)',
+    1 => 'Fully enables Ajax for the entire site'
   ),
   'WIDGET_DATE_FORMAT' => 'L, d F Y',
   'YEAR_OFFSET' => '0'
