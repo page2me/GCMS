@@ -143,5 +143,5 @@ return array(
     1 => 'Ajax enabled website with a full'
   ),
   'WIDGET_DATE_FORMAT' => 'L, d F Y',
-  'YEAR_OFFSET' => 0
+  'YEAR_OFFSET' => '0'
 );

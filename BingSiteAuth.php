@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * BingSiteAuth.php
  *
  * @author Goragod Wiriya <admin@goragod.com>

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource documentation/controllers/admin/category.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com

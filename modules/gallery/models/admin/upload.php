@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource gallery/models/admin/upload.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com

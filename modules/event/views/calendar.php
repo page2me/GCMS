@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource event/views/calendar.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com

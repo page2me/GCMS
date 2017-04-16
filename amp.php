@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * amp.php
  *
  * @author Goragod Wiriya <admin@goragod.com>

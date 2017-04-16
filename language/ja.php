@@ -598,7 +598,6 @@ return array(
   'Subject' => '件名',
   'Subscribers' => '購読者になる',
   'Successfully remove template files' => 'テンプレートを削除しました',
-  'Surname' => '',
   'Suspended' => '凍結',
   'Tags' => 'タグ',
   'Target directory is not writable' => 'ディレクトリが書き込み可能ではありません',
@@ -641,7 +640,6 @@ return array(
   'The number of items displayed per page' => '項目の配置方法を指定して下さい',
   'The opening page of links' => 'リンクの開き方',
   'The page will appear on your site is in maintenance mode' => 'メンテナンスモードに表示する内容',
-#
   'The password for the CWP web hosting for sending the email (read only)' => 'メールの送信時に使用するホスティングサービスのパスワード（読み取り専用）',
   'The period of cached pages per second. The recommended value is 2 to 20 seconds. Settings high value, something changed will be slow.(0 means no cache)' => 'ページのキャッシュ期限を秒単位で入力して下さい。2〜20秒が最適です（0はキャッシュしません）。大き過ぎると変更に時間が掛かる恐れがあります',
   'The pretty URL for servers that support mod_rewrite' => 'mod_rewriteで短いURLに書き換えるかを指定して下さい',
@@ -650,7 +648,6 @@ return array(
   'The sequence of the desired menu. The menu will be displayed next from the selected item' => '希望する順序を指定して下さい。メニューは選択した項目の隣に表示されます',
   'The size of the avatar (pixels), automatic resizing' => 'アバターのサイズをピクセルで指定して下さい。自動でリサイズされます',
   'The size of the files can be uploaded. (Should not exceed the value of the Server :upload_max_filesize.)' => 'アップロードできるファイルサイズを指定して下さい（本サーバーでは:upload_max_filesizeが上限です）',
-#
   'The size of the images are stored as pixels. The image will be resized automatically.' => '画像のサイズをピクセルで指定して下さい。自動でリサイズされます',
   'The size of the small picture (Thumbnail) is displayed in albums and galleries (pixels), resize automatically' => 'ギャラリーやアルバムに表示するサムネイルをピクセルで指定して下さい。自動でリサイズされます',
   'The size of the widget' => 'ウィジェットのサイズ',
@@ -736,7 +733,6 @@ return array(
   'Website title' => 'サイト名',
   'Welcome' => 'ようこそ',
   'Welcome %s, login complete' => 'ようこそ%sさん。ログインに成功しました。',
-#
   'When adding a new document Email alert to the recipient. When enabled this option.' => 'このオプションを有効にして文書を作成した場合、メールが送信されます',
   'When choosing the menu' => 'メニューをクリックした時',
   'When you press the button below. GCMS will create <em>:dbname.sql</em> file for save on your computer. This file contains all the information in the database. You can use it to restore your system, or used to move data to another site.' => 'エクスポートボタンを押して<em>:dbname.sql</em>を保存して下さい。当該ファイルにはデータベース内の全情報が書き込まれます。サイトの復旧や引っ越しに使用して下さい。',
@@ -753,7 +749,6 @@ return array(
   'Writer' => '著者',
   'Writing' => '書き込み',
   'year' => '年',
-  'YEAR_OFFSET' => 0,
   'You are currently using GCMS version' => '現在使用中のGCMSのバージョン',
   'You are not logged in Please log in Before continuing' => '操作を継続するにはログインが必要です',
   'You can add the RSS URL and name of Tab to display Tab' => 'RSSのURL追加とTabの設定',
@@ -764,5 +759,6 @@ return array(
   'Your post is already exists. You do not need to post this.' => '同じ内容が投稿されています。重複書き込みはご遠慮下さい。',
   'Your site&#39;s URL (exclude http://, eg www.domain.tld).' => 'URIスキーム（http://）を含めずに入力して下さい（例：www.domain.tld）',
   'Your Workplace' => '会社名などを記入して下さい',
-  'Zipcode' => '郵便番号'
+  'Zipcode' => '郵便番号',
+  'YEAR_OFFSET' => '0'
 );

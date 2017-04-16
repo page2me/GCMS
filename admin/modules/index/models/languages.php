@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource index/models/languages.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -40,7 +40,9 @@ class Model extends \Kotchasan\KBase
         // do not saved
         $save = false;
         $reload = false;
-        if ($post['action'] === 'changed' || $post['action'] === 'move') {
+        if ($post['action'] === 'import') {
+          self::import();
+        } else if ($post['action'] === 'changed' || $post['action'] === 'move') {
           if ($post['action'] === 'changed') {
             // เปลี่ยนแปลงสถานะการเผยแพร่ภาษา
             $config->languages = explode(',', str_replace('check_', '', $post['data']));
@@ -79,7 +81,6 @@ class Model extends \Kotchasan\KBase
         if ($save) {
           // save config
           if (Config::save($config, ROOT_PATH.'settings/config.php')) {
-            $ret['alert'] = Language::get('Saved successfully');
             if ($reload) {
               $ret['location'] = 'reload';
             }
@@ -93,5 +94,103 @@ class Model extends \Kotchasan\KBase
     }
     // คืนค่าเป็น JSON
     echo json_encode($ret);
+  }
+
+  /**
+   * นำเข้าข้อมูลไฟล์ภาษา
+   */
+  public static function import()
+  {
+    $dir = ROOT_PATH.'language/';
+    if (is_dir($dir)) {
+      // Model
+      $model = new \Kotchasan\Model;
+      // ตาราง language
+      $language_table = $model->getTableName('language');
+      $f = opendir($dir);
+      while (false !== ($text = readdir($f))) {
+        if (preg_match('/([a-z]+)\.(php|js)/', $text, $match)) {
+          if ($match[2] == 'php') {
+            self::importPHP($model, $language_table, $match[1], $dir.$text);
+          } else {
+            self::importJS($model, $language_table, $match[1], $dir.$text);
+          }
+        }
+      }
+      closedir($f);
+    }
+  }
+
+  /**
+   * นำเข้าข้อมูลไฟล์ภาษา PHP
+   *
+   * @param \Kotchasan\Model $model Database Object
+   * @param string $language_table ชื่อตาราง language
+   * @param string $lang ชื่อภาษา
+   * @param string $file_name ไฟล์ภาษา
+   */
+  public static function importPHP($model, $language_table, $lang, $file_name)
+  {
+    foreach (include ($file_name) AS $key => $value) {
+      $type = is_array($value) ? 'array' : 'text';
+      $search = $model->db()->first($language_table, array(
+        array('key', $key),
+        array('js', 0),
+        array('type', $type)
+      ));
+      if ($type == 'array') {
+        $value = serialize($value);
+      }
+      if ($search) {
+        $model->db()->update($language_table, $search->id, array(
+          $lang => $value,
+        ));
+      } else {
+        $model->db()->insert($language_table, array(
+          'key' => $key,
+          'js' => 0,
+          'type' => $type,
+          'owner' => 'index',
+          $lang => $value,
+        ));
+      }
+    }
+  }
+
+  /**
+   * นำเข้าข้อมูลไฟล์ภาษา Javascript
+   *
+   * @param \Kotchasan\Model $model Database Object
+   * @param string $language_table ชื่อตาราง language
+   * @param string $lang ชื่อภาษา
+   * @param string $file_name ไฟล์ภาษา
+   */
+  public static function importJS($model, $language_table, $lang, $file_name)
+  {
+    $patt = '/^var[\s]+([A-Z0-9_]+)[\s]{0,}=[\s]{0,}[\'"](.*)[\'"];$/';
+    foreach (file($file_name) AS $item) {
+      $item = trim($item);
+      if ($item != '') {
+        if (preg_match($patt, $item, $match)) {
+          $search = $model->db()->first($language_table, array(
+            array('key', $match[1]),
+            array('js', 1)
+          ));
+          if ($search) {
+            $model->db()->update($language_table, $search->id, array(
+              $lang => $match[2],
+            ));
+          } else {
+            $model->db()->insert($language_table, array(
+              'key' => $match[1],
+              'js' => 1,
+              'type' => 'text',
+              'owner' => 'index',
+              $lang => $match[2],
+            ));
+          }
+        }
+      }
+    }
   }
 }

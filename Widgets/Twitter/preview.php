@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Widgets/Twitter/preview.php
  *
  * @author Goragod Wiriya <admin@goragod.com>

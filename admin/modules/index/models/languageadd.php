@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource index/models/languageadd.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -59,10 +59,11 @@ class Model extends \Kotchasan\KBase
               @copy(ROOT_PATH.'language/'.$post['copy'].'.js', ROOT_PATH.'language/'.$post['language_name'].'.js');
               @copy(ROOT_PATH.'language/'.$post['copy'].'.gif', ROOT_PATH.'language/'.$post['language_name'].'.gif');
               $config->languages[] = $post['language_name'];
+              // เพิ่อมคอลัมน์ภาษา
+              $model->db()->query("ALTER TABLE `$language_table` ADD `$post[language_name]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `$post[copy]`");
+              // สำเนาภาษา
+              $model->db()->query("UPDATE `$language_table` SET `$post[language_name]`=`$post[copy]`");
             }
-            // อัปเดทฐานข้อมูล
-            $model->db()->query("ALTER TABLE `$language_table` ADD `$post[language_name]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL");
-            $model->db()->query("UPDATE `$language_table` SET `$post[language_name]`=`$post[copy]`");
           } elseif ($post['language_name'] != $post['language']) {
             // เปลี่ยนชื่อภาษา
             rename(ROOT_PATH.'language/'.$post['language'].'.php', ROOT_PATH.'language/'.$post['language_name'].'.php');

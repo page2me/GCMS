@@ -104,7 +104,7 @@ function initListCategory(module) {
   });
 }
 function initLanguages(id) {
-  var patt = /^(edit|delete|check)_([a-z]{2,2})$/;
+  var patt = /^(edit|delete|check|import)_([a-z]{2,2})$/;
   var doClick = function () {
     var hs = patt.exec(this.id);
     var q = '';
@@ -124,6 +124,8 @@ function initLanguages(id) {
       }
     } else if (hs[1] == 'delete' && confirm(trans('You want to XXX ?').replace(/XXX/, trans('delete')))) {
       q = 'action=droplang&data=' + hs[2];
+    } else if (hs[1] == 'import' && confirm(trans('You want to XXX ?').replace(/XXX/, this.title))) {
+      q = 'action=import';
     }
     if (q != '') {
       send('index.php/index/model/languages/save', q, doFormSubmit, this);
@@ -134,6 +136,7 @@ function initLanguages(id) {
       callClick(this, doClick);
     }
   });
+  callClick('import_xx', doClick);
   new GSortTable(id, {
     'tag': 'li',
     'endDrag': function () {

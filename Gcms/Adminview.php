@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource Gcms/Adminview.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com

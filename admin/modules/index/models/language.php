@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource index/models/language.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -74,7 +74,10 @@ class Model extends \Kotchasan\Orm\Field
       foreach ($languages as $lng) {
         if (isset($item[$lng]) && $item[$lng] != '') {
           if ($item['type'] == 'array') {
-            $save[$lng] = unserialize($item[$lng]);
+            $data = @unserialize($item[$lng]);
+            if (is_array($data)) {
+              $save[$lng] = $data;
+            }
           } elseif ($item['type'] == 'int') {
             $save[$lng] = (int)$item[$lng];
           } else {

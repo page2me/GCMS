@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * admin/index.php
  *
  * @author Goragod Wiriya <admin@goragod.com>

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource index/views/language.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -123,11 +123,14 @@ class View extends \Gcms\Adminview
   {
     foreach ($this->languages as $lng) {
       if ($item['type'] == 'array') {
-        if ($item[$lng] != '') {
-          $item[$lng] = implode(', ', unserialize($item[$lng]));
+        if (!empty($item[$lng])) {
+          $data = @unserialize($item[$lng]);
+          if (is_array($data)) {
+            $item[$lng] = implode(', ', $data);
+          }
         }
       }
-      $item[$lng] = $item[$lng] == '' ? '' : '<span title="'.htmlspecialchars($item[$lng]).'">'.self::toText($item[$lng]).'</span>';
+      $item[$lng] = empty($item[$lng]) ? '' : '<span title="'.htmlspecialchars($item[$lng]).'">'.self::toText($item[$lng]).'</span>';
     }
     $item['key'] = '<a class="icon-copy" title="'.htmlspecialchars($item['key']).'">'.self::toText($item['key']).'</a>';
     return $item;

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Widgets/Facebook/preview.php
  *
  * @author Goragod Wiriya <admin@goragod.com>

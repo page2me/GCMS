@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource Widgets/Marquee/Controllers/Settings.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com

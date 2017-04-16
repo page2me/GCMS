@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * @filesource index/views/languages.php
  * @link http://www.kotchasan.com/
  * @copyright 2016 Goragod.com
@@ -80,6 +80,15 @@ class View extends \Gcms\Adminview
     $a->add('span', array(
       'class' => 'icon-plus',
       'innerHTML' => '{LNG_Add New} {LNG_Language}'
+    ));
+    $a = $div->add('a', array(
+      'class' => 'button red large',
+      'id' => 'import_xx',
+      'title' => '{LNG_Import} {LNG_Language}'
+    ));
+    $a->add('span', array(
+      'class' => 'icon-import',
+      'innerHTML' => '{LNG_Import} {LNG_Language}'
     ));
     $section->script('initLanguages("languages");');
     return $section->render();
