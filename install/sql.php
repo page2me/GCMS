@@ -708,7 +708,7 @@ INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`)
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('Writer','text','index','0','ผู้เขียน','','著者');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('Writing','text','index','0','การเขียน','','書き込み');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('year','text','index','0','ปี','','年');
-INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('YEAR_OFFSET','text','index','0','543','0','0');
+INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('YEAR_OFFSET','int','index','0','543','0','0');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('You are currently using GCMS version','text','index','0','ขณะนี้คุณกำลังใช้งาน GCMS เวอร์ชั่น','','現在使用中のGCMSのバージョン');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('You are not logged in Please log in Before continuing','text','index','0','คุณยังไม่ได้เข้าระบบ กรุณาเข้าระบบ ก่อนดำเนินการต่อ','','操作を継続するにはログインが必要です');
 INSERT INTO `{prefix}_language` (`key`, `type`, `owner`, `js`, `th`, `en`, `ja`) VALUES ('You can add the RSS URL and name of Tab to display Tab','text','index','0','คุณสามารถเพิ่ม Tab ของ RSS ที่ต้องการแสดงผลโดยระบุ URL ของ RSS ที่ต้องการ และชื่อ Tab','','RSSのURL追加とTabの設定');

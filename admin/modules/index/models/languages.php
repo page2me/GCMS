@@ -136,7 +136,13 @@ class Model extends \Kotchasan\KBase
   public static function importPHP($model, $language_table, $lang, $file_name)
   {
     foreach (include ($file_name) AS $key => $value) {
-      $type = is_array($value) ? 'array' : 'text';
+      if (is_array($value)) {
+        $type = 'array';
+      } else if (is_int($value)) {
+        $type = 'int';
+      } else {
+        $type = 'text';
+      }
       $search = $model->db()->first($language_table, array(
         array('key', $key),
         array('js', 0),
