@@ -32,7 +32,7 @@ class Index extends \Kotchasan\Controller
     $widget = '<div id=counter-box>';
     $widget .= '<p class=counter-detail><span class=col>{LNG_Visitors total}</span><span id=counter>'.sprintf($fmt, $counter->counter).'</span></p>';
     $widget .= '<p class=counter-detail><span class=col>{LNG_Visitors today}</span><span id=counter_today>'.sprintf($fmt, $counter->visited).'</span></p>';
-    $widget .= '<p class=counter-detail><span class=col>{LNG_Pages View}</span><span id=pages_view>'.sprintf($fmt, $counter->pages_view).'</span></p>';
+    $widget .= '<p class=counter-detail><span class=col>{LNG_Pages view}</span><span id=pages_view>'.sprintf($fmt, $counter->pages_view).'</span></p>';
     $widget .= '<p class=counter-detail><span class=col>{LNG_People online}</span><span id=useronline>'.sprintf($fmt, $counter->useronline).'</span></p>';
     $widget .= '</div>';
     return $widget;

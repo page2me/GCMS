@@ -109,7 +109,11 @@ class Model extends \Kotchasan\KBase
       $language_table = $model->getTableName('language');
       $f = opendir($dir);
       while (false !== ($text = readdir($f))) {
-        if (preg_match('/([a-z]+)\.(php|js)/', $text, $match)) {
+        if (preg_match('/([a-z]{2,2})\.(php|js)/', $text, $match)) {
+          if ($model->db()->fieldExists($language_table, $match[1]) == false) {
+            // เพิ่อมคอลัมน์ภาษา ถ้ายังไม่มีภาษาที่ต้องการ
+            $model->db()->query("ALTER TABLE `$language_table` ADD `$match[1]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci AFTER `key`");
+          }
           if ($match[2] == 'php') {
             self::importPHP($model, $language_table, $match[1], $dir.$text);
           } else {

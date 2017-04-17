@@ -41,7 +41,7 @@ class View extends \Gcms\Adminview
     $content .= '<canvas></canvas>';
     $content .= '<table class="data fullwidth">';
     $content .= '<thead><tr><th>{LNG_date}</th>'.implode('', $thead).'</tr></thead>';
-    $content .= '<tbody><tr><th>{LNG_Pages View}</th>'.implode('', $tbody).'</tr></tbody>';
+    $content .= '<tbody><tr><th>{LNG_Pages view}</th>'.implode('', $tbody).'</tr></tbody>';
     $content .= '</table>';
     $content .= '</div>';
     $content .= '</section>';

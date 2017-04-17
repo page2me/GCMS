@@ -60,7 +60,7 @@ class Model extends \Kotchasan\KBase
               @copy(ROOT_PATH.'language/'.$post['copy'].'.gif', ROOT_PATH.'language/'.$post['language_name'].'.gif');
               $config->languages[] = $post['language_name'];
               // เพิ่อมคอลัมน์ภาษา
-              $model->db()->query("ALTER TABLE `$language_table` ADD `$post[language_name]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `$post[copy]`");
+              $model->db()->query("ALTER TABLE `$language_table` ADD `$post[language_name]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci AFTER `$post[copy]`");
               // สำเนาภาษา
               $model->db()->query("UPDATE `$language_table` SET `$post[language_name]`=`$post[copy]`");
             }

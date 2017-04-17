@@ -598,6 +598,7 @@ return array(
   'Subject' => '件名',
   'Subscribers' => '購読者になる',
   'Successfully remove template files' => 'テンプレートを削除しました',
+  'Surname' => '姓',
   'Suspended' => '凍結',
   'Tags' => 'タグ',
   'Target directory is not writable' => 'ディレクトリが書き込み可能ではありません',
@@ -749,6 +750,7 @@ return array(
   'Writer' => '著者',
   'Writing' => '書き込み',
   'year' => '年',
+  'YEAR_OFFSET' => '0',
   'You are currently using GCMS version' => '現在使用中のGCMSのバージョン',
   'You are not logged in Please log in Before continuing' => '操作を継続するにはログインが必要です',
   'You can add the RSS URL and name of Tab to display Tab' => 'RSSのURL追加とTabの設定',
@@ -760,5 +762,5 @@ return array(
   'Your site&#39;s URL (exclude http://, eg www.domain.tld).' => 'URIスキーム（http://）を含めずに入力して下さい（例：www.domain.tld）',
   'Your Workplace' => '会社名などを記入して下さい',
   'Zipcode' => '郵便番号',
-  'YEAR_OFFSET' => '0'
+  'Pages view' => 'ページビュー'
 );

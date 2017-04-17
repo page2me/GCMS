@@ -749,6 +749,7 @@ return array(
   'Writer' => 'ผู้เขียน',
   'Writing' => 'การเขียน',
   'year' => 'ปี',
+  'YEAR_OFFSET' => '543',
   'You are currently using GCMS version' => 'ขณะนี้คุณกำลังใช้งาน GCMS เวอร์ชั่น',
   'You are not logged in Please log in Before continuing' => 'คุณยังไม่ได้เข้าระบบ กรุณาเข้าระบบ ก่อนดำเนินการต่อ',
   'You can add the RSS URL and name of Tab to display Tab' => 'คุณสามารถเพิ่ม Tab ของ RSS ที่ต้องการแสดงผลโดยระบุ URL ของ RSS ที่ต้องการ และชื่อ Tab',
@@ -760,5 +761,5 @@ return array(
   'Your site&#39;s URL (exclude http://, eg www.domain.tld).' => 'เว็บไซต์ของคุณ (ไม่รวม http:// เช่น www.domain.tld)',
   'Your Workplace' => 'สถานที่ทำงานของคุณ',
   'Zipcode' => 'รหัสไปรษณีย์',
-  'YEAR_OFFSET' => '543'
+  'Pages view' => 'การดูหน้าเว็บ'
 );
