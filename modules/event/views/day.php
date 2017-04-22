@@ -45,13 +45,7 @@ class View extends \Gcms\View
           Gcms::$view->addBreadcrumb($index->canonical, $menu->menu_text, $menu->menu_tooltip);
         }
       }
-      // ภาษา
-      $lng = Language::getItems(array(
-          'MONTH_SHORT',
-          'YEAR_OFFSET',
-          'FROM_TIME',
-          'TO_TIME'
-      ));
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'd='.$index->date), Date::format($index->date, 'd M Y'));
       // /event/dayitem.html
       $listitem = Template::create('event', $index->module, 'dayitem');
       foreach ($index->items as $item) {
@@ -59,17 +53,15 @@ class View extends \Gcms\View
           '/{URL}/' => Gcms::createUrl($index->module, '', 0, 0, 'id='.$item->id),
           '/{TOPIC}/' => $item->topic,
           '/{DESCRIPTION}/' => $item->description,
-          '/{FROM_TIME}/' => Date::format($item->begin_date, $lng['FROM_TIME']),
-          '/{TO_TIME}/' => $item->end_date == '0000-00-00 00:00:00' ? '' : Date::format($item->end_date, $lng['TO_TIME']),
+          '/{FROM_TIME}/' => Language::replace('FROM_TIME', array('H:i' => $item->from)),
+          '/{TO_TIME}/' => $item->end_date == '0000-00-00' ? '' : Language::replace('TO_TIME', array('H:i' => $item->to)),
           '/{COLOR}/' => $item->color
         ));
       }
       // /event/day.html
       $template = Template::create('event', $index->module, 'day');
       $template->add(array(
-        '/{YEAR}/' => $index->year + $lng['YEAR_OFFSET'],
-        '/{MONTH}/' => $lng['MONTH_SHORT'][$index->month],
-        '/{DATE}/' => $index->day,
+        '/{DATE}/' => $index->date,
         '/{LIST}/' => $listitem->render(),
         '/{MODULE}/' => $index->module,
         '/{TOPIC}/' => $index->topic

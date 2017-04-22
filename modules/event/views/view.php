@@ -37,13 +37,6 @@ class View extends \Gcms\View
     // query
     $index = \Event\View\Model::get($request, $index);
     if ($index) {
-      // ภาษา
-      $lng = Language::getItems(array(
-          'MONTH_SHORT',
-          'YEAR_OFFSET',
-          'FROM_TIME',
-          'TO_TIME'
-      ));
       // breadcrumb ของโมดูล
       $menu = Gcms::$menu->findTopLevelMenu($index->index_id);
       if ($menu) {
@@ -51,12 +44,7 @@ class View extends \Gcms\View
       } else {
         Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module), $index->topic, $index->description);
       }
-      // วันที่
-      preg_match('/^([0-9]+)\-([0-9]+)\-([0-9]+)\s([0-9]{2,2}:[0-9]{2,2}):([0-9]{2,2})$/', $index->begin_date, $match);
-      $year = (int)$match[1] + $lng['YEAR_OFFSET'];
-      $month = $lng['MONTH_SHORT'][(int)$match[2]];
-      $date = (int)$match[3];
-      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, "d=$match[1]-$match[2]-$match[3]"), "$date $month $year");
+      Gcms::$view->addBreadcrumb(Gcms::createUrl($index->module, '', 0, 0, 'd='.$index->begin_date), Date::format($index->begin_date, 'd M Y'));
       // breadcrumb ของหน้า
       $index->canonical = Gcms::createUrl($index->module, '', 0, 0, 'id='.$index->id);
       Gcms::$view->addBreadcrumb($index->canonical, $index->topic);
@@ -66,11 +54,9 @@ class View extends \Gcms\View
         '/{TOPIC}/' => $index->topic,
         '/{DETAIL}/' => Text::highlighter($index->detail),
         '/{MODULE}/' => $index->module,
-        '/{YEAR}/' => $year,
-        '/{MONTH}/' => $month,
-        '/{DATE}/' => $date,
-        '/{FROM_TIME}/' => Date::format($index->begin_date, $lng['FROM_TIME']),
-        '/{TO_TIME}/' => $index->end_date == '0000-00-00 00:00:00' ? '' : Date::format($index->end_date, $lng['TO_TIME']),
+        '/{DATE}/' => $index->begin_date,
+        '/{FROM_TIME}/' => Language::replace('FROM_TIME', array('H:i' => $index->from)),
+        '/{TO_TIME}/' => $index->end_date == '0000-00-00' ? '' : Language::replace('TO_TIME', array('H:i' => $index->to)),
         '/{COLOR}/' => $index->color
       ));
       $index->detail = $template->render();

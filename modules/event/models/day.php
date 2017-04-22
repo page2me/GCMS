@@ -9,6 +9,7 @@
 namespace Event\Day;
 
 use \Kotchasan\Http\Request;
+use \Kotchasan\Database\Sql;
 
 /**
  * อ่านข้อมูลโมดูล
@@ -30,17 +31,25 @@ class Model extends \Kotchasan\Model
   public static function get(Request $request, $index)
   {
     if (preg_match('/^([0-9]{4,4})\-([0-9]{1,2})\-([0-9]{1,2})$/', $request->request('d')->toString(), $match)) {
-      $index->year = (int)$match[1];
-      $index->month = (int)$match[2];
-      $index->day = (int)$match[3];
+      $index->date = "$match[1]-$match[2]-$match[3]";
+      $select = array(
+        'id',
+        'color',
+        'topic',
+        'description',
+        Sql::DATE('begin_date', 'begin_date'),
+        Sql::DATE_FORMAT('begin_date', '%h:%i', 'from'),
+        Sql::DATE('end_date', 'end_date'),
+        Sql::DATE_FORMAT('end_date', '%h:%i', 'to')
+      );
       $model = new static;
       $index->items = $model->db()->createQuery()
-        ->select('id', 'color', 'topic', 'description', 'begin_date', 'end_date')
+        ->select($select)
         ->from('event')
         ->where(array(
-          array('YEAR(`begin_date`)', $index->year),
-          array('MONTH(`begin_date`)', $index->month),
-          array('DAY(`begin_date`)', $index->day),
+          array(Sql::YEAR('begin_date'), $match[1]),
+          array(Sql::MONTH('begin_date'), $match[2]),
+          array(Sql::DAY('begin_date'), $match[3]),
           array('module_id', (int)$index->module_id)
         ))
         ->order('begin_date', 'end_date')

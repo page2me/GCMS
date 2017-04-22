@@ -109,7 +109,7 @@ class Controller extends \Kotchasan\Controller
       }
       $data .= '</p></td>';
       if ($weekday == 7 && $day != $endday) {
-        $calendar[] = $data.'</td>';
+        $calendar[] = $data;
         $data = '<tr class="date row">';
         $weekday = 0;
       }

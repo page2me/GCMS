@@ -8,6 +8,8 @@
 
 namespace Event\Calendar;
 
+use \Kotchasan\Database\Sql;
+
 /**
  * ปฎิทิน
  *
@@ -28,12 +30,12 @@ class Model extends \Kotchasan\Model
   {
     $model = new static;
     return $model->db()->createQuery()
-        ->select('D.id', 'D.topic', 'M.module', 'D.color', 'DAY(D.`begin_date`) AS `d`')
+        ->select('D.id', 'D.topic', 'M.module', 'D.color', Sql::DAY('D.begin_date', 'd'))
         ->from('event D')
         ->join('modules M', 'INNER', array('M.id', 'D.module_id'))
         ->where(array(
-          array('MONTH(D.`begin_date`)', $month),
-          array('YEAR(D.`begin_date`)', $year)
+          array(Sql::MONTH('D.begin_date'), $month),
+          array(Sql::YEAR('D.begin_date'), $year)
         ))
         ->order('begin_date DESC', 'end_date')
         ->cacheOn()
