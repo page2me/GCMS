@@ -750,7 +750,7 @@ return array(
   'Writer' => '著者',
   'Writing' => '書き込み',
   'year' => '年',
-  'YEAR_OFFSET' => '0',
+  'YEAR_OFFSET' => 0,
   'You are currently using GCMS version' => '現在使用中のGCMSのバージョン',
   'You are not logged in Please log in Before continuing' => '操作を継続するにはログインが必要です',
   'You can add the RSS URL and name of Tab to display Tab' => 'RSSのURL追加とTabの設定',

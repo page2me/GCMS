@@ -143,5 +143,5 @@ return array(
     1 => 'Fully enables Ajax for the entire site'
   ),
   'WIDGET_DATE_FORMAT' => 'L, d F Y',
-  'YEAR_OFFSET' => 0,
+  'YEAR_OFFSET' => 0
 );
