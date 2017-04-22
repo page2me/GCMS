@@ -30,29 +30,25 @@ class Model extends \Index\Upgrade\Model
     $content = array();
     // install database language
     $db->query("DROP TABLE IF EXISTS `$_SESSION[prefix]_language`;");
-    $db->query("CREATE TABLE `$_SESSION[prefix]_language` (`id` int(11) unsigned NOT NULL auto_increment,`key` text collate utf8_unicode_ci NOT NULL,`th` text collate utf8_unicode_ci NULL DEFAULT NULL,`en` text collate utf8_unicode_ci NULL DEFAULT NULL,`owner` varchar(20) collate utf8_unicode_ci NOT NULL,`type` varchar(5) collate utf8_unicode_ci NOT NULL,`js` tinyint(1) NOT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+    $db->query("CREATE TABLE `$_SESSION[prefix]_language` (`id` int(11) unsigned NOT NULL auto_increment,`key` text collate utf8_unicode_ci NOT NULL,`ja` text collate utf8_unicode_ci,`th` text collate utf8_unicode_ci,`en` text collate utf8_unicode_ci,`owner` varchar(20) collate utf8_unicode_ci NOT NULL,`type` varchar(5) collate utf8_unicode_ci NOT NULL,`js` tinyint(1) NOT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+    // class Index\Languages\Model
+    include('../admin/modules/index/models/languages.php');
     // import language
-    foreach (array('php', 'js') as $lng) {
-      foreach (Language::installed($lng) as $item) {
-        if (!empty($item['array'])) {
-          $item['type'] = 'array';
-          if (isset($item['th']) && is_array($item['th'])) {
-            $item['th'] = serialize($item['th']);
+    $dir = ROOT_PATH.'language/';
+    if (is_dir($dir)) {
+      // ตาราง language
+      $language_table = $_SESSION['prefix'].'_language';
+      $f = opendir($dir);
+      while (false !== ($text = readdir($f))) {
+        if (preg_match('/([a-z]{2,2})\.(php|js)/', $text, $match)) {
+          if ($match[2] == 'php') {
+            \Index\Languages\Model::importPHP($db, $language_table, $match[1], $dir.$text);
+          } else {
+            \Index\Languages\Model::importJS($db, $language_table, $match[1], $dir.$text);
           }
-          if (isset($item['en']) && is_array($item['en'])) {
-            $item['en'] = serialize($item['en']);
-          }
-        } elseif (is_int($item['th'])) {
-          $item['type'] = 'int';
-        } else {
-          $item['type'] = 'text';
         }
-        unset($item['id']);
-        unset($item['array']);
-        $item['js'] = $lng == 'js' ? 1 : 0;
-        $item['owner'] = 'index';
-        $db->insert($_SESSION['prefix'].'_language', $item);
       }
+      closedir($f);
     }
     $content[] = '<li class="correct">Created and Imported database <b>'.$_SESSION['prefix'].'_language</b> complete...</li>';
     // อัปเกรด useronline

@@ -115,9 +115,9 @@ class Model extends \Kotchasan\KBase
             $model->db()->query("ALTER TABLE `$language_table` ADD `$match[1]` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci AFTER `key`");
           }
           if ($match[2] == 'php') {
-            self::importPHP($model, $language_table, $match[1], $dir.$text);
+            self::importPHP($model->db(), $language_table, $match[1], $dir.$text);
           } else {
-            self::importJS($model, $language_table, $match[1], $dir.$text);
+            self::importJS($model->db(), $language_table, $match[1], $dir.$text);
           }
         }
       }
@@ -128,12 +128,12 @@ class Model extends \Kotchasan\KBase
   /**
    * นำเข้าข้อมูลไฟล์ภาษา PHP
    *
-   * @param \Kotchasan\Model $model Database Object
+   * @param Database $db Database Object
    * @param string $language_table ชื่อตาราง language
    * @param string $lang ชื่อภาษา
    * @param string $file_name ไฟล์ภาษา
    */
-  public static function importPHP($model, $language_table, $lang, $file_name)
+  public static function importPHP($db, $language_table, $lang, $file_name)
   {
     foreach (include ($file_name) AS $key => $value) {
       if (is_array($value)) {
@@ -143,7 +143,7 @@ class Model extends \Kotchasan\KBase
       } else {
         $type = 'text';
       }
-      $search = $model->db()->first($language_table, array(
+      $search = $db->first($language_table, array(
         array('key', $key),
         array('js', 0),
         array('type', $type)
@@ -152,11 +152,11 @@ class Model extends \Kotchasan\KBase
         $value = serialize($value);
       }
       if ($search) {
-        $model->db()->update($language_table, $search->id, array(
+        $db->update($language_table, $search->id, array(
           $lang => $value,
         ));
       } else {
-        $model->db()->insert($language_table, array(
+        $db->insert($language_table, array(
           'key' => $key,
           'js' => 0,
           'type' => $type,
@@ -170,28 +170,28 @@ class Model extends \Kotchasan\KBase
   /**
    * นำเข้าข้อมูลไฟล์ภาษา Javascript
    *
-   * @param \Kotchasan\Model $model Database Object
+   * @param Database $db Database Object
    * @param string $language_table ชื่อตาราง language
    * @param string $lang ชื่อภาษา
    * @param string $file_name ไฟล์ภาษา
    */
-  public static function importJS($model, $language_table, $lang, $file_name)
+  public static function importJS($db, $language_table, $lang, $file_name)
   {
     $patt = '/^var[\s]+([A-Z0-9_]+)[\s]{0,}=[\s]{0,}[\'"](.*)[\'"];$/';
     foreach (file($file_name) AS $item) {
       $item = trim($item);
       if ($item != '') {
         if (preg_match($patt, $item, $match)) {
-          $search = $model->db()->first($language_table, array(
+          $search = $db->first($language_table, array(
             array('key', $match[1]),
             array('js', 1)
           ));
           if ($search) {
-            $model->db()->update($language_table, $search->id, array(
+            $db->update($language_table, $search->id, array(
               $lang => $match[2],
             ));
           } else {
-            $model->db()->insert($language_table, array(
+            $db->insert($language_table, array(
               'key' => $match[1],
               'js' => 1,
               'type' => 'text',

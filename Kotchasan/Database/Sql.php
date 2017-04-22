@@ -393,13 +393,14 @@ class Sql
   }
 
   /**
-   * หาค่าวันที่
+   * แยกวันที่ออกจากคอลัมน์ชนิด DATE DATETIME
    *
    * @param string $column_name
    * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
    * @return \static
    *
    * @assert ('date')->text() [==] 'DAY(`date`)'
+   * @assert ('date', 'd')->text() [==] 'DAY(`date`) AS `d`'
    */
   public static function DAY($column_name, $alias = null)
   {
@@ -407,13 +408,14 @@ class Sql
   }
 
   /**
-   * หาค่าเดือน
+   * แยกเดือนออกจากคอลัมน์ชนิด DATE DATETIME
    *
    * @param string $column_name
    * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
    * @return \static
    *
    * @assert ('date')->text() [==] 'MONTH(`date`)'
+   * @assert ('date', 'm')->text() [==] 'MONTH(`date`) AS `m`'
    */
   public static function MONTH($column_name, $alias = null)
   {
@@ -421,17 +423,65 @@ class Sql
   }
 
   /**
-   * หาค่าปี
+   * แยกปีออกจากคอลัมน์ชนิด DATE DATETIME
    *
    * @param string $column_name
    * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
    * @return \static
    *
    * @assert ('date')->text() [==] 'YEAR(`date`)'
+   * @assert ('date', 'y')->text() [==] 'YEAR(`date`) AS `y`'
    */
   public static function YEAR($column_name, $alias = null)
   {
     return self::create('YEAR('.self::fieldName($column_name).')'.($alias ? " AS `$alias`" : ''));
+  }
+
+  /**
+   * แยกวันที่ออกจากคอลัมน์ชนิด DATETIME
+   *
+   * @param string $column_name
+   * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
+   * @return \static
+   *
+   * @assert ('create_date')->text() [==] 'DATE(`create_date`)'
+   * @assert ('create_date', 'date')->text() [==] 'DATE(`create_date`) AS `date`'
+   */
+  public static function DATE($column_name, $alias = null)
+  {
+    return self::create('DATE('.self::fieldName($column_name).')'.($alias ? " AS `$alias`" : ''));
+  }
+
+  /**
+   * จัดรูปแบบของวันที่ตอนแสดงผล
+   *
+   * @param string $column_name
+   * @param string $format
+   * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
+   * @return \static
+   *
+   * @assert (Sql::NOW(), '%h:%i')->text() [==] "DATE_FORMAT(NOW(), '%h:%i')"
+   * @assert ('create_date', '%Y-%m-%d', 'today')->text() [==] "DATE_FORMAT(`create_date`, '%Y-%m-%d') AS `today`"
+   */
+  public static function DATE_FORMAT($column_name, $format, $alias = null)
+  {
+    return self::create("DATE_FORMAT(".self::fieldName($column_name).", '$format')".($alias ? " AS `$alias`" : ''));
+  }
+
+  /**
+   * จัดรูปแบบของคอลัมน์ตอนแสดงผล
+   *
+   * @param string $column_name
+   * @param string $format
+   * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
+   * @return \static
+   *
+   * @assert (Sql::NOW(), 'Y-m-d')->text() [==] "FORMAT(NOW(), 'Y-m-d')"
+   * @assert ('create_date', 'Y-m-d', 'today')->text() [==] "FORMAT(`create_date`, 'Y-m-d') AS `today`"
+   */
+  public static function FORMAT($column_name, $format, $alias = null)
+  {
+    return self::create("FORMAT(".self::fieldName($column_name).", '$format')".($alias ? " AS `$alias`" : ''));
   }
 
   /**
@@ -447,6 +497,20 @@ class Sql
   public static function RAND($alias = null)
   {
     return self::create('RAND()'.($alias ? " AS `$alias`" : ''));
+  }
+
+  /**
+   * คืนค่าวันที่และเวลาปัจจุบัน
+   *
+   * @param string|null $alias ชื่อรองที่ต้องการ ถ้าไม่ระบุไม่มีชื่อรอง
+   * @return \static
+   *
+   * @assert ()->text() [==] 'NOW()'
+   * @assert ('id')->text() [==] 'NOW() AS `id`'
+   */
+  public static function NOW($alias = null)
+  {
+    return self::create('NOW()'.($alias ? " AS `$alias`" : ''));
   }
 
   /**

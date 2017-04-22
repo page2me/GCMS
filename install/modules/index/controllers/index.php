@@ -81,8 +81,14 @@ class Controller extends \Kotchasan\Controller
         }
       }
     } elseif (version_compare(self::$cfg->version, self::$cfg->new_version) == -1) {
-      // อัปเกรดจาก GCMS 11
-      $cfg = include(ROOT_PATH.'settings/database.php');
+      if (is_file('../settings/config.php') && is_file('../settings/database.php')) {
+        // มีค่าติดตั้งอยู่ก่อนแล้ว
+        $cfg = include('../settings/database.php');
+        $_SESSION['tables'] = $cfg['tables'];
+      } else {
+        // อัปเกรดจาก GCMS 11
+        $cfg = include(ROOT_PATH.'settings/database.php');
+      }
       $_SESSION['cfg'] = array(
         'db_username' => $cfg['mysql']['username'],
         'db_password' => $cfg['mysql']['password'],
