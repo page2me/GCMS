@@ -166,10 +166,10 @@ class AbstractRequest extends AbstractMessage implements RequestInterface
   {
     $query = array();
     foreach ($_GET as $key => $value) {
-      $query[$key] = $key.'='.$value;
+      $query[$key] = $value === null ? $key : $key.'='.$value;
     }
     foreach ($_POST as $key => $value) {
-      $query[$key] = $key.'='.$value;
+      $query[$key] = $value === null ? $key : $key.'='.$value;
     }
     if (!empty($query)) {
       $uri .= (strpos('?', $uri) === false ? '?' : '&').implode('&', $query);
